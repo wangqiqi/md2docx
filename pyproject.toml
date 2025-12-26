@@ -45,8 +45,8 @@ Documentation = "https://github.com/wangqiqi/md2docx#readme"
 Issues = "https://github.com/wangqiqi/md2docx/issues"
 
 [project.scripts]
-mddocx = "md2docx.cli:main"
-mddocx-webui = "md2docx.webui.app:main"
+mddocx = "mddocx.cli:main"
+mddocx-webui = "mddocx.webui.app:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
