@@ -20,13 +20,25 @@ globs: [".github/workflows/publish.yml", "scripts/publish_to_pypi.sh", "**/pypro
 
 #### Trusted Publisher配置
 - [ ] 访问 [PyPI Publishing Settings](https://pypi.org/manage/project/mddocx/settings/publishing/)
-- [ ] 添加Trusted Publisher：
+- [ ] 点击 **"Add"** 添加新的pending publisher
+- [ ] 填写配置信息：
   ```
-  Publisher: GitHub
-  Repository: wangqiqi/md2docx
-  Workflow: publish.yml
-  Environment: (留空)
+  PyPI Project Name: mddocx
+  Owner: wangqiqi
+  Repository name: md2docx
+  Workflow name: publish.yml
+  Environment name: (留空)
   ```
+- [ ] 配置完成后会出现在"Pending publishers"列表中
+- [ ] **注意**: 如果项目不存在，第一次发布会自动创建项目
+
+#### Trusted Publisher故障排查
+**常见错误**: `invalid-publisher: valid token, but no corresponding publisher`
+**解决方案**:
+1. 确认PyPI配置完全匹配
+2. 等待5-10分钟生效
+3. 检查workflow文件名是否正确
+4. 使用手动发布作为备用方案
 
 #### 本地验证
 - [ ] 构建包：`python -m build`

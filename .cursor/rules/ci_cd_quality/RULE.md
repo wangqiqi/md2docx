@@ -93,12 +93,24 @@ exclude =
 
 ### hashFiles语法错误
 ```yaml
-# ❌ 错误
-key: ${{ hashFiles('**/pyproject.toml, **/requirements.txt') }}
+# ❌ 错误：参数之间缺少空格
+key: ${{ hashFiles('**/pyproject.toml,**/requirements.txt') }}
 
-# ✅ 正确
+# ❌ 错误：混合语法
+key: ${{ hashFiles('**/pyproject.toml', '**/requirements.txt,**/setup.py') }}
+
+# ✅ 正确：每个参数独立
 key: ${{ hashFiles('**/pyproject.toml', '**/requirements.txt') }}
+
+# ✅ 推荐：简化到核心配置文件
+key: ${{ hashFiles('**/pyproject.toml') }}
 ```
+
+#### hashFiles使用最佳实践
+- **单一文件**: 对于核心配置，使用单个文件哈希
+- **多文件**: 相关文件分别作为独立参数
+- **性能考虑**: 避免包含过多文件影响缓存效率
+- **依赖管理**: 优先使用 `pyproject.toml` 而非 `requirements.txt`
 
 ### E402导入顺序错误
 ```
@@ -107,6 +119,30 @@ src/mddocx/webui/app.py:30:1: E402 module level import not at top of file
 **解决方案**：
 - 配置flake8忽略E402：`extend-ignore = E203,W503,E402`
 - 或重构代码确保导入在文件顶部
+
+### 测试覆盖率评估误区
+**问题**: 整体覆盖率看似达标，但关键模块可能完全没有测试
+**表现**: 总覆盖率67%，但webui模块0%覆盖率
+**解决方案**:
+- 检查每个子模块的覆盖率：`pytest --cov=src --cov-report=html`
+- 确保新增代码都有相应测试
+- webui模块至少要有基础功能测试
+- 定期审查覆盖率报告，识别未测试的代码路径
+
+### mypy类型检查配置问题
+```yaml
+# ❌ 错误的错误代码名称（mypy 1.19.1）
+--disable-error-code=attr-defined,union-attr
+
+# ✅ 正确的配置方式
+- name: Run mypy (optional)
+  run: |
+    echo "Running mypy type checking..."
+    mypy src --ignore-missing-imports --no-strict-optional --follow-imports=skip || echo "⚠️ mypy found some type issues, but this is acceptable for now"
+  continue-on-error: true
+```
+**原因**: mypy版本不同，错误代码名称可能变化
+**建议**: 使用宽松配置，避免阻塞开发流程
 
 ### 格式化检查失败
 ```

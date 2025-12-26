@@ -52,7 +52,35 @@ from module import *
 # ❌ 循环导入
 # module_a.py: from module_b import B
 # module_b.py: from module_a import A
+
+# ❌ sys.path修改后的导入问题
+import sys
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))  # ❌ 执行代码后导入
+from .local_module import something
+
+# ✅ 正确的sys.path处理
+# 1. 标准库导入
+import sys
+from pathlib import Path
+
+# 2. 路径设置
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
+# 3. 模块导入
+from .local_module import something
 ```
+
+#### 导入顺序错误的影响
+- **flake8 E402错误**: `module level import not at top of file`
+- **运行时错误**: 可能导致模块找不到
+- **维护困难**: 代码结构不清晰
+
+#### 解决方案优先级
+1. **重构代码**: 将路径设置移到文件顶部
+2. **条件导入**: 在函数内部进行导入
+3. **配置忽略**: `extend-ignore = E203,W503,E402` (最后手段)
 
 ## 🎨 代码格式化标准
 
