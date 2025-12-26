@@ -150,8 +150,8 @@ pip install mddocx
 # 方法1：使用pip安装后运行（推荐）
 mddocx-webui
 
-# 方法2：使用启动脚本（源码运行）
-python start_webui.py
+# 方法2：使用命令行工具（推荐）
+mddocx-webui
 
 # 方法3：直接运行模块（源码运行）
 python -m webui.app
