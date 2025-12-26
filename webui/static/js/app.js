@@ -523,15 +523,11 @@ function generatePreview() {
     })
     .then(response => response.text())
     .then(html => {
-        // 提取预览内容（简单处理）
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const bodyContent = doc.body.innerHTML;
-
-        if (bodyContent.trim()) {
-            previewContent.innerHTML = bodyContent;
+        // 直接使用返回的HTML片段
+        if (html.trim()) {
+            previewContent.innerHTML = html;
         } else {
-            previewContent.innerHTML = '<div style="padding: 20px; color: #666;">预览生成失败</div>';
+            previewContent.innerHTML = '<div class="preview-placeholder"><span class="icon">👁️</span><p>预览生成失败</p></div>';
         }
     })
     .catch(error => {

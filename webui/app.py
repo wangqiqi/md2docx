@@ -16,6 +16,15 @@ from flask import Flask, flash, redirect, render_template, request, send_file, u
 
 from src.converter import BaseConverter
 
+# 导入markdown解析器
+try:
+    from markdown_it import MarkdownIt
+
+    md = MarkdownIt()
+except ImportError:
+    # 如果没有安装markdown-it-py，使用简单的解析
+    md = None
+
 # 创建Flask应用
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key-change-in-production")
@@ -92,7 +101,7 @@ def convert():
 
 @app.route("/preview", methods=["POST"])
 def preview():
-    """预览功能"""
+    """预览功能 - 只返回预览内容的HTML片段"""
     try:
         # 获取Markdown内容
         markdown_content = ""
@@ -103,68 +112,91 @@ def preview():
             markdown_content = request.form.get("markdown", "")
 
         if not markdown_content:
-            return render_template(
-                "preview.html",
-                markdown_content="",
-                preview_content="请输入Markdown内容",
-                error="请输入Markdown内容",
-            )
+            return "<div class='preview-placeholder'><span class='icon'>👁️</span><p>请输入Markdown内容</p></div>"
 
         # 生成预览HTML
         preview_html = generate_preview_html(markdown_content)
 
-        return render_template(
-            "preview.html",
-            markdown_content=markdown_content,
-            preview_content=preview_html,
-        )
+        # 返回只包含预览内容的HTML片段
+        return f"""<div class="preview-result"><div class="preview-content-rendered">{preview_html}</div></div>"""
 
     except Exception as e:
-        return render_template(
-            "preview.html",
-            markdown_content=markdown_content if "markdown_content" in locals() else "",
-            preview_content=f"预览失败: {str(e)}",
-            error=str(e),
-        )
+        error_msg = f"预览失败: {str(e)}"
+        return f"<div class='preview-error' style='color: #dc3545; padding: 20px; text-align: center;'>{error_msg}</div>"
 
 
 def generate_preview_html(markdown_content):
     """生成预览HTML"""
-    # 这里可以实现更复杂的预览逻辑
-    # 目前先返回简单的格式化
-    lines = markdown_content.split("\n")
-    html_lines = []
+    if md:
+        # 使用markdown-it-py生成HTML
+        html_content = md.render(markdown_content)
+        # 添加一些基础样式，让预览更接近DOCX样式
+        styled_html = f"""
+        <div class="markdown-preview" style="font-family: 'Arial', sans-serif; line-height: 1.6;">
+            {html_content}
+        </div>
+        """
+        return styled_html
+    else:
+        # 降级到简单格式化
+        lines = markdown_content.split("\n")
+        html_lines = []
 
-    for line in lines:
-        line = line.strip()
-        if not line:
-            continue
+        for line in lines:
+            line = line.strip()
+            if not line:
+                html_lines.append("<br>")
+                continue
 
-        # 标题
-        if line.startswith("#"):
-            level = len(line.split()[0])  # 计算#的数量
-            text = line.lstrip("#").strip()
-            html_lines.append(f"<h{level}>{text}</h{level}>")
-        # 无序列表
-        elif line.startswith("- ") or line.startswith("* "):
-            text = line[2:].strip()
-            html_lines.append(f"<li>{text}</li>")
-        # 有序列表
-        elif line[0].isdigit() and line[1:3] == ". ":
-            text = line[3:].strip()
-            html_lines.append(f"<li>{text}</li>")
-        # 代码块
-        elif line.startswith("```"):
-            if "```" in line[3:]:
-                html_lines.append("<code>" + line[3:-3] + "</code>")
+            # 标题
+            if line.startswith("#"):
+                level = len(line.split()[0])  # 计算#的数量
+                text = line.lstrip("#").strip()
+                html_lines.append(
+                    f"<h{level} style='margin: 16px 0 8px 0; font-weight: bold;'>{text}</h{level}>"
+                )
+            # 无序列表
+            elif line.startswith("- ") or line.startswith("* "):
+                text = line[2:].strip()
+                html_lines.append(f"<li style='margin-left: 20px;'>{text}</li>")
+            # 有序列表
+            elif line[0].isdigit() and line[1:3] == ". ":
+                text = line[3:].strip()
+                html_lines.append(f"<li style='margin-left: 20px;'>{text}</li>")
+            # 代码块
+            elif line.startswith("```"):
+                if "```" in line[3:]:
+                    code = line[3:-3]
+                    code_style = "background: #f4f4f4; padding: 2px 4px; border-radius: 3px; font-family: monospace;"
+                    html_lines.append(f"<code style='{code_style}'>{code}</code>")
+                else:
+                    pre_style = "background: #f4f4f4; padding: 12px; border-radius: 4px; font-family: monospace; margin: 8px 0;"
+                    html_lines.append(f"<pre style='{pre_style}'>")
+            # 内联代码
+            elif "`" in line:
+                # 简单的内联代码处理
+                parts = line.split("`")
+                formatted_parts = []
+                for i, part in enumerate(parts):
+                    if i % 2 == 1:  # 奇数索引是代码
+                        inline_code_style = "background: #f4f4f4; padding: 1px 3px; border-radius: 2px; font-family: monospace;"
+                        formatted_parts.append(f"<code style='{inline_code_style}'>{part}</code>")
+                    else:
+                        formatted_parts.append(part)
+                html_lines.append(f"<p>{''.join(formatted_parts)}</p>")
+            # 粗体
+            elif "**" in line:
+                text = line.replace("**", "<strong>", 1).replace("**", "</strong>", 1)
+                html_lines.append(f"<p>{text}</p>")
+            # 斜体
+            elif "*" in line:
+                text = line.replace("*", "<em>", 1).replace("*", "</em>", 1)
+                html_lines.append(f"<p>{text}</p>")
+            # 普通段落
             else:
-                # 多行代码块开始/结束
-                html_lines.append("<pre><code>")
-        # 普通段落
-        else:
-            html_lines.append(f"<p>{line}</p>")
+                html_lines.append(f"<p style='margin: 8px 0;'>{line}</p>")
 
-    return "\n".join(html_lines)
+        return "\n".join(html_lines)
 
 
 @app.errorhandler(413)
