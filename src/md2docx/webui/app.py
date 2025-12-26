@@ -23,8 +23,7 @@ from flask import (
 )
 from werkzeug.utils import secure_filename
 
-from src.converter import BaseConverter
-
+from ..converter import BaseConverter
 from .config import get_config
 
 # 导入markdown解析器
@@ -323,5 +322,10 @@ def add_security_headers(response):
     return response
 
 
-if __name__ == "__main__":
+def main():
+    """命令行入口点"""
     app.run(debug=config.DEBUG, host=config.HOST, port=config.PORT)
+
+
+if __name__ == "__main__":
+    main()

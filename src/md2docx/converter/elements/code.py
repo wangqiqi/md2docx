@@ -1,5 +1,6 @@
-from docx.shared import RGBColor, Pt
 from docx.enum.style import WD_STYLE_TYPE
+from docx.shared import Pt, RGBColor
+
 from .base import ElementConverter
 
 
@@ -14,13 +15,13 @@ class CodeConverter(ElementConverter):
     def set_document(self, document):
         if document is None:
             raise ValueError("Document cannot be None")
-            
+
         self.document = document
         # 创建代码样式
-        if 'Code' not in self.document.styles:
-            style = self.document.styles.add_style('Code', WD_STYLE_TYPE.PARAGRAPH)
+        if "Code" not in self.document.styles:
+            style = self.document.styles.add_style("Code", WD_STYLE_TYPE.PARAGRAPH)
             font = style.font
-            font.name = 'Consolas'  # 使用等宽字体
+            font.name = "Consolas"  # 使用等宽字体
             font.size = Pt(10)
             # 设置段落格式
             style.paragraph_format.space_before = Pt(10)
@@ -43,26 +44,26 @@ class CodeConverter(ElementConverter):
 
         # 创建新段落
         paragraph = self.document.add_paragraph()
-        paragraph.style = 'Code'
+        paragraph.style = "Code"
 
         # 获取代码内容
-        code = token.content if hasattr(token, 'content') else ''
-        
+        code = token.content if hasattr(token, "content") else ""
+
         # 处理空的代码块
         if not code:
             paragraph.add_run("")
             return
 
         # 分割并处理每一行，去掉末尾的空行
-        lines = code.rstrip('\n').splitlines()
-        
+        lines = code.rstrip("\n").splitlines()
+
         # 添加代码内容
         for i, line in enumerate(lines):
             if i > 0:  # 不是第一行，添加换行符
-                paragraph.add_run('\n')
+                paragraph.add_run("\n")
             run = paragraph.add_run(line)
-            run.font.name = 'Consolas'
+            run.font.name = "Consolas"
             run.font.color.rgb = RGBColor(51, 51, 51)  # 深灰色
 
         # 更新状态
-        self._last_was_code = True 
+        self._last_was_code = True

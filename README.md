@@ -130,6 +130,10 @@ pip install -r requirements-prod.txt
 pip install md2docx
 ```
 
+**安装后即可使用完整功能：**
+- 命令行工具：`md2docx`
+- Web界面：`md2docx-webui`
+
 ### 依赖说明
 
 - **`requirements-prod.txt`**：仅包含运行时必需的依赖，轻量化安装
@@ -143,13 +147,16 @@ pip install md2docx
 最简单的方式是使用内置的Web界面：
 
 ```bash
-# 方法1：使用启动脚本（推荐）
+# 方法1：使用pip安装后运行（推荐）
+md2docx-webui
+
+# 方法2：使用启动脚本（源码运行）
 python start_webui.py
 
-# 方法2：直接运行模块
+# 方法3：直接运行模块（源码运行）
 python -m webui.app
 
-# 方法3：通过导入运行
+# 方法4：通过导入运行（源码运行）
 python -c "from webui.app import app; app.run(debug=True)"
 ```
 

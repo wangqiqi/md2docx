@@ -1,0 +1,13 @@
+# 包含webui目录
+recursive-include src/md2docx/webui *.py
+recursive-include src/md2docx/webui *.html
+recursive-include src/md2docx/webui *.css
+recursive-include src/md2docx/webui *.js
+recursive-include src/md2docx/webui *.md
+
+# 包含启动脚本
+include start_webui.py
+
+# 包含其他重要文件
+include LICENSE
+include README.md
