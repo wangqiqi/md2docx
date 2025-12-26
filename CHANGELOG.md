@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2025-12-26
+
+### Added
+- 🎨 **CLI帮助信息增强**：添加详细的项目描述、功能列表、使用示例和项目链接
+- 📋 **版本信息显示**：CLI支持 `--version`/`-V` 参数显示版本信息
+- 🔗 **项目链接集成**：在帮助信息中集成GitHub主页、文档和问题反馈链接
+
+### Fixed
+- 🧹 **代码清理**：移除未使用的导入，提升代码质量
+
 ## [0.4.0] - 2025-12-26
 
 ### Added
