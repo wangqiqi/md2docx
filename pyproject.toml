@@ -9,7 +9,7 @@ addopts = "-v"
 pythonpath = ["src"]
 
 [project]
-name = "md2docx"
+name = "mddocx"
 version = "0.4.2"
 description = "一个功能强大的 Markdown 转 DOCX 文档转换工具"
 readme = "README.md"
@@ -45,8 +45,8 @@ Documentation = "https://github.com/wangqiqi/md2docx#readme"
 Issues = "https://github.com/wangqiqi/md2docx/issues"
 
 [project.scripts]
-md2docx = "md2docx.cli:main"
-md2docx-webui = "md2docx.webui.app:main"
+mddocx = "md2docx.cli:main"
+mddocx-webui = "md2docx.webui.app:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

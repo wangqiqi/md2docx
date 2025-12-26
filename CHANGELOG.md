@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 📋 **版本信息显示**：CLI支持 `--version`/`-V` 参数显示版本信息
 - 🔗 **项目链接集成**：在帮助信息中集成GitHub主页、文档和问题反馈链接
 
+### Changed
+- 📦 **包名重命名**：由于PyPI名称冲突，从 `md2docx` 更改为 `mddocx`
+- 🛠️ **命令名更新**：CLI命令从 `md2docx` 更改为 `mddocx`，WebUI从 `md2docx-webui` 更改为 `mddocx-webui`
+
 ### Fixed
 - 🧹 **代码清理**：移除未使用的导入，提升代码质量
 

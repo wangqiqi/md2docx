@@ -1,8 +1,9 @@
-# 开发环境依赖 - 包含所有开发、测试和构建工具
-# 基础生产依赖
--r requirements-prod.txt
-
-# 开发和测试工具
+# 生产环境依赖 - 仅包含运行时必需的包
+markdown-it-py>=2.2.0
+python-docx>=0.8.11
+requests>=2.28.2
+html2docx>=1.6.0
+工具
 pytest>=7.3.1
 black>=23.0.0
 pyinstaller==6.5.0

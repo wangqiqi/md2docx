@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.4.0-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.4.0)
+[![Version](https://img.shields.io/badge/version-0.4.2-blue.svg)](https://github.com/wangqiqi/mddocx/releases/tag/v0.4.2)
 [![Cursor AI Rules](https://img.shields.io/badge/Cursor%20AI%20Rules-v3.0.0-green.svg)](https://github.com/wangqiqi/cursor-ai-rules)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
@@ -101,7 +101,7 @@
 1. 克隆仓库：
 ```bash
 git clone [repository-url]
-cd md2docx
+cd mddocx
 ```
 
 2. 创建虚拟环境：
@@ -119,7 +119,7 @@ pip install -r requirements-dev.txt
 
 ### 生产环境安装
 
-如果您只是想使用 md2docx 进行文档转换：
+如果您只是想使用 mddocx 进行文档转换：
 
 ```bash
 pip install -r requirements-prod.txt
@@ -127,12 +127,12 @@ pip install -r requirements-prod.txt
 
 或直接从 PyPI 安装：
 ```bash
-pip install md2docx
+pip install mddocx
 ```
 
 **安装后即可使用完整功能：**
-- 命令行工具：`md2docx`
-- Web界面：`md2docx-webui`
+- 命令行工具：`mddocx`
+- Web界面：`mddocx-webui`
 
 ### 依赖说明
 
@@ -148,7 +148,7 @@ pip install md2docx
 
 ```bash
 # 方法1：使用pip安装后运行（推荐）
-md2docx-webui
+mddocx-webui
 
 # 方法2：使用启动脚本（源码运行）
 python start_webui.py
@@ -202,7 +202,7 @@ python scripts/batch_convert_test.py --input-dir your_md_folder --output-dir you
 ## 项目结构
 
 ```
-md2docx/
+mddocx/
 ├── src/                    # 源代码
 │   ├── converter/         # 转换核心
 │   │   ├── base.py       # 基础转换类

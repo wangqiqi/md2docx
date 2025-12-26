@@ -131,7 +131,7 @@ def main():
 
     # 创建主解析器（先用英文创建，然后根据参数重新设置）
     parser = argparse.ArgumentParser(
-        prog="md2docx",
+        prog="mddocx",
         description="Markdown to DOCX Converter",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         add_help=False,  # 暂时禁用自动帮助
@@ -153,7 +153,7 @@ def main():
 
     # 重新创建解析器，使用正确的语言
     parser = argparse.ArgumentParser(
-        prog="md2docx",
+        prog="mddocx",
         description=texts["description"],
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
