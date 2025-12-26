@@ -59,4 +59,5 @@ jobs:
         echo "   repository: wangqiqi/md2docx"
         echo "   repository_owner: wangqiqi"
         echo "   workflow_ref: wangqiqi/md2docx/.github/workflows/publish.yml@refs/tags/${GITHUB_REF#refs/tags/}"
-        exit 1
+        echo ""
+        echo "📝 注意：测试应在 ci.yml 工作流中完成"
