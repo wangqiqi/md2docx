@@ -55,13 +55,12 @@ def convert_file(input_file: str, output_file: str, debug: bool = False) -> None
     )
 
 
-def main():
-    """主函数"""
+def get_help_texts(lang="zh"):
+    """获取指定语言的帮助文本"""
 
-    # 创建主解析器
-    parser = argparse.ArgumentParser(
-        prog="md2docx",
-        description="""\
+    texts = {
+        "zh": {
+            "description": """\
 Markdown to DOCX 转换工具 v{0}
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法。
@@ -82,19 +81,100 @@ Markdown to DOCX 转换工具 v{0}
 使用示例:
   md2docx README.md output.docx
   md2docx --debug document.md report.docx
-        """.format(
-            __version__
-        ),
+            """.format(
+                __version__
+            ),
+            "input_help": "输入的 Markdown 文件路径",
+            "output_help": "输出的 DOCX 文件路径",
+            "debug_help": "显示调试信息和详细的转换过程",
+            "version_help": "显示版本信息",
+            "lang_help": "选择帮助信息的语言 (zh/en, 默认: zh)",
+        },
+        "en": {
+            "description": """\
+Markdown to DOCX Converter v{0}
+
+A powerful Markdown to DOCX document conversion tool that supports rich Markdown syntax.
+
+Supported features:
+  • Standard Markdown syntax (headings, lists, links, images, etc.)
+  • Table conversion and alignment
+  • Code blocks with syntax highlighting
+  • Task lists (TODO)
+  • Blockquotes (nested support)
+  • HTML tag support
+  • Mathematical formulas and flowcharts
+
+Homepage: https://github.com/wangqiqi/md2docx
+Documentation: https://github.com/wangqiqi/md2docx#readme
+Bug reports: https://github.com/wangqiqi/md2docx/issues
+
+Usage examples:
+  md2docx README.md output.docx
+  md2docx --debug document.md report.docx
+            """.format(
+                __version__
+            ),
+            "input_help": "Path to input Markdown file",
+            "output_help": "Path to output DOCX file",
+            "debug_help": "Show debug information and detailed conversion process",
+            "version_help": "Show version information",
+            "lang_help": "Choose language for help information (zh/en, default: zh)",
+        },
+    }
+
+    return texts.get(lang, texts["zh"])
+
+
+def main():
+    """主函数"""
+
+    # 创建主解析器（先用英文创建，然后根据参数重新设置）
+    parser = argparse.ArgumentParser(
+        prog="md2docx",
+        description="Markdown to DOCX Converter",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        add_help=False,  # 暂时禁用自动帮助
+    )
+
+    # 添加语言参数（需要在其他参数之前）
+    parser.add_argument(
+        "--lang",
+        choices=["zh", "en"],
+        default="zh",
+        help="Choose language for help information (zh/en, default: zh)",
+    )
+
+    # 解析语言参数
+    args, remaining = parser.parse_known_args()
+
+    # 获取对应语言的文本
+    texts = get_help_texts(args.lang)
+
+    # 重新创建解析器，使用正确的语言
+    parser = argparse.ArgumentParser(
+        prog="md2docx",
+        description=texts["description"],
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
+    # 重新添加语言参数
+    parser.add_argument(
+        "--lang",
+        choices=["zh", "en"],
+        default="zh",
+        help=texts["lang_help"],
+    )
+
     # 添加位置参数
-    parser.add_argument("input", help="输入的 Markdown 文件路径")
-    parser.add_argument("output", help="输出的 DOCX 文件路径")
+    parser.add_argument("input", help=texts["input_help"])
+    parser.add_argument("output", help=texts["output_help"])
 
     # 添加可选参数
     parser.add_argument(
-        "--debug", action="store_true", help="显示调试信息和详细的转换过程"
+        "--debug",
+        action="store_true",
+        help=texts["debug_help"],
     )
 
     # 添加版本信息
@@ -103,8 +183,11 @@ Markdown to DOCX 转换工具 v{0}
         "-V",
         action="version",
         version="md2docx v{0}".format(__version__),
-        help="显示版本信息",
+        help=texts["version_help"],
     )
+
+    # 重新解析所有参数
+    args = parser.parse_args(remaining)
 
     args = parser.parse_args()
 

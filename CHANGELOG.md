@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - 🎨 **CLI帮助信息增强**：添加详细的项目描述、功能列表、使用示例和项目链接
+- 🌍 **多语言支持**：CLI支持中文和英文帮助信息 (`--lang zh/en`)
 - 📋 **版本信息显示**：CLI支持 `--version`/`-V` 参数显示版本信息
 - 🔗 **项目链接集成**：在帮助信息中集成GitHub主页、文档和问题反馈链接
 
