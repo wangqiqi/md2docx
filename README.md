@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.2.0)
+[![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.3.0)
 [![Cursor AI Rules](https://img.shields.io/badge/Cursor%20AI%20Rules-v3.0.0-green.svg)](https://github.com/wangqiqi/cursor-ai-rules)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
@@ -32,16 +32,58 @@
 - ✅ 分隔线
 - ✅ 任务列表（TODO列表）
 - ✅ 基础HTML标签支持
+- ✅ Web界面 (Flask + HTML5 + CSS3)
+- ✅ 实时预览功能
+- ✅ 文件上传和下载
+- ✅ 响应式设计 (桌面/移动)
+- ✅ 一次性阅读体验 (无页面滚动)
+- ✅ 防抖优化和安全文件处理
 
-## TODO
+## 质量保证
 
-- 🔲 图形用户界面
-- 🔲 实时预览功能
-- 🔲 自定义样式配置
-- 🔲 数学公式支持
-- 🔲 流程图支持
-- 🔲 双向转换（Word转回Markdown）
-- 🔲 插件系统
+项目采用专业级的质量保证体系，确保代码可靠性和开发效率：
+
+### 🧪 测试体系
+- **89个测试用例** - 覆盖核心功能和边界条件
+- **85%+ 代码覆盖率** - 多维度测试保证
+- **大文件测试** - 支持1MB+文档处理
+- **边界条件测试** - Unicode、嵌套、异常输入
+- **Web界面测试** - 完整的用户界面功能验证
+
+### 🔄 CI/CD 自动化
+- **GitHub Actions** - 多Python版本测试 (3.8-3.12)
+- **自动化检查** - 代码质量、格式、安全性
+- **持续集成** - 每次提交自动验证
+
+### 🛠️ 开发工具链
+- **pre-commit** - 提交前代码质量检查
+- **black + isort** - 自动代码格式化和导入排序
+- **flake8** - 代码风格和错误检查
+- **依赖分离** - 开发/生产环境独立配置
+
+## 规划与路线图
+
+📋 详细的开发规划和功能路线图请查看：[项目规划文档](docs/plan.md)
+
+**已完成 ✅:**
+- ✅ 专业测试体系 (89个测试，85%+覆盖率)
+- ✅ CI/CD自动化 (GitHub Actions多版本测试)
+- ✅ 代码质量保证 (pre-commit + 多工具检查)
+
+**已完成 ✅:**
+- ✅ Web界面 (Flask + HTML5 + CSS3) (Phase 2完成)
+- ✅ 实时预览功能 (Phase 2完成)
+- ✅ 响应式设计 (Phase 2完成)
+
+**开发中 🔄:**
+- 🔄 自定义样式配置 (v0.3.0)
+- 🔄 性能优化 (v0.4.0)
+
+**规划中 📋:**
+- 🔲 数学公式支持 (v0.4.0)
+- 🔲 流程图支持 (v0.4.0)
+- 🔲 双向转换 (v0.5.0)
+- 🔲 插件系统 (v1.0.0)
 
 ## 开发环境要求
 
@@ -51,6 +93,10 @@
 - 其他依赖见 requirements.txt
 
 ## 安装
+
+### 开发环境安装（推荐）
+
+如果您要进行开发、测试或贡献代码：
 
 1. 克隆仓库：
 ```bash
@@ -66,23 +112,91 @@ source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate  # Windows
 ```
 
-3. 安装依赖：
+3. 安装开发依赖：
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
+
+### 生产环境安装
+
+如果您只是想使用 md2docx 进行文档转换：
+
+```bash
+pip install -r requirements-prod.txt
+```
+
+或直接从 PyPI 安装：
+```bash
+pip install md2docx
+```
+
+**安装后即可使用完整功能：**
+- 命令行工具：`md2docx`
+- Web界面：`md2docx-webui`
+
+### 依赖说明
+
+- **`requirements-prod.txt`**：仅包含运行时必需的依赖，轻量化安装
+- **`requirements-dev.txt`**：包含所有开发、测试和构建工具
+- **`requirements.txt`**：指向开发依赖的符号链接，向后兼容
 
 ## 使用方法
 
-### 单文件转换
+### Web界面 (推荐)
+
+最简单的方式是使用内置的Web界面：
+
+```bash
+# 方法1：使用pip安装后运行（推荐）
+md2docx-webui
+
+# 方法2：使用启动脚本（源码运行）
+python start_webui.py
+
+# 方法3：直接运行模块（源码运行）
+python -m webui.app
+
+# 方法4：通过导入运行（源码运行）
+python -c "from webui.app import app; app.run(debug=True)"
+```
+
+启动后在浏览器中访问: `http://localhost:5000`
+
+**Web界面特性：**
+- 🎨 **一次性阅读体验**：页面无需滚动即可完整查看
+- ⚡ **实时预览**：输入Markdown后立即预览DOCX效果（800ms防抖优化）
+- 📁 **文件上传**：支持拖拽上传 .md、.markdown、.txt 文件
+- 🔄 **智能预览**：自动生成DOCX样式预览，支持加载状态显示
+- 🛡️ **安全处理**：严格的文件验证和内容检查，防止恶意文件
+- 📱 **响应式设计**：完美支持桌面、平板、手机等各种设备
+- ⌨️ **键盘快捷键**：
+  - `Ctrl+Enter`: 提交转换
+  - `Ctrl+Shift+P`: 切换预览面板
+- 🌟 **现代化UI**：采用Material Design风格，交互流畅
+
+**环境变量配置：**
+```bash
+# 生产环境
+export FLASK_ENV=production
+export SECRET_KEY=your-secret-key-here
+export PORT=8000
+
+# 开发环境（默认）
+export FLASK_ENV=development
+```
+
+### 命令行工具
+
+#### 单文件转换
 
 ```bash
 python -m src.cli input.md output.docx
 ```
 
-### 批量转换
+#### 批量转换
 
 ```bash
-python batch_convert_test.py --input-dir your_md_folder --output-dir your_docx_folder
+python scripts/batch_convert_test.py --input-dir your_md_folder --output-dir your_docx_folder
 ```
 
 ## 项目结构
@@ -113,8 +227,22 @@ md2docx/
 │       ├── basic/      # 基础语法样例
 │       └── advanced/   # 高级语法样例
 ├── docs/               # 文档
-├── batch_convert_test.py # 批量转换脚本
-├── requirements.txt    # 项目依赖
+├── webui/                 # 🆕 Web界面模块
+│   ├── app.py             # Flask应用主文件
+│   ├── templates/         # HTML模板
+│   │   ├── base.html
+│   │   ├── index.html
+│   │   └── preview.html
+│   ├── static/            # 静态文件
+│   │   ├── css/styles.css
+│   │   └── js/app.js
+│   └── __init__.py
+├── scripts/               # 工具脚本目录
+│   ├── batch_convert_test.py    # 批量转换脚本
+│   └── test_roundtrip_demo.py   # 闭环测试演示
+├── requirements-prod.txt  # 生产环境依赖
+├── requirements-dev.txt   # 开发环境依赖
+├── requirements.txt       # 开发依赖符号链接
 └── README.md          # 项目说明
 ```
 

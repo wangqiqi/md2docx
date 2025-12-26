@@ -6,4 +6,50 @@ build-backend = "setuptools.build_meta"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 addopts = "-v"
-pythonpath = ["src"] 
+pythonpath = ["src"]
+
+[project]
+name = "md2docx"
+version = "0.3.0"
+description = "一个功能强大的 Markdown 转 DOCX 文档转换工具"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "jw.zhou", email = "zhou24388@163.com"}
+]
+keywords = ["markdown", "docx", "converter", "document", "python"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Text Processing :: Markup",
+    "Topic :: Utilities"
+]
+requires-python = ">=3.8"
+dependencies = [
+    "python-docx>=0.8.11",
+    "markdown-it-py>=2.1.0",
+    "flask>=2.0.0",
+    "werkzeug>=2.0.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/wangqiqi/md2docx"
+Repository = "https://github.com/wangqiqi/md2docx"
+Documentation = "https://github.com/wangqiqi/md2docx#readme"
+Issues = "https://github.com/wangqiqi/md2docx/issues"
+
+[project.scripts]
+md2docx = "md2docx.cli:main"
+md2docx-webui = "md2docx.webui.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+md2docx = ["webui/templates/*.html", "webui/static/**/*"]

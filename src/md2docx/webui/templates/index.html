@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Markdown to DOCX Converter{% endblock %}
+
+{% block content %}
+<!-- 主编辑容器 -->
+<div class="editor-container" id="editor-mode">
+    <!-- 编辑区域 -->
+    <div class="editor-section">
+        <div class="input-panel">
+            <div class="input-header">
+                <h3>📝 Markdown 输入</h3>
+                <div class="input-actions">
+                    <button class="btn-small" onclick="clearContent()">
+                        <span class="icon">🗑️</span> 清空
+                    </button>
+                    <input type="file" id="file-input" accept=".md,.markdown,.txt" style="display: none;">
+                    <button class="btn-small" onclick="document.getElementById('file-input').click()">
+                        <span class="icon">📁</span> 上传文件
+                    </button>
+                </div>
+            </div>
+            <textarea
+                id="markdown-input"
+                name="markdown"
+                placeholder="在这里输入 Markdown 内容...
+
+示例：
+# 标题
+
+这是一个**粗体**文本和*斜体*文本。
+
+## 列表
+- 项目 1
+- 项目 2
+
+## 代码
+```python
+print('Hello World!')
+```
+
+| 表格 | 示例 |
+|------|------|
+| 数据 | 内容 |"
+                autofocus
+            ></textarea>
+        </div>
+
+        <!-- 预览面板 -->
+        <div class="preview-panel" id="preview-panel">
+            <div class="preview-header">
+                <h3>📄 DOCX 预览</h3>
+                <button class="btn-small" onclick="togglePreview()">
+                    <span class="icon">⬅️</span> 收起
+                </button>
+            </div>
+            <div class="preview-content" id="preview-content">
+                <div class="preview-placeholder">
+                    <span class="icon">👁️</span>
+                    <p>输入 Markdown 内容后将在此处显示预览</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 操作栏 -->
+    <div class="action-bar">
+        <div class="action-left">
+            <form id="convert-form" action="{{ url_for('convert') }}" method="post" enctype="multipart/form-data" style="display: inline;">
+                <input type="hidden" id="hidden-markdown" name="markdown" value="">
+                <button type="submit" class="btn btn-primary" onclick="updateHiddenInput()">
+                    <span class="icon">📥</span>
+                    转换为 DOCX
+                </button>
+            </form>
+            <button class="btn btn-secondary" onclick="generatePreview()">
+                <span class="icon">🔄</span>
+                实时预览
+            </button>
+        </div>
+        <div class="action-right">
+            <button class="btn btn-secondary" onclick="toggleMode()">
+                <span class="icon">📋</span>
+                特性介绍
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 特性介绍模式 -->
+<div class="features-container" id="features-mode" style="display: none;">
+    <div class="features-header">
+        <h2>✨ Markdown to DOCX Converter</h2>
+        <p>将 Markdown 转换为精美的 DOCX 文档</p>
+        <button class="btn btn-primary" onclick="toggleMode()">
+            <span class="icon">🚀</span>
+            开始使用
+        </button>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📝</div>
+            <h3>完整 Markdown 支持</h3>
+            <p>支持标准 Markdown 语法，包括标题、列表、链接、图片、表格、代码块等</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🎨</div>
+            <h3>美观排版</h3>
+            <p>自动生成专业格式的 Word 文档，保持良好的排版效果和样式</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>快速转换</h3>
+            <p>本地处理，无需网络，转换速度快，支持大文件处理</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🛡️</div>
+            <h3>隐私保护</h3>
+            <p>完全本地处理，不上传文件，保护您的隐私和数据安全</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <h3>响应式设计</h3>
+            <p>支持桌面、平板、手机等各种设备，适配不同屏幕尺寸</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🌐</div>
+            <h3>易于访问</h3>
+            <p>打开浏览器即可使用，无需安装额外软件或插件</p>
+        </div>
+    </div>
+
+    <div class="features-footer">
+        <div class="feature-stats">
+            <div class="stat">
+                <span class="stat-number">89</span>
+                <span class="stat-label">测试用例</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">85%+</span>
+                <span class="stat-label">代码覆盖率</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">0.3.0</span>
+                <span class="stat-label">当前版本</span>
+            </div>
+        </div>
+
+        <div class="feature-links">
+            <a href="https://github.com/wangqiqi/md2docx" class="btn btn-secondary" target="_blank">
+                <span class="icon">💻</span>
+                GitHub
+            </a>
+            <a href="{{ url_for('static', filename='docs/api.md') }}" class="btn btn-secondary">
+                <span class="icon">📖</span>
+                API 文档
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
