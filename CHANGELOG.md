@@ -5,20 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.4.1] - 2025-12-26
+## [0.4.2] - 2025-12-26
 
 ### Added
 - 🎨 **CLI帮助信息增强**：添加详细的项目描述、功能列表、使用示例和项目链接
 - 🌍 **多语言支持**：CLI支持中文和英文帮助信息 (`--lang zh/en`)
-- 📋 **版本信息显示**：CLI支持 `--version`/`-V` 参数显示版本信息
+- 📋 **版本信息显示**：CLI支持 `--version`/`-v`/`-V` 参数显示版本信息
 - 🔗 **项目链接集成**：在帮助信息中集成GitHub主页、文档和问题反馈链接
 
 ### Changed
 - 📦 **包名重命名**：由于PyPI名称冲突，从 `md2docx` 更改为 `mddocx`
 - 🛠️ **命令名更新**：CLI命令从 `md2docx` 更改为 `mddocx`，WebUI从 `md2docx-webui` 更改为 `mddocx-webui`
+- 💡 **帮助示例修正**：更新帮助信息中的命令示例为正确的包名
 
 ### Fixed
 - 🧹 **代码清理**：移除未使用的导入，提升代码质量
+- 🔧 **Entry Points修复**：修正CLI entry points路径，确保命令正常工作
+- 📄 **依赖文件整理**：统一requirements文件结构和内容
 
 ## [0.4.0] - 2025-12-26
 
