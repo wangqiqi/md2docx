@@ -9,6 +9,7 @@ from pathlib import Path
 
 from . import __version__
 from .converter import BaseConverter
+from .converter.base import MD2DocxError
 
 
 def convert_file(input_file: str, output_file: str, debug: bool = False) -> None:
@@ -18,14 +19,36 @@ def convert_file(input_file: str, output_file: str, debug: bool = False) -> None
         input_file: 输入的 Markdown 文件路径
         output_file: 输出的 DOCX 文件路径
         debug: 是否显示调试信息
-    """
-    # 读取输入文件
-    with open(input_file, "r", encoding="utf-8") as f:
-        content = f.read()
 
-    # 初始化转换器并执行转换
-    converter = BaseConverter(debug=debug)
-    doc = converter.convert(content)
+    Raises:
+        FileNotFoundError: 输入文件不存在
+        PermissionError: 文件权限错误
+        MD2DocxError: 转换过程中的错误
+    """
+    try:
+        # 检查输入文件是否存在
+        input_path = Path(input_file)
+        if not input_path.exists():
+            raise FileNotFoundError(f"输入文件不存在: {input_file}")
+
+        if not input_path.is_file():
+            raise ValueError(f"输入路径不是文件: {input_file}")
+
+        # 读取输入文件
+        with open(input_file, "r", encoding="utf-8") as f:
+            content = f.read()
+
+    except (OSError, IOError) as e:
+        raise FileNotFoundError(f"无法读取输入文件 {input_file}: {e}")
+
+    try:
+        # 初始化转换器并执行转换
+        converter = BaseConverter(debug=debug)
+        doc = converter.convert(content)
+
+    except MD2DocxError:
+        # 转换器自定义错误，直接重新抛出
+        raise
 
     # 检查输出文件是否被占用，如果是则添加时间戳后缀
     output_path = Path(output_file)
@@ -55,7 +78,7 @@ def convert_file(input_file: str, output_file: str, debug: bool = False) -> None
     )
 
 
-def get_help_texts(lang="zh"):
+def get_help_texts(lang: str = "zh") -> dict:
     """获取指定语言的帮助文本"""
 
     texts = {
@@ -124,7 +147,7 @@ Usage examples:
     return texts.get(lang, texts["zh"])
 
 
-def main():
+def main() -> None:
     """主函数"""
 
     # 创建主解析器（先用英文创建，然后根据参数重新设置）

@@ -10,7 +10,7 @@ from docx import Document
 class ElementConverter:
     """元素转换器基类"""
 
-    def __init__(self, base_converter=None):
+    def __init__(self, base_converter: Optional[Any] = None) -> None:
         """初始化元素转换器
 
         Args:

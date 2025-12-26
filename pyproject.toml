@@ -38,6 +38,23 @@ dependencies = [
     "werkzeug>=2.0.0"
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "coverage>=7.0.0",
+    "flake8>=6.0.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
+    "isort>=5.12.0",
+    "build>=1.0.0",
+    "twine>=4.0.0"
+]
+docs = [
+    "sphinx>=5.0.0",
+    "sphinx-rtd-theme>=1.2.0"
+]
+
 [project.urls]
 Homepage = "https://github.com/wangqiqi/md2docx"
 Repository = "https://github.com/wangqiqi/md2docx"

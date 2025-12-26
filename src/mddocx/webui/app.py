@@ -3,11 +3,14 @@ Flask Web应用
 提供Markdown转DOCX的Web界面
 """
 
+# 标准库导入
+import logging
 import mimetypes
 import os
 import sys
 from pathlib import Path
 
+# 第三方库导入
 from flask import (
     Flask,
     flash,
@@ -23,6 +26,7 @@ from werkzeug.utils import secure_filename
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
+# 本地模块导入
 from ..converter import BaseConverter
 from .config import get_config
 
@@ -36,8 +40,6 @@ except ImportError:
     md = None
 
 # 配置日志
-import logging
-
 logging.basicConfig(level=logging.INFO)
 
 # 加载配置
@@ -263,12 +265,16 @@ def generate_preview_html(markdown_content):
             elif line.startswith("```"):
                 if "```" in line[3:]:
                     code = line[3:-3]
-                    code_style = ("background: #f4f4f4; padding: 2px 4px; "
-                                  "border-radius: 3px; font-family: monospace;")
+                    code_style = (
+                        "background: #f4f4f4; padding: 2px 4px; "
+                        "border-radius: 3px; font-family: monospace;"
+                    )
                     html_lines.append(f"<code style='{code_style}'>{code}</code>")
                 else:
-                    pre_style = ("background: #f4f4f4; padding: 12px; "
-                                 "border-radius: 4px; font-family: monospace; margin: 8px 0;")
+                    pre_style = (
+                        "background: #f4f4f4; padding: 12px; "
+                        "border-radius: 4px; font-family: monospace; margin: 8px 0;"
+                    )
                     html_lines.append(f"<pre style='{pre_style}'>")
             # 内联代码
             elif "`" in line:
@@ -277,8 +283,10 @@ def generate_preview_html(markdown_content):
                 formatted_parts = []
                 for i, part in enumerate(parts):
                     if i % 2 == 1:  # 奇数索引是代码
-                        inline_code_style = ("background: #f4f4f4; padding: 1px 3px; "
-                                             "border-radius: 2px; font-family: monospace;")
+                        inline_code_style = (
+                            "background: #f4f4f4; padding: 1px 3px; "
+                            "border-radius: 2px; font-family: monospace;"
+                        )
                         formatted_parts.append(
                             f"<code style='{inline_code_style}'>{part}</code>"
                         )

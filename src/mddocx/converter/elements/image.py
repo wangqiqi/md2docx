@@ -17,7 +17,7 @@ from .base import ElementConverter
 class ImageConverter(ElementConverter):
     """图片转换器，处理各种类型的图片"""
 
-    def __init__(self, base_converter=None):
+    def __init__(self, base_converter=None) -> None:
         super().__init__(base_converter)
         self.document = None
         # 图片缓存，避免重复下载
@@ -103,7 +103,7 @@ class ImageConverter(ElementConverter):
                 print(f"添加图片失败: {str(e)}")
             return paragraph
 
-    def convert_in_paragraph(self, paragraph, token, style=None):
+    def convert_in_paragraph(self, paragraph, token, style=None) -> None:
         """在段落中转换图片
 
         Args:

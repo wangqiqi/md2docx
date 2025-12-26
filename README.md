@@ -325,6 +325,10 @@ git push origin v0.4.3
 - **Workflow**: publish.yml
 - **Environment**: (留空)
 
+## 贡献
+
+欢迎贡献代码！请查看 [贡献指南](CONTRIBUTING.md) 了解详细信息。
+
 ## 许可证
 
 MIT License

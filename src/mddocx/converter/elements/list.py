@@ -16,7 +16,7 @@ from .base import ElementConverter
 class ListConverter(ElementConverter):
     """处理列表的转换器"""
 
-    def __init__(self, base_converter=None):
+    def __init__(self, base_converter=None) -> None:
         super().__init__(base_converter)
         # 跟踪当前列表状态：(层级, 是否有序, 编号ID)
         self._current_lists: List[Tuple[int, bool, Optional[int]]] = []

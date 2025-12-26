@@ -238,7 +238,11 @@ ___
         """测试基础转换器错误处理"""
         from unittest.mock import patch
 
-        from mddocx.converter.base import BaseConverter, ConvertError, MD2DocxError
+        from mddocx.converter.base import (
+            BaseConverter,
+            MD2DocxError,
+            ParseError,
+        )
 
         converter = BaseConverter()
 
@@ -250,13 +254,13 @@ ___
             except MD2DocxError:
                 pass  # 正确行为
 
-        # 测试其他异常转换为ConvertError
+        # 测试其他异常转换为ParseError
         with patch.object(converter.md, "parse", side_effect=ValueError("测试异常")):
             try:
                 converter.convert("# 测试")
-                assert False, "应该抛出ConvertError"
-            except ConvertError as e:
-                assert "转换失败" in str(e)
+                assert False, "应该抛出ParseError"
+            except ParseError as e:
+                assert "Markdown解析失败" in str(e)
 
     def test_base_converter_debug_mode(self):
         """测试基础转换器调试模式"""

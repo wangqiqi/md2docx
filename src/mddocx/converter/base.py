@@ -2,7 +2,7 @@
 基础转换器模块，处理 Markdown 到 DOCX 的核心转换逻辑
 """
 
-from typing import List, Tuple
+from typing import Any, Dict, List, Tuple
 
 from docx import Document
 from markdown_it import MarkdownIt
@@ -44,7 +44,7 @@ class ConvertError(MD2DocxError):
 class BaseConverter:
     """基础转换器，处理文档结构"""
 
-    def __init__(self, debug=False):
+    def __init__(self, debug: bool = False) -> None:
         """初始化转换器
 
         Args:
@@ -61,7 +61,7 @@ class BaseConverter:
             .enable("table")
         )  # 启用表格支持
         self.document = Document()
-        self.converters = {}
+        self.converters: Dict[str, Any] = {}
         self._list_stack: List[Tuple[str, int]] = []  # [(list_type, level), ...]
 
         # 自动注册所有转换器
@@ -71,7 +71,7 @@ class BaseConverter:
         if self.debug:
             print(f"转换器注册完成: {self.converters.keys()}")
 
-    def _register_default_converters(self):
+    def _register_default_converters(self) -> None:
         """注册默认的转换器"""
         self.register_converter("heading", HeadingConverter(self))
         self.register_converter("text", TextConverter(self))
@@ -85,7 +85,9 @@ class BaseConverter:
         self.register_converter("task_list", TaskListConverter(self))
         self.register_converter("html", HtmlConverter(self))  # 注册HTML转换器
 
-    def register_converter(self, element_type: str, converter: ElementConverter):
+    def register_converter(
+        self, element_type: str, converter: ElementConverter
+    ) -> None:
         """注册一个元素转换器
 
         Args:
@@ -109,6 +111,16 @@ class BaseConverter:
             ConvertError: 转换过程错误
         """
         try:
+            # 验证输入参数
+            if not isinstance(md_text, str):
+                raise ConvertError(
+                    f"输入参数类型错误，期望 str，得到 {type(md_text).__name__}"
+                )
+
+            if not md_text.strip():
+                # 空文档也创建基本的DOCX结构
+                return self.document
+
             # 解析 Markdown 文本为 AST
             tokens = self.md.parse(md_text)
 
@@ -123,13 +135,17 @@ class BaseConverter:
                 )
 
                 for token in tokens:
-                    print(f"Token type={token.type}, "
-                          f"tag={token.tag if hasattr(token, 'tag') else ''}, "
-                          f"content={token.content if hasattr(token, 'content') else ''}")
+                    print(
+                        f"Token type={token.type}, "
+                        f"tag={token.tag if hasattr(token, 'tag') else ''}, "
+                        f"content={token.content if hasattr(token, 'content') else ''}"
+                    )
                     if hasattr(token, "children") and token.children is not None:
                         for child in token.children:
-                            print(f"  Child: type={child.type}, "
-                                  f"content={child.content if hasattr(child, 'content') else ''}")
+                            print(
+                                f"  Child: type={child.type}, "
+                                f"content={child.content if hasattr(child, 'content') else ''}"
+                            )
 
             # 用于跟踪已处理的段落，避免重复处理
             processed_paragraphs = set()
@@ -415,7 +431,12 @@ class BaseConverter:
 
             return self.document
 
+        except (TypeError, ValueError) as e:
+            # Markdown解析相关的错误
+            raise ParseError(f"Markdown解析失败: {str(e)}")
+        except MD2DocxError:
+            # 自定义错误，直接重新抛出
+            raise
         except Exception as e:
-            if isinstance(e, MD2DocxError):
-                raise
-            raise ConvertError(f"转换失败: {str(e)}")
+            # 其他未知错误
+            raise ConvertError(f"转换过程发生未知错误: {str(e)}")

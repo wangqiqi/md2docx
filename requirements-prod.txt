@@ -1,5 +1,0 @@
-# 生产环境依赖 - 仅包含运行时必需的包
-markdown-it-py>=2.1.0
-python-docx>=0.8.11
-flask>=2.0.0
-werkzeug>=2.0.0
