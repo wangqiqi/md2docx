@@ -3,13 +3,11 @@
 """
 
 import argparse
-import os
 import sys
 import time
 from pathlib import Path
 
-from docx import Document
-
+from . import __version__
 from .converter import BaseConverter
 
 
@@ -59,10 +57,54 @@ def convert_file(input_file: str, output_file: str, debug: bool = False) -> None
 
 def main():
     """主函数"""
-    parser = argparse.ArgumentParser(description="将 Markdown 文件转换为 DOCX 文件")
+
+    # 创建主解析器
+    parser = argparse.ArgumentParser(
+        prog="md2docx",
+        description="""\
+Markdown to DOCX 转换工具 v{0}
+
+一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法。
+
+支持的功能:
+  • 标准 Markdown 语法 (标题、列表、链接、图片等)
+  • 表格转换和对齐
+  • 代码块和语法高亮
+  • 任务列表 (TODO)
+  • 引用块 (支持嵌套)
+  • HTML 标签支持
+  • 数学公式和流程图
+
+项目主页: https://github.com/wangqiqi/md2docx
+文档: https://github.com/wangqiqi/md2docx#readme
+问题反馈: https://github.com/wangqiqi/md2docx/issues
+
+使用示例:
+  md2docx README.md output.docx
+  md2docx --debug document.md report.docx
+        """.format(
+            __version__
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+
+    # 添加位置参数
     parser.add_argument("input", help="输入的 Markdown 文件路径")
     parser.add_argument("output", help="输出的 DOCX 文件路径")
-    parser.add_argument("--debug", action="store_true", help="显示调试信息")
+
+    # 添加可选参数
+    parser.add_argument(
+        "--debug", action="store_true", help="显示调试信息和详细的转换过程"
+    )
+
+    # 添加版本信息
+    parser.add_argument(
+        "--version",
+        "-V",
+        action="version",
+        version="md2docx v{0}".format(__version__),
+        help="显示版本信息",
+    )
 
     args = parser.parse_args()
 
