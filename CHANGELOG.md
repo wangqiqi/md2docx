@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2025-12-26
+
+### Added
+- 🚀 **自动化发布系统**：集成GitHub Actions和PyPI Trusted Publisher，实现自动发布
+- 🏗️ **CI/CD工作流**：添加完整的持续集成和持续部署流程
+- 🔧 **代码质量工具**：集成pre-commit hooks，提升代码质量
+- 📦 **包管理优化**：改进MANIFEST.in和requirements文件结构
+- 🧪 **测试体系完善**：新增边界条件、错误处理和大文件测试
+- 📚 **项目文档体系**：添加API文档、开发指南和项目规划文档
+- 🎨 **WebUI界面重构**：全新的现代化Web界面设计
+- ⚡ **性能优化**：实时预览、防抖优化和响应式设计
+- 🛡️ **安全增强**：文件验证、HTTP安全头和错误处理
+
+### Changed
+- 🔄 **项目结构重组**：优化包结构，提高可维护性
+- 📋 **依赖管理优化**：分离生产和开发依赖
+- 🎯 **界面交互优化**：改进用户体验和响应速度
+
+### Fixed
+- 🐛 **兼容性修复**：解决各种环境下的兼容性问题
+
 ## [0.3.0] - 2025-12-26
 
 ### Added

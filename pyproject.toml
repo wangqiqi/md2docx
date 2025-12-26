@@ -10,7 +10,7 @@ pythonpath = ["src"]
 
 [project]
 name = "md2docx"
-version = "0.3.0"
+version = "0.4.0"
 description = "一个功能强大的 Markdown 转 DOCX 文档转换工具"
 readme = "README.md"
 license = {text = "MIT"}
