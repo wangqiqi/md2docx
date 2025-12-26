@@ -25,7 +25,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements-dev.txt') }}
+        key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/pyproject.toml', '**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-${{ matrix.python-version }}-
           ${{ runner.os }}-pip-
@@ -33,7 +33,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements-dev.txt
+        pip install -e .[dev]
 
     - name: Run tests with coverage
       run: |
@@ -60,8 +60,7 @@ jobs:
     - name: Install quality tools
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements-dev.txt
-        pip install flake8 black mypy isort
+        pip install -e .[dev]
 
     - name: Run flake8
       run: flake8 src tests --max-line-length=120 --extend-ignore=E203,W503
@@ -98,30 +97,5 @@ jobs:
         pip install twine
         twine check dist/*
 
-  release:
-    needs: [test, quality, build]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install build twine
-
-    - name: Build package
-      run: python -m build
-
-    - name: Publish to PyPI
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: |
-        twine upload dist/*
+  # 注意：发布功能已移至 publish.yml，只在 tag 推送时触发
+  # 如需手动发布，请使用: ./scripts/publish_to_pypi.sh

@@ -126,7 +126,7 @@ venv\Scripts\activate  # Windows
 
 3. 安装开发依赖：
 ```bash
-pip install -r requirements-dev.txt
+pip install -e .[dev]
 ```
 
 ### 生产环境安装
@@ -149,7 +149,7 @@ pip install mddocx
 ### 依赖说明
 
 - **`requirements-prod.txt`**：仅包含运行时必需的依赖，轻量化安装
-- **`requirements-dev.txt`**：包含所有开发、测试和构建工具
+- **`pyproject.toml`**：现代化的项目配置，包含依赖管理和构建配置
 - **`requirements.txt`**：指向开发依赖的符号链接，向后兼容
 
 ## 使用方法
@@ -271,7 +271,7 @@ md2docx/
 │   └── test_roundtrip_demo.py   # 闭环测试演示
 ├── dist/                # 构建产物
 ├── requirements-prod.txt  # 生产环境依赖
-├── requirements-dev.txt   # 开发环境依赖
+├── pyproject.toml          # 项目配置和依赖管理
 ├── requirements.txt       # 开发依赖符号链接
 ├── pyproject.toml        # 项目配置
 ├── MANIFEST.in          # 打包配置

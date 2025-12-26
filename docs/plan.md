@@ -82,7 +82,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: pip install -r requirements-dev.txt
+        run: pip install -e .[dev]
       - name: Run tests
         run: python -m pytest --cov=src --cov-report=xml
       - name: Upload coverage
