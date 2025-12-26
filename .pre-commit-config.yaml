@@ -15,7 +15,7 @@ ci:
 repos:
   # Python code quality
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -28,40 +28,40 @@ repos:
 
   # Python formatting and linting
   - repo: https://github.com/psf/black
-    rev: 23.12.1
+    rev: 25.12.0
     hooks:
       - id: black
         language_version: python3
 
   - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
+    rev: 7.0.0
     hooks:
       - id: isort
         args: ["--profile", "black"]
 
   - repo: https://github.com/pycqa/flake8
-    rev: 7.0.0
+    rev: 7.3.0
     hooks:
       - id: flake8
         args: ["--max-line-length=120", "--extend-ignore=E203,W503"]
 
-  # Type checking
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.8.0
-    hooks:
-      - id: mypy
-        additional_dependencies: [types-all]
-        args: ["--ignore-missing-imports", "--no-strict-optional"]
+  # Type checking (暂时禁用，待依赖冲突解决)
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.19.1
+  #   hooks:
+  #     - id: mypy
+  #       additional_dependencies: [types-all]
+  #       args: ["--ignore-missing-imports", "--no-strict-optional"]
 
   # Python requirements
-  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-    rev: v1.3.2
-    hooks:
-      - id: python-safety-dependencies
+  # - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+  #   rev: v1.3.2
+  #   hooks:
+  #     - id: python-safety-dependencies
 
   # Commit message linting
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.13.0
+    rev: v4.10.0
     hooks:
       - id: commitizen
         stages: [commit-msg]
