@@ -44,7 +44,7 @@
 项目采用专业级的质量保证体系，确保代码可靠性和开发效率：
 
 ### 🧪 测试体系
-- **89个测试用例** - 覆盖核心功能和边界条件
+- **19个测试用例** - 覆盖核心功能和边界条件
 - **85%+ 代码覆盖率** - 多维度测试保证
 - **大文件测试** - 支持1MB+文档处理
 - **边界条件测试** - Unicode、嵌套、异常输入
@@ -239,10 +239,9 @@ md2docx/
 │           │   ├── img/
 │           │   └── js/
 │           │       └── app.js
-│           ├── tests/      # WebUI测试
-│           │   ├── __init__.py
-│           │   └── test_basic.py
-│           └── utils/      # 工具模块
+│           └── tests/      # WebUI测试
+│               ├── __init__.py
+│               └── test_basic.py
 ├── tests/                 # 测试用例
 │   ├── __init__.py
 │   ├── conftest.py       # 测试配置
@@ -264,6 +263,7 @@ md2docx/
 ├── requirements.txt       # 开发依赖符号链接
 ├── pyproject.toml        # 项目配置
 ├── MANIFEST.in          # 打包配置
+├── .pre-commit-config.yaml  # pre-commit 配置
 ├── LICENSE              # 许可证
 ├── CHANGELOG.md         # 更新日志
 └── README.md           # 项目说明
