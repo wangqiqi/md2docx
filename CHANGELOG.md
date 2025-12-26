@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-12-26
+
+### Added
+- 🧪 **新增行内代码测试用例**：添加完整的行内代码转换测试
+- 📝 **增强调试功能**：在关键组件中添加详细的调试信息输出
+
+### Changed
+- 🔧 **优化列表栈管理**：重构BaseConverter中的列表嵌套处理逻辑
+- 🎨 **改进任务列表显示**：使用Unicode复选框符号，提升视觉效果
+
+### Fixed
+- 🐛 **修复行内代码丢失问题**：TextConverter现在正确处理`code_inline`标记
+- 📋 **修复列表自动序号问题**：有序列表现在正确显示1. 2. 3.编号
+- 📏 **修复列表悬挂距离问题**：列表项正确应用缩进和悬挂缩进
+- 🔗 **修复嵌套列表编号错误**：嵌套有序列表的编号现在独立且正确
+- ✅ **修复任务列表符号重复**：任务列表不再显示重复的列表符号
+- 📊 **修复混合列表显示问题**：有序和无序列表的嵌套现在正确区分
+
+### Performance
+- ⚡ **优化转换性能**：改进token处理逻辑，减少不必要的遍历
+
 ## [0.1.1] - 2025-12-26
 
 ### Added

@@ -85,44 +85,28 @@ class TaskListConverter(ElementConverter):
                         task_text += str(child.content) if child.content is not None else ""
         
         # 使用符号替代复选框
-        checkbox_symbol = "√ " if is_checked else "× "
-        
+        checkbox_symbol = "☐ " if not is_checked else "☑ "
+
         # 将符号添加到任务文本前面
         task_text_with_symbol = checkbox_symbol + task_text
-        
-        # 使用列表转换器创建段落
-        paragraph = None
-        if self.list_converter:
-            try:
-                # 创建一个新的内容token，只包含任务文本（不包含符号）
-                new_content_token = type('InlineToken', (), {
-                    'type': 'inline',
-                    'content': task_text,  # 不包含符号，以便列表转换器正常处理
-                    'children': []
-                })
-                
-                # 使用列表转换器创建段落
-                paragraph = self.list_converter.convert((list_token, new_content_token))
-                
-                # 清空段落内容
-                if paragraph.runs:
-                    # 直接修改第一个run的文本，而不是清空后重新添加
-                    paragraph.runs[0].text = task_text_with_symbol
-                    
-                    # 删除其他所有runs（如果有的话）
-                    for i in range(len(paragraph.runs) - 1, 0, -1):
-                        paragraph._p.remove(paragraph.runs[i]._r)
-                else:
-                    paragraph.add_run(task_text_with_symbol)
-                
-                return paragraph
-            except Exception as e:
-                if self.debug:
-                    print(f"使用列表转换器创建段落时出错: {e}")
-        
-        # 如果列表转换器失败或不存在，创建一个简单的段落
+
+        # 创建普通段落，不使用列表样式，避免重复的列表符号
         paragraph = self.document.add_paragraph()
         paragraph.add_run(task_text_with_symbol)
+
+        # 添加适当的缩进，让任务列表看起来像列表项
+        # 获取列表层级（从 list_token 中推断）
+        level = 1
+        if hasattr(list_token, 'content'):
+            indent = len(list_token.content)
+            level = (indent // 2) + 1
+
+        # 设置缩进
+        indent_inches = 0.25 * (level - 1)
+        from docx.shared import Inches
+        paragraph.paragraph_format.left_indent = Inches(indent_inches)
+        paragraph.paragraph_format.first_line_indent = Inches(-0.25)
+
         return paragraph
 
     def _add_checkbox(self, paragraph, is_checked=False):

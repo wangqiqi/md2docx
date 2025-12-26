@@ -191,6 +191,8 @@ class BaseConverter:
                     list_type = 'ordered' if token.type == 'ordered_list_open' else 'bullet'
                     level = len(self._list_stack) + 1
                     self._list_stack.append((list_type, level))
+                    if self.debug:
+                        print(f"列表开始: {token.type}, 栈={self._list_stack}")
                     i += 1
                 
                 # 处理列表项
@@ -200,6 +202,9 @@ class BaseConverter:
                         # 获取列表类型和级别
                         list_type = self._list_stack[-1][0] if self._list_stack else 'bullet'
                         level = self._list_stack[-1][1] if self._list_stack else 1
+
+                        if self.debug:
+                            print(f"处理列表项: 栈={self._list_stack}, list_type={list_type}, level={level}")
                         
                         # 创建列表token
                         list_token = type('ListToken', (), {
@@ -207,11 +212,12 @@ class BaseConverter:
                             'content': '  ' * (level - 1)
                         })
                         
-                        # 查找列表项内容
+                        # 查找列表项内容 - 简化逻辑，遇到嵌套列表时停止
                         content_token = None
                         j = i + 1
                         paragraph_indices = []
-                        while j < len(tokens) and tokens[j].type != 'list_item_close':
+
+                        while j < len(tokens) and tokens[j].type not in ('list_item_close', 'ordered_list_open', 'bullet_list_open'):
                             if tokens[j].type == 'paragraph_open' and j + 1 < len(tokens):
                                 content_token = tokens[j + 1]
                                 paragraph_indices.append(j)
@@ -242,18 +248,29 @@ class BaseConverter:
                         else:
                             converter.convert((list_token, content_token))
                         
-                        # 跳过列表项内的段落，避免重复处理
-                        while j < len(tokens) and tokens[j].type != 'list_item_close':
-                            j += 1
-                        
-                        i = j + 1 if j < len(tokens) else i + 1
+                        # 跳过已处理的段落
+                        for paragraph_index in paragraph_indices:
+                            processed_paragraphs.add(paragraph_index)
+
+                        # 移动到下一个token
+                        i = j
                     else:
                         i += 1
                 
                 # 处理列表结束
                 elif token.type in ('bullet_list_close', 'ordered_list_close'):
-                    if self._list_stack:
+                    if self.debug:
+                        print(f"列表结束前栈: {self._list_stack}, token: {token.type}, level: {getattr(token, 'level', 'N/A')}")
+                    # 弹出栈中对应的列表
+                    # markdown-it-py 的 level 从 0 开始，我们的栈 level 从 1 开始
+                    current_token_level = getattr(token, 'level', 0)
+                    # markdown-it-py level=0 -> 栈 level=1, level=2 -> 栈 level=2
+                    target_level = (current_token_level // 2) + 1
+                    # 弹出栈顶 level == target_level 的项
+                    if self._list_stack and self._list_stack[-1][1] == target_level:
                         self._list_stack.pop()
+                    if self.debug:
+                        print(f"列表结束后栈: {self._list_stack}")
                     i += 1
                 
                 # 处理代码块

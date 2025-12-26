@@ -98,11 +98,29 @@ def test_empty_paragraph():
         converter.convert((tokens[0], tokens[1]))
 
 
+def test_inline_code():
+    """测试行内代码"""
+    md_text = "这是`行内代码`的示例。"
+
+    converter = BaseConverter()
+    converter.register_converter('paragraph', TextConverter())
+
+    doc = converter.convert(md_text)
+    runs = doc.paragraphs[0].runs
+
+    assert runs[0].text == "这是"
+    # 行内代码应该直接显示代码内容，不带反引号
+    assert runs[1].text == "行内代码"
+    # 检查是否使用了等宽字体
+    assert runs[1].font.name == "Consolas"
+    assert runs[2].text == "的示例。"
+
+
 def test_document_not_set():
     """测试未设置文档实例的情况"""
     converter = TextConverter()
     md = MarkdownIt()
     tokens = md.parse("测试文本")
-    
+
     with pytest.raises(ValueError, match="Document not set"):
         converter.convert((tokens[0], tokens[1])) 
