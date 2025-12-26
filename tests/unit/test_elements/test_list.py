@@ -58,6 +58,73 @@ def test_convert_unordered_list():
     assert paragraphs is not None
 
 
+def test_convert_nested_ordered_list():
+    """测试嵌套有序列表转换"""
+    converter = ListConverter()
+    converter.set_document(Document())
+
+    ol1_token = MagicMock()
+    ol1_token.type = "ordered_list_open"
+    ol1_token.content = ""
+
+    li1_token = MagicMock()
+    li1_token.type = "list_item_open"
+
+    text1_token = MagicMock()
+    text1_token.type = "text"
+    text1_token.content = "第一级项目"
+
+    ol2_token = MagicMock()
+    ol2_token.type = "ordered_list_open"
+    ol2_token.content = "  "
+
+    li2_token = MagicMock()
+    li2_token.type = "list_item_open"
+
+    text2_token = MagicMock()
+    text2_token.type = "text"
+    text2_token.content = "第二级项目"
+
+    ol1_token.children = [li1_token]
+    li1_token.children = [text1_token, ol2_token]
+    ol2_token.children = [li2_token]
+    li2_token.children = [text2_token]
+
+    paragraphs = converter.convert((ol1_token, ol1_token))
+    assert paragraphs is not None
+
+
+def test_get_list_info_edge_cases():
+    """测试_get_list_info方法的边界情况"""
+    converter = ListConverter()
+
+    # 测试无type属性的token
+    token1 = MagicMock()
+    del token1.type
+
+    level, is_ordered = converter._get_list_info(token1)
+    assert level == 1
+    assert is_ordered is False
+
+    # 测试无content属性的token
+    token2 = MagicMock()
+    token2.type = "bullet_list_open"
+    del token2.content
+
+    level, is_ordered = converter._get_list_info(token2)
+    assert level == 1
+    assert is_ordered is False
+
+    # 测试有序列表
+    token3 = MagicMock()
+    token3.type = "ordered_list_open"
+    token3.content = "    "
+
+    level, is_ordered = converter._get_list_info(token3)
+    assert level == 3
+    assert is_ordered is True
+
+
 def test_convert_ordered_list():
     """测试有序列表转换"""
     # 创建转换器

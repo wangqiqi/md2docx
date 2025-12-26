@@ -4,16 +4,19 @@
 展示如何使用 markitdown 进行 MD → DOCX → MD 的闭环验证
 """
 
-from markitdown import MarkItDown
-import sys
 import os
+import sys
+
+from markitdown import MarkItDown
 
 # 添加项目根目录到 Python 路径
 script_dir = os.path.dirname(__file__)
 project_root = os.path.dirname(script_dir)
 sys.path.insert(0, project_root)
+sys.path.insert(0, os.path.join(project_root, "src"))
 
-from src.converter import BaseConverter
+from mddocx.converter.base import BaseConverter
+
 
 def test_roundtrip():
     """简单的闭环测试示例"""
@@ -72,6 +75,7 @@ print("Hello World")
 
     print("\n🎉 闭环测试完成！")
     return True
+
 
 if __name__ == "__main__":
     test_roundtrip()

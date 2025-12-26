@@ -115,3 +115,74 @@ def test_convert_table():
 
     # 验证结果
     assert table is not None
+
+
+def test_convert_table_empty_rows():
+    """测试表格转换 - 空行数据"""
+    # 创建转换器
+    converter = TableConverter()
+    converter.set_document(Document())
+
+    # 创建模拟表格token
+    table_token = MagicMock()
+    table_token.type = "table_open"
+
+    # 模拟空tokens列表
+    tokens = []
+
+    # 转换表格
+    table = converter.convert(table_token, tokens)
+
+    # 验证结果 - 应该返回None
+    assert table is None
+
+
+def test_convert_table_no_tokens():
+    """测试表格转换 - 无tokens参数"""
+    # 创建转换器
+    converter = TableConverter()
+    converter.set_document(Document())
+
+    # 创建模拟表格token
+    table_token = MagicMock()
+    table_token.type = "table_open"
+
+    # 转换表格（不提供tokens参数）
+    table = converter.convert(table_token)
+
+    # 验证结果 - 应该返回None
+    assert table is None
+
+
+def test_parse_table_structure_empty():
+    """测试表格结构解析 - 空tokens"""
+    # 创建转换器
+    converter = TableConverter()
+    converter.set_document(Document())
+
+    # 创建模拟表格token
+    table_token = MagicMock()
+    table_token.type = "table_open"
+
+    # 解析空tokens列表
+    rows = converter._parse_table_structure(table_token, [])
+
+    # 验证结果 - 应该返回空列表
+    assert rows == []
+
+
+def test_parse_table_structure_no_children():
+    """测试表格结构解析 - token无children"""
+    # 创建转换器
+    converter = TableConverter()
+    converter.set_document(Document())
+
+    # 创建模拟表格token（无children）
+    table_token = MagicMock()
+    table_token.type = "table_open"
+
+    # 解析无children的token
+    rows = converter._parse_table_structure(table_token, None)
+
+    # 验证结果 - 应该返回空列表
+    assert rows == []
