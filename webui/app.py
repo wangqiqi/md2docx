@@ -3,21 +3,28 @@ Flask Web应用
 提供Markdown转DOCX的Web界面
 """
 
+import mimetypes
 import os
 import sys
-import tempfile
-import mimetypes
-import uuid
 from pathlib import Path
 
 # 添加项目根目录到Python路径
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from flask import Flask, flash, redirect, render_template, request, send_file, url_for, jsonify
+from flask import (
+    Flask,
+    flash,
+    redirect,
+    render_template,
+    request,
+    send_file,
+    url_for,
+)
 from werkzeug.utils import secure_filename
 
 from src.converter import BaseConverter
+
 from .config import get_config
 
 # 导入markdown解析器
@@ -31,6 +38,7 @@ except ImportError:
 
 # 配置日志
 import logging
+
 logging.basicConfig(level=logging.INFO)
 
 # 加载配置
@@ -50,10 +58,10 @@ converter = BaseConverter()
 def allowed_file(filename, file_obj=None):
     """验证文件是否允许上传"""
     # 检查文件扩展名
-    if '.' not in filename:
+    if "." not in filename:
         return False
 
-    ext = filename.rsplit('.', 1)[1].lower()
+    ext = filename.rsplit(".", 1)[1].lower()
     if ext not in config.ALLOWED_EXTENSIONS:
         return False
 
@@ -68,7 +76,7 @@ def allowed_file(filename, file_obj=None):
 
             # 检查是否是文本文件（简单的启发式检查）
             try:
-                file_header.decode('utf-8')
+                file_header.decode("utf-8")
             except UnicodeDecodeError:
                 return False
 
@@ -159,7 +167,7 @@ def convert():
             try:
                 if os.path.exists(docx_file_path):
                     os.unlink(docx_file_path)
-            except:
+            except (OSError, IOError):
                 pass
             raise save_error
 
@@ -269,7 +277,9 @@ def generate_preview_html(markdown_content):
                 for i, part in enumerate(parts):
                     if i % 2 == 1:  # 奇数索引是代码
                         inline_code_style = "background: #f4f4f4; padding: 1px 3px; border-radius: 2px; font-family: monospace;"
-                        formatted_parts.append(f"<code style='{inline_code_style}'>{part}</code>")
+                        formatted_parts.append(
+                            f"<code style='{inline_code_style}'>{part}</code>"
+                        )
                     else:
                         formatted_parts.append(part)
                 html_lines.append(f"<p>{''.join(formatted_parts)}</p>")
@@ -306,16 +316,12 @@ def internal_error(e):
 @app.after_request
 def add_security_headers(response):
     """添加安全头"""
-    response.headers['X-Content-Type-Options'] = 'nosniff'
-    response.headers['X-Frame-Options'] = 'DENY'
-    response.headers['X-XSS-Protection'] = '1; mode=block'
-    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     return response
 
 
 if __name__ == "__main__":
-    app.run(
-        debug=config.DEBUG,
-        host=config.HOST,
-        port=config.PORT
-    )
+    app.run(debug=config.DEBUG, host=config.HOST, port=config.PORT)
