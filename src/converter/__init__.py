@@ -7,7 +7,13 @@ from .elements import (
     TextConverter,
     BlockquoteConverter,
     ListConverter,
-    CodeConverter
+    CodeConverter,
+    LinkConverter,
+    ImageConverter,
+    TableConverter,
+    HRConverter,
+    TaskListConverter,
+    HtmlConverter
 )
 
 __all__ = [
@@ -20,5 +26,11 @@ __all__ = [
     'TextConverter',
     'BlockquoteConverter',
     'ListConverter',
-    'CodeConverter'
+    'CodeConverter',
+    'LinkConverter',
+    'ImageConverter',
+    'TableConverter',
+    'HRConverter',
+    'TaskListConverter',
+    'HtmlConverter'
 ] 

@@ -342,6 +342,14 @@ class TextConverter(ElementConverter):
                     current_text = ""
                 current_style["strike"] = False
                 i += 1
+            elif child.type == 'code_inline':
+                # 处理行内代码
+                if current_text:
+                    self._add_text_with_style(paragraph, current_text, current_style)
+                    current_text = ""
+                # 添加行内代码
+                self._add_inline_code(paragraph, child.content, current_style.copy())
+                i += 1
             elif child.type == 'softbreak':
                 current_text += " "
                 i += 1
@@ -365,13 +373,29 @@ class TextConverter(ElementConverter):
         run.italic = style["italic"]
         run.font.strike = style["strike"]
     
+    def _add_inline_code(self, paragraph: Paragraph, code_text: str, style: Dict[str, bool]) -> None:
+        """添加行内代码到段落
+
+        Args:
+            paragraph: 段落对象
+            code_text: 代码文本
+            style: 样式配置
+        """
+        run = paragraph.add_run(code_text)  # 直接显示代码内容，不带反引号
+        run.bold = style.get("bold", False)
+        run.italic = style.get("italic", False)
+        run.font.strike = style.get("strike", False)
+        # 设置等宽字体
+        run.font.name = 'Consolas'
+        run.font.size = Pt(10)  # 稍微小一点的字体
+
     def _get_text_between_tokens(self, tokens: List[Any], start_token: Any) -> str:
         """获取开始和结束标记之间的文本
-        
+
         Args:
             tokens: 标记列表
             start_token: 开始标记
-            
+
         Returns:
             str: 标记之间的文本
         """

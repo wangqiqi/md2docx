@@ -7,7 +7,7 @@ import argparse
 import time
 from pathlib import Path
 from docx import Document
-from converter import BaseConverter
+from .converter import BaseConverter
 
 
 def convert_file(input_file: str, output_file: str, debug: bool = False) -> None:

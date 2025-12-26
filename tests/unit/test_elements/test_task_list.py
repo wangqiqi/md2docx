@@ -38,16 +38,10 @@ def test_convert_checked_task():
     converter = TaskListConverter()
     converter.set_document(Document())
     
-    # 模拟列表转换器
-    list_converter = MagicMock()
-    paragraph = Document().add_paragraph("任务项")
-    list_converter.convert.return_value = paragraph
-    converter.list_converter = list_converter
-    
     # 创建模拟任务列表token
     list_token = MagicMock()
     list_token.type = 'bullet_list_open'
-    
+
     # 创建模拟内容token - 使用字符串内容而不是复杂的模拟对象
     content_token = MagicMock()
     content_token.type = 'inline'
@@ -56,11 +50,13 @@ def test_convert_checked_task():
     
     # 转换任务列表项
     paragraph = converter.convert((list_token, content_token))
-    
+
     # 验证结果
     assert paragraph is not None
-    assert list_converter.convert.called
     assert paragraph._element is not None
+    # 验证包含复选框符号
+    assert "☑" in paragraph.text
+    assert "已完成任务" in paragraph.text
 
 
 def test_convert_unchecked_task():
@@ -69,16 +65,10 @@ def test_convert_unchecked_task():
     converter = TaskListConverter()
     converter.set_document(Document())
     
-    # 模拟列表转换器
-    list_converter = MagicMock()
-    paragraph = Document().add_paragraph("任务项")
-    list_converter.convert.return_value = paragraph
-    converter.list_converter = list_converter
-    
     # 创建模拟任务列表token
     list_token = MagicMock()
     list_token.type = 'bullet_list_open'
-    
+
     # 创建模拟内容token - 使用字符串内容而不是复杂的模拟对象
     content_token = MagicMock()
     content_token.type = 'inline'
@@ -87,11 +77,13 @@ def test_convert_unchecked_task():
     
     # 转换任务列表项
     paragraph = converter.convert((list_token, content_token))
-    
+
     # 验证结果
     assert paragraph is not None
-    assert list_converter.convert.called
     assert paragraph._element is not None
+    # 验证包含复选框符号
+    assert "☐" in paragraph.text
+    assert "未完成任务" in paragraph.text
 
 
 def test_convert_without_list_converter():
