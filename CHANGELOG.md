@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-12-26
+
+### Added
+- 🎨 **一次性阅读体验**：WebUI页面无需滚动即可完整查看
+- ⚡ **防抖优化**：实时预览响应延迟优化到800ms，提升性能
+- 🛡️ **安全加固**：完善文件验证、错误处理和HTTP安全头
+- 📱 **响应式设计优化**：改进移动端和平板适配
+- 🔧 **配置管理系统**：新增外部化配置支持，支持环境切换
+- 🧪 **WebUI测试套件**：添加7个WebUI功能测试用例
+- 📚 **WebUI文档**：完善WebUI使用说明和开发指南
+
+### Changed
+- 🎯 **界面布局优化**：调整编辑器和预览面板高度，压缩不必要的间距
+- 🔄 **代码重构**：清理重复代码，优化JavaScript架构
+- 📁 **文件组织**：将WebUI相关文件统一到webui目录
+- ⚙️ **配置外部化**：将硬编码配置移至配置文件
+- 🚀 **启动方式优化**：提供多种便捷的启动方式
+
+### Performance
+- ⚡ **预览性能提升**：防抖处理减少服务器请求频率
+- 🔄 **异步处理**：添加请求超时和取消机制
+- 📏 **内容限制**：优化内存使用，限制预览和转换内容大小
+
+### Fixed
+- 🐛 **模块导入问题**：修复config模块导入错误
+- 📋 **文件验证**：完善文件类型和内容检查
+- 🔒 **安全漏洞**：修复潜在的安全风险
+
 ## [0.2.0] - 2025-12-26
 
 ### Added

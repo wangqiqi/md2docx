@@ -362,22 +362,16 @@ function getMessageIcon(type) {
  * 初始化事件监听器
  */
 function initializeEventListeners() {
-    // Markdown输入变化时自动生成预览
+    // Markdown输入变化时自动生成预览 - 添加更长的防抖延迟
     const markdownInput = document.getElementById('markdown-input');
     if (markdownInput) {
-        markdownInput.addEventListener('input', debounce(generatePreview, 500));
+        markdownInput.addEventListener('input', debounce(generatePreview, 800)); // 增加到800ms
     }
 }
 
 /**
- * 初始化文件上传
+ * 初始化文件上传 - 合并到主初始化函数中
  */
-function initializeFileUpload() {
-    const fileInput = document.getElementById('file-input');
-    if (fileInput) {
-        fileInput.addEventListener('change', handleFileUpload);
-    }
-}
 
 /**
  * 处理文件上传
@@ -490,7 +484,7 @@ function toggleMode() {
 }
 
 /**
- * 生成实时预览
+ * 生成实时预览 - 优化版本
  */
 function generatePreview() {
     const markdownInput = document.getElementById('markdown-input');
@@ -511,17 +505,32 @@ function generatePreview() {
     }
 
     // 显示加载状态
-    previewContent.innerHTML = '<div style="text-align: center; padding: 40px;">生成预览中...</div>';
+    previewContent.innerHTML = `
+        <div class="preview-loading">
+            <div class="loading-spinner"></div>
+            <p>生成预览中...</p>
+        </div>
+    `;
 
-    // 发送到后端生成预览
+    // 发送到后端生成预览 - 添加超时控制
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
+
     fetch('/preview', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: 'markdown=' + encodeURIComponent(content)
+        body: 'markdown=' + encodeURIComponent(content),
+        signal: controller.signal
     })
-    .then(response => response.text())
+    .then(response => {
+        clearTimeout(timeoutId);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        return response.text();
+    })
     .then(html => {
         // 直接使用返回的HTML片段
         if (html.trim()) {
@@ -531,8 +540,17 @@ function generatePreview() {
         }
     })
     .catch(error => {
+        clearTimeout(timeoutId);
         console.error('预览生成失败:', error);
-        previewContent.innerHTML = '<div style="padding: 20px; color: #dc3545;">预览生成失败，请稍后重试</div>';
+
+        let errorMessage = '预览生成失败，请稍后重试';
+        if (error.name === 'AbortError') {
+            errorMessage = '预览生成超时，请重试';
+        } else if (error.message.includes('HTTP')) {
+            errorMessage = '服务器错误，请稍后重试';
+        }
+
+        previewContent.innerHTML = `<div class="preview-error"><span class="icon">❌</span><p>${errorMessage}</p></div>`;
     });
 }
 

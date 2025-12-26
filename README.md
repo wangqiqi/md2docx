@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.2.0)
+[![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.3.0)
 [![Cursor AI Rules](https://img.shields.io/badge/Cursor%20AI%20Rules-v3.0.0-green.svg)](https://github.com/wangqiqi/cursor-ai-rules)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
@@ -36,6 +36,8 @@
 - ✅ 实时预览功能
 - ✅ 文件上传和下载
 - ✅ 响应式设计 (桌面/移动)
+- ✅ 一次性阅读体验 (无页面滚动)
+- ✅ 防抖优化和安全文件处理
 
 ## 质量保证
 
@@ -141,17 +143,40 @@ pip install md2docx
 最简单的方式是使用内置的Web界面：
 
 ```bash
-# 启动Web服务器
+# 方法1：使用启动脚本（推荐）
+python start_webui.py
+
+# 方法2：直接运行模块
 python -m webui.app
 
-# 在浏览器中访问: http://localhost:5000
+# 方法3：通过导入运行
+python -c "from webui.app import app; app.run(debug=True)"
 ```
 
+启动后在浏览器中访问: `http://localhost:5000`
+
 **Web界面特性：**
-- 📝 实时Markdown编辑和预览
-- 📤 拖拽文件上传
-- 👁️ 即时DOCX样式预览
-- 📥 一键下载生成的文档
+- 🎨 **一次性阅读体验**：页面无需滚动即可完整查看
+- ⚡ **实时预览**：输入Markdown后立即预览DOCX效果（800ms防抖优化）
+- 📁 **文件上传**：支持拖拽上传 .md、.markdown、.txt 文件
+- 🔄 **智能预览**：自动生成DOCX样式预览，支持加载状态显示
+- 🛡️ **安全处理**：严格的文件验证和内容检查，防止恶意文件
+- 📱 **响应式设计**：完美支持桌面、平板、手机等各种设备
+- ⌨️ **键盘快捷键**：
+  - `Ctrl+Enter`: 提交转换
+  - `Ctrl+Shift+P`: 切换预览面板
+- 🌟 **现代化UI**：采用Material Design风格，交互流畅
+
+**环境变量配置：**
+```bash
+# 生产环境
+export FLASK_ENV=production
+export SECRET_KEY=your-secret-key-here
+export PORT=8000
+
+# 开发环境（默认）
+export FLASK_ENV=development
+```
 
 ### 命令行工具
 
