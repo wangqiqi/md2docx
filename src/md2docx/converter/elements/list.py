@@ -364,7 +364,7 @@ class ListConverter(ElementConverter):
             try:
                 # 尝试应用内置编号样式
                 return 1  # 使用内置的编号定义
-            except:
+            except (AttributeError, KeyError, IndexError):
                 pass
 
         # 对于无序列表或有序列表失败的情况，使用简单的方法

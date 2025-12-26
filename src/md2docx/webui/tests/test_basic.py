@@ -14,8 +14,8 @@ import sys
 
 sys.path.insert(0, str(project_root))
 
-from webui.app import allowed_file, app
-from webui.config import get_config
+from md2docx.webui.app import allowed_file, app
+from md2docx.webui.config import get_config
 
 
 class TestConfig:
