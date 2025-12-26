@@ -79,15 +79,15 @@ Markdown to DOCX 转换工具 v{0}
 问题反馈: https://github.com/wangqiqi/md2docx/issues
 
 使用示例:
-  md2docx README.md output.docx
-  md2docx --debug document.md report.docx
+  mddocx README.md output.docx
+  mddocx --debug document.md report.docx
             """.format(
                 __version__
             ),
             "input_help": "输入的 Markdown 文件路径",
             "output_help": "输出的 DOCX 文件路径",
             "debug_help": "显示调试信息和详细的转换过程",
-            "version_help": "显示版本信息",
+            "version_help": "显示版本信息 (-v, -V)",
             "lang_help": "选择帮助信息的语言 (zh/en, 默认: zh)",
         },
         "en": {
@@ -110,15 +110,15 @@ Documentation: https://github.com/wangqiqi/md2docx#readme
 Bug reports: https://github.com/wangqiqi/md2docx/issues
 
 Usage examples:
-  md2docx README.md output.docx
-  md2docx --debug document.md report.docx
+  mddocx README.md output.docx
+  mddocx --debug document.md report.docx
             """.format(
                 __version__
             ),
             "input_help": "Path to input Markdown file",
             "output_help": "Path to output DOCX file",
             "debug_help": "Show debug information and detailed conversion process",
-            "version_help": "Show version information",
+            "version_help": "Show version information (-v, -V)",
             "lang_help": "Choose language for help information (zh/en, default: zh)",
         },
     }
@@ -180,6 +180,7 @@ def main():
     # 添加版本信息
     parser.add_argument(
         "--version",
+        "-v",
         "-V",
         action="version",
         version="mddocx v{0}".format(__version__),
