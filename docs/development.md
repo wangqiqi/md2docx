@@ -43,6 +43,23 @@ pytest tests/
 - **参数处理**: 输入输出路径、调试选项
 - **错误处理**: 文件占用等异常情况处理
 
+#### `webui/app.py` (新增)
+- **Flask应用**: Web服务器主入口
+- **路由处理**: `/` (主页), `/convert` (转换), `/preview` (预览)
+- **文件处理**: 上传、转换、下载临时文件管理
+- **错误处理**: 用户友好的错误提示
+
+#### `webui/templates/` (新增)
+- **Jinja2模板**: HTML页面模板
+- **base.html**: 基础布局，包含导航和样式
+- **index.html**: 主页，文件上传和文本输入
+- **preview.html**: 预览页，源码和样式预览
+
+#### `webui/static/` (新增)
+- **CSS样式**: 现代化响应式设计
+- **JavaScript**: 前端交互和表单验证
+- **资源文件**: 图标、字体等静态资源
+
 ### 测试结构
 ```
 tests/
@@ -268,6 +285,60 @@ pyinstaller --onefile --name md2docx src/cli.py
 python setup.py sdist bdist_wheel
 ```
 
+## 9. Web界面开发
+
+### Web界面概述
+项目提供完整的Web界面，基于Flask框架实现，支持：
+- 文件上传和文本输入
+- 实时预览和转换
+- 响应式设计 (桌面/移动)
+- RESTful API接口
+
+### 启动Web界面
+```bash
+# 开发模式
+python -m webui.app
+
+# 访问 http://localhost:5000
+```
+
+### Web界面架构
+```
+webui/
+├── app.py              # Flask应用核心
+├── config.py           # 应用配置 (可选)
+├── templates/          # Jinja2模板
+│   ├── base.html      # 基础布局
+│   ├── index.html     # 主页
+│   └── preview.html   # 预览页
+└── static/            # 静态资源
+    ├── css/styles.css # 样式文件
+    └── js/app.js      # 前端脚本
+```
+
+### 添加新功能
+1. **后端路由**: 在 `webui/app.py` 中添加新路由
+2. **前端页面**: 创建新的HTML模板
+3. **样式增强**: 更新CSS文件
+4. **交互功能**: 扩展JavaScript代码
+
+### API接口
+Web界面提供了REST API接口：
+- `POST /convert` - 文档转换
+- `POST /preview` - 预览功能
+- 详细API文档见 `docs/api.md`
+
+### 部署Web界面
+```bash
+# 生产环境部署
+pip install gunicorn
+gunicorn -w 4 -b 0.0.0.0:8000 webui.app:app
+
+# Docker部署
+docker build -t md2docx .
+docker run -p 8000:8000 md2docx
+```
+
 ## 10. 故障排除
 
 ### 常见问题
@@ -284,4 +355,3 @@ python setup.py sdist bdist_wheel
 ---
 
 *此开发指南将随着项目发展持续更新。如有问题或建议，请提交Issue或PR。*
-
