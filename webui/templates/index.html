@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}首页 - Markdown to DOCX Converter{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h2>将 Markdown 转换为精美的 DOCX 文档</h2>
+    <p>支持标题、列表、表格、代码块、图片等丰富的Markdown语法</p>
+</div>
+
+<div class="converter-section">
+    <div class="tabs">
+        <button class="tab-button active" onclick="switchTab('text')">文本输入</button>
+        <button class="tab-button" onclick="switchTab('file')">文件上传</button>
+    </div>
+
+    <form id="converter-form" action="{{ url_for('convert') }}" method="post" enctype="multipart/form-data">
+        <!-- 文本输入模式 -->
+        <div id="text-tab" class="tab-content active">
+            <div class="form-group">
+                <label for="markdown">Markdown 内容</label>
+                <textarea
+                    id="markdown"
+                    name="markdown"
+                    placeholder="在这里输入 Markdown 内容...
+
+示例：
+# 标题
+
+这是一个**粗体**文本和*斜体*文本。
+
+## 列表
+- 项目 1
+- 项目 2
+
+## 代码
+```python
+print('Hello World!')
+```
+
+| 表格 | 示例 |
+|------|------|
+| 数据 | 内容 |"
+                    rows="20"
+                    required
+                ></textarea>
+            </div>
+        </div>
+
+        <!-- 文件上传模式 -->
+        <div id="file-tab" class="tab-content">
+            <div class="form-group">
+                <label for="file">选择 Markdown 文件</label>
+                <input
+                    type="file"
+                    id="file"
+                    name="file"
+                    accept=".md,.markdown,.txt"
+                >
+                <small>支持 .md, .markdown, .txt 文件，最大 16MB</small>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <span class="icon">📥</span>
+                转换为 DOCX
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="showPreview()">
+                <span class="icon">👁️</span>
+                预览效果
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="features">
+    <h3>核心特性</h3>
+    <div class="feature-grid">
+        <div class="feature-item">
+            <span class="feature-icon">📝</span>
+            <h4>完整 Markdown 支持</h4>
+            <p>支持标准 Markdown 语法，包括标题、列表、链接、图片等</p>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">🎨</span>
+            <h4>美观排版</h4>
+            <p>自动生成专业格式的 Word 文档，保持良好的排版效果</p>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">⚡</span>
+            <h4>快速转换</h4>
+            <p>本地处理，无需网络，转换速度快，支持大文件</p>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">🛡️</span>
+            <h4>隐私保护</h4>
+            <p>完全本地处理，不上传文件，保护您的隐私安全</p>
+        </div>
+    </div>
+</div>
+
+<!-- 预览模态框 -->
+<div id="preview-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>文档预览</h3>
+            <span class="modal-close" onclick="closePreview()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="preview-form" action="{{ url_for('preview') }}" method="post" enctype="multipart/form-data">
+                <div class="preview-input">
+                    <textarea id="preview-markdown" name="markdown" placeholder="输入Markdown内容进行预览..." rows="15"></textarea>
+                    <div class="preview-actions">
+                        <button type="submit" class="btn btn-primary">生成预览</button>
+                        <button type="button" class="btn btn-secondary" onclick="syncPreviewContent()">从上方同步</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// 标签切换功能
+function switchTab(tabName) {
+    // 隐藏所有标签内容
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+
+    // 移除所有标签按钮的激活状态
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active');
+    });
+
+    // 显示选中的标签内容
+    document.getElementById(tabName + '-tab').classList.add('active');
+
+    // 激活对应的标签按钮
+    event.target.classList.add('active');
+}
+
+// 预览功能
+function showPreview() {
+    document.getElementById('preview-modal').style.display = 'block';
+}
+
+function closePreview() {
+    document.getElementById('preview-modal').style.display = 'none';
+}
+
+// 从主输入框同步内容到预览
+function syncPreviewContent() {
+    const mainContent = document.getElementById('markdown').value;
+    document.getElementById('preview-markdown').value = mainContent;
+}
+
+// 点击模态框外部关闭
+window.onclick = function(event) {
+    const modal = document.getElementById('preview-modal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// 初始化
+document.addEventListener('DOMContentLoaded', function() {
+    // 绑定文件输入变化事件
+    document.getElementById('file').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // 可以在这里添加文件信息显示
+            console.log('选择文件:', file.name, '大小:', (file.size / 1024 / 1024).toFixed(2), 'MB');
+        }
+    });
+});
+</script>
+{% endblock %}

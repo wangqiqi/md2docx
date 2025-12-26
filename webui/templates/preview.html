@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}预览 - Markdown to DOCX Converter{% endblock %}
+
+{% block content %}
+<div class="preview-page">
+    <div class="preview-header">
+        <h2>📄 文档预览</h2>
+        <div class="preview-actions">
+            <button onclick="window.history.back()" class="btn btn-secondary">
+                <span class="icon">⬅️</span> 返回
+            </button>
+            <form action="{{ url_for('convert') }}" method="post" style="display: inline;">
+                <input type="hidden" name="markdown" value="{{ markdown_content }}">
+                <button type="submit" class="btn btn-primary">
+                    <span class="icon">📥</span> 下载 DOCX
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="preview-container">
+        <!-- Markdown源码 -->
+        <div class="preview-panel source-panel">
+            <div class="panel-header">
+                <h3>📝 Markdown 源码</h3>
+                <button onclick="copySource()" class="btn btn-small">
+                    <span class="icon">📋</span> 复制
+                </button>
+            </div>
+            <div class="panel-content">
+                <pre id="markdown-source">{{ markdown_content }}</pre>
+            </div>
+        </div>
+
+        <!-- DOCX预览 -->
+        <div class="preview-panel preview-panel">
+            <div class="panel-header">
+                <h3>📄 DOCX 预览</h3>
+                <div class="preview-controls">
+                    <button onclick="toggleWordMode()" id="word-mode-btn" class="btn btn-small">
+                        <span class="icon">📄</span> Word样式
+                    </button>
+                </div>
+            </div>
+            <div class="panel-content">
+                <div id="docx-preview" class="docx-preview">
+                    {% if error %}
+                        <div class="error-message">
+                            <span class="icon">❌</span>
+                            {{ error }}
+                        </div>
+                    {% else %}
+                        <div class="docx-content">
+                            {{ preview_content|safe }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 统计信息 -->
+    <div class="preview-stats">
+        <div class="stat-item">
+            <span class="stat-label">字符数:</span>
+            <span class="stat-value">{{ markdown_content|length }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">行数:</span>
+            <span class="stat-value">{{ markdown_content.split('\n')|length }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">预览模式:</span>
+            <span class="stat-value" id="preview-mode">基础预览</span>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// 复制源码功能
+function copySource() {
+    const sourceText = document.getElementById('markdown-source').textContent;
+    navigator.clipboard.writeText(sourceText).then(function() {
+        // 简单的反馈
+        const btn = event.target.closest('button');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="icon">✅</span> 已复制';
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+        }, 2000);
+    }).catch(function(err) {
+        console.error('复制失败:', err);
+    });
+}
+
+// Word样式预览切换
+let wordMode = false;
+function toggleWordMode() {
+    const preview = document.getElementById('docx-preview');
+    const btn = document.getElementById('word-mode-btn');
+    const modeIndicator = document.getElementById('preview-mode');
+
+    wordMode = !wordMode;
+
+    if (wordMode) {
+        preview.classList.add('word-mode');
+        btn.innerHTML = '<span class="icon">🎨</span> 简化样式';
+        modeIndicator.textContent = 'Word样式';
+    } else {
+        preview.classList.remove('word-mode');
+        btn.innerHTML = '<span class="icon">📄</span> Word样式';
+        modeIndicator.textContent = '基础预览';
+    }
+}
+
+// 页面加载完成后的初始化
+document.addEventListener('DOMContentLoaded', function() {
+    // 高亮代码块（如果有的话）
+    document.querySelectorAll('pre code').forEach((block) => {
+        // 这里可以添加语法高亮
+        block.style.backgroundColor = '#f8f8f8';
+        block.style.padding = '1em';
+        block.style.borderRadius = '4px';
+        block.style.overflow = 'auto';
+    });
+
+    // 添加一些基本的样式增强
+    const docxContent = document.querySelector('.docx-content');
+    if (docxContent) {
+        // 为标题添加样式
+        docxContent.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(header => {
+            header.style.marginTop = '1.5em';
+            header.style.marginBottom = '0.5em';
+            header.style.fontWeight = 'bold';
+        });
+
+        // 为段落添加样式
+        docxContent.querySelectorAll('p').forEach(p => {
+            p.style.marginBottom = '1em';
+            p.style.lineHeight = '1.6';
+        });
+    }
+});
+</script>
+{% endblock %}
