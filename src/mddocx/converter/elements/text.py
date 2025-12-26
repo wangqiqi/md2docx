@@ -6,7 +6,6 @@ from typing import Any, Dict, List, Tuple
 
 from docx.shared import Pt
 from docx.text.paragraph import Paragraph
-from docx.text.run import Run
 
 from .base import ElementConverter
 
@@ -379,7 +378,7 @@ class TextConverter(ElementConverter):
                 # 处理图片
                 if image_converter:
                     if debug:
-                        print(f"处理段落内图片")
+                        print("处理段落内图片")
                     image_converter.convert_in_paragraph(
                         paragraph, child, current_style.copy()
                     )

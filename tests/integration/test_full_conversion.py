@@ -1,21 +1,20 @@
 """
 完整转换流程的集成测试
 """
-from pathlib import Path
-from docx import Document
+
 
 
 def test_convert_all_samples(converter, samples_dir, tmp_path):
     """测试转换所有基础样例文件"""
-    for md_file in samples_dir.glob('*.md'):
+    for md_file in samples_dir.glob("*.md"):
         # 读取 Markdown 文件
-        with open(md_file, 'r', encoding='utf-8') as f:
+        with open(md_file, "r", encoding="utf-8") as f:
             content = f.read()
-        
+
         # 转换文档
         doc = converter.convert(content)
         assert doc is not None
-        
+
         # 保存并验证输出
         output_file = tmp_path / f"{md_file.stem}.docx"
         doc.save(str(output_file))
@@ -56,11 +55,11 @@ def hello():
 
 最后一段文本。
 """
-    
+
     # 转换文档
     doc = converter.convert(content)
     assert doc is not None
-    
+
     # 保存并验证输出
     output_file = tmp_path / "complex.docx"
     doc.save(str(output_file))
@@ -71,17 +70,17 @@ def hello():
 def test_convert_empty_elements(converter):
     """测试转换空元素"""
     content = """
-# 
+#
 
-> 
-
-```
+>
 
 ```
 
-- 
+```
 
-1. 
+-
+
+1.
 """
     doc = converter.convert(content)
     assert doc is not None
@@ -112,4 +111,4 @@ def test_convert_nested_structures(converter):
       2. 第二项
 """
     doc = converter.convert(content)
-    assert doc is not None 
+    assert doc is not None

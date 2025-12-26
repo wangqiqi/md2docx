@@ -5,7 +5,6 @@
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
-from docx.shared import Pt, RGBColor
 
 from .base import ElementConverter
 
@@ -54,9 +53,6 @@ class HRConverter(ElementConverter):
         Args:
             paragraph: 要添加水平线的段落
         """
-        # 创建一个运行对象
-        run = paragraph.add_run()
-
         # 创建分隔线元素
         pPr = paragraph._element.get_or_add_pPr()
         pBdr = OxmlElement("w:pBdr")

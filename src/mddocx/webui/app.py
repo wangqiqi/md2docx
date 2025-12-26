@@ -8,10 +8,6 @@ import os
 import sys
 from pathlib import Path
 
-# 添加项目根目录到Python路径
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
-
 from flask import (
     Flask,
     flash,
@@ -22,6 +18,10 @@ from flask import (
     url_for,
 )
 from werkzeug.utils import secure_filename
+
+# 添加项目根目录到Python路径
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
 from ..converter import BaseConverter
 from .config import get_config
@@ -263,10 +263,12 @@ def generate_preview_html(markdown_content):
             elif line.startswith("```"):
                 if "```" in line[3:]:
                     code = line[3:-3]
-                    code_style = "background: #f4f4f4; padding: 2px 4px; border-radius: 3px; font-family: monospace;"
+                    code_style = ("background: #f4f4f4; padding: 2px 4px; "
+                                  "border-radius: 3px; font-family: monospace;")
                     html_lines.append(f"<code style='{code_style}'>{code}</code>")
                 else:
-                    pre_style = "background: #f4f4f4; padding: 12px; border-radius: 4px; font-family: monospace; margin: 8px 0;"
+                    pre_style = ("background: #f4f4f4; padding: 12px; "
+                                 "border-radius: 4px; font-family: monospace; margin: 8px 0;")
                     html_lines.append(f"<pre style='{pre_style}'>")
             # 内联代码
             elif "`" in line:
@@ -275,7 +277,8 @@ def generate_preview_html(markdown_content):
                 formatted_parts = []
                 for i, part in enumerate(parts):
                     if i % 2 == 1:  # 奇数索引是代码
-                        inline_code_style = "background: #f4f4f4; padding: 1px 3px; border-radius: 2px; font-family: monospace;"
+                        inline_code_style = ("background: #f4f4f4; padding: 1px 3px; "
+                                             "border-radius: 2px; font-family: monospace;")
                         formatted_parts.append(
                             f"<code style='{inline_code_style}'>{part}</code>"
                         )

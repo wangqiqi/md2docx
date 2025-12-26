@@ -2,7 +2,7 @@
 引用块转换器模块，处理引用块的转换
 """
 
-from typing import Any, Optional, Tuple
+from typing import Any, Tuple
 
 from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.text import WD_ALIGN_PARAGRAPH

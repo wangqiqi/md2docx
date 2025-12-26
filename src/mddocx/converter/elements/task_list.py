@@ -4,10 +4,6 @@
 
 import re
 
-from docx.oxml import OxmlElement
-from docx.oxml.ns import qn
-from docx.shared import Pt
-
 from .base import ElementConverter
 from .list import ListConverter
 

@@ -5,11 +5,11 @@
 import os
 import re
 from io import BytesIO
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional, Tuple
 
 import requests
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.shared import Inches, Pt
+from docx.shared import Pt
 
 from .base import ElementConverter
 

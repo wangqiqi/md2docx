@@ -2,7 +2,7 @@
 基础转换器模块，处理 Markdown 到 DOCX 的核心转换逻辑
 """
 
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
 from docx import Document
 from markdown_it import MarkdownIt
@@ -123,14 +123,13 @@ class BaseConverter:
                 )
 
                 for token in tokens:
-                    print(
-                        f"Token type={token.type}, tag={token.tag if hasattr(token, 'tag') else ''}, content={token.content if hasattr(token, 'content') else ''}"
-                    )
+                    print(f"Token type={token.type}, "
+                          f"tag={token.tag if hasattr(token, 'tag') else ''}, "
+                          f"content={token.content if hasattr(token, 'content') else ''}")
                     if hasattr(token, "children") and token.children is not None:
                         for child in token.children:
-                            print(
-                                f"  Child: type={child.type}, content={child.content if hasattr(child, 'content') else ''}"
-                            )
+                            print(f"  Child: type={child.type}, "
+                                  f"content={child.content if hasattr(child, 'content') else ''}")
 
             # 用于跟踪已处理的段落，避免重复处理
             processed_paragraphs = set()

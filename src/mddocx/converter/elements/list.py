@@ -6,11 +6,9 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.oxml import ns
 from docx.oxml.shared import OxmlElement, qn
-from docx.shared import Inches, Pt, RGBColor
+from docx.shared import Inches, Pt
 from docx.text.paragraph import Paragraph
-from docx.text.run import Run
 
 from .base import ElementConverter
 
@@ -52,7 +50,8 @@ class ListConverter(ElementConverter):
         )
         if debug:
             print(
-                f"ListConverter: 处理列表项, token.type={list_token.type}, content={content_token.content if hasattr(content_token, 'content') else 'N/A'}"
+                f"ListConverter: 处理列表项, token.type={list_token.type}, "
+                f"content={content_token.content if hasattr(content_token, 'content') else 'N/A'}"
             )
 
         # 获取列表层级和类型
@@ -236,18 +235,18 @@ class ListConverter(ElementConverter):
             return True
 
         # 检查是否有相同层级的列表
-        for l, o, _ in reversed(self._current_lists):
-            if l == level:
+        for list_level, list_ordered, _ in reversed(self._current_lists):
+            if list_level == level:
                 # 如果找到相同层级，但类型不同，需要新编号
-                if o != is_ordered:
+                if list_ordered != is_ordered:
                     return True
                 # 如果类型相同，不需要新编号
                 return False
             # 如果遇到更深层级，继续查找
-            if l > level:
+            if list_level > level:
                 continue
             # 如果遇到更浅层级，需要新编号
-            if l < level:
+            if list_level < level:
                 return True
 
         return True

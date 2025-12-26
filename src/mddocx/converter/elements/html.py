@@ -5,12 +5,10 @@ HTML转换器模块，处理Markdown中的HTML标签
 import os
 import re
 import tempfile
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional
 
 from docx import Document
-from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
-from docx.shared import Pt, RGBColor
 from docx.text.paragraph import Paragraph
 
 try:
