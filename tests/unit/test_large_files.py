@@ -1,15 +1,13 @@
 """
+test large files 测试
+"""
+"""
 大文件处理测试
 测试系统对大型Markdown文件的处理能力
 """
 
-import os
-import tempfile
-from pathlib import Path
 
-import pytest
 
-from mddocx.converter import BaseConverter
 
 
 class TestLargeFileHandling:

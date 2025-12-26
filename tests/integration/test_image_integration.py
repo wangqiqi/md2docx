@@ -1,15 +1,12 @@
 """
+test image integration 测试
+"""
+"""
 图片转换集成测试
 """
 
-import os
-from io import BytesIO
-from unittest.mock import MagicMock, patch
 
-import pytest
-from docx import Document
 
-from mddocx.converter import BaseConverter
 
 
 class TestImageIntegration:

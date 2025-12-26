@@ -1,11 +1,11 @@
 """
+test table integration 测试
+"""
+"""
 表格转换集成测试
 """
 
-import pytest
-from docx import Document
 
-from mddocx.converter import BaseConverter
 
 
 class TestTableIntegration:

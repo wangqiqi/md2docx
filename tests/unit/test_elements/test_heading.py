@@ -1,13 +1,11 @@
 """
+test heading 测试
+"""
+"""
 标题转换器测试模块
 """
 
-import pytest
-from docx import Document
-from markdown_it import MarkdownIt
 
-from mddocx.converter.base import BaseConverter
-from mddocx.converter.elements.heading import HeadingConverter
 
 
 def test_heading_conversion():

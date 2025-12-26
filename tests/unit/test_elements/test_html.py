@@ -1,13 +1,12 @@
 """
+test html 测试
+"""
+"""
 HTML转换器单元测试
 """
 
-from unittest.mock import MagicMock, patch
 
-import pytest
-from docx import Document
 
-from mddocx.converter.elements.html import HTML2DOCX_AVAILABLE, HtmlConverter
 
 
 def test_init():

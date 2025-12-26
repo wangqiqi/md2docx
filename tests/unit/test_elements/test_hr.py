@@ -1,13 +1,12 @@
 """
+test hr 测试
+"""
+"""
 分隔线转换器单元测试
 """
 
-from unittest.mock import MagicMock
 
-import pytest
-from docx import Document
 
-from mddocx.converter.elements.hr import HRConverter
 
 
 def test_init():

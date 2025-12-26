@@ -1,14 +1,12 @@
 """
+test table 测试
+"""
+"""
 表格转换器单元测试
 """
 
-from unittest.mock import MagicMock, patch
 
-import pytest
-from docx import Document
 
-from mddocx.converter import BaseConverter
-from mddocx.converter.elements.table import TableConverter
 
 
 def test_init():

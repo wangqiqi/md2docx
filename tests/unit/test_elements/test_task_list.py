@@ -1,13 +1,12 @@
 """
+test task list 测试
+"""
+"""
 任务列表转换器单元测试
 """
 
-from unittest.mock import MagicMock, patch
 
-import pytest
-from docx import Document
 
-from mddocx.converter.elements.task_list import TaskListConverter
 
 
 def test_init():

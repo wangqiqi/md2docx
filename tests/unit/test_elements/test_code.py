@@ -1,8 +1,7 @@
-import pytest
-from docx.shared import RGBColor
+"""
+test code 测试
+"""
 
-from mddocx.converter.base import BaseConverter
-from mddocx.converter.elements.code import CodeConverter
 
 
 def test_basic_code_block(base_converter):

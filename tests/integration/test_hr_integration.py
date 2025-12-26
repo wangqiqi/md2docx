@@ -1,20 +1,13 @@
 """
+test hr integration 测试
+"""
+"""
 分隔线转换集成测试
 """
-
-import pytest
-from docx import Document
-
-from mddocx.converter import BaseConverter
 
 
 class TestHRIntegration:
     """分隔线转换集成测试"""
-
-    @pytest.fixture
-    def base_converter(self):
-        """创建基础转换器实例"""
-        return BaseConverter(debug=False)
 
     def test_basic_hr(self, base_converter):
         """测试基本分隔线转换"""

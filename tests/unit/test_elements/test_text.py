@@ -1,13 +1,11 @@
 """
+test text 测试
+"""
+"""
 文本转换器测试模块
 """
 
-import pytest
-from docx import Document
-from markdown_it import MarkdownIt
 
-from mddocx.converter.base import BaseConverter
-from mddocx.converter.elements import TextConverter
 
 
 def test_basic_paragraph():

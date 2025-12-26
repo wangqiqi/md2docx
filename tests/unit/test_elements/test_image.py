@@ -1,19 +1,12 @@
 """
+test image 测试
+"""
+"""
 测试图片转换功能
 """
 
-import os
-from io import BytesIO
-from unittest.mock import MagicMock, patch
 
-import pytest
-from docx import Document
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.text.paragraph import Paragraph
-from docx.text.run import Run
-from markdown_it import MarkdownIt
 
-from mddocx.converter.elements.image import ImageConverter
 
 
 class TestImageConverter:

@@ -1,13 +1,11 @@
 """
+test list 测试
+"""
+"""
 列表转换器测试模块
 """
 
-import pytest
-from docx import Document
-from markdown_it import MarkdownIt
 
-from mddocx.converter.base import BaseConverter
-from mddocx.converter.elements import ListConverter, TextConverter
 
 
 def test_unordered_list():

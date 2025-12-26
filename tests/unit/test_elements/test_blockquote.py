@@ -1,13 +1,11 @@
 """
+test blockquote 测试
+"""
+"""
 引用块转换器测试
 """
 
-import pytest
-from docx import Document
-from markdown_it import MarkdownIt
 
-from mddocx.converter.base import BaseConverter
-from mddocx.converter.elements import BlockquoteConverter, TextConverter
 
 
 def test_basic_blockquote():

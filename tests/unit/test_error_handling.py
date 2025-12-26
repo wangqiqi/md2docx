@@ -1,15 +1,13 @@
 """
+test error handling 测试
+"""
+"""
 异常输入处理测试
 测试系统对各种错误输入的处理能力和错误恢复
 """
 
-import os
-import tempfile
-from pathlib import Path
 
-import pytest
 
-from mddocx.converter import BaseConverter, MD2DocxError
 
 
 class TestErrorHandling:
