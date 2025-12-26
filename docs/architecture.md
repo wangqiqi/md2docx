@@ -50,8 +50,8 @@ md2docx/
 ├── .cursorGrowth/     # AI感知数据 (已忽略)
 ├── docs/               # 项目文档
 │   ├── architecture.md # 架构设计
-│   ├── development.md  # 开发指南 (规划中)
-│   └── testing.md     # 测试规范 (规划中)
+│   ├── development.md  # 开发指南
+│   └── testing.md     # 测试规范
 ├── batch_convert_test.py # 批量转换脚本
 ├── requirements.txt    # 项目依赖
 ├── pyproject.toml     # 项目配置
