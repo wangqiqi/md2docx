@@ -2,7 +2,6 @@
 图片转换集成测试
 """
 
-
 import pytest
 
 from mddocx.converter.base import BaseConverter
