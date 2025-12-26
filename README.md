@@ -52,6 +52,10 @@
 
 ## 安装
 
+### 开发环境安装（推荐）
+
+如果您要进行开发、测试或贡献代码：
+
 1. 克隆仓库：
 ```bash
 git clone [repository-url]
@@ -66,10 +70,29 @@ source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate  # Windows
 ```
 
-3. 安装依赖：
+3. 安装开发依赖：
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
+
+### 生产环境安装
+
+如果您只是想使用 md2docx 进行文档转换：
+
+```bash
+pip install -r requirements-prod.txt
+```
+
+或直接从 PyPI 安装：
+```bash
+pip install md2docx
+```
+
+### 依赖说明
+
+- **`requirements-prod.txt`**：仅包含运行时必需的依赖，轻量化安装
+- **`requirements-dev.txt`**：包含所有开发、测试和构建工具
+- **`requirements.txt`**：指向开发依赖的符号链接，向后兼容
 
 ## 使用方法
 
@@ -82,7 +105,7 @@ python -m src.cli input.md output.docx
 ### 批量转换
 
 ```bash
-python batch_convert_test.py --input-dir your_md_folder --output-dir your_docx_folder
+python scripts/batch_convert_test.py --input-dir your_md_folder --output-dir your_docx_folder
 ```
 
 ## 项目结构
@@ -113,8 +136,12 @@ md2docx/
 │       ├── basic/      # 基础语法样例
 │       └── advanced/   # 高级语法样例
 ├── docs/               # 文档
-├── batch_convert_test.py # 批量转换脚本
-├── requirements.txt    # 项目依赖
+├── scripts/              # 工具脚本目录
+│   ├── batch_convert_test.py    # 批量转换脚本
+│   └── test_roundtrip_demo.py   # 闭环测试演示
+├── requirements-prod.txt   # 生产环境依赖
+├── requirements-dev.txt    # 开发环境依赖
+├── requirements.txt        # 开发依赖符号链接
 └── README.md          # 项目说明
 ```
 

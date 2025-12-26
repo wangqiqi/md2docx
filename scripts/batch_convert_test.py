@@ -10,7 +10,9 @@ from pathlib import Path
 from datetime import datetime
 
 # 添加项目根目录到 Python 路径
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+script_dir = os.path.dirname(__file__)
+project_root = os.path.dirname(script_dir)  # scripts目录的父目录
+sys.path.insert(0, project_root)
 
 # 导入转换器
 from src.converter import BaseConverter
