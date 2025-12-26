@@ -182,7 +182,7 @@ def main():
         "--version",
         "-V",
         action="version",
-        version="md2docx v{0}".format(__version__),
+        version="mddocx v{0}".format(__version__),
         help=texts["version_help"],
     )
 
