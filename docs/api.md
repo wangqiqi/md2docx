@@ -159,7 +159,14 @@ fetch('/convert', {
 ### 开发环境
 
 ```bash
-python -m webui.app
+# 方法1：使用命令行工具
+mddocx-webui
+
+# 方法2：直接运行模块
+python -m src.mddocx.webui.app
+
+# 方法3：运行启动脚本
+python src/mddocx/webui/start_webui.py
 ```
 
 ### 生产环境
@@ -167,9 +174,10 @@ python -m webui.app
 ```bash
 # 使用Gunicorn
 pip install gunicorn
-gunicorn -w 4 -b 0.0.0.0:8000 webui.app:app
+gunicorn -w 4 -b 0.0.0.0:8000 src.mddocx.webui.app:app
 
 # 使用Docker
+# 注意：需要创建适当的Dockerfile
 docker build -t md2docx .
 docker run -p 8000:8000 md2docx
 ```

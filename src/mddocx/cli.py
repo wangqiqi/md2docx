@@ -72,7 +72,6 @@ Markdown to DOCX 转换工具 v{0}
   • 任务列表 (TODO)
   • 引用块 (支持嵌套)
   • HTML 标签支持
-  • 数学公式和流程图
 
 项目主页: https://github.com/wangqiqi/md2docx
 文档: https://github.com/wangqiqi/md2docx#readme
@@ -103,7 +102,6 @@ Supported features:
   • Task lists (TODO)
   • Blockquotes (nested support)
   • HTML tag support
-  • Mathematical formulas and flowcharts
 
 Homepage: https://github.com/wangqiqi/md2docx
 Documentation: https://github.com/wangqiqi/md2docx#readme

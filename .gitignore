@@ -137,6 +137,7 @@ dmypy.json
 
 # Cursor AI Rules system
 .cursorGrowth/
+.cursor/backup/
 
 # OS generated files
 .DS_Store

@@ -43,19 +43,19 @@ pytest tests/
 - **参数处理**: 输入输出路径、调试选项
 - **错误处理**: 文件占用等异常情况处理
 
-#### `webui/app.py` (新增)
+#### `src/mddocx/webui/app.py` (新增)
 - **Flask应用**: Web服务器主入口
 - **路由处理**: `/` (主页), `/convert` (转换), `/preview` (预览)
 - **文件处理**: 上传、转换、下载临时文件管理
 - **错误处理**: 用户友好的错误提示
 
-#### `webui/templates/` (新增)
+#### `src/mddocx/webui/templates/` (新增)
 - **Jinja2模板**: HTML页面模板
 - **base.html**: 基础布局，包含导航和样式
 - **index.html**: 主页，文件上传和文本输入
 - **preview.html**: 预览页，源码和样式预览
 
-#### `webui/static/` (新增)
+#### `src/mddocx/webui/static/` (新增)
 - **CSS样式**: 现代化响应式设计
 - **JavaScript**: 前端交互和表单验证
 - **资源文件**: 图标、字体等静态资源
@@ -296,24 +296,39 @@ python setup.py sdist bdist_wheel
 
 ### 启动Web界面
 ```bash
-# 开发模式
-python -m webui.app
+# 方法1：使用命令行工具（推荐）
+mddocx-webui
+
+# 方法2：直接运行模块
+python -m src.mddocx.webui.app
+
+# 方法3：运行启动脚本
+python src/mddocx/webui/start_webui.py
 
 # 访问 http://localhost:5000
 ```
 
 ### Web界面架构
 ```
-webui/
+src/mddocx/webui/
+├── __init__.py         # 包初始化
 ├── app.py              # Flask应用核心
-├── config.py           # 应用配置 (可选)
+├── config.py           # 应用配置
+├── start_webui.py      # WebUI启动脚本
 ├── templates/          # Jinja2模板
 │   ├── base.html      # 基础布局
 │   ├── index.html     # 主页
 │   └── preview.html   # 预览页
-└── static/            # 静态资源
-    ├── css/styles.css # 样式文件
-    └── js/app.js      # 前端脚本
+├── static/            # 静态资源
+│   ├── css/
+│   │   └── styles.css # 样式文件
+│   ├── js/
+│   │   └── app.js     # 前端脚本
+│   └── img/           # 图片资源
+├── tests/             # WebUI测试
+│   ├── __init__.py
+│   └── test_basic.py
+└── utils/             # 工具模块
 ```
 
 ### 添加新功能
