@@ -6,4 +6,4 @@ build-backend = "setuptools.build_meta"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 addopts = "-v"
-pythonpath = ["E:/study/face-change/md2docx"] 
+pythonpath = ["src"] 

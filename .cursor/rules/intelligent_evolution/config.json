@@ -1,0 +1,160 @@
+{
+  "version": "1.0.0",
+  "description": "自动进化系统配置",
+  "perception": {
+    "enabled": true,
+    "scan_interval": 3600,
+    "data_retention_days": 90,
+    "privacy_mode": true
+  },
+  "project_monitoring": {
+    "technology_stack": {
+      "enabled": true,
+      "change_threshold": 0.3,
+      "scan_files": [
+        "package.json",
+        "requirements.txt",
+        "go.mod",
+        "Cargo.toml",
+        "pyproject.toml",
+        "composer.json",
+        "CMakeLists.txt",
+        "Makefile",
+        "configure.ac",
+        "configure.in"
+      ]
+    },
+    "team_dynamics": {
+      "enabled": true,
+      "contributor_threshold": 1,
+      "activity_window_days": 30
+    },
+    "project_scale": {
+      "enabled": true,
+      "code_growth_threshold": 0.2,
+      "file_count_threshold": 50
+    },
+    "development_stage": {
+      "enabled": true,
+      "commit_frequency_threshold": 10,
+      "branch_complexity_threshold": 5
+    },
+    "system_environment": {
+      "enabled": true,
+      "detect_os": true,
+      "detect_architecture": true,
+      "detect_toolchain": true,
+      "toolchain_commands": [
+        "gcc",
+        "clang",
+        "cl",
+        "cc",
+        "g++"
+      ]
+    }
+  },
+  "user_analysis": {
+    "communication_patterns": {
+      "enabled": true,
+      "repetition_threshold": 3,
+      "session_memory_count": 20
+    },
+    "preference_learning": {
+      "enabled": true,
+      "confidence_threshold": 0.7,
+      "learning_rate": 0.1
+    },
+    "feedback_analysis": {
+      "enabled": true,
+      "sentiment_threshold": 0.6,
+      "feedback_memory_days": 30
+    }
+  },
+  "evolution_triggers": {
+    "threshold_based": {
+      "project_scale_change": {
+        "enabled": true,
+        "threshold": 0.25,
+        "cooldown_days": 7
+      },
+      "team_change": {
+        "enabled": true,
+        "threshold": 1,
+        "cooldown_days": 14
+      },
+      "user_preference_accumulation": {
+        "enabled": true,
+        "threshold": 10,
+        "cooldown_days": 3
+      }
+    },
+    "pattern_based": {
+      "repeated_issues": {
+        "enabled": true,
+        "threshold": 3,
+        "time_window_days": 14
+      },
+      "efficiency_patterns": {
+        "enabled": true,
+        "threshold": 5,
+        "success_rate_threshold": 0.8
+      }
+    }
+  },
+  "rule_adjustments": {
+    "collaboration_mode": {
+      "auto_adjust": true,
+      "sensitivity": 0.7,
+      "gradual_rollout": true
+    },
+    "quality_gates": {
+      "dynamic_adjustment": true,
+      "risk_based": true,
+      "team_size_factor": true
+    },
+    "communication_style": {
+      "personalization": true,
+      "learning_enabled": true,
+      "fallback_mode": "balanced"
+    }
+  },
+  "learning_system": {
+    "data_storage": {
+      "local_only": true,
+      "encrypted": true,
+      "max_size_mb": 10
+    },
+    "model_update": {
+      "frequency": "daily",
+      "backup_enabled": true,
+      "version_control": true
+    },
+    "privacy_controls": {
+      "data_anonymization": true,
+      "user_consent_required": false,
+      "data_export_allowed": true
+    }
+  },
+  "recommendation_engine": {
+    "confidence_threshold": 0.75,
+    "max_suggestions": 3,
+    "explanation_required": true,
+    "user_feedback_collection": true
+  },
+  "monitoring": {
+    "performance_metrics": {
+      "enabled": true,
+      "metrics_retention_days": 60
+    },
+    "effectiveness_tracking": {
+      "enabled": true,
+      "baseline_period_days": 14,
+      "improvement_threshold": 0.1
+    },
+    "error_reporting": {
+      "enabled": true,
+      "anonymized": true,
+      "auto_correction_attempts": 3
+    }
+  }
+}

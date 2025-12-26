@@ -1,0 +1,108 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-12-21T12:06:50+08:00",
+    "last_updated_by": "jw.zhou <zhou24388@163.com>",
+    "description": "AI共生项目配置模板框架"
+  },
+  "project_template": {
+    "name": "{{PROJECT_NAME}}",
+    "type": "{{PROJECT_TYPE}}",
+    "version": "{{RULES_VERSION}}",
+    "generated_at": "2025-12-26 09:14:38 CST",
+    "generated_by": "jw.zhou <zhou24388@163.com>",
+    "ai_symbiosis_version": "1.1.0"
+  },
+  "collaboration_settings": {
+    "mode": "{{TEAM_SIZE == 'personal' ? 'autonomous' : 'confirmatory'}}",
+    "communication_style": "human_language",
+    "confirmation_level": "{{QUALITY_LEVEL == 'enterprise' ? 'high' : 'standard'}}",
+    "risk_tolerance": "{{SECURITY_LEVEL}}",
+    "document_focus": "{{PROJECT_TYPE == 'document_management' || PROJECT_TYPE == 'work_logging'}}"
+  },
+  "technical_requirements": {
+    "primary_stack": "{{TECH_STACK}}",
+    "quality_gates": {
+      "code_review": "{{QUALITY_LEVEL >= 'standard'}}",
+      "testing": "{{QUALITY_LEVEL >= 'standard'}}",
+      "security_scan": "{{SECURITY_LEVEL >= 'standard'}}",
+      "performance_check": "{{QUALITY_LEVEL == 'high' || QUALITY_LEVEL == 'enterprise'}}"
+    },
+    "deployment_requirements": {
+      "environment_separation": "{{DEV_STAGE != 'prototype'}}",
+      "rollback_capability": true,
+      "monitoring_setup": "{{QUALITY_LEVEL >= 'standard'}}"
+    }
+  },
+  "team_dynamics": {
+    "size_category": "{{TEAM_SIZE}}",
+    "communication_frequency": "{{TEAM_SIZE == 'large' ? 'structured' : 'fluid'}}",
+    "decision_making": "{{TEAM_SIZE == 'personal' ? 'solo' : 'collaborative'}}",
+    "documentation_level": "{{QUALITY_LEVEL}}"
+  },
+  "development_workflow": {
+    "iteration_style": "{{DEV_STAGE == 'maintenance' ? 'incremental' : 'agile'}}",
+    "automation_level": "{{QUALITY_LEVEL}}",
+    "feedback_loops": "{{TEAM_SIZE != 'personal'}}",
+    "continuous_integration": "{{QUALITY_LEVEL >= 'standard'}}"
+  },
+  "quality_assurance": {
+    "testing_strategy": {
+      "unit_tests": true,
+      "integration_tests": "{{QUALITY_LEVEL >= 'standard'}}",
+      "e2e_tests": "{{QUALITY_LEVEL == 'high' || QUALITY_LEVEL == 'enterprise'}}",
+      "performance_tests": "{{QUALITY_LEVEL == 'enterprise'}}"
+    },
+    "code_quality": {
+      "linting": true,
+      "formatting": true,
+      "static_analysis": "{{QUALITY_LEVEL >= 'standard'}}",
+      "complexity_checks": "{{QUALITY_LEVEL >= 'high'}}"
+    }
+  },
+  "security_framework": {
+    "input_validation": "{{SECURITY_LEVEL >= 'basic'}}",
+    "authentication": "{{SECURITY_LEVEL >= 'standard'}}",
+    "authorization": "{{SECURITY_LEVEL >= 'standard'}}",
+    "data_encryption": "{{SECURITY_LEVEL >= 'high'}}",
+    "audit_logging": "{{SECURITY_LEVEL >= 'high'}}",
+    "vulnerability_scanning": "{{SECURITY_LEVEL >= 'standard'}}"
+  },
+  "evolution_triggers": {
+    "version_bumps": {
+      "minor_update": "monthly_review || feature_complete",
+      "major_update": "tech_stack_change || requirements_shift",
+      "patch_update": "bug_fix || optimization"
+    },
+    "review_cycles": {
+      "frequency": "{{DEV_STAGE == 'maintenance' ? 'quarterly' : 'monthly'}}",
+      "triggers": ["milestone_reached", "team_feedback", "performance_issues"]
+    }
+  },
+  "document_management": {
+    "enabled": "{{PROJECT_TYPE == 'document_management' || PROJECT_TYPE == 'work_logging'}}",
+    "standards": {
+      "naming_conventions": true,
+      "template_consistency": true,
+      "version_control": true,
+      "regular_updates": "{{DEV_STAGE != 'maintenance'}}"
+    },
+    "work_documentation": {
+      "weekly_reports": "{{PROJECT_TYPE == 'work_logging'}}",
+      "monthly_reports": "{{PROJECT_TYPE == 'work_logging'}}",
+      "template_validation": true,
+      "content_accuracy_checks": "{{QUALITY_LEVEL >= 'standard'}}"
+    },
+    "collaboration_features": {
+      "team_sharing": "{{TEAM_SIZE != 'personal'}}",
+      "review_workflows": "{{QUALITY_LEVEL >= 'standard'}}",
+      "audit_trails": "{{SECURITY_LEVEL >= 'standard'}}"
+    }
+  },
+  "custom_extensions": {
+    "enabled": false,
+    "variables": {},
+    "rules": [],
+    "integrations": []
+  }
+}
