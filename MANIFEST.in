@@ -1,9 +1,9 @@
 # 包含webui目录
-recursive-include src/md2docx/webui *.py
-recursive-include src/md2docx/webui *.html
-recursive-include src/md2docx/webui *.css
-recursive-include src/md2docx/webui *.js
-recursive-include src/md2docx/webui *.md
+recursive-include src/mddocx/webui *.py
+recursive-include src/mddocx/webui *.html
+recursive-include src/mddocx/webui *.css
+recursive-include src/mddocx/webui *.js
+recursive-include src/mddocx/webui *.md
 
 # 包含其他重要文件
 include LICENSE

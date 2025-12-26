@@ -115,7 +115,7 @@ jobs:
 
 ##### 1. Web界面基础架构 ✅
 - ✅ **Flask应用搭建**: 完整的路由设计，Jinja2模板系统，配置管理
-- ✅ **目录结构**: `src/md2docx/webui/` 目录，包含模板和静态文件
+- ✅ **目录结构**: `src/mddocx/webui/` 目录，包含模板和静态文件
 - ✅ **基础页面**: 主页(index.html)，预览页(preview.html)，基础模板(base.html)
 
 ##### 2. 核心功能实现 ✅
@@ -140,7 +140,7 @@ jobs:
 
 ```
 md2docx/
-├── src/md2docx/webui/     # 🆕 Web界面模块
+├── src/mddocx/webui/      # 🆕 Web界面模块
 │   ├── __init__.py
 │   ├── app.py            # Flask应用主文件
 │   ├── config.py         # 应用配置

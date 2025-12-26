@@ -52,4 +52,4 @@ mddocx-webui = "md2docx.webui.app:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-md2docx = ["webui/templates/*.html", "webui/static/**/*"]
+mddocx = ["webui/templates/*.html", "webui/static/**/*"]
