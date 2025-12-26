@@ -1,5 +1,325 @@
 /* Markdown to DOCX Converter - 样式文件 */
 
+/* ===========================
+   新界面布局样式
+   =========================== */
+
+/* 编辑器容器 */
+.editor-container {
+    min-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-section {
+    flex: 1;
+    display: flex;
+    gap: 0;
+    min-height: 500px;
+}
+
+/* 输入面板 */
+.input-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #e0e0e0;
+    background: #fafafa;
+}
+
+.input-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    background: white;
+}
+
+.input-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.input-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s;
+}
+
+.btn-small:hover {
+    background: #f5f5f5;
+    border-color: #bbb;
+}
+
+#markdown-input {
+    flex: 1;
+    width: 100%;
+    border: none;
+    padding: 20px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+    outline: none;
+    background: transparent;
+    box-sizing: border-box;
+}
+
+/* 预览面板 */
+.preview-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #e0e0e0;
+    background: white;
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #fafafa;
+}
+
+.preview-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.preview-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: white;
+}
+
+.preview-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: #999;
+    text-align: center;
+}
+
+.preview-placeholder .icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+/* 操作栏 */
+.action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-top: 1px solid #e0e0e0;
+    background: white;
+}
+
+.action-left,
+.action-right {
+    display: flex;
+    gap: 12px;
+}
+
+/* 特性介绍模式 */
+.features-container {
+    min-height: calc(100vh - 80px);
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.features-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.features-header h2 {
+    font-size: 2.5rem;
+    margin: 0 0 16px 0;
+    font-weight: 700;
+}
+
+.features-header p {
+    font-size: 1.2rem;
+    margin: 0 0 32px 0;
+    opacity: 0.9;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto 60px auto;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.feature-card h3 {
+    font-size: 1.4rem;
+    margin: 0 0 16px 0;
+    font-weight: 600;
+}
+
+.feature-card p {
+    font-size: 1rem;
+    margin: 0;
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+.features-footer {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.feature-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.feature-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+    .editor-section {
+        flex-direction: column;
+    }
+
+    .input-panel,
+    .preview-panel {
+        flex: none;
+        height: 50vh;
+    }
+
+    .input-panel {
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .preview-panel {
+        border-left: none;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .feature-stats {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .preview-panel {
+        display: none;
+    }
+
+    #markdown-input {
+        font-size: 16px; /* 防止iOS缩放 */
+    }
+
+    .action-bar {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .action-left,
+    .action-right {
+        justify-content: center;
+    }
+
+    .features-header h2 {
+        font-size: 2rem;
+    }
+
+    .feature-card {
+        padding: 24px;
+    }
+
+    .feature-links {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+/* 预览面板折叠状态 */
+.preview-panel.collapsed {
+    display: none;
+}
+
+.preview-panel.collapsed ~ .input-panel {
+    border-right: none;
+}
+
 /* 基础样式 */
 :root {
     --primary-color: #007acc;

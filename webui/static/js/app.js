@@ -2,22 +2,23 @@
  * Markdown to DOCX Converter - JavaScript 功能
  */
 
+// 全局状态
+let currentMode = 'editor'; // 'editor' 或 'features'
+let previewCollapsed = false;
+
 // 页面加载完成后的初始化
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
 });
 
 function initializeApp() {
-    // 初始化工具提示
-    initializeTooltips();
+    // 初始化事件监听器
+    initializeEventListeners();
 
-    // 初始化表单验证
-    initializeFormValidation();
-
-    // 初始化文件上传预览
+    // 初始化文件上传
     initializeFileUpload();
 
-    // 初始化快捷键
+    // 初始化键盘快捷键
     initializeKeyboardShortcuts();
 
     console.log('🚀 Markdown to DOCX Converter 已初始化');
@@ -357,11 +358,238 @@ function getMessageIcon(type) {
     return icons[type] || 'ℹ️';
 }
 
+/**
+ * 初始化事件监听器
+ */
+function initializeEventListeners() {
+    // Markdown输入变化时自动生成预览
+    const markdownInput = document.getElementById('markdown-input');
+    if (markdownInput) {
+        markdownInput.addEventListener('input', debounce(generatePreview, 500));
+    }
+}
+
+/**
+ * 初始化文件上传
+ */
+function initializeFileUpload() {
+    const fileInput = document.getElementById('file-input');
+    if (fileInput) {
+        fileInput.addEventListener('change', handleFileUpload);
+    }
+}
+
+/**
+ * 处理文件上传
+ */
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // 验证文件类型
+    if (!isValidFileType(file)) {
+        showMessage('请上传 .md, .markdown 或 .txt 文件', 'error');
+        return;
+    }
+
+    // 验证文件大小
+    if (file.size > 16 * 1024 * 1024) {
+        showMessage('文件大小不能超过 16MB', 'error');
+        return;
+    }
+
+    // 读取文件内容
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const content = e.target.result;
+        document.getElementById('markdown-input').value = content;
+        generatePreview();
+        showMessage(`文件 "${file.name}" 已加载`, 'success');
+    };
+    reader.readAsText(file);
+}
+
+/**
+ * 验证文件类型
+ */
+function isValidFileType(file) {
+    const validTypes = ['text/plain', 'text/markdown', 'text/x-markdown'];
+    const validExtensions = ['.md', '.markdown', '.txt'];
+
+    // 检查 MIME 类型
+    if (validTypes.includes(file.type)) {
+        return true;
+    }
+
+    // 检查文件扩展名
+    const fileName = file.name.toLowerCase();
+    return validExtensions.some(ext => fileName.endsWith(ext));
+}
+
+/**
+ * 清空输入内容
+ */
+function clearContent() {
+    document.getElementById('markdown-input').value = '';
+    document.getElementById('preview-content').innerHTML = `
+        <div class="preview-placeholder">
+            <span class="icon">👁️</span>
+            <p>输入 Markdown 内容后将在此处显示预览</p>
+        </div>
+    `;
+    showMessage('内容已清空', 'info');
+}
+
+/**
+ * 切换预览面板
+ */
+function togglePreview() {
+    const previewPanel = document.getElementById('preview-panel');
+    const inputPanel = document.querySelector('.input-panel');
+
+    previewCollapsed = !previewCollapsed;
+
+    if (previewCollapsed) {
+        previewPanel.classList.add('collapsed');
+        // 让输入框占满宽度
+        inputPanel.style.flex = '1';
+    } else {
+        previewPanel.classList.remove('collapsed');
+        // 恢复原来的布局
+        inputPanel.style.flex = '1';
+    }
+}
+
+/**
+ * 切换编辑模式和特性模式
+ */
+function toggleMode() {
+    const editorMode = document.getElementById('editor-mode');
+    const featuresMode = document.getElementById('features-mode');
+    const toggleBtn = document.getElementById('features-toggle');
+
+    if (currentMode === 'editor') {
+        // 切换到特性模式
+        editorMode.style.display = 'none';
+        featuresMode.style.display = 'block';
+        currentMode = 'features';
+
+        if (toggleBtn) {
+            toggleBtn.innerHTML = '<span class="icon">🚀</span> 开始使用';
+        }
+    } else {
+        // 切换到编辑模式
+        featuresMode.style.display = 'none';
+        editorMode.style.display = 'block';
+        currentMode = 'editor';
+
+        if (toggleBtn) {
+            toggleBtn.innerHTML = '<span class="icon">📋</span> 特性介绍';
+        }
+    }
+}
+
+/**
+ * 生成实时预览
+ */
+function generatePreview() {
+    const markdownInput = document.getElementById('markdown-input');
+    const previewContent = document.getElementById('preview-content');
+
+    if (!markdownInput || !previewContent) return;
+
+    const content = markdownInput.value.trim();
+
+    if (!content) {
+        previewContent.innerHTML = `
+            <div class="preview-placeholder">
+                <span class="icon">👁️</span>
+                <p>输入 Markdown 内容后将在此处显示预览</p>
+            </div>
+        `;
+        return;
+    }
+
+    // 显示加载状态
+    previewContent.innerHTML = '<div style="text-align: center; padding: 40px;">生成预览中...</div>';
+
+    // 发送到后端生成预览
+    fetch('/preview', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'markdown=' + encodeURIComponent(content)
+    })
+    .then(response => response.text())
+    .then(html => {
+        // 提取预览内容（简单处理）
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const bodyContent = doc.body.innerHTML;
+
+        if (bodyContent.trim()) {
+            previewContent.innerHTML = bodyContent;
+        } else {
+            previewContent.innerHTML = '<div style="padding: 20px; color: #666;">预览生成失败</div>';
+        }
+    })
+    .catch(error => {
+        console.error('预览生成失败:', error);
+        previewContent.innerHTML = '<div style="padding: 20px; color: #dc3545;">预览生成失败，请稍后重试</div>';
+    });
+}
+
+/**
+ * 更新隐藏的表单字段
+ */
+function updateHiddenInput() {
+    const markdownInput = document.getElementById('markdown-input');
+    const hiddenInput = document.getElementById('hidden-markdown');
+
+    if (markdownInput && hiddenInput) {
+        hiddenInput.value = markdownInput.value;
+    }
+}
+
+/**
+ * 键盘快捷键
+ */
+function initializeKeyboardShortcuts() {
+    document.addEventListener('keydown', function(event) {
+        // Ctrl/Cmd + Enter 提交表单
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+            event.preventDefault();
+            updateHiddenInput();
+            const submitBtn = document.querySelector('#convert-form button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.click();
+            }
+        }
+
+        // Ctrl/Cmd + Shift + P 切换预览
+        if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'P') {
+            event.preventDefault();
+            togglePreview();
+        }
+
+        // Ctrl/Cmd + Shift + F 切换模式
+        if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'F') {
+            event.preventDefault();
+            toggleMode();
+        }
+    });
+}
+
 // 导出功能供其他脚本使用
 window.MD2DOCX = {
     showLoading,
     formatFileSize,
     debounce,
     copyToClipboard,
-    showMessage
+    showMessage,
+    toggleMode,
+    togglePreview,
+    generatePreview,
+    clearContent
 };

@@ -15,9 +15,18 @@
                 Markdown to DOCX Converter
             </h1>
             <nav class="nav">
-                <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">首页</a>
-                <a href="#" onclick="showPreview()">预览</a>
-                <a href="#about">关于</a>
+                <a href="https://github.com/wangqiqi/md2docx" target="_blank">
+                    <span class="icon">💻</span>
+                    GitHub
+                </a>
+                <a href="#" onclick="toggleMode()" id="features-toggle">
+                    <span class="icon">📋</span>
+                    特性介绍
+                </a>
+                <a href="{{ url_for('static', filename='docs/api.md') }}">
+                    <span class="icon">📖</span>
+                    API 文档
+                </a>
             </nav>
         </div>
     </header>
