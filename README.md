@@ -94,7 +94,19 @@
 
 ## 安装
 
-### 开发环境安装（推荐）
+### PyPI 安装（推荐）
+
+直接从 PyPI 安装最新稳定版本：
+
+```bash
+pip install mddocx
+```
+
+**安装后即可使用完整功能：**
+- 命令行工具：`mddocx`
+- Web界面：`mddocx-webui`
+
+### 开发环境安装
 
 如果您要进行开发、测试或贡献代码：
 
@@ -287,6 +299,31 @@ pytest tests/
 3. 提交变更
 4. 推送到分支
 5. 创建 Pull Request
+
+## 发布说明
+
+### 自动发布
+项目使用 GitHub Actions 和 PyPI Trusted Publisher 实现自动发布：
+
+```bash
+# 推送版本标签触发自动发布
+git tag v0.4.3
+git push origin v0.4.3
+```
+
+### 手动发布
+如果自动发布失败，可以使用手动发布脚本：
+
+```bash
+./scripts/publish_to_pypi.sh
+```
+
+### 配置 Trusted Publisher
+在 PyPI 项目设置中添加：
+- **Publisher**: GitHub
+- **Repository**: wangqiqi/md2docx
+- **Workflow**: publish.yml
+- **Environment**: (留空)
 
 ## 许可证
 

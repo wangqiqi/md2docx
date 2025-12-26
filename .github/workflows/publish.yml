@@ -34,7 +34,29 @@ jobs:
     - name: Check package
       run: twine check dist/*
 
-    - name: Publish to PyPI
+    - name: Publish to PyPI (Trusted Publisher)
+      id: trusted-publish
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         print-hash: true
+      continue-on-error: true
+
+    - name: Check Trusted Publisher result
+      if: steps.trusted-publish.outcome == 'failure'
+      run: |
+        echo "⚠️  Trusted Publisher 发布失败"
+        echo "📋 解决方法："
+        echo "   1. 访问: https://pypi.org/manage/project/mddocx/settings/publishing/"
+        echo "   2. 添加 Trusted Publisher:"
+        echo "      - Publisher: GitHub"
+        echo "      - Repository: wangqiqi/md2docx"
+        echo "      - Workflow: publish.yml"
+        echo "      - Environment: (留空)"
+        echo "   3. 或使用手动发布: ./scripts/publish_to_pypi.sh"
+        echo ""
+        echo "🔍 当前 claims 信息:"
+        echo "   sub: repo:wangqiqi/md2docx:ref:refs/tags/${GITHUB_REF#refs/tags/}"
+        echo "   repository: wangqiqi/md2docx"
+        echo "   repository_owner: wangqiqi"
+        echo "   workflow_ref: wangqiqi/md2docx/.github/workflows/publish.yml@refs/tags/${GITHUB_REF#refs/tags/}"
+        exit 1
