@@ -1,16 +1,90 @@
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+import pytest
 test task list 测试
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 任务列表转换器单元测试
 """
 
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
 
-
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 
 
 def test_init():
     """测试初始化"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     converter = TaskListConverter()
     assert converter is not None
     assert converter.document is None
@@ -28,6 +102,21 @@ def test_init():
 
 def test_document_not_set():
     """测试文档未设置的情况"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     converter = TaskListConverter()
     with pytest.raises(ValueError):
         converter.convert((MagicMock(), MagicMock()))
@@ -35,6 +124,21 @@ def test_document_not_set():
 
 def test_convert_checked_task():
     """测试已选中的任务列表项转换"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     # 创建转换器
     converter = TaskListConverter()
     converter.set_document(Document())
@@ -62,6 +166,21 @@ def test_convert_checked_task():
 
 def test_convert_unchecked_task():
     """测试未选中的任务列表项转换"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     # 创建转换器
     converter = TaskListConverter()
     converter.set_document(Document())
@@ -89,6 +208,21 @@ def test_convert_unchecked_task():
 
 def test_convert_without_list_converter():
     """测试没有列表转换器的情况"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     # 创建转换器
     converter = TaskListConverter()
     converter.set_document(Document())

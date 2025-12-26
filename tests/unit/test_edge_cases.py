@@ -1,25 +1,145 @@
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+import pytest
 test edge cases 测试
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 边界条件和特殊字符测试
 测试系统对各种边缘情况的处理能力
 """
 
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
 
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 
 
 class TestEdgeCases:
     """边界条件测试类"""
 
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+
     @pytest.fixture
     def converter(self):
         """创建转换器实例"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         return BaseConverter()
 
     def test_unicode_characters(self, converter):
         """测试Unicode特殊字符"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         unicode_content = """# Unicode测试
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 
 ## 表情符号
 🎉 庆祝 🎊 派对 🥳
@@ -37,12 +157,42 @@ Español：Hola mundo
 ## 数学符号
 ∑ ∏ √ ∫ ∂ ∇ ∞ ≠ ≈ ≤ ≥ ⊂ ⊃ ∪ ∩ ∈ ∉
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         doc = converter.convert(unicode_content)
         assert doc is not None
         assert len(doc.paragraphs) > 5
 
     def test_empty_and_whitespace(self, converter):
         """测试空内容和空白内容"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         # 完全空的Markdown
         empty_doc = converter.convert("")
         assert empty_doc is not None
@@ -58,7 +208,37 @@ Español：Hola mundo
 
     def test_malformed_markdown(self, converter):
         """测试格式错误的Markdown"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         malformed_content = """# 标题
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 
 这是一个段落，没有正确结束。
 
@@ -79,12 +259,42 @@ def function():
     # 缺少结束标记
 """
 
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+
         # 不应该抛出异常
         doc = converter.convert(malformed_content)
         assert doc is not None
 
     def test_extreme_nesting(self, converter):
         """测试极端的嵌套结构"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         # 生成极度嵌套的列表
         content = "# 极度嵌套测试\n\n"
 
@@ -102,6 +312,21 @@ def function():
 
     def test_very_long_lines(self, converter):
         """测试超长行"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         # 生成超长的一行
         long_line = "这是一行非常长的文本，" * 1000  # 约15,000字符
 
@@ -113,7 +338,37 @@ def function():
 
     def test_special_html_entities(self, converter):
         """测试HTML实体"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         html_entities_content = """# HTML实体测试
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 
 ## 基本实体
 & < > " '
@@ -125,12 +380,57 @@ def function():
 &#169; &#8482; &#8364; &#8212; &#8230;
 """
 
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+
         doc = converter.convert(html_entities_content)
         assert doc is not None
 
     def test_mixed_encodings(self, converter):
         """测试混合编码内容"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         mixed_content = """# 混合编码测试
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 
 ## 正常ASCII
 Hello World!
@@ -145,12 +445,57 @@ Hello 世界！Mixing English and 中文 content.
 café naïve résumé
 """
 
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+
         doc = converter.convert(mixed_content)
         assert doc is not None
 
     def test_code_blocks_edge_cases(self, converter):
         """测试代码块的边界情况"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         code_content = """# 代码块测试
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 
 ## 空代码块
 ```
@@ -173,12 +518,57 @@ const symbols = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 ```
 """
 
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+
         doc = converter.convert(code_content)
         assert doc is not None
 
     def test_table_edge_cases(self, converter):
         """测试表格的边界情况"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         table_content = """# 表格边界测试
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 
 ## 空表格
 | | |
@@ -201,12 +591,57 @@ const symbols = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 | 数据1 | 数据2 | 数据3 | 数据4 | 数据5 |
 """
 
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+
         doc = converter.convert(table_content)
         assert doc is not None
 
     def test_link_edge_cases(self, converter):
         """测试链接的边界情况"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         link_content = """# 链接边界测试
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 
 ## 各种链接格式
 [正常链接](https://example.com)
@@ -226,13 +661,58 @@ www.example.com
 [ref1]: https://example.com "标题"
 """
 
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+
         doc = converter.convert(link_content)
         assert doc is not None
 
     def test_image_edge_cases(self, converter):
         """测试图片的边界情况"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         # 注意：这个测试可能需要mock，因为实际的图片下载可能失败
         image_content = """# 图片边界测试
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 
 ## 各种图片格式
 ![正常图片](https://example.com/image.jpg)
@@ -243,6 +723,21 @@ www.example.com
 ## 带标题的图片
 ![图片标题](https://example.com/img.jpg "这是图片标题")
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 
         doc = converter.convert(image_content)
         assert doc is not None  # 即使图片下载失败，文档结构应该正常

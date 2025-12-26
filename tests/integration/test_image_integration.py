@@ -1,20 +1,109 @@
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+import pytest
 test image integration 测试
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 图片转换集成测试
 """
 
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
 
-
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 
 
 class TestImageIntegration:
     """图片转换集成测试"""
 
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+
     @pytest.fixture
     def base_converter(self):
         """创建基础转换器实例"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         return BaseConverter(debug=False)
 
     @patch("src.converter.elements.image.requests.get")
@@ -24,6 +113,21 @@ class TestImageIntegration:
         self, mock_open, mock_exists, mock_get, base_converter
     ):
         """测试转换基本图片"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         # 模拟本地文件存在
         mock_exists.return_value = True
 
@@ -49,6 +153,21 @@ class TestImageIntegration:
         self, mock_open, mock_exists, mock_get, base_converter
     ):
         """测试转换带标题的图片"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         # 模拟本地文件存在
         mock_exists.return_value = True
 
@@ -78,6 +197,21 @@ class TestImageIntegration:
     @patch("src.converter.elements.image.requests.get")
     def test_convert_online_image(self, mock_get, base_converter):
         """测试转换在线图片"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         # 模拟请求响应
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -99,6 +233,21 @@ class TestImageIntegration:
         self, mock_open, mock_exists, mock_get, base_converter
     ):
         """测试转换内联图片"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         # 模拟本地文件存在
         mock_exists.return_value = True
 
@@ -123,6 +272,21 @@ class TestImageIntegration:
         self, mock_open, mock_exists, mock_get, base_converter
     ):
         """测试转换多个图片"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         # 模拟本地文件存在
         mock_exists.return_value = True
 
@@ -133,6 +297,21 @@ class TestImageIntegration:
 
         # 测试转换
         md_text = """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 # 多个图片测试
 
 ![图片1](test1.png)
@@ -141,6 +320,21 @@ class TestImageIntegration:
 
 ![图片3](test3.png)
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         doc = base_converter.convert(md_text)
 
         # 验证结果

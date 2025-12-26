@@ -1,20 +1,125 @@
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 test list 测试
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 列表转换器测试模块
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 
 
 
 
 def test_unordered_list():
     """测试无序列表"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     md_text = """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 * 第一项
 * 第二项
 * 第三项
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     converter = BaseConverter()
     converter.register_converter("list", ListConverter())
     converter.register_converter("paragraph", TextConverter())
@@ -30,11 +135,56 @@ def test_unordered_list():
 
 def test_ordered_list():
     """测试有序列表"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     md_text = """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 1. 第一项
 2. 第二项
 3. 第三项
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     converter = BaseConverter()
     converter.register_converter("list", ListConverter())
     converter.register_converter("paragraph", TextConverter())
@@ -50,12 +200,57 @@ def test_ordered_list():
 
 def test_nested_unordered_list():
     """测试嵌套无序列表"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     md_text = """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 * 第一级
   * 第二级
     * 第三级
 * 回到第一级
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     converter = BaseConverter()
     converter.register_converter("list", ListConverter())
     converter.register_converter("paragraph", TextConverter())
@@ -74,12 +269,57 @@ def test_nested_unordered_list():
 
 def test_nested_ordered_list():
     """测试嵌套有序列表"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     md_text = """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 1. 第一级
    1. 第二级
       1. 第三级
 2. 回到第一级
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     converter = BaseConverter()
     converter.register_converter("list", ListConverter())
     converter.register_converter("paragraph", TextConverter())
@@ -104,13 +344,58 @@ def test_nested_ordered_list():
 
 def test_mixed_list():
     """测试混合列表（有序和无序）"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     md_text = """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 * 无序第一级
   1. 有序第二级
      * 无序第三级
   2. 有序第二级
 * 回到无序第一级
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     converter = BaseConverter()
     converter.register_converter("list", ListConverter())
     converter.register_converter("paragraph", TextConverter())
@@ -129,12 +414,57 @@ def test_mixed_list():
 
 def test_list_with_styles():
     """测试带样式的列表项"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     md_text = """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 * **粗体**项目
 * *斜体*项目
 * ***粗斜体***项目
 * ~~删除线~~项目
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     converter = BaseConverter()
     converter.register_converter("list", ListConverter())
     converter.register_converter("paragraph", TextConverter())
@@ -158,10 +488,55 @@ def test_list_with_styles():
 
 def test_empty_list():
     """测试空列表项"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     md_text = """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 *
 *
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     converter = BaseConverter()
     converter.register_converter("list", ListConverter())
     converter.register_converter("paragraph", TextConverter())
@@ -176,7 +551,37 @@ def test_empty_list():
 
 def test_list_numbering_restart():
     """测试列表编号重启"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     md_text = """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 1. 第一个列表
    1. 子项1
    2. 子项2
@@ -189,6 +594,21 @@ def test_list_numbering_restart():
    2. 新的子项2
 2. 第二个列表
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
     converter = BaseConverter()
     converter.register_converter("list", ListConverter())
     converter.register_converter("paragraph", TextConverter())

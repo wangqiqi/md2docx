@@ -1,27 +1,146 @@
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+import pytest
 test large files 测试
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 大文件处理测试
 测试系统对大型Markdown文件的处理能力
 """
 
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
 
-
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 
 
 class TestLargeFileHandling:
     """大文件处理测试类"""
 
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
+
     @pytest.fixture
     def converter(self):
         """创建转换器实例"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         return BaseConverter()
 
     def generate_large_markdown(self, size_mb=1):
         """生成指定大小的Markdown内容"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         # 估算每个段落的大小
         paragraph_template = """## 第{index}节
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
 
 这是一个测试段落，包含了一些内容用于测试大文件处理能力。
 这里有一些**粗体文本**和*斜体文本*，还有一些`内联代码`。
@@ -43,6 +162,21 @@ def hello_world():
 ---
 
 """
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         content = ""
         paragraphs_needed = max(
             1, int(size_mb * 1024 * 1024 / len(paragraph_template.encode("utf-8")))
@@ -55,6 +189,21 @@ def hello_world():
 
     def test_large_file_1mb(self, converter):
         """测试1MB文件的处理"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         large_content = self.generate_large_markdown(size_mb=1)
 
         # 验证内容大小
@@ -70,6 +219,21 @@ def hello_world():
 
     def test_large_file_5mb(self, converter):
         """测试5MB文件的处理"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         large_content = self.generate_large_markdown(size_mb=5)
 
         # 验证内容大小
@@ -85,6 +249,21 @@ def hello_world():
 
     def test_very_deep_nesting(self, converter):
         """测试深度嵌套的结构"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         # 生成深度嵌套的内容
         content = "# 根标题\n\n"
         for level in range(1, 7):  # H1 到 H6
@@ -103,6 +282,21 @@ def hello_world():
 
     def test_file_with_many_tables(self, converter):
         """测试包含多个表格的文件"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         content = "# 表格测试文档\n\n"
 
         # 生成10个表格
@@ -123,6 +317,21 @@ def hello_world():
 
     def test_mixed_content_large_file(self, converter):
         """测试混合内容的较大文件"""
+
+import pytest
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from markdown_it import MarkdownIt
+
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.hr import HRConverter
+from mddocx.converter.elements.html import HtmlConverter
+from mddocx.converter.elements.image import ImageConverter
+from mddocx.converter.elements.table import TableConverter
+from mddocx.converter.elements.task_list import TaskListConverter
+from mddocx.converter.elements.text import TextConverter
         content_parts = []
 
         # 添加各种类型的元素

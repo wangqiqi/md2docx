@@ -23,6 +23,7 @@ from mddocx.converter.elements import (
     ListConverter,
     TextConverter,
 )
+from mddocx.converter.elements.html import HTML2DOCX_AVAILABLE
 
 
 @pytest.fixture
