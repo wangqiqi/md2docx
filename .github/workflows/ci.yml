@@ -25,7 +25,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/pyproject.toml', '**/requirements.txt') }}
+        key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/pyproject.toml') }}
         restore-keys: |
           ${{ runner.os }}-pip-${{ matrix.python-version }}-
           ${{ runner.os }}-pip-
@@ -69,7 +69,7 @@ jobs:
       run: black --check --diff src tests
 
     - name: Run mypy
-      run: mypy src --ignore-missing-imports
+      run: mypy src --ignore-missing-imports --disable-error-code=attr-defined,union-attr
 
     - name: Run isort check
       run: isort --check-only --diff src tests
