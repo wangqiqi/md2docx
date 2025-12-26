@@ -1,11 +1,13 @@
 """
 分隔线转换器单元测试
 """
-import pytest
-from docx import Document
+
 from unittest.mock import MagicMock
 
-from src.converter.elements.hr import HRConverter
+import pytest
+from docx import Document
+
+from mddocx.converter.elements.hr import HRConverter
 
 
 def test_init():
@@ -14,7 +16,7 @@ def test_init():
     assert converter is not None
     assert converter.document is None
     assert converter.debug is False
-    
+
     # 测试带基础转换器的初始化
     base_converter = MagicMock()
     base_converter.debug = True
@@ -34,20 +36,20 @@ def test_convert():
     # 创建转换器
     converter = HRConverter()
     converter.set_document(Document())
-    
+
     # 创建模拟分隔线token
     hr_token = MagicMock()
-    hr_token.type = 'hr'
-    hr_token.markup = '---'
-    
+    hr_token.type = "hr"
+    hr_token.markup = "---"
+
     # 转换分隔线
     paragraph = converter.convert(hr_token)
-    
+
     # 验证结果
     assert paragraph is not None
     assert paragraph.alignment == 1  # 居中对齐
-    
+
     # 验证段落中包含水平线
     # 注意：由于水平线是通过XML元素添加的，无法直接验证
     # 这里只能验证段落存在
-    assert paragraph._element is not None 
+    assert paragraph._element is not None

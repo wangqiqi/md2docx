@@ -2,11 +2,14 @@
 异常输入处理测试
 测试系统对各种错误输入的处理能力和错误恢复
 """
-import pytest
-import tempfile
+
 import os
+import tempfile
 from pathlib import Path
-from src.converter import BaseConverter, MD2DocxError
+
+import pytest
+
+from mddocx.converter import BaseConverter, MD2DocxError
 
 
 class TestErrorHandling:
@@ -58,7 +61,7 @@ def function():
 
     def test_binary_content(self, converter):
         """测试二进制内容输入"""
-        binary_content = b'\x00\x01\x02\x03\xff\xfe\xfd'
+        binary_content = b"\x00\x01\x02\x03\xff\xfe\xfd"
 
         with pytest.raises((TypeError, UnicodeDecodeError)):
             converter.convert(binary_content)
@@ -126,7 +129,7 @@ def function():
         """测试无效的Unicode序列"""
         # 创建包含无效UTF-8序列的内容
         try:
-            invalid_unicode = "正常文本" + b'\xff\xfe'.decode('utf-8', errors='ignore')
+            invalid_unicode = "正常文本" + b"\xff\xfe".decode("utf-8", errors="ignore")
             doc = converter.convert(invalid_unicode)
             assert doc is not None
         except UnicodeDecodeError:
@@ -167,7 +170,7 @@ __
 
 >>>>>
 
-- 
+-
 
 1.
 

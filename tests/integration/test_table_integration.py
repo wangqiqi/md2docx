@@ -1,10 +1,11 @@
 """
 表格转换集成测试
 """
+
 import pytest
 from docx import Document
 
-from src.converter import BaseConverter
+from mddocx.converter import BaseConverter
 
 
 class TestTableIntegration:
@@ -25,21 +26,21 @@ class TestTableIntegration:
 | 王五 | 28 | 产品经理 |
 """
         doc = base_converter.convert(md_text)
-        
+
         # 验证结果
         assert len(doc.tables) == 1
         table = doc.tables[0]
-        
+
         # 验证表格结构
         assert len(table.rows) >= 3  # 至少有3行
         assert len(table.columns) == 3
-        
+
         # 验证表格内容 - 只验证存在性，不验证具体位置
         cell_texts = []
         for row in table.rows:
             for cell in row.cells:
                 cell_texts.append(cell.text.strip())
-        
+
         assert "姓名" in cell_texts
         assert "年龄" in cell_texts
         assert "职业" in cell_texts
@@ -59,21 +60,21 @@ class TestTableIntegration:
 | 长一点的内容 | 长一点的内容 | 长一点的内容 |
 """
         doc = base_converter.convert(md_text)
-        
+
         # 验证结果
         assert len(doc.tables) == 1
         table = doc.tables[0]
-        
+
         # 验证表格结构
         assert len(table.rows) >= 3  # 至少有3行
         assert len(table.columns) == 3
-        
+
         # 验证表格内容 - 只验证存在性，不验证具体位置
         cell_texts = []
         for row in table.rows:
             for cell in row.cells:
                 cell_texts.append(cell.text.strip())
-        
+
         assert "左对齐" in cell_texts
         assert "居中对齐" in cell_texts
         assert "右对齐" in cell_texts
@@ -90,21 +91,21 @@ class TestTableIntegration:
 | 商品C | 这是一个~~删除线~~的描述 | 50.00 | 5 |
 """
         doc = base_converter.convert(md_text)
-        
+
         # 验证结果
         assert len(doc.tables) == 1
         table = doc.tables[0]
-        
+
         # 验证表格结构
         assert len(table.rows) >= 3  # 至少有3行
         assert len(table.columns) == 4
-        
+
         # 验证表格内容 - 只验证存在性，不验证具体位置
         cell_texts = []
         for row in table.rows:
             for cell in row.cells:
                 cell_texts.append(cell.text.strip())
-        
+
         assert "项目" in cell_texts
         assert "描述" in cell_texts
         assert "价格" in cell_texts
@@ -124,21 +125,21 @@ class TestTableIntegration:
 | 数据 | 数据 |  |
 """
         doc = base_converter.convert(md_text)
-        
+
         # 验证结果
         assert len(doc.tables) == 1
         table = doc.tables[0]
-        
+
         # 验证表格结构
         assert len(table.rows) >= 4  # 至少有4行
         assert len(table.columns) == 3
-        
+
         # 验证表格内容 - 只验证存在性，不验证具体位置
         cell_texts = []
         for row in table.rows:
             for cell in row.cells:
                 cell_texts.append(cell.text.strip())
-        
+
         assert "A" in cell_texts
         assert "B" in cell_texts
         assert "C" in cell_texts
@@ -161,38 +162,38 @@ class TestTableIntegration:
 | 3 | 4 |
 """
         doc = base_converter.convert(md_text)
-        
+
         # 验证结果
         assert len(doc.tables) == 2
-        
+
         # 验证第一个表格
         table1 = doc.tables[0]
         assert len(table1.rows) >= 2  # 至少有2行
         assert len(table1.columns) == 2
-        
+
         # 验证第一个表格内容 - 只验证存在性，不验证具体位置
         cell_texts1 = []
         for row in table1.rows:
             for cell in row.cells:
                 cell_texts1.append(cell.text.strip())
-        
+
         assert "A" in cell_texts1
         assert "B" in cell_texts1
         assert "1" in cell_texts1
         assert "2" in cell_texts1
-        
+
         # 验证第二个表格
         table2 = doc.tables[1]
         assert len(table2.rows) >= 2  # 至少有2行
         assert len(table2.columns) == 2
-        
+
         # 验证第二个表格内容 - 只验证存在性，不验证具体位置
         cell_texts2 = []
         for row in table2.rows:
             for cell in row.cells:
                 cell_texts2.append(cell.text.strip())
-        
+
         assert "C" in cell_texts2
         assert "D" in cell_texts2
         assert "3" in cell_texts2
-        assert "4" in cell_texts2 
+        assert "4" in cell_texts2

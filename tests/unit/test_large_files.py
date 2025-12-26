@@ -2,11 +2,14 @@
 大文件处理测试
 测试系统对大型Markdown文件的处理能力
 """
-import pytest
-import tempfile
+
 import os
+import tempfile
 from pathlib import Path
-from src.converter import BaseConverter
+
+import pytest
+
+from mddocx.converter import BaseConverter
 
 
 class TestLargeFileHandling:
@@ -43,7 +46,9 @@ def hello_world():
 
 """
         content = ""
-        paragraphs_needed = max(1, int(size_mb * 1024 * 1024 / len(paragraph_template.encode('utf-8'))))
+        paragraphs_needed = max(
+            1, int(size_mb * 1024 * 1024 / len(paragraph_template.encode("utf-8")))
+        )
 
         for i in range(1, paragraphs_needed + 1):
             content += paragraph_template.format(index=i)
@@ -55,7 +60,7 @@ def hello_world():
         large_content = self.generate_large_markdown(size_mb=1)
 
         # 验证内容大小
-        content_size = len(large_content.encode('utf-8'))
+        content_size = len(large_content.encode("utf-8"))
         assert content_size > 500 * 1024  # 至少500KB
 
         # 执行转换
@@ -70,7 +75,7 @@ def hello_world():
         large_content = self.generate_large_markdown(size_mb=5)
 
         # 验证内容大小
-        content_size = len(large_content.encode('utf-8'))
+        content_size = len(large_content.encode("utf-8"))
         assert content_size > 2 * 1024 * 1024  # 至少2MB
 
         # 执行转换（这个测试可能会较慢）
@@ -128,19 +133,22 @@ def hello_world():
         # 文本段落
         for i in range(1, 21):
             content_parts.append(f"## 章节 {i}\n\n")
-            content_parts.append(f"这是第{i}章的内容，包含**粗体**、*斜体*和`代码`。\n\n")
+            content_parts.append(
+                f"这是第{i}章的内容，包含**粗体**、*斜体*和`代码`。\n\n"
+            )
             content_parts.append(f"- 列表项 {i}.1\n- 列表项 {i}.2\n- 列表项 {i}.3\n\n")
 
             # 每5章添加一个表格
             if i % 5 == 0:
-                content_parts.append("| A | B | C |\n| --- | --- | --- |\n| 1 | 2 | 3 |\n\n")
+                content_parts.append(
+                    "| A | B | C |\n| --- | --- | --- |\n| 1 | 2 | 3 |\n\n"
+                )
 
         large_content = "".join(content_parts)
 
         # 验证内容大小
-        assert len(large_content.encode('utf-8')) > 50 * 1024  # 至少50KB
+        assert len(large_content.encode("utf-8")) > 50 * 1024  # 至少50KB
 
         doc = converter.convert(large_content)
         assert doc is not None
         assert len(doc.paragraphs) > 100  # 大量内容</contents>
-

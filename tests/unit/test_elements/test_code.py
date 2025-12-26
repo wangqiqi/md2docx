@@ -1,8 +1,8 @@
 import pytest
 from docx.shared import RGBColor
 
-from src.converter.elements.code import CodeConverter
-from src.converter.base import BaseConverter
+from mddocx.converter.base import BaseConverter
+from mddocx.converter.elements.code import CodeConverter
 
 
 def test_basic_code_block(base_converter):
@@ -27,7 +27,9 @@ function hello() {
     doc = base_converter.convert(markdown)
     paragraphs = doc.paragraphs
     assert len(paragraphs) == 1
-    assert paragraphs[0].text == 'function hello() {\n    console.log("Hello, World!");\n}'
+    assert (
+        paragraphs[0].text == 'function hello() {\n    console.log("Hello, World!");\n}'
+    )
 
 
 def test_code_block_without_language(base_converter):
@@ -38,7 +40,7 @@ Some code without language
     doc = base_converter.convert(markdown)
     paragraphs = doc.paragraphs
     assert len(paragraphs) == 1
-    assert paragraphs[0].text == 'Some code without language'
+    assert paragraphs[0].text == "Some code without language"
 
 
 def test_multiple_code_blocks(base_converter):
@@ -65,7 +67,7 @@ def test_empty_code_block(base_converter):
     doc = base_converter.convert(markdown)
     paragraphs = doc.paragraphs
     assert len(paragraphs) == 1
-    assert paragraphs[0].text == ''
+    assert paragraphs[0].text == ""
 
 
 def test_code_block_with_special_characters(base_converter):
@@ -78,4 +80,7 @@ def special_chars():
     doc = base_converter.convert(markdown)
     paragraphs = doc.paragraphs
     assert len(paragraphs) == 1
-    assert paragraphs[0].text == 'def special_chars():\n    # 这是一个注释\n    print("特殊字符：!@#$%^&*()")' 
+    assert (
+        paragraphs[0].text
+        == 'def special_chars():\n    # 这是一个注释\n    print("特殊字符：!@#$%^&*()")'
+    )

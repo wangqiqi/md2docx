@@ -1,11 +1,13 @@
 """
 HTML转换器单元测试
 """
-import pytest
-from docx import Document
+
 from unittest.mock import MagicMock, patch
 
-from src.converter.elements.html import HtmlConverter, HTML2DOCX_AVAILABLE
+import pytest
+from docx import Document
+
+from mddocx.converter.elements.html import HTML2DOCX_AVAILABLE, HtmlConverter
 
 
 def test_init():
@@ -14,7 +16,7 @@ def test_init():
     assert converter is not None
     assert converter.document is None
     assert converter.debug is False
-    
+
     # 测试带基础转换器的初始化
     base_converter = MagicMock()
     base_converter.debug = True
@@ -35,15 +37,15 @@ def test_convert_with_html2docx():
     # 创建转换器
     converter = HtmlConverter()
     converter.set_document(Document())
-    
+
     # 创建模拟HTML token
     token = MagicMock()
-    token.type = 'html_block'
-    token.content = '<p>这是一个<strong>HTML</strong>段落</p>'
-    
+    token.type = "html_block"
+    token.content = "<p>这是一个<strong>HTML</strong>段落</p>"
+
     # 转换HTML
     result = converter.convert(token)
-    
+
     # 验证结果
     assert result is not None
     # 由于html2docx的具体行为难以模拟，这里只验证基本结果
@@ -54,17 +56,17 @@ def test_convert_without_html2docx():
     # 创建转换器
     converter = HtmlConverter()
     converter.set_document(Document())
-    
+
     # 模拟html2docx不可用
-    with patch('src.converter.elements.html.HTML2DOCX_AVAILABLE', False):
+    with patch("src.converter.elements.html.HTML2DOCX_AVAILABLE", False):
         # 创建模拟HTML token
         token = MagicMock()
-        token.type = 'html_block'
-        token.content = '<p>这是一个<strong>HTML</strong>段落</p>'
-        
+        token.type = "html_block"
+        token.content = "<p>这是一个<strong>HTML</strong>段落</p>"
+
         # 转换HTML
         result = converter.convert(token)
-        
+
         # 验证结果
         assert result is not None
         assert len(converter.document.paragraphs) > 0
@@ -75,15 +77,15 @@ def test_convert_empty_html():
     # 创建转换器
     converter = HtmlConverter()
     converter.set_document(Document())
-    
+
     # 创建模拟空HTML token
     token = MagicMock()
-    token.type = 'html_block'
-    token.content = ''
-    
+    token.type = "html_block"
+    token.content = ""
+
     # 转换HTML
     result = converter.convert(token)
-    
+
     # 验证结果
     assert result is None
 
@@ -93,14 +95,14 @@ def test_fallback_convert():
     # 创建转换器
     converter = HtmlConverter()
     converter.set_document(Document())
-    
+
     # 调用回退转换方法
-    html_content = '<p>这是一个<strong>HTML</strong>段落</p>'
+    html_content = "<p>这是一个<strong>HTML</strong>段落</p>"
     result = converter._fallback_convert(html_content)
-    
+
     # 验证结果
     assert result is not None
     assert len(converter.document.paragraphs) > 0
     # 验证HTML标签被移除
-    assert '<' not in result.text
-    assert '>' not in result.text 
+    assert "<" not in result.text
+    assert ">" not in result.text
