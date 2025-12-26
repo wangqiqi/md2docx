@@ -166,7 +166,7 @@ done
 
 这是一个[百度](https://www.baidu.com)的链接。
 
-访问[GitHub](https://github.com)查看代码。
+访问[GitHub](https://github.com/wangqiqi/md2docx)查看代码。
 
 ### 8.2 带格式的链接
 
