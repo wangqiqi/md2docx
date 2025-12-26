@@ -23,7 +23,7 @@ class ImageConverter(ElementConverter):
         # 图片缓存，避免重复下载
         self._image_cache = {}
 
-    def convert(self, tokens: Tuple[Any, Any]) -> None:
+    def convert(self, tokens: Tuple[Any, Any]) -> Optional[Any]:
         """转换图片元素
 
         Args:
@@ -74,7 +74,7 @@ class ImageConverter(ElementConverter):
             if not image_data:
                 if debug:
                     print(f"无法获取图片数据: {src}")
-                return
+                return paragraph
 
             # 添加图片到文档
             if width and height:
@@ -96,10 +96,12 @@ class ImageConverter(ElementConverter):
 
             if debug:
                 print(f"图片添加成功: {src}")
+            return paragraph
 
         except Exception as e:
             if debug:
                 print(f"添加图片失败: {str(e)}")
+            return paragraph
 
     def convert_in_paragraph(self, paragraph, token, style=None):
         """在段落中转换图片

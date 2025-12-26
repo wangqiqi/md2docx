@@ -2,7 +2,7 @@
 文本转换器模块，处理段落和内联文本的转换
 """
 
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from docx.shared import Pt
 from docx.text.paragraph import Paragraph
@@ -22,7 +22,7 @@ class TextConverter(ElementConverter):
         super().__init__(base_converter)
         self.document = None
 
-    def convert(self, tokens: Tuple[Any, Any]) -> None:
+    def convert(self, tokens: Tuple[Any, Any]) -> Optional[Any]:
         """转换段落元素
 
         Args:
@@ -437,6 +437,8 @@ class TextConverter(ElementConverter):
         # 添加剩余的文本
         if current_text:
             self._add_text_with_style(paragraph, current_text, current_style)
+
+        return paragraph
 
     def _add_text_with_style(
         self, paragraph: Paragraph, text: str, style: Dict[str, bool]

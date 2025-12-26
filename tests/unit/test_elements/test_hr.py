@@ -1,90 +1,17 @@
 """
-
-import pytest
-from unittest.mock import patch, MagicMock
-from io import BytesIO
-from docx import Document
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from markdown_it import MarkdownIt
-
-from mddocx.converter.base import BaseConverter
-from mddocx.converter.elements.hr import HRConverter
-from mddocx.converter.elements.html import HtmlConverter
-from mddocx.converter.elements.image import ImageConverter
-from mddocx.converter.elements.table import TableConverter
-from mddocx.converter.elements.task_list import TaskListConverter
-from mddocx.converter.elements.text import TextConverter
-import pytest
-test hr 测试
-"""
-
-import pytest
-from unittest.mock import patch, MagicMock
-from io import BytesIO
-from docx import Document
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from markdown_it import MarkdownIt
-
-from mddocx.converter.base import BaseConverter
-from mddocx.converter.elements.hr import HRConverter
-from mddocx.converter.elements.html import HtmlConverter
-from mddocx.converter.elements.image import ImageConverter
-from mddocx.converter.elements.table import TableConverter
-from mddocx.converter.elements.task_list import TaskListConverter
-from mddocx.converter.elements.text import TextConverter
-
-"""
-
-import pytest
-from unittest.mock import patch, MagicMock
-from io import BytesIO
-from docx import Document
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from markdown_it import MarkdownIt
-
-from mddocx.converter.base import BaseConverter
-from mddocx.converter.elements.hr import HRConverter
-from mddocx.converter.elements.html import HtmlConverter
-from mddocx.converter.elements.image import ImageConverter
-from mddocx.converter.elements.table import TableConverter
-from mddocx.converter.elements.task_list import TaskListConverter
-from mddocx.converter.elements.text import TextConverter
 分隔线转换器单元测试
 """
 
-import pytest
-from unittest.mock import patch, MagicMock
-from io import BytesIO
-from docx import Document
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from markdown_it import MarkdownIt
+from unittest.mock import MagicMock
 
-from mddocx.converter.base import BaseConverter
+import pytest
+from docx import Document
+
 from mddocx.converter.elements.hr import HRConverter
-from mddocx.converter.elements.html import HtmlConverter
-from mddocx.converter.elements.image import ImageConverter
-from mddocx.converter.elements.table import TableConverter
-from mddocx.converter.elements.task_list import TaskListConverter
-from mddocx.converter.elements.text import TextConverter
 
 
 def test_init():
     """测试初始化"""
-
-import pytest
-from unittest.mock import patch, MagicMock
-from io import BytesIO
-from docx import Document
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from markdown_it import MarkdownIt
-
-from mddocx.converter.base import BaseConverter
-from mddocx.converter.elements.hr import HRConverter
-from mddocx.converter.elements.html import HtmlConverter
-from mddocx.converter.elements.image import ImageConverter
-from mddocx.converter.elements.table import TableConverter
-from mddocx.converter.elements.task_list import TaskListConverter
-from mddocx.converter.elements.text import TextConverter
     converter = HRConverter()
     assert converter is not None
     assert converter.document is None
@@ -99,21 +26,6 @@ from mddocx.converter.elements.text import TextConverter
 
 def test_document_not_set():
     """测试文档未设置的情况"""
-
-import pytest
-from unittest.mock import patch, MagicMock
-from io import BytesIO
-from docx import Document
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from markdown_it import MarkdownIt
-
-from mddocx.converter.base import BaseConverter
-from mddocx.converter.elements.hr import HRConverter
-from mddocx.converter.elements.html import HtmlConverter
-from mddocx.converter.elements.image import ImageConverter
-from mddocx.converter.elements.table import TableConverter
-from mddocx.converter.elements.task_list import TaskListConverter
-from mddocx.converter.elements.text import TextConverter
     converter = HRConverter()
     with pytest.raises(ValueError):
         converter.convert(MagicMock())
@@ -121,21 +33,6 @@ from mddocx.converter.elements.text import TextConverter
 
 def test_convert():
     """测试分隔线转换"""
-
-import pytest
-from unittest.mock import patch, MagicMock
-from io import BytesIO
-from docx import Document
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from markdown_it import MarkdownIt
-
-from mddocx.converter.base import BaseConverter
-from mddocx.converter.elements.hr import HRConverter
-from mddocx.converter.elements.html import HtmlConverter
-from mddocx.converter.elements.image import ImageConverter
-from mddocx.converter.elements.table import TableConverter
-from mddocx.converter.elements.task_list import TaskListConverter
-from mddocx.converter.elements.text import TextConverter
     # 创建转换器
     converter = HRConverter()
     converter.set_document(Document())

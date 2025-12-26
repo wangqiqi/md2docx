@@ -2,9 +2,12 @@
 HTML转换器单元测试
 """
 
-import pytest
+from unittest.mock import MagicMock, patch
 
-from mddocx.converter.elements.html import HTML2DOCX_AVAILABLE
+import pytest
+from docx import Document
+
+from mddocx.converter.elements.html import HTML2DOCX_AVAILABLE, HtmlConverter
 
 
 def test_init():
@@ -55,7 +58,7 @@ def test_convert_without_html2docx():
     converter.set_document(Document())
 
     # 模拟html2docx不可用
-    with patch("src.converter.elements.html.HTML2DOCX_AVAILABLE", False):
+    with patch("mddocx.converter.elements.html.HTML2DOCX_AVAILABLE", False):
         # 创建模拟HTML token
         token = MagicMock()
         token.type = "html_block"
