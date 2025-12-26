@@ -75,3 +75,8 @@ mddocx = ["webui/templates/*.html", "webui/static/**/*"]
 max-line-length = 120
 extend-ignore = ["E203", "W503", "E402"]  # E402: 允许有意的导入位置
 exclude = ["__pycache__", ".git", ".venv", "dist", "build", "*.egg-info"]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3  # 保持多行格式
+line_length = 120

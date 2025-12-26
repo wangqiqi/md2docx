@@ -14,122 +14,47 @@ globs: [".github/workflows/publish.yml", "scripts/publish_to_pypi.sh", "**/pypro
 - 发布流程标准化
 - 包可用性验证
 
-## 📋 PyPI发布完整流程
+## 📋 核心原则
 
-### 1. 🔧 发布准备阶段
+### 自动化发布
+- **Trusted Publisher**: 优先使用GitHub Actions自动发布
+- **版本标签触发**: 通过Git标签自动触发发布流程
+- **权限安全**: 使用临时令牌而非长期API密钥
 
-#### Trusted Publisher配置
-- [ ] 访问 [PyPI Publishing Settings](https://pypi.org/manage/project/mddocx/settings/publishing/)
-- [ ] 点击 **"Add"** 添加新的pending publisher
-- [ ] 填写配置信息：
-  ```
-  PyPI Project Name: mddocx
-  Owner: wangqiqi
-  Repository name: md2docx
-  Workflow name: publish.yml
-  Environment name: (留空)
-  ```
-- [ ] 配置完成后会出现在"Pending publishers"列表中
-- [ ] **注意**: 如果项目不存在，第一次发布会自动创建项目
+### 三阶段流程
+- **准备阶段**: 配置验证、本地测试、权限检查
+- **执行阶段**: 自动构建、签名、上传发布
+- **验证阶段**: 安装测试、可用性确认、监控设置
 
-#### Trusted Publisher故障排查
-**常见错误**: `invalid-publisher: valid token, but no corresponding publisher`
-**解决方案**:
-1. 确认PyPI配置完全匹配
-2. 等待5-10分钟生效
-3. 检查workflow文件名是否正确
-4. 使用手动发布作为备用方案
+### 安全保障
+- **权限最小化**: 只授予必要的发布权限
+- **双重验证**: 人工确认重要版本发布
+- **回滚能力**: 发布失败时能快速回滚
 
-#### 本地验证
-- [ ] 构建包：`python -m build`
-- [ ] 检查包：`twine check dist/*`
-- [ ] 测试安装：`pip install dist/mddocx-0.4.3-py3-none-any.whl`
+## 🔧 配置要求
 
-### 2. 🚀 发布执行阶段
+### Trusted Publisher设置
+- **项目所有权**: 确保有PyPI项目管理权限
+- **仓库匹配**: GitHub仓库信息与PyPI配置一致
+- **工作流命名**: 发布工作流文件名标准化
 
-#### 自动发布（推荐）
-```bash
-# 推送版本标签，自动触发发布
-git tag -a v0.4.3 -m "Release version 0.4.3"
-git push origin v0.4.3
-```
+### 发布脚本
+- **构建验证**: 确保包能正确构建
+- **元数据检查**: 验证包信息和依赖关系
+- **分发文件**: 生成正确的wheel和source distribution
 
-#### 手动发布（备用）
-```bash
-# 如自动发布失败，使用脚本
-./scripts/publish_to_pypi.sh
-```
+## 📊 监控与维护
 
-### 3. ✅ 发布验证阶段
+### 发布状态监控
+- **工作流状态**: 实时监控GitHub Actions执行状态
+- **包可用性**: 确认包在PyPI上正确发布
+- **安装验证**: 确保用户能正常安装和使用
 
-#### PyPI可用性检查
-- [ ] 访问 [PyPI项目页面](https://pypi.org/project/mddocx/)
-- [ ] 确认版本 `0.4.3` 已发布
-- [ ] 检查包文件完整性
+### 持续改进
+- **发布频率**: 根据项目成熟度调整发布频率
+- **质量保证**: 发布前确保通过所有测试
+- **文档同步**: 发布后更新相关文档和版本信息
 
-#### 安装测试
-```bash
-# 清除缓存后安装
-pip install --no-cache-dir --index-url https://pypi.org/simple/ mddocx==0.4.3
+## 📚 实施参考
 
-# 验证安装
-python -c "import mddocx; print(f'✅ 版本: {mddocx.__version__}')"
-
-# 运行基本功能测试
-python -c "from mddocx import BaseConverter; print('✅ 导入成功')"
-```
-
-## ⚠️ 常见问题与解决方案
-
-### Trusted Publisher配置失败
-```
-错误: The publisher is not configured for this project
-```
-**解决方案**：
-1. 确认PyPI项目所有权
-2. 检查GitHub仓库名称拼写
-3. 等待PyPI配置生效（可能需要几分钟）
-
-### 包发布延迟
-```
-包在PyPI搜索中不可见
-```
-**解决方案**：
-1. 等待10-30分钟让索引同步
-2. 直接使用PyPI官方源安装：
-   ```bash
-   pip install --index-url https://pypi.org/simple/ mddocx
-   ```
-
-### 权限问题
-```
-错误: 403 Forbidden
-```
-**解决方案**：
-1. 验证PyPI API token权限
-2. 检查Trusted Publisher配置
-3. 确认GitHub Actions有正确的权限
-
-## 📊 发布监控
-
-### GitHub Actions监控
-- 访问: https://github.com/wangqiqi/md2docx/actions/workflows/publish.yml
-- 查看发布工作流执行状态
-- 检查详细日志了解失败原因
-
-### PyPI状态监控
-- 项目页面: https://pypi.org/project/mddocx/
-- 下载统计: https://pypi.org/project/mddocx/#files
-- 依赖检查: https://pypi.org/project/mddocx/#dependencies
-
-## 🔄 发布后的维护
-
-### 版本管理
-- [ ] 更新CHANGELOG.md记录发布内容
-- [ ] 创建GitHub Release说明
-- [ ] 更新文档中的版本信息
-
-### 监控与支持
-- [ ] 监控PyPI下载统计
-- [ ] 处理用户反馈和问题报告
-- [ ] 准备下一个版本的改进计划
+具体配置步骤和实施细节请参考：[发布流程实施指南](../../docs/implementation/release_process.md)

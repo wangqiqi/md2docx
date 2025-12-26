@@ -238,11 +238,7 @@ ___
         """测试基础转换器错误处理"""
         from unittest.mock import patch
 
-        from mddocx.converter.base import (
-            BaseConverter,
-            MD2DocxError,
-            ParseError,
-        )
+        from mddocx.converter.base import BaseConverter, MD2DocxError, ParseError
 
         converter = BaseConverter()
 

@@ -11,15 +11,7 @@ import sys
 from pathlib import Path
 
 # 第三方库导入
-from flask import (
-    Flask,
-    flash,
-    redirect,
-    render_template,
-    request,
-    send_file,
-    url_for,
-)
+from flask import Flask, flash, redirect, render_template, request, send_file, url_for
 from werkzeug.utils import secure_filename
 
 # 添加项目根目录到Python路径
