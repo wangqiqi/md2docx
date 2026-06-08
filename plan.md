@@ -73,8 +73,8 @@
 | T-TEST-01-03 | WebUI 连续转换内容独立性断言（非仅状态码） | P0 | ✅ | pytest -q src/mddocx/webui/tests/test_basic.py -k accumulate | webui/tests/test_basic.py |
 | T-TEST-01-04 | CLI `--lang en` 帮助/输出端到端 | P0 | ✅ | pytest -q tests/unit/test_cli.py -k lang | test_cli.py |
 | T-TEST-01-05 | html2docx optional-deps + skip 策略文档化 | P1 | ✅ | grep -q html2docx pyproject.toml && pytest -q tests/unit/test_elements/test_html.py | pyproject.toml · docs/testing.md |
-| T-TEST-01-06 | `BaseConverter` token 路由边界单测（fence/mermaid/html） | P1 | 🔧 | pytest -q tests/unit/test_base_converter.py | tests/unit/test_base_converter.py |
-| T-TEST-01-07 | 同步 `docs/testing.md` / `samples/output/README` 基线 | P1 | ⬜ | grep -q '169 passed' docs/testing.md | docs/testing.md · samples/output/README.md |
+| T-TEST-01-06 | `BaseConverter` token 路由边界单测（fence/mermaid/html） | P1 | ✅ | pytest -q tests/unit/test_base_converter.py | tests/unit/test_base_converter.py |
+| T-TEST-01-07 | 同步 `docs/testing.md` / `samples/output/README` 基线 | P1 | 🔧 | grep -q '169 passed' docs/testing.md | docs/testing.md · samples/output/README.md |
 
 ### 现状（为何做）
 
