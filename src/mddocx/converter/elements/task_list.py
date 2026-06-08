@@ -4,8 +4,47 @@
 
 import re
 
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from docx.shared import Inches
+
 from .base import ElementConverter
 from .list import ListConverter
+
+
+def insert_word_checkbox(paragraph, checked: bool = False) -> bool:
+    """向段落插入 Word 2010+ checkbox 内容控件。成功返回 True。"""
+    try:
+        sdt = OxmlElement("w:sdt")
+        sdt_pr = OxmlElement("w:sdtPr")
+
+        checkbox = OxmlElement("w14:checkbox")
+        checked_el = OxmlElement("w14:checked")
+        checked_el.set(qn("w14:val"), "1" if checked else "0")
+        checkbox.append(checked_el)
+
+        checked_state = OxmlElement("w14:checkedState")
+        checked_state.set(qn("w14:val"), "2612")
+        checked_state.set(qn("w14:font"), "Segoe UI Symbol")
+        checkbox.append(checked_state)
+
+        unchecked_state = OxmlElement("w14:uncheckedState")
+        unchecked_state.set(qn("w14:val"), "2610")
+        unchecked_state.set(qn("w14:font"), "Segoe UI Symbol")
+        checkbox.append(unchecked_state)
+
+        sdt_pr.append(checkbox)
+        sdt.append(sdt_pr)
+
+        sdt_content = OxmlElement("w:sdtContent")
+        run = OxmlElement("w:r")
+        sdt_content.append(run)
+        sdt.append(sdt_content)
+
+        paragraph._p.insert(0, sdt)
+        return True
+    except Exception:
+        return False
 
 
 class TaskListConverter(ElementConverter):
@@ -88,52 +127,42 @@ class TaskListConverter(ElementConverter):
                             str(child.content) if child.content is not None else ""
                         )
 
-        # 使用符号替代复选框
-        checkbox_symbol = "☐ " if not is_checked else "☑ "
-
-        # 将符号添加到任务文本前面
-        task_text_with_symbol = checkbox_symbol + task_text
-
-        # 创建普通段落，不使用列表样式，避免重复的列表符号
         paragraph = self.document.add_paragraph()
-        paragraph.add_run(task_text_with_symbol)
 
-        # 添加适当的缩进，让任务列表看起来像列表项
+        if not insert_word_checkbox(paragraph, is_checked):
+            checkbox_symbol = "☐ " if not is_checked else "☑ "
+            paragraph.add_run(checkbox_symbol + task_text)
+        else:
+            if task_text.strip():
+                paragraph.add_run(" " + task_text.strip())
+
         # 获取列表层级（从 list_token 中推断）
         level = 1
         if hasattr(list_token, "content"):
             indent = len(list_token.content)
             level = (indent // 2) + 1
 
-        # 设置缩进
         indent_inches = 0.25 * (level - 1)
-        from docx.shared import Inches
-
         paragraph.paragraph_format.left_indent = Inches(indent_inches)
         paragraph.paragraph_format.first_line_indent = Inches(-0.25)
 
         return paragraph
 
     def _add_checkbox(self, paragraph, is_checked=False):
-        """向段落添加复选框
-
-        Args:
-            paragraph: 段落对象
-            is_checked: 是否勾选
-        """
-        # 检查段落是否为None
+        """向段落添加复选框（兼容旧测试接口）。"""
         if paragraph is None:
             if self.debug:
                 print("警告: 尝试向None段落添加复选框")
             return
 
-        # 获取段落的第一个run
+        if insert_word_checkbox(paragraph, is_checked):
+            return
+
         if not paragraph.runs:
             run = paragraph.add_run()
         else:
             run = paragraph.runs[0]
 
-        # 添加复选框符号
         if is_checked:
             run.text = "√ " + run.text
         else:
