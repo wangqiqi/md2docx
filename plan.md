@@ -3,13 +3,13 @@
 <!-- PLANNING: false -->
 <!-- SPRINT: M-MATH-01 -->
 <!-- PLAN_APPROVED: 2026-06-08 -->
-<!-- AUTONOMOUS: true -->
-<!-- ACTIVE: M-MATH-01-04 -->
+<!-- AUTONOMOUS: false -->
+<!-- ACTIVE: (none) -->
 <!-- NEXT: (none) -->
-<!-- LAST_DONE: M-MATH-01-03 -->
+<!-- LAST_DONE: M-MATH-01-04 -->
 <!-- VERIFY: pytest -q -->
 <!-- VERSION_LINE: 0.5 -->
-<!-- RELEASED: v0.5.13 -->
+<!-- RELEASED: v0.5.14 -->
 <!-- MAX_LOOPS: 15 -->
 
 > 产品愿景见 [`docs/plan.md`](docs/plan.md)。样例：[`tests/samples/advanced/math.md`](tests/samples/advanced/math.md)
@@ -18,7 +18,7 @@
 
 | # | 主题 | 优先级 | 状态 | 备注 |
 |---|------|--------|------|------|
-| 2 | **数学公式 LaTeX 支持** | P1 | **活跃** | M-MATH-01 · v0.5.11+ |
+| 2 | **数学公式 LaTeX 支持** | P1 | **已完成** | M-MATH-01 · v0.5.11–v0.5.14 |
 | 4 | 双向转换 DOCX→MD | P2 | 待立项 | v0.6.0 |
 | 5 | 插件系统基础 | P3 | 待立项 | v1.0.0 |
 | 6 | 架构建议 Suggestions 1-8 | P3 | 远期 | |
@@ -55,7 +55,7 @@
 | M-MATH-01-01 | 添加 `mdit-py-plugins` + `MathConverter` 骨架 + `base.py` 路由 math token | P0 | ✅ | test -f src/mddocx/converter/elements/math.py | math.py · base.py · pyproject.toml |
 | M-MATH-01-02 | CodeCogs 渲染 PNG 并插入 DOCX（行内/块级） | P0 | ✅ | pytest -q tests/unit/test_elements/test_math.py | math.py |
 | M-MATH-01-03 | 白名单 URL + 渲染失败回退 LaTeX 源码 | P0 | ✅ | pytest -q tests/unit/test_elements/test_math.py -k security | security.py · math.py |
-| M-MATH-01-04 | 集成测试（math.md mock）+ README 说明 | P1 | 🔧 | pytest -q tests/integration/test_math_integration.py | tests/ · README.md |
+| M-MATH-01-04 | 集成测试（math.md mock）+ README 说明 | P1 | ✅ | pytest -q tests/integration/test_math_integration.py | tests/ · README.md |
 
 ### 现状（为何做）
 
