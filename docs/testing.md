@@ -30,16 +30,26 @@ tests/
 │   ├── test_full_conversion.py    # 完整转换测试
 │   ├── test_table_integration.py  # 表格集成测试
 │   └── ...                        # 其他集成测试
+├── test.md                  # 综合回归样例
 └── samples/                 # 测试样例数据
-    ├── basic/               # 基础语法样例
+    ├── basic/               # 基础语法样例（test_convert_all_samples）
     │   ├── headings.md      # 标题样例
     │   ├── text_styles.md   # 文本样式样例
     │   └── ...              # 其他基础样例
-    └── advanced/            # 高级语法样例
+    └── advanced/            # 高级语法样例（test_convert_advanced_samples）
         ├── tables.md        # 表格样例
         ├── math.md          # 数学公式样例
+        ├── flowcharts.md    # Mermaid 流程图（mock 网络）
         └── ...              # 其他高级样例
 ```
+
+### conftest 样例 fixtures
+
+| Fixture | 路径 |
+|---------|------|
+| `samples_dir` / `samples_basic` | `tests/samples/basic/` |
+| `samples_advanced` | `tests/samples/advanced/` |
+| `samples_root` | `tests/samples/`（含 `test.md`） |
 
 ### 测试文件命名规范
 - **单元测试**: `test_*.py`
@@ -170,6 +180,17 @@ def test_table_with_list_integration():
 
 ## 5. 测试数据管理
 
+### 可选依赖 html2docx
+
+复杂 HTML 转换依赖可选包 **html2docx**（`pyproject.toml` → `[project.optional-dependencies] html`）：
+
+```bash
+pip install -e ".[html]"   # 或 pip install mddocx[html]
+pytest tests/unit/test_elements/test_html.py
+```
+
+CI 默认**不安装** html2docx；相关用例以 `@pytest.mark.skipif(not HTML2DOCX_AVAILABLE)` 跳过，属预期行为。
+
 ### 样例文件规范
 - **文件位置**: `tests/samples/basic/` 或 `tests/samples/advanced/`
 - **命名规范**: `功能名称.md` (如 `headings.md`, `tables.md`)
@@ -244,9 +265,10 @@ pytest --cov=src --cov-report=xml
 ## 7. 测试质量标准
 
 ### 覆盖率要求
-- **语句覆盖率**: ≥ 65%（当前基线，持续提升）
+- **语句覆盖率**: ≥ 65%（当前基线 **~81%**，持续提升）
+- **全量回归**: `pytest tests/ src/mddocx/webui/tests/` → **169+ passed, 2 skipped**（v0.5.4 基线）
 - **CI 报告**: `pytest --cov=src --cov-report=term-missing`
-- WebUI 模块纳入 CI 后覆盖率逐步提升
+- WebUI 与 `tests/samples` basic/advanced 均已纳入 CI
 
 ### 性能标准
 - **单元测试**: 单个测试 < 0.1秒
