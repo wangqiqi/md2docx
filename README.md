@@ -67,13 +67,9 @@
 
 **已完成 ✅:**
 - ✅ 专业测试体系 (150+ 测试，CI 持续验证)
-- ✅ CI/CD自动化 (GitHub Actions多版本测试)
+- ✅ CI/CD 自动化 (GitHub Actions 多版本测试)
 - ✅ 代码质量保证 (pre-commit + 多工具检查)
-
-**已完成 ✅:**
-- ✅ Web界面 (Flask + HTML5 + CSS3) (Phase 2完成)
-- ✅ 实时预览功能 (Phase 2完成)
-- ✅ 响应式设计 (Phase 2完成)
+- ✅ Web 界面、实时预览、响应式设计 (Phase 2)
 
 **开发中 🔄:**
 - 🔄 自定义样式配置 (v0.4.0)
@@ -135,16 +131,15 @@ pip install -e .[dev]
 pip install mddocx
 ```
 
-或从源码安装运行时依赖：
+从源码安装运行时依赖：
 
 ```bash
-pip install -r requirements-prod.txt
+pip install .
 ```
 
 ### 依赖说明
 
-- **`pyproject.toml`**：项目配置与依赖管理（推荐）
-- **`requirements-prod.txt`**：仅包含运行时必需依赖的清单
+- **`pyproject.toml`**：项目配置与依赖管理（唯一依赖源）
 
 ## 使用方法
 
@@ -264,10 +259,8 @@ md2docx/
 │   ├── batch_convert_test.py    # 批量转换脚本
 │   └── test_roundtrip_demo.py   # 闭环测试演示
 ├── dist/                # 构建产物
-├── requirements-prod.txt  # 生产环境依赖
-├── pyproject.toml          # 项目配置和依赖管理
-├── requirements.txt       # 开发依赖符号链接
-├── pyproject.toml        # 项目配置
+├── pyproject.toml       # 项目配置和依赖管理
+├── plan.md              # Sprint 编排（jwplan/jwrun）
 ├── MANIFEST.in          # 打包配置
 ├── .pre-commit-config.yaml  # pre-commit 配置
 ├── LICENSE              # 许可证

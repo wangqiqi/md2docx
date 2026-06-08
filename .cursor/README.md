@@ -30,6 +30,14 @@
 - 所有系统变更都需要明确批准
 - 对所有建议进行风险评估
 
+## jwplan · jwrun 开发闭环
+
+规划与自治执行工作流（详见 [`docs/jwplan-jwrun.md`](docs/jwplan-jwrun.md)）：
+
+- **`/jwplan`** → `jwplan-skill`：拆 Sprint 写入根目录 `plan.md`
+- **`/jwrun`** → `jwrun-skill`：gate-check → 实现 → `pytest` 验收 → commit → 打版 tag
+- CLI：`.cursor/bin/dev_runner.sh`（`gate-check` · `task-verify` · `plan-check`）
+
 ## 🛠️ 开发指南
 
 ### 代码质量

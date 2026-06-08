@@ -5,13 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.4.4] - 2026-06-08
 
 ### Added
-- jwplan/jwrun 开发闭环：从 seegrow 适配迁入 `.cursor/`（skills · commands · hooks · `dev_runner.sh`）
-- 根目录 `plan.md` 作为 Sprint 编排真源；`archive/` 本地归档区
-
-## [0.4.4] - 2026-06-08
+- jwplan/jwrun 开发闭环：`.cursor/` skills · commands · hooks · `dev_runner.sh`
+- 根目录 `plan.md` 作为 Sprint 编排真源；`archive/` 本地归档区（不入库）
+- 代码审查报告 `审查.md`
 
 ### Fixed
 - 🔧 **转换器状态复用**：`BaseConverter.convert()` 每次调用前重置文档与内部状态，修复 WebUI 多次转换内容累积问题
@@ -23,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - 🧪 **测试增强**：WebUI 测试纳入 CI；新增安全与状态复用测试
-- 📝 **文档修正**：更新 README 命令路径、测试数量说明
+- 📝 **文档修正**：更新 README、`docs/api.md` 安全说明与项目结构
 
 ## [0.4.3] - 2026-06-08
 

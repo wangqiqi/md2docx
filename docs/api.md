@@ -99,14 +99,15 @@ curl -X POST -F "markdown=# Preview Test" http://localhost:5000/preview
 ## 安全考虑
 
 ### 输入验证
-- Markdown内容长度限制
+- Markdown 内容长度限制
 - 文件类型严格检查
-- XSS防护 (通过Flask模板转义)
+- **预览 XSS 防护**：`/preview` 使用 `bleach` 对 HTML 消毒（非 Jinja 模板转义）
+- **CSRF 防护**：`Flask-WTF` 校验 POST 请求（测试环境可关闭）
 
 ### 文件处理
 - 临时文件自动清理
 - 无文件系统永久存储
-- 安全的文件路径处理
+- 本地图片路径校验（防路径遍历）；远程图片 SSRF 与大小限制
 
 ## 使用示例
 

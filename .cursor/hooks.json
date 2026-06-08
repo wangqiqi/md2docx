@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": ".cursor/hooks/jwrun-session-start.sh",
+        "timeout": 5
+      }
+    ],
+    "stop": [
+      {
+        "command": ".cursor/hooks/jwrun-stop.sh",
+        "timeout": 5,
+        "loop_limit": 15
+      }
+    ]
+  }
+}

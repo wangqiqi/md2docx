@@ -149,6 +149,12 @@ ehthumbs.db
 Thumbs.db
 
 # Project specific
+# jwplan/jwrun 本地归档（不入库）
+archive/
+
+# jwrun hook 运行时状态
+.cursor/hooks/state/*.json
+
 # Temporary files
 *.tmp
 *.bak
