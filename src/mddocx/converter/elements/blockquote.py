@@ -2,11 +2,12 @@
 引用块转换器模块，处理引用块的转换
 """
 
-from typing import Any, Tuple
+from typing import Any, Dict, Tuple
 
 from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Pt, RGBColor
+from docx.text.paragraph import Paragraph
 
 from .base import ElementConverter
 
@@ -28,88 +29,154 @@ class BlockquoteConverter(ElementConverter):
 
         quote_token, content_token = tokens
 
-        # 获取引用块层级
         level = len(quote_token.markup) if hasattr(quote_token, "markup") else 1
 
-        # 创建或获取引用块样式
         style_name = "Quote" if level == 1 else f"Quote{level}"
         self._ensure_quote_style(style_name, level)
 
-        # 创建新段落
         paragraph = self.document.add_paragraph()
         paragraph.style = self.document.styles[style_name]
 
-        # 处理空引用块
         if not content_token:
             paragraph.add_run("")
             return
 
-        # 处理引用块内容
-        current_text = ""
-        current_style = {"bold": False, "italic": False, "strike": False}
+        link_converter = None
+        if self.base_converter and "link" in self.base_converter.converters:
+            link_converter = self.base_converter.converters.get("link")
 
-        for child in content_token.children:
+        self._process_inline_children(
+            paragraph, content_token.children, link_converter
+        )
+
+    def _process_inline_children(
+        self, paragraph: Paragraph, children, link_converter
+    ) -> None:
+        """处理引用块内联内容（链接、删除线、行内代码等）"""
+        current_text = ""
+        current_style: Dict[str, bool] = {
+            "bold": False,
+            "italic": False,
+            "strike": False,
+        }
+
+        i = 0
+        while i < len(children):
+            child = children[i]
+
             if child.type == "text":
-                # 处理多行文本中的空格
                 text = child.content.replace("\n", " ")
                 if text.endswith(" "):
                     text = text[:-1]
                 current_text += text
+                i += 1
+            elif child.type == "link_open":
+                if current_text:
+                    self._add_text_with_style(paragraph, current_text, current_style)
+                    current_text = ""
+
+                link_content = None
+                j = i + 1
+                while j < len(children) and children[j].type != "link_close":
+                    if children[j].type == "text":
+                        link_content = children[j]
+                    j += 1
+
+                if link_content and link_converter:
+                    link_text = (
+                        link_content.content
+                        if hasattr(link_content, "content")
+                        else None
+                    )
+                    link_converter.convert_in_paragraph(
+                        paragraph, child, current_style.copy(), link_text
+                    )
+                elif link_content:
+                    self._add_text_with_style(
+                        paragraph, link_content.content, current_style
+                    )
+
+                i = j + 1 if j < len(children) else i + 1
+            elif child.type == "link_close":
+                i += 1
             elif child.type == "strong_open":
                 if current_text:
                     self._add_text_with_style(paragraph, current_text, current_style)
                     current_text = ""
                 current_style["bold"] = True
+                i += 1
             elif child.type == "strong_close":
                 if current_text:
                     self._add_text_with_style(paragraph, current_text, current_style)
                     current_text = ""
                 current_style["bold"] = False
+                i += 1
             elif child.type == "em_open":
                 if current_text:
                     self._add_text_with_style(paragraph, current_text, current_style)
                     current_text = ""
                 current_style["italic"] = True
+                i += 1
             elif child.type == "em_close":
                 if current_text:
                     self._add_text_with_style(paragraph, current_text, current_style)
                     current_text = ""
                 current_style["italic"] = False
+                i += 1
+            elif child.type == "s_open":
+                if current_text:
+                    self._add_text_with_style(paragraph, current_text, current_style)
+                    current_text = ""
+                current_style["strike"] = True
+                i += 1
+            elif child.type == "s_close":
+                if current_text:
+                    self._add_text_with_style(paragraph, current_text, current_style)
+                    current_text = ""
+                current_style["strike"] = False
+                i += 1
+            elif child.type == "code_inline":
+                if current_text:
+                    self._add_text_with_style(paragraph, current_text, current_style)
+                    current_text = ""
+                self._add_inline_code(paragraph, child.content, current_style.copy())
+                i += 1
             elif child.type == "softbreak":
                 current_text += " "
+                i += 1
+            else:
+                i += 1
 
-        # 添加剩余的文本
         if current_text:
             self._add_text_with_style(paragraph, current_text, current_style)
 
-    def _add_text_with_style(self, paragraph, text: str, style: dict) -> None:
-        """添加带样式的文本
-
-        Args:
-            paragraph: 段落对象
-            text: 要添加的文本
-            style: 样式配置
-        """
+    def _add_text_with_style(
+        self, paragraph: Paragraph, text: str, style: Dict[str, bool]
+    ) -> None:
+        """添加带样式的文本"""
         run = paragraph.add_run(text)
         run.bold = style["bold"]
         run.italic = style["italic"]
+        run.font.strike = style["strike"]
+
+    def _add_inline_code(
+        self, paragraph: Paragraph, code_text: str, style: Dict[str, bool]
+    ) -> None:
+        """添加行内代码"""
+        run = paragraph.add_run(code_text)
+        run.bold = style.get("bold", False)
+        run.italic = style.get("italic", False)
+        run.font.strike = style.get("strike", False)
+        run.font.name = "Consolas"
+        run.font.size = Pt(10)
 
     def _ensure_quote_style(self, style_name: str, level: int) -> None:
-        """确保引用块样式存在
-
-        Args:
-            style_name: 样式名称
-            level: 引用块层级
-        """
+        """确保引用块样式存在"""
         if style_name not in self.document.styles:
             style = self.document.styles.add_style(style_name, WD_STYLE_TYPE.PARAGRAPH)
-            # 设置基本样式
             style.font.size = Pt(12)
-            style.font.color.rgb = RGBColor(102, 102, 102)  # 灰色
-            # 根据层级设置左缩进
+            style.font.color.rgb = RGBColor(102, 102, 102)
             style.paragraph_format.left_indent = Pt(30 * level)
-            # 设置段落间距
             style.paragraph_format.space_before = Pt(6)
             style.paragraph_format.space_after = Pt(6)
-            # 设置对齐方式
             style.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT

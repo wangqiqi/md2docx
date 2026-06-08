@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.9] - 2026-06-08
+
+### Fixed
+- M-CONV-01-01：引用块支持链接、删除线、行内代码（审查 m2）
+
 ## [0.4.8] - 2026-06-08
 
 ### Changed
