@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.12] - 2026-06-08
+
+### Added
+- M-MATH-01-02：CodeCogs PNG 渲染嵌入
+
 ## [0.5.11] - 2026-06-08
 
 ### Added
