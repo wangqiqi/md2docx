@@ -4,12 +4,12 @@
 <!-- SPRINT: M-MATH-01 -->
 <!-- PLAN_APPROVED: 2026-06-08 -->
 <!-- AUTONOMOUS: true -->
-<!-- ACTIVE: M-MATH-01-03 -->
-<!-- NEXT: M-MATH-01-04 -->
-<!-- LAST_DONE: M-MATH-01-02 -->
+<!-- ACTIVE: M-MATH-01-04 -->
+<!-- NEXT: (none) -->
+<!-- LAST_DONE: M-MATH-01-03 -->
 <!-- VERIFY: pytest -q -->
 <!-- VERSION_LINE: 0.5 -->
-<!-- RELEASED: v0.5.12 -->
+<!-- RELEASED: v0.5.13 -->
 <!-- MAX_LOOPS: 15 -->
 
 > 产品愿景见 [`docs/plan.md`](docs/plan.md)。样例：[`tests/samples/advanced/math.md`](tests/samples/advanced/math.md)
@@ -54,8 +54,8 @@
 |----|------|--------|------|------|------|
 | M-MATH-01-01 | 添加 `mdit-py-plugins` + `MathConverter` 骨架 + `base.py` 路由 math token | P0 | ✅ | test -f src/mddocx/converter/elements/math.py | math.py · base.py · pyproject.toml |
 | M-MATH-01-02 | CodeCogs 渲染 PNG 并插入 DOCX（行内/块级） | P0 | ✅ | pytest -q tests/unit/test_elements/test_math.py | math.py |
-| M-MATH-01-03 | 白名单 URL + 渲染失败回退 LaTeX 源码 | P0 | 🔧 | pytest -q tests/unit/test_elements/test_math.py -k security | security.py · math.py |
-| M-MATH-01-04 | 集成测试（math.md mock）+ README 说明 | P1 | ⬜ | pytest -q tests/integration/test_math_integration.py | tests/ · README.md |
+| M-MATH-01-03 | 白名单 URL + 渲染失败回退 LaTeX 源码 | P0 | ✅ | pytest -q tests/unit/test_elements/test_math.py -k security | security.py · math.py |
+| M-MATH-01-04 | 集成测试（math.md mock）+ README 说明 | P1 | 🔧 | pytest -q tests/integration/test_math_integration.py | tests/ · README.md |
 
 ### 现状（为何做）
 
