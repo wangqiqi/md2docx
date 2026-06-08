@@ -36,8 +36,8 @@
 | ID | 任务 | 优先级 | 状态 | 验收 | 落点 |
 |----|------|--------|------|------|------|
 | M-HTML-01-01 | optional-dep：`html2docx` → `html-for-docx>=1.1.0` | P0 | ✅ | `grep html-for-docx pyproject.toml` · `pip install -e ".[html]"` 成功 | `pyproject.toml` |
-| M-HTML-01-02 | `HtmlConverter` 改用 `HtmlToDocx.add_html_to_document()`，去掉临时文件路径（或最小化） | P0 | 🔧 | `pytest -q tests/unit/test_elements/test_html.py` | `src/mddocx/converter/elements/html.py` |
-| M-HTML-01-03 | 测试：`HTML_FOR_DOCX_AVAILABLE` + 保留别名；集成测 complex html.md | P0 | ⬜ | `pytest -q tests/unit/test_elements/test_html.py tests/integration/test_html_integration.py` | `tests/unit/test_elements/test_html.py` · `tests/integration/test_html_integration.py` |
+| M-HTML-01-02 | `HtmlConverter` 改用 `HtmlToDocx.add_html_to_document()`，去掉临时文件路径（或最小化） | P0 | ✅ | `pytest -q tests/unit/test_elements/test_html.py` | `src/mddocx/converter/elements/html.py` |
+| M-HTML-01-03 | 测试：`HTML_FOR_DOCX_AVAILABLE` + 保留别名；集成测 complex html.md | P0 | 🔧 | `pytest -q tests/unit/test_elements/test_html.py tests/integration/test_html_integration.py` | `tests/unit/test_elements/test_html.py` · `tests/integration/test_html_integration.py` |
 | M-HTML-01-04 | 文档：testing.md / README 可选依赖说明更新 | P1 | ⬜ | 文档含 `html-for-docx` · 安装命令 `mddocx[html]` 不变 | `docs/testing.md` · `README.md` |
 
 **执行顺序**：`M-HTML-01-01` → `M-HTML-01-02` → `M-HTML-01-03` → `M-HTML-01-04`

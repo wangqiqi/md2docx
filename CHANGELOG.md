@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.16] - 2026-06-08
+
+### Changed
+- M-HTML-01-02：`HtmlConverter` 改用 `HtmlToDocx.add_html_to_document()`，移除临时文件路径
+
 ## [0.5.15] - 2026-06-08
 
 ### Changed
