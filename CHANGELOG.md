@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.20] - 2026-06-09
+
+### Changed
+- M-ARCH-01-02：任务列表 Word checkbox 内容控件，失败回退 Unicode
+
+
 ## [0.5.19] - 2026-06-09
 
 ### Added
