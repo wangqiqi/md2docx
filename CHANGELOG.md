@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.10] - 2026-06-08
+
+### Added
+- T-TEST-01-07：同步 testing 文档与 samples/output 基线（176 passed）
+
 ## [0.5.9] - 2026-06-08
 
 ### Added

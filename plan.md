@@ -3,13 +3,13 @@
 <!-- PLANNING: false -->
 <!-- SPRINT: T-TEST-01 -->
 <!-- PLAN_APPROVED: 2026-06-08 -->
-<!-- AUTONOMOUS: true -->
-<!-- ACTIVE: T-TEST-01-06 -->
-<!-- NEXT: T-TEST-01-07 -->
-<!-- LAST_DONE: T-TEST-01-05 -->
+<!-- AUTONOMOUS: false -->
+<!-- ACTIVE: (none) -->
+<!-- NEXT: (none) -->
+<!-- LAST_DONE: T-TEST-01-07 -->
 <!-- VERIFY: pytest -q -->
 <!-- VERSION_LINE: 0.5 -->
-<!-- RELEASED: v0.5.8 -->
+<!-- RELEASED: v0.5.10 -->
 <!-- MAX_LOOPS: 15 -->
 
 > 产品愿景见 [`docs/plan.md`](docs/plan.md)。样例：[`tests/samples/advanced/flowcharts.md`](tests/samples/advanced/flowcharts.md)
@@ -18,7 +18,7 @@
 
 | # | 主题 | 优先级 | 状态 | 备注 |
 |---|------|--------|------|------|
-| 7 | **测试体系补强** | P1 | **活跃** | T-TEST-01 · 审计后缺口闭合 |
+| 7 | **测试体系补强** | P1 | **已完成** | T-TEST-01 · v0.5.4–v0.5.10 |
 | 3 | Mermaid 流程图支持 | P1 | 已完成 | M-MERMAID-01 · v0.5.0–v0.5.3 |
 | 1 | html2docx 可选依赖文档化 | P2 | 并入 T-TEST-01-05 | 原 T-HTML-01 |
 | 2 | 数学公式 LaTeX 支持 | P1 | 待立项 | v0.5.x+ |
@@ -74,7 +74,7 @@
 | T-TEST-01-04 | CLI `--lang en` 帮助/输出端到端 | P0 | ✅ | pytest -q tests/unit/test_cli.py -k lang | test_cli.py |
 | T-TEST-01-05 | html2docx optional-deps + skip 策略文档化 | P1 | ✅ | grep -q html2docx pyproject.toml && pytest -q tests/unit/test_elements/test_html.py | pyproject.toml · docs/testing.md |
 | T-TEST-01-06 | `BaseConverter` token 路由边界单测（fence/mermaid/html） | P1 | ✅ | pytest -q tests/unit/test_base_converter.py | tests/unit/test_base_converter.py |
-| T-TEST-01-07 | 同步 `docs/testing.md` / `samples/output/README` 基线 | P1 | 🔧 | grep -q '176 passed' docs/testing.md | docs/testing.md · samples/output/README.md |
+| T-TEST-01-07 | 同步 `docs/testing.md` / `samples/output/README` 基线 | P1 | ✅ | grep -q '176 passed' docs/testing.md | docs/testing.md · samples/output/README.md |
 
 ### 现状（为何做）
 
@@ -91,12 +91,14 @@
 
 | Sprint | 版本 | 归档 |
 |--------|------|------|
+| T-TEST-01 | v0.5.4–v0.5.10 | archive/sprint/（待 §7 归档） |
 | M-MERMAID-01 | v0.5.0–v0.5.3 | archive/sprint/20260608_225947_… |
 | M-CONV-01 | v0.4.9–v0.4.10 | archive/sprint/20260608_225306_… |
 | M-DOC-03 | v0.4.5–v0.4.8 | archive/sprint/20260608_225037_… |
 
 ## 变更记录
 
+- **2026-06-08** · **T-TEST-01 §7 闭合** · v0.5.4–v0.5.10 · 176 passed
 - **2026-06-08** · **T-TEST-01 Sprint 规划** · 测试体系审计：扎实但不完备 · 7 项补强 · handoff jwrun
 - **2026-06-08** · **M-MERMAID-01 §7 闭合** · v0.5.0–v0.5.3 · 169 passed
 - **2026-06-08** · **M-MERMAID-01 Sprint 规划** · mermaid.ink 方案 · graph TD 首版 · handoff jwrun
