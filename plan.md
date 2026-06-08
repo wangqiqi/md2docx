@@ -3,7 +3,7 @@
 <!-- PLANNING: false -->
 <!-- SPRINT: M-MERMAID-01 -->
 <!-- PLAN_APPROVED: 2026-06-08 -->
-<!-- AUTONOMOUS: true -->
+<!-- AUTONOMOUS: false -->
 <!-- ACTIVE: (none) -->
 <!-- NEXT: (none) -->
 <!-- LAST_DONE: M-MERMAID-01-04 -->
@@ -70,10 +70,12 @@
 
 | Sprint | 版本 | 归档 |
 |--------|------|------|
+| M-MERMAID-01 | v0.5.0–v0.5.3 | archive/sprint/20260608_225947_… |
 | M-CONV-01 | v0.4.9–v0.4.10 | archive/sprint/20260608_225306_… |
 | M-DOC-03 | v0.4.5–v0.4.8 | archive/sprint/20260608_225037_… |
 
 ## 变更记录
 
+- **2026-06-08** · **M-MERMAID-01 §7 闭合** · v0.5.0–v0.5.3 · 169 passed
 - **2026-06-08** · **M-MERMAID-01 Sprint 规划** · mermaid.ink 方案 · graph TD 首版 · handoff jwrun
 - **2026-06-08** · M-CONV-01 §7 闭合 · v0.4.10
