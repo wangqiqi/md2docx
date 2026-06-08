@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-06-08
+
 ### Added
 - M-MERMAID-01-03：mermaid.ink URL 白名单、渲染失败回退源码块
 

@@ -53,8 +53,8 @@
 |----|------|--------|------|------|------|
 | M-MERMAID-01-01 | `MermaidConverter` 骨架 + `base.py` 按 `info=mermaid` 路由 | P0 | ✅ | test -f src/mddocx/converter/elements/mermaid.py | mermaid.py · base.py |
 | M-MERMAID-01-02 | mermaid.ink 渲染 PNG 并插入 DOCX（graph TD） | P0 | ✅ | pytest -q tests/unit/test_elements/test_mermaid.py | mermaid.py |
-| M-MERMAID-01-03 | 安全白名单 + 失败回退源码块 | P0 | 🔧 | pytest -q tests/unit/test_elements/test_mermaid.py -k security | security.py · mermaid.py |
-| M-MERMAID-01-04 | 集成测试 + README 说明 | P1 | ⬜ | pytest -q tests/integration/test_mermaid_integration.py | tests/ · README.md |
+| M-MERMAID-01-03 | 安全白名单 + 失败回退源码块 | P0 | ✅ | pytest -q tests/unit/test_elements/test_mermaid.py -k security | security.py · mermaid.py |
+| M-MERMAID-01-04 | 集成测试 + README 说明 | P1 | 🔧 | pytest -q tests/integration/test_mermaid_integration.py | tests/ · README.md |
 
 ### 现状（为何做）
 
