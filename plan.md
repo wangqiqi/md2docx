@@ -4,12 +4,12 @@
 <!-- SPRINT: M-MERMAID-01 -->
 <!-- PLAN_APPROVED: 2026-06-08 -->
 <!-- AUTONOMOUS: true -->
-<!-- ACTIVE: M-MERMAID-01-04 -->
+<!-- ACTIVE: (none) -->
 <!-- NEXT: (none) -->
-<!-- LAST_DONE: M-MERMAID-01-03 -->
+<!-- LAST_DONE: M-MERMAID-01-04 -->
 <!-- VERIFY: pytest -q -->
 <!-- VERSION_LINE: 0.5 -->
-<!-- RELEASED: v0.5.2 -->
+<!-- RELEASED: v0.5.3 -->
 <!-- MAX_LOOPS: 15 -->
 
 > 产品愿景见 [`docs/plan.md`](docs/plan.md)。样例：[`tests/samples/advanced/flowcharts.md`](tests/samples/advanced/flowcharts.md)
@@ -18,7 +18,7 @@
 
 | # | 主题 | 优先级 | 状态 | 备注 |
 |---|------|--------|------|------|
-| 3 | **Mermaid 流程图支持** | P1 | **活跃** | M-MERMAID-01 · v0.5.x |
+| 3 | **Mermaid 流程图支持** | P1 | **已完成** | M-MERMAID-01 · v0.5.0–v0.5.3 |
 | 1 | html2docx 可选依赖文档化 | P2 | 待立项 | T-HTML-01 |
 | 2 | 数学公式 LaTeX 支持 | P1 | 待立项 | v0.5.0 |
 | 4 | 双向转换 DOCX→MD | P2 | 待立项 | v0.6.0 |
@@ -54,7 +54,7 @@
 | M-MERMAID-01-01 | `MermaidConverter` 骨架 + `base.py` 按 `info=mermaid` 路由 | P0 | ✅ | test -f src/mddocx/converter/elements/mermaid.py | mermaid.py · base.py |
 | M-MERMAID-01-02 | mermaid.ink 渲染 PNG 并插入 DOCX（graph TD） | P0 | ✅ | pytest -q tests/unit/test_elements/test_mermaid.py | mermaid.py |
 | M-MERMAID-01-03 | 安全白名单 + 失败回退源码块 | P0 | ✅ | pytest -q tests/unit/test_elements/test_mermaid.py -k security | security.py · mermaid.py |
-| M-MERMAID-01-04 | 集成测试 + README 说明 | P1 | 🔧 | pytest -q tests/integration/test_mermaid_integration.py | tests/ · README.md |
+| M-MERMAID-01-04 | 集成测试 + README 说明 | P1 | ✅ | pytest -q tests/integration/test_mermaid_integration.py | tests/ · README.md |
 
 ### 现状（为何做）
 
