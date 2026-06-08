@@ -43,7 +43,7 @@ def _assert_sample_converted(doc, md_file) -> None:
 
 
 def test_convert_all_samples(converter, samples_dir, tmp_path):
-    """测试转换所有基础样例文件"""
+    """测试转换所有基础样例并验证标题与结构（T-TEST-01-02）"""
     for md_file in samples_dir.glob("*.md"):
         with open(md_file, "r", encoding="utf-8") as f:
             content = f.read()
