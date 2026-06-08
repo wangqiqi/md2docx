@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.10] - 2026-06-08
+
+### Fixed
+- M-CONV-01-02：`ConvertError` 使用 `from e` 保留原始异常链（审查 m1）
+
 ## [0.4.9] - 2026-06-08
 
 ### Fixed

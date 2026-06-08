@@ -471,5 +471,4 @@ class BaseConverter:
             # 自定义错误，直接重新抛出
             raise
         except Exception as e:
-            # 其他未知错误
-            raise ConvertError(f"转换过程发生未知错误: {str(e)}")
+            raise ConvertError(f"转换过程发生未知错误: {str(e)}") from e
