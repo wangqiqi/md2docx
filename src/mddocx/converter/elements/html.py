@@ -2,21 +2,21 @@
 HTML转换器模块，处理Markdown中的HTML标签
 """
 
-import os
 import re
-import tempfile
 from typing import Any, Optional
 
-from docx import Document
 from docx.oxml.ns import qn
 from docx.text.paragraph import Paragraph
 
 try:
-    import html2docx
+    from html4docx import HtmlToDocx
 
-    HTML2DOCX_AVAILABLE = True
+    HTML_FOR_DOCX_AVAILABLE = True
 except ImportError:
-    HTML2DOCX_AVAILABLE = False
+    HTML_FOR_DOCX_AVAILABLE = False
+
+# 兼容旧 import 名（一版别名）
+HTML2DOCX_AVAILABLE = HTML_FOR_DOCX_AVAILABLE
 
 from .base import ElementConverter
 
@@ -71,125 +71,32 @@ class HtmlConverter(ElementConverter):
                 print("使用自定义HTML解析成功")
             return result
 
-        # 如果自定义解析失败，尝试使用html2docx
-        if HTML2DOCX_AVAILABLE:
+        # 如果自定义解析失败，尝试使用 html-for-docx
+        if HTML_FOR_DOCX_AVAILABLE:
             try:
                 if self.debug:
-                    print("尝试使用html2docx转换")
-
-                # 创建完整的HTML文档
-                full_html = f"""
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset="utf-8">
-                    <title>HTML转换</title>
-                    <style>
-                        body {{ font-family: Arial, sans-serif; }}
-                        table {{ border-collapse: collapse; width: 100%; }}
-                        th, td {{ border: 1px solid #ddd; padding: 8px; }}
-                        th {{ background-color: #f2f2f2; }}
-                    </style>
-                </head>
-                <body>
-                    {html_content}
-                </body>
-                </html>
-                """
-
-                # 创建临时HTML文件
-                with tempfile.NamedTemporaryFile(
-                    suffix=".html", delete=False, mode="w", encoding="utf-8"
-                ) as f:
-                    f.write(full_html)
-                    temp_html_path = f.name
-
-                if self.debug:
-                    print(f"创建临时HTML文件: {temp_html_path}")
-                    print(f"HTML内容: {full_html[:100]}...")
-
-                # 创建临时DOCX文件路径
-                temp_docx_path = temp_html_path.replace(".html", ".docx")
-
-                # 使用html2docx转换
-                html2docx.convert(temp_html_path, temp_docx_path)
-
-                if self.debug:
-                    print(f"转换完成，临时DOCX文件: {temp_docx_path}")
-                    if os.path.exists(temp_docx_path):
-                        print(
-                            f"临时DOCX文件大小: {os.path.getsize(temp_docx_path)} 字节"
-                        )
-                    else:
-                        print("临时DOCX文件不存在")
-
-                # 打开生成的DOCX文件
-                temp_doc = Document(temp_docx_path)
-
-                if self.debug:
-                    print(f"临时文档包含 {len(temp_doc.paragraphs)} 个段落")
-
-                # 将临时文档的内容复制到当前文档
-                for paragraph in temp_doc.paragraphs:
-                    if not paragraph.text.strip():
-                        continue  # 跳过空段落
-
-                    p = self.document.add_paragraph()
-                    for run in paragraph.runs:
-                        r = p.add_run(run.text)
-                        r.bold = run.bold
-                        r.italic = run.italic
-                        r.underline = run.underline
-                        # 复制其他样式...
-
-                # 复制表格
-                for table in temp_doc.tables:
-                    if self.debug:
-                        print(f"复制表格: {len(table.rows)}行 x {len(table.columns)}列")
-
-                    new_table = self.document.add_table(
-                        rows=len(table.rows), cols=len(table.columns)
-                    )
-                    new_table.style = "Table Grid"
-
-                    # 复制单元格内容
-                    for i, row in enumerate(table.rows):
-                        for j, cell in enumerate(row.cells):
-                            if i < len(new_table.rows) and j < len(
-                                new_table.rows[i].cells
-                            ):
-                                new_table.rows[i].cells[j].text = cell.text
-
-                # 清理临时文件
-                try:
-                    os.remove(temp_html_path)
-                    os.remove(temp_docx_path)
-                    if self.debug:
-                        print("临时文件已清理")
-                except Exception as e:
-                    if self.debug:
-                        print(f"清理临时文件失败: {e}")
-
-                if self.debug:
-                    print(
-                        f"HTML转换完成，添加了{len(temp_doc.paragraphs)}个段落和{len(temp_doc.tables)}个表格"
-                    )
-
-                # 返回最后一个添加的段落
-                return (
-                    self.document.paragraphs[-1] if self.document.paragraphs else None
-                )
-
+                    print("尝试使用 html-for-docx 转换")
+                return self._html_for_docx_convert(html_content)
             except Exception as e:
                 if self.debug:
                     print(f"HTML转换失败: {e}")
-                # 失败时回退到基本转换
                 return self._fallback_convert(html_content)
-        else:
-            # html2docx不可用时回退到基本转换
-            if self.debug:
-                print("html2docx不可用，使用基本转换")
-            return self._fallback_convert(html_content)
+
+        if self.debug:
+            print("html-for-docx 不可用，使用基本转换")
+        return self._fallback_convert(html_content)
+
+    def _html_for_docx_convert(self, html_content: str) -> Optional[Paragraph]:
+        """使用 html-for-docx 将 HTML 片段写入当前文档。"""
+        paragraph_count_before = len(self.document.paragraphs)
+        parser = HtmlToDocx()
+        parser.add_html_to_document(html_content, self.document)
+
+        if len(self.document.paragraphs) > paragraph_count_before:
+            return self.document.paragraphs[-1]
+        if self.document.paragraphs:
+            return self.document.paragraphs[-1]
+        return None
 
     def _custom_html_convert(self, html_content: str) -> Optional[Paragraph]:
         """自定义HTML解析和转换
