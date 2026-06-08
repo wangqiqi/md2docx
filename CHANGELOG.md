@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.5] - 2026-06-08
+
+### Added
+- T-TEST-01-02：集成测试增强标题与结构断言
+
 ## [0.5.4] - 2026-06-08
 
 ### Added
