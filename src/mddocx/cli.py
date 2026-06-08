@@ -9,7 +9,7 @@ from pathlib import Path
 
 from . import __version__
 from .converter import BaseConverter
-from .converter.base import MD2DocxError
+from .errors import E_INPUT_NOT_FOUND, E_SAVE_FAILED, error_from_exception, error_info
 
 
 def convert_file(input_file: str, output_file: str, debug: bool = False) -> None:
@@ -25,6 +25,8 @@ def convert_file(input_file: str, output_file: str, debug: bool = False) -> None
         PermissionError: 文件权限错误
         MD2DocxError: 转换过程中的错误
     """
+    from .converter.base import MD2DocxError
+
     try:
         # 检查输入文件是否存在
         input_path = Path(input_file)
@@ -74,7 +76,7 @@ def convert_file(input_file: str, output_file: str, debug: bool = False) -> None
 
     # 如果多次尝试后仍然失败
     raise PermissionError(
-        f"无法保存文件，请关闭可能正在使用该文件的应用程序: {output_file}"
+        error_info(E_SAVE_FAILED).format_user()
     )
 
 
@@ -212,13 +214,15 @@ def main() -> None:
     args = parser.parse_args(remaining)
 
     if not Path(args.input).exists():
-        print(f"错误: 输入文件不存在: {args.input}")
+        from .errors import error_info
+
+        print(f"错误: {error_info(E_INPUT_NOT_FOUND).format_user()}")
         sys.exit(1)
 
     try:
         convert_file(args.input, args.output, args.debug)
     except Exception as e:
-        print(f"错误: {str(e)}")
+        print(f"错误: {error_from_exception(e).format_user()}")
         sys.exit(1)
 
 

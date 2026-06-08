@@ -9,6 +9,7 @@ import os
 import tempfile
 import uuid
 from html import escape
+from typing import Optional
 
 import bleach
 from flask import Flask, flash, redirect, render_template, request, send_file, url_for
@@ -17,6 +18,18 @@ from markdown_it import MarkdownIt
 from werkzeug.utils import secure_filename
 
 from ..converter import BaseConverter
+from ..errors import (
+    E_CONTENT_EMPTY,
+    E_CONTENT_TOO_LARGE,
+    E_CONVERT_FAILED,
+    E_FILE_TYPE_INVALID,
+    E_INPUT_ENCODING,
+    E_MEMORY,
+    E_PREVIEW_FAILED,
+    E_SERVER_ERROR,
+    error_from_exception,
+    error_info,
+)
 from .config import get_config
 
 # 与转换器保持一致的 Markdown 解析配置
@@ -88,6 +101,10 @@ def index():
     return render_template("index.html")
 
 
+def flash_error(code: str, message: Optional[str] = None) -> None:
+    flash(error_info(code, message).format_user(), "error")
+
+
 @app.route("/convert", methods=["POST"])
 def convert():
     """转换处理"""
@@ -97,29 +114,29 @@ def convert():
         if "file" in request.files and request.files["file"].filename:
             file = request.files["file"]
             if file.filename == "":
-                flash("没有选择文件", "error")
+                flash_error(E_CONTENT_EMPTY, "没有选择文件")
                 return redirect(url_for("index"))
 
             filename = secure_filename(file.filename)
 
             if not allowed_file(filename, file):
-                flash("文件类型不支持或文件内容无效", "error")
+                flash_error(E_FILE_TYPE_INVALID)
                 return redirect(url_for("index"))
 
             try:
                 markdown_content = file.read().decode("utf-8")
             except UnicodeDecodeError:
-                flash("文件编码错误，请使用UTF-8编码的文件", "error")
+                flash_error(E_INPUT_ENCODING)
                 return redirect(url_for("index"))
         else:
             markdown_content = request.form.get("markdown", "").strip()
 
         if not markdown_content:
-            flash("请输入Markdown内容或上传文件", "error")
+            flash_error(E_CONTENT_EMPTY)
             return redirect(url_for("index"))
 
         if len(markdown_content) > config.MAX_TEXT_CONTENT_SIZE:
-            flash("内容过大，请分批处理", "error")
+            flash_error(E_CONTENT_TOO_LARGE)
             return redirect(url_for("index"))
 
         doc = BaseConverter().convert(markdown_content)
@@ -157,12 +174,12 @@ def convert():
             raise save_error
 
     except UnicodeDecodeError:
-        flash("文件编码错误，请使用UTF-8编码", "error")
+        flash_error(E_INPUT_ENCODING)
     except MemoryError:
-        flash("文件过大，内存不足", "error")
+        flash_error(E_MEMORY)
     except Exception as e:
         app.logger.error(f"转换失败: {str(e)}", exc_info=True)
-        flash("转换失败，请检查内容格式", "error")
+        flash(error_from_exception(e).format_user(), "error")
 
     return redirect(url_for("index"))
 
@@ -177,12 +194,12 @@ def preview():
             filename = secure_filename(file.filename)
 
             if not allowed_file(filename, file):
-                return _preview_error("不支持的文件类型")
+                return _preview_error(error_info(E_FILE_TYPE_INVALID).format_user())
 
             try:
                 markdown_content = file.read().decode("utf-8")
             except UnicodeDecodeError:
-                return _preview_error("文件编码错误")
+                return _preview_error(error_info(E_INPUT_ENCODING).format_user())
         else:
             markdown_content = request.form.get("markdown", "")
 
@@ -190,7 +207,7 @@ def preview():
             return _preview_placeholder("请输入Markdown内容")
 
         if len(markdown_content) > config.MAX_PREVIEW_CONTENT_SIZE:
-            return _preview_error("内容过长，无法预览")
+            return _preview_error(error_info(E_CONTENT_TOO_LARGE).format_user())
 
         preview_html = generate_preview_html(markdown_content.strip())
         return (
@@ -201,7 +218,7 @@ def preview():
 
     except Exception as e:
         app.logger.error(f"预览失败: {str(e)}", exc_info=True)
-        return _preview_error("预览生成失败，请稍后重试")
+        return _preview_error(error_info(E_PREVIEW_FAILED).format_user())
 
 
 def _preview_error(message: str) -> str:
@@ -243,7 +260,7 @@ def generate_preview_html(markdown_content):
 @app.errorhandler(413)
 def too_large(e):
     """文件过大错误"""
-    flash("文件大小超过限制 (16MB)", "error")
+    flash_error(E_CONTENT_TOO_LARGE, "文件大小超过限制 (16MB)")
     return redirect(url_for("index"))
 
 
@@ -251,7 +268,7 @@ def too_large(e):
 def internal_error(e):
     """服务器错误"""
     app.logger.error(f"服务器错误: {str(e)}", exc_info=True)
-    flash("服务器内部错误，请稍后重试", "error")
+    flash_error(E_SERVER_ERROR)
     return redirect(url_for("index"))
 
 
