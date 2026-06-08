@@ -2,6 +2,45 @@
 完整转换流程的集成测试
 """
 
+from unittest.mock import MagicMock, patch
+
+FAKE_PNG = (
+    b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
+    b"\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\x0cIDATx\x9cc\xf8\x0f"
+    b"\x00\x00\x01\x01\x00\x05\x18\xd8d\x00\x00\x00\x00IEND\xaeB`\x82"
+)
+
+
+def _paragraph_text(doc) -> str:
+    return "\n".join(p.text for p in doc.paragraphs)
+
+
+def _first_h1_from_file(md_file):
+    with open(md_file, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.startswith("# "):
+                return line[2:].strip()
+    return None
+
+
+def _assert_sample_converted(doc, md_file) -> None:
+    """验证样例转换后含标题且文档非空"""
+    assert doc is not None
+    text = _paragraph_text(doc)
+    assert len(doc.paragraphs) >= 1
+
+    title = _first_h1_from_file(md_file)
+    if title:
+        assert title in text
+
+    stem = md_file.stem
+    if stem == "tables":
+        assert len(doc.tables) >= 1
+    elif stem == "image":
+        assert len(text) > 0
+    elif stem == "code":
+        assert "代码" in text or "python" in text.lower()
+
 
 def test_convert_all_samples(converter, samples_dir, tmp_path):
     """测试转换所有基础样例文件"""
@@ -10,7 +49,7 @@ def test_convert_all_samples(converter, samples_dir, tmp_path):
             content = f.read()
 
         doc = converter.convert(content, base_path=str(md_file))
-        assert doc is not None
+        _assert_sample_converted(doc, md_file)
 
         output_file = tmp_path / f"{md_file.stem}.docx"
         doc.save(str(output_file))
@@ -18,13 +57,54 @@ def test_convert_all_samples(converter, samples_dir, tmp_path):
         assert output_file.stat().st_size > 0
 
 
+@patch("docx.text.run.Run.add_picture")
+@patch("mddocx.converter.elements.mermaid.requests.get")
+def test_convert_advanced_samples(
+    mock_get, mock_add_picture, converter, samples_advanced, tmp_path
+):
+    """测试转换 advanced 样例（mermaid 走 mock）"""
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.headers = {"Content-Type": "image/png"}
+    mock_resp.iter_content.return_value = [FAKE_PNG]
+    mock_get.return_value = mock_resp
+
+    for md_file in samples_advanced.glob("*.md"):
+        with open(md_file, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        doc = converter.convert(content, base_path=str(md_file))
+        _assert_sample_converted(doc, md_file)
+
+        output_file = tmp_path / f"advanced_{md_file.stem}.docx"
+        doc.save(str(output_file))
+        assert output_file.stat().st_size > 0
+
+
+def test_convert_root_test_md(converter, samples_root, tmp_path):
+    """测试转换 samples/test.md 综合样例"""
+    test_md = samples_root / "test.md"
+    with open(test_md, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    doc = converter.convert(content, base_path=str(test_md))
+    _assert_sample_converted(doc, test_md)
+
+    text = _paragraph_text(doc)
+    assert "Markdown to DOCX" in text or "转换测试文档" in text
+
+    output_file = tmp_path / "test.docx"
+    doc.save(str(output_file))
+    assert output_file.stat().st_size > 0
+
+
 def test_converter_reuse_does_not_accumulate_content(converter):
     """同一转换器实例多次转换不应累积内容"""
     doc1 = converter.convert("# 第一次\n\n第一段。")
     doc2 = converter.convert("# 第二次\n\n第二段。")
 
-    text1 = "\n".join(p.text for p in doc1.paragraphs)
-    text2 = "\n".join(p.text for p in doc2.paragraphs)
+    text1 = _paragraph_text(doc1)
+    text2 = _paragraph_text(doc2)
 
     assert "第一次" in text1
     assert "第二次" not in text1
@@ -66,11 +146,12 @@ def hello():
 最后一段文本。
 """
 
-    # 转换文档
     doc = converter.convert(content)
     assert doc is not None
+    text = _paragraph_text(doc)
+    assert "主标题" in text
+    assert "粗体文本" in text
 
-    # 保存并验证输出
     output_file = tmp_path / "complex.docx"
     doc.save(str(output_file))
     assert output_file.exists()
@@ -106,6 +187,8 @@ def test_convert_mixed_styles(converter):
 """
     doc = converter.convert(content)
     assert doc is not None
+    text = _paragraph_text(doc)
+    assert "粗体" in text
 
 
 def test_convert_nested_structures(converter):
@@ -122,3 +205,5 @@ def test_convert_nested_structures(converter):
 """
     doc = converter.convert(content)
     assert doc is not None
+    text = _paragraph_text(doc)
+    assert "外层引用" in text

@@ -30,5 +30,23 @@ def converter(base_converter):
 
 @pytest.fixture
 def samples_dir():
-    """获取测试样例目录"""
+    """获取基础测试样例目录（向后兼容）"""
     return TESTS_DIR / "samples" / "basic"
+
+
+@pytest.fixture
+def samples_basic(samples_dir):
+    """基础语法样例目录"""
+    return samples_dir
+
+
+@pytest.fixture
+def samples_advanced():
+    """高级语法样例目录"""
+    return TESTS_DIR / "samples" / "advanced"
+
+
+@pytest.fixture
+def samples_root():
+    """样例根目录（含 test.md）"""
+    return TESTS_DIR / "samples"
