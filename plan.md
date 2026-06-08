@@ -4,12 +4,12 @@
 <!-- SPRINT: M-DOC-03 -->
 <!-- PLAN_APPROVED: 2026-06-08 -->
 <!-- AUTONOMOUS: false -->
-<!-- ACTIVE: M-DOC-03-03 -->
-<!-- NEXT: M-DOC-03-03 -->
-<!-- LAST_DONE: M-DOC-03-02 -->
+<!-- ACTIVE: M-DOC-03-04 -->
+<!-- NEXT: M-DOC-03-04 -->
+<!-- LAST_DONE: M-DOC-03-03 -->
 <!-- VERIFY: pytest -q -->
 <!-- VERSION_LINE: 0.4 -->
-<!-- RELEASED: v0.4.6 -->
+<!-- RELEASED: v0.4.7 -->
 <!-- MAX_LOOPS: 15 -->
 
 > 产品愿景见 [`docs/plan.md`](docs/plan.md)。审查依据：[`审查.md`](审查.md)
@@ -20,7 +20,7 @@
 |------|--------|------|------|
 | 审查报告代码项（C/M P0-P1） | P0 | **已闭合** | v0.4.4 · 4C + 10M 代码/安全/CI |
 | 审查报告文档收尾（M-DOC-02） | P0 | **已闭合** | api.md · README 依赖/段落 |
-| 审查报告残余文档（M-DOC-03） | P1 | **活跃** | architecture/testing/README 发布节 |
+| 审查报告残余文档（M-DOC-03） | P1 | **已闭合** | v0.4.5–v0.4.8 文档同步 |
 | 审查报告残余代码（M-CONV-01） | P2 | 待立项 | blockquote 内联 · 异常类型保留 |
 | html2docx 可选依赖文档化 | P2 | 待立项 | M12 · `pip install mddocx[html]` |
 | 架构建议（Suggestions 1-8） | P3 | 远期 | token 重构 · mypy · Docker 等 |
@@ -56,7 +56,7 @@
 | M-DOC-03-01 | 更新 `docs/architecture.md` 项目结构（mddocx 包 · webui · security.py） | P0 | ✅ | grep -q 'webui' docs/architecture.md | docs/architecture.md |
 | M-DOC-03-02 | 更新 `docs/testing.md` 导入路径与 WebUI 测试说明 | P0 | ✅ | ! grep -q 'src.converter' docs/testing.md | docs/testing.md |
 | M-DOC-03-03 | 修正 README 发布节 v0.4.6、`batch_convert.py`、pytest 全量路径 | P1 | ✅ | grep -q 'v0.4.6' README.md && ! grep -q batch_convert_test README.md | README.md |
-| M-DOC-03-04 | api.md 标注 Docker 为规划中或移除占位命令 | P1 | 🔧 | grep -q '规划\|未提供' docs/api.md \|\| ! grep -q 'docker build' docs/api.md | docs/api.md |
+| M-DOC-03-04 | api.md 标注 Docker 为规划中或移除占位命令 | P1 | ✅ | grep -q 规划 docs/api.md && ! grep -q docker build docs/api.md | docs/api.md |
 
 ### 已具备（不必重复立项）
 
@@ -73,6 +73,7 @@
 
 ## 变更记录
 
+- **2026-06-08** · **M-DOC-03 jwrun 闭合** · architecture/testing/README/api · v0.4.8
 - **2026-06-08** · **审查.md 完成度审计** · C4/4 · M代码9/9 · 文档/Minor/Suggestions 未全闭合 → 立项 M-DOC-03
 - **2026-06-08** · **M-DOC-02 jwrun 执行** · api.md 安全说明 · README 依赖/结构树修正
 - **2026-06-08** · **M-DOC-02 Sprint 规划** · handoff jwrun

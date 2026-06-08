@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.8] - 2026-06-08
+
+### Changed
+- M-DOC-03-04：`docs/api.md` Docker 部署标注为规划中，移除占位命令
+
 ## [0.4.7] - 2026-06-08
 
 ### Changed

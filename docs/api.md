@@ -177,10 +177,8 @@ python src/mddocx/webui/start_webui.py
 pip install gunicorn
 gunicorn -w 4 -b 0.0.0.0:8000 src.mddocx.webui.app:app
 
-# 使用Docker
-# 注意：需要创建适当的Dockerfile
-docker build -t md2docx .
-docker run -p 8000:8000 md2docx
+# Docker 部署（规划中，当前未提供 Dockerfile）
+# 后续版本将补充容器化方案；现阶段请使用 pip install + gunicorn
 ```
 
 ## 监控和日志
