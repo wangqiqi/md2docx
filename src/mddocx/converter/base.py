@@ -8,6 +8,8 @@ from typing import Any, Dict, List, Optional, Tuple
 from docx import Document
 from markdown_it import MarkdownIt
 
+from mdit_py_plugins.dollarmath import dollarmath_plugin
+
 from .elements import (
     BlockquoteConverter,
     CodeConverter,
@@ -18,6 +20,7 @@ from .elements import (
     LinkConverter,
     ListConverter,
     MermaidConverter,
+    MathConverter,
     TableConverter,
     TaskListConverter,
     TextConverter,
@@ -57,11 +60,12 @@ class BaseConverter:
 
         # 启用所有需要的插件
         self.md = (
-            MarkdownIt("commonmark", {"breaks": True, "html": True})  # 启用HTML支持
+            MarkdownIt("commonmark", {"breaks": True, "html": True})
             .enable("strikethrough")
             .enable("emphasis")
             .enable("table")
-        )  # 启用表格支持
+            .use(dollarmath_plugin)
+        )
         self.document = Document()
         self.converters: Dict[str, Any] = {}
         self._list_stack: List[Tuple[str, int]] = []  # [(list_type, level), ...]
@@ -93,6 +97,7 @@ class BaseConverter:
         self.register_converter("list", ListConverter(self))
         self.register_converter("code", CodeConverter(self))
         self.register_converter("mermaid", MermaidConverter(self))
+        self.register_converter("math", MathConverter(self))
         self.register_converter("link", LinkConverter(self))
         self.register_converter("image", ImageConverter(self))
         self.register_converter("table", TableConverter(self))
@@ -362,6 +367,13 @@ class BaseConverter:
                         self._list_stack.pop()
                     if self.debug:
                         print(f"列表结束后栈: {self._list_stack}")
+                    i += 1
+
+                # 处理数学公式块
+                elif token.type == "math_block":
+                    converter = self.converters.get("math")
+                    if converter:
+                        converter.convert(token)
                     i += 1
 
                 # 处理代码块

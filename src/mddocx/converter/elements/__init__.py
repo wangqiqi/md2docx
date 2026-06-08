@@ -11,6 +11,7 @@ from .html import HtmlConverter
 from .image import ImageConverter
 from .links import LinkConverter
 from .list import ListConverter
+from .math import MathConverter
 from .mermaid import MermaidConverter
 from .table import TableConverter
 from .task_list import TaskListConverter
@@ -24,6 +25,7 @@ __all__ = [
     "ListConverter",
     "CodeConverter",
     "MermaidConverter",
+    "MathConverter",
     "LinkConverter",
     "ImageConverter",
     "TableConverter",

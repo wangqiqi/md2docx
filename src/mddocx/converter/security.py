@@ -15,6 +15,23 @@ MAX_IMAGE_BYTES = 10 * 1024 * 1024
 MAX_IMAGE_CACHE_ENTRIES = 64
 
 MERMAID_INK_HOST = "mermaid.ink"
+CODECOGS_HOST = "latex.codecogs.com"
+MAX_CODECOGS_URL_LEN = 8192
+
+
+def is_allowed_codecogs_url(url: str) -> bool:
+    """校验 CodeCogs LaTeX 渲染 URL（仅允许固定服务域名与路径）"""
+    try:
+        parsed = urlparse(url)
+    except Exception:
+        return False
+    if len(url) > MAX_CODECOGS_URL_LEN:
+        return False
+    return (
+        parsed.scheme == "https"
+        and (parsed.hostname or "").lower() == CODECOGS_HOST
+        and parsed.path.startswith("/png.latex")
+    )
 
 
 def is_allowed_mermaid_ink_url(url: str) -> bool:

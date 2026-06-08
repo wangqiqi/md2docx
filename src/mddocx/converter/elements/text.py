@@ -420,6 +420,21 @@ class TextConverter(ElementConverter):
                     current_text = ""
                 current_style["strike"] = False
                 i += 1
+            elif child.type == "math_inline":
+                if current_text:
+                    self._add_text_with_style(paragraph, current_text, current_style)
+                    current_text = ""
+                math_converter = None
+                if self.base_converter and "math" in self.base_converter.converters:
+                    math_converter = self.base_converter.converters.get("math")
+                if math_converter:
+                    math_converter.set_document(self.document)
+                    math_converter.convert_in_paragraph(paragraph, child)
+                else:
+                    self._add_inline_code(
+                        paragraph, f"${child.content}$", current_style.copy()
+                    )
+                i += 1
             elif child.type == "code_inline":
                 # 处理行内代码
                 if current_text:
