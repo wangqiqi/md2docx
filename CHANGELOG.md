@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.7] - 2026-06-08
+
+### Added
+- T-TEST-01-04：CLI `--lang en` 帮助端到端断言
+
 ## [0.5.6] - 2026-06-08
 
 ### Added
