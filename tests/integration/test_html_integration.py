@@ -2,10 +2,14 @@
 HTML转换集成测试
 """
 
+from pathlib import Path
+
 import pytest
 
 from mddocx.converter.base import BaseConverter
-from mddocx.converter.elements.html import HTML2DOCX_AVAILABLE
+from mddocx.converter.elements.html import HTML2DOCX_AVAILABLE, HTML_FOR_DOCX_AVAILABLE
+
+SAMPLES_DIR = Path(__file__).resolve().parents[1] / "samples"
 
 
 class TestHtmlIntegration:
@@ -123,7 +127,7 @@ class TestHtmlIntegration:
                 or "25" in table_text
             ), f"表格内容: {table_text}"
 
-    @pytest.mark.skipif(not HTML2DOCX_AVAILABLE, reason="html2docx not available")
+    @pytest.mark.skipif(not HTML_FOR_DOCX_AVAILABLE, reason="html-for-docx not available")
     def test_complex_html(self, base_converter):
         """测试复杂HTML结构"""
         md_text = """
@@ -149,3 +153,18 @@ class TestHtmlIntegration:
         assert "复杂" in all_text
         assert "HTML" in all_text
         assert "项目" in all_text
+
+    @pytest.mark.skipif(not HTML_FOR_DOCX_AVAILABLE, reason="html-for-docx not available")
+    def test_html_sample_file(self, base_converter):
+        """tests/samples/basic/html.md 端到端转换。"""
+        md_text = (SAMPLES_DIR / "basic" / "html.md").read_text(encoding="utf-8")
+        doc = base_converter.convert(md_text)
+
+        all_text = " ".join(p.text for p in doc.paragraphs)
+        assert "HTML支持示例" in all_text or "HTML" in all_text
+        assert len(doc.paragraphs) > 5
+        if doc.tables:
+            table_text = " ".join(
+                cell.text for row in doc.tables[0].rows for cell in row.cells
+            )
+            assert "姓名" in table_text or "张三" in table_text

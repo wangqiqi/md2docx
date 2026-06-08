@@ -7,7 +7,16 @@ from unittest.mock import MagicMock, patch
 import pytest
 from docx import Document
 
-from mddocx.converter.elements.html import HTML2DOCX_AVAILABLE, HtmlConverter
+from mddocx.converter.elements.html import (
+    HTML2DOCX_AVAILABLE,
+    HTML_FOR_DOCX_AVAILABLE,
+    HtmlConverter,
+)
+
+
+def test_html_for_docx_alias_matches_legacy_flag():
+    """HTML2DOCX_AVAILABLE 与 HTML_FOR_DOCX_AVAILABLE 保持一致（兼容别名）。"""
+    assert HTML2DOCX_AVAILABLE == HTML_FOR_DOCX_AVAILABLE
 
 
 def test_init():
@@ -31,46 +40,46 @@ def test_document_not_set():
         converter.convert(MagicMock())
 
 
-@pytest.mark.skipif(not HTML2DOCX_AVAILABLE, reason="html2docx not available")
-def test_convert_with_html2docx():
-    """测试使用html2docx转换HTML"""
-    # 创建转换器
+@pytest.mark.skipif(not HTML_FOR_DOCX_AVAILABLE, reason="html-for-docx not available")
+def test_convert_with_html_for_docx():
+    """复杂 HTML 在自定义解析失败时走 html-for-docx。"""
     converter = HtmlConverter()
     converter.set_document(Document())
 
-    # 创建模拟HTML token
     token = MagicMock()
     token.type = "html_block"
-    token.content = "<p>这是一个<strong>HTML</strong>段落</p>"
+    token.content = """<div class="container">
+  <h2>HTML标题</h2>
+  <p>这是一个<strong>复杂</strong>的<em>HTML</em>结构。</p>
+</div>"""
 
-    # 转换HTML
     result = converter.convert(token)
 
-    # 验证结果
     assert result is not None
-    # 由于html2docx的具体行为难以模拟，这里只验证基本结果
+    all_text = " ".join(p.text for p in converter.document.paragraphs)
+    assert "HTML标题" in all_text
+    assert "复杂" in all_text
 
 
-def test_convert_without_html2docx():
-    """测试在html2docx不可用时的转换"""
-    # 创建转换器
+def test_convert_without_html_for_docx():
+    """html-for-docx 不可用时回退到基本转换。"""
     converter = HtmlConverter()
     converter.set_document(Document())
 
-    # 模拟html2docx不可用
-    with patch("mddocx.converter.elements.html.HTML2DOCX_AVAILABLE", False):
-        # 创建模拟HTML token
+    with patch("mddocx.converter.elements.html.HTML_FOR_DOCX_AVAILABLE", False), patch(
+        "mddocx.converter.elements.html.HTML2DOCX_AVAILABLE", False
+    ):
         token = MagicMock()
         token.type = "html_block"
         token.content = "<p>这是一个<strong>HTML</strong>段落</p>"
 
-        # 转换HTML
         result = converter.convert(token)
 
-        # 验证结果
         assert result is not None
         assert len(converter.document.paragraphs) > 0
 
+
+def test_custom_html_convert_div():
     """测试自定义HTML转换 - div标签"""
     # 创建转换器
     converter = HtmlConverter()
