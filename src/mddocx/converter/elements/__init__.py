@@ -11,6 +11,7 @@ from .html import HtmlConverter
 from .image import ImageConverter
 from .links import LinkConverter
 from .list import ListConverter
+from .mermaid import MermaidConverter
 from .table import TableConverter
 from .task_list import TaskListConverter
 from .text import TextConverter
@@ -22,6 +23,7 @@ __all__ = [
     "BlockquoteConverter",
     "ListConverter",
     "CodeConverter",
+    "MermaidConverter",
     "LinkConverter",
     "ImageConverter",
     "TableConverter",

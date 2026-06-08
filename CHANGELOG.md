@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- M-MERMAID-01-01：`MermaidConverter` 骨架与 `fence` 按 `info=mermaid` 路由
+
 ## [0.4.10] - 2026-06-08
 
 ### Fixed

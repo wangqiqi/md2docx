@@ -14,6 +14,22 @@ MAX_IMAGE_BYTES = 10 * 1024 * 1024
 # 图片缓存最大条目数
 MAX_IMAGE_CACHE_ENTRIES = 64
 
+MERMAID_INK_HOST = "mermaid.ink"
+
+
+def is_allowed_mermaid_ink_url(url: str) -> bool:
+    """校验 mermaid.ink 渲染 URL（仅允许固定服务域名）"""
+    try:
+        parsed = urlparse(url)
+    except Exception:
+        return False
+    return (
+        parsed.scheme == "https"
+        and (parsed.hostname or "").lower() == MERMAID_INK_HOST
+        and parsed.path.startswith("/img/")
+    )
+
+
 _BLOCKED_HOSTNAMES: Set[str] = {
     "localhost",
     "localhost.localdomain",

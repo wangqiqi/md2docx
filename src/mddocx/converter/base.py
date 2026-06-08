@@ -17,6 +17,7 @@ from .elements import (
     ImageConverter,
     LinkConverter,
     ListConverter,
+    MermaidConverter,
     TableConverter,
     TaskListConverter,
     TextConverter,
@@ -91,6 +92,7 @@ class BaseConverter:
         self.register_converter("blockquote", BlockquoteConverter(self))
         self.register_converter("list", ListConverter(self))
         self.register_converter("code", CodeConverter(self))
+        self.register_converter("mermaid", MermaidConverter(self))
         self.register_converter("link", LinkConverter(self))
         self.register_converter("image", ImageConverter(self))
         self.register_converter("table", TableConverter(self))
@@ -364,7 +366,11 @@ class BaseConverter:
 
                 # 处理代码块
                 elif token.type == "fence":
-                    converter = self.converters.get("code")
+                    lang = (getattr(token, "info", "") or "").strip().lower()
+                    if lang == "mermaid":
+                        converter = self.converters.get("mermaid")
+                    else:
+                        converter = self.converters.get("code")
                     if converter:
                         converter.convert(token)
                     i += 1
