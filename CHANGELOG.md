@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.4] - 2026-06-08
+
+### Added
+- T-TEST-01-01：advanced 样例与 test.md 纳入集成测试
+
 ## [0.5.3] - 2026-06-08
 
 ### Added
@@ -239,3 +244,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 *此变更日志遵循[语义化版本](https://semver.org/)规范。*
+### Added
+- T-TEST-01-01：advanced 样例与 test.md 纳入集成测试
