@@ -4,12 +4,12 @@
 <!-- SPRINT: M-MERMAID-01 -->
 <!-- PLAN_APPROVED: 2026-06-08 -->
 <!-- AUTONOMOUS: true -->
-<!-- ACTIVE: M-MERMAID-01-02 -->
-<!-- NEXT: M-MERMAID-01-03 -->
-<!-- LAST_DONE: M-MERMAID-01-01 -->
+<!-- ACTIVE: M-MERMAID-01-03 -->
+<!-- NEXT: M-MERMAID-01-04 -->
+<!-- LAST_DONE: M-MERMAID-01-02 -->
 <!-- VERIFY: pytest -q -->
 <!-- VERSION_LINE: 0.5 -->
-<!-- RELEASED: v0.5.0 -->
+<!-- RELEASED: v0.5.1 -->
 <!-- MAX_LOOPS: 15 -->
 
 > 产品愿景见 [`docs/plan.md`](docs/plan.md)。样例：[`tests/samples/advanced/flowcharts.md`](tests/samples/advanced/flowcharts.md)
