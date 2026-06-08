@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.15] - 2026-06-08
+
+### Changed
+- M-HTML-01-01：`mddocx[html]` 可选依赖由停更 `html2docx` 换为 `html-for-docx>=1.1.0`
+
 ## [0.5.14] - 2026-06-08
 
 ### Added
