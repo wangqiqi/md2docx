@@ -54,8 +54,8 @@
 | ID | 任务 | 优先级 | 状态 | 验收 | 落点 |
 |----|------|--------|------|------|------|
 | M-DOC-03-01 | 更新 `docs/architecture.md` 项目结构（mddocx 包 · webui · security.py） | P0 | ✅ | grep -q 'webui' docs/architecture.md | docs/architecture.md |
-| M-DOC-03-02 | 更新 `docs/testing.md` 导入路径与 WebUI 测试说明 | P0 | 🔧 | ! grep -q 'src.converter' docs/testing.md | docs/testing.md |
-| M-DOC-03-03 | 修正 README 发布节 v0.4.4、`batch_convert.py`、pytest 全量路径 | P1 | ⬜ | grep -q 'v0.4.4' README.md && ! grep -q batch_convert_test README.md | README.md |
+| M-DOC-03-02 | 更新 `docs/testing.md` 导入路径与 WebUI 测试说明 | P0 | ✅ | ! grep -q 'src.converter' docs/testing.md | docs/testing.md |
+| M-DOC-03-03 | 修正 README 发布节 v0.4.4、`batch_convert.py`、pytest 全量路径 | P1 | 🔧 | grep -q 'v0.4.4' README.md && ! grep -q batch_convert_test README.md | README.md |
 | M-DOC-03-04 | api.md 标注 Docker 为规划中或移除占位命令 | P1 | ⬜ | grep -q '规划\|未提供' docs/api.md \|\| ! grep -q 'docker build' docs/api.md | docs/api.md |
 
 ### 已具备（不必重复立项）

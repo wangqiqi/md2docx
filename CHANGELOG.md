@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.6] - 2026-06-08
+
+### Changed
+- M-DOC-03-02：更新 `docs/testing.md` 导入路径与 WebUI/CI 测试说明
+
 ## [0.4.5] - 2026-06-08
 
 ### Changed

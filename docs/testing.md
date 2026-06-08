@@ -51,7 +51,7 @@ tests/
 ### 测试类结构
 ```python
 import pytest
-from src.converter.elements.heading import HeadingConverter
+from mddocx.converter.elements.heading import HeadingConverter
 
 class TestHeadingConverter:
     """标题转换器测试类"""
@@ -123,7 +123,8 @@ def test_full_markdown_conversion():
     | 数据1 | 数据2 |
     """
 
-    # 执行转换
+    from mddocx.converter.base import BaseConverter
+
     converter = BaseConverter()
     doc = converter.convert(markdown_content)
 
@@ -153,6 +154,8 @@ def test_table_with_list_integration():
       - 子功能1
       - 子功能2
     """
+
+    from mddocx.converter.base import BaseConverter
 
     converter = BaseConverter()
     doc = converter.convert(content)
@@ -192,14 +195,17 @@ def test_table_with_list_integration():
 
 ### 基本运行命令
 ```bash
-# 运行所有测试
-pytest
+# 运行所有测试（含 WebUI）
+pytest tests/ src/mddocx/webui/tests/
 
 # 运行单元测试
 pytest tests/unit/
 
 # 运行集成测试
 pytest tests/integration/
+
+# 运行 WebUI 测试
+pytest src/mddocx/webui/tests/
 
 # 运行特定测试文件
 pytest tests/unit/test_elements/test_heading.py
@@ -212,11 +218,10 @@ pytest tests/unit/test_elements/test_heading.py::TestHeadingConverter::test_h1_c
 ```ini
 # pyproject.toml 中的pytest配置
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "src/mddocx/webui/tests"]
 python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-addopts = "-v --tb=short"
+addopts = "-v"
+pythonpath = ["src"]
 markers = [
     "slow: 运行较慢的测试",
     "integration: 集成测试",
@@ -239,9 +244,9 @@ pytest --cov=src --cov-report=xml
 ## 7. 测试质量标准
 
 ### 覆盖率要求
-- **语句覆盖率**: ≥ 90%
-- **分支覆盖率**: ≥ 80%
-- **函数覆盖率**: ≥ 95%
+- **语句覆盖率**: ≥ 65%（当前基线，持续提升）
+- **CI 报告**: `pytest --cov=src --cov-report=term-missing`
+- WebUI 模块纳入 CI 后覆盖率逐步提升
 
 ### 性能标准
 - **单元测试**: 单个测试 < 0.1秒
@@ -270,9 +275,9 @@ jobs:
       with:
         python-version: '3.8'
     - name: Install dependencies
-      run: pip install -r requirements.txt
+      run: pip install -e .[dev]
     - name: Run tests with coverage
-      run: pytest --cov=src --cov-report=xml
+      run: pytest tests/ src/mddocx/webui/tests/ --cov=src --cov-report=xml
     - name: Upload coverage reports
       uses: codecov/codecov-action@v3
 ```
