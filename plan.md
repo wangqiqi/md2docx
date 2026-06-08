@@ -4,12 +4,12 @@
 <!-- SPRINT: M-HTML-01 -->
 <!-- PLAN_APPROVED: 2026-06-08 -->
 <!-- AUTONOMOUS: true -->
-<!-- ACTIVE: M-HTML-01-02 -->
-<!-- NEXT: M-HTML-01-02 -->
-<!-- LAST_DONE: M-HTML-01-01 -->
+<!-- ACTIVE: M-HTML-01-03 -->
+<!-- NEXT: M-HTML-01-03 -->
+<!-- LAST_DONE: M-HTML-01-02 -->
 <!-- VERIFY: pytest -q -->
 <!-- VERSION_LINE: 0.5 -->
-<!-- RELEASED: v0.5.15 -->
+<!-- RELEASED: v0.5.16 -->
 <!-- MAX_LOOPS: 15 -->
 
 > 产品愿景见 [`docs/plan.md`](docs/plan.md)。样例：[`tests/samples/basic/html.md`](tests/samples/basic/html.md)
@@ -37,8 +37,8 @@
 |----|------|--------|------|------|------|
 | M-HTML-01-01 | optional-dep：`html2docx` → `html-for-docx>=1.1.0` | P0 | ✅ | `grep html-for-docx pyproject.toml` · `pip install -e ".[html]"` 成功 | `pyproject.toml` |
 | M-HTML-01-02 | `HtmlConverter` 改用 `HtmlToDocx.add_html_to_document()`，去掉临时文件路径（或最小化） | P0 | ✅ | `pytest -q tests/unit/test_elements/test_html.py` | `src/mddocx/converter/elements/html.py` |
-| M-HTML-01-03 | 测试：`HTML_FOR_DOCX_AVAILABLE` + 保留别名；集成测 complex html.md | P0 | 🔧 | `pytest -q tests/unit/test_elements/test_html.py tests/integration/test_html_integration.py` | `tests/unit/test_elements/test_html.py` · `tests/integration/test_html_integration.py` |
-| M-HTML-01-04 | 文档：testing.md / README 可选依赖说明更新 | P1 | ⬜ | 文档含 `html-for-docx` · 安装命令 `mddocx[html]` 不变 | `docs/testing.md` · `README.md` |
+| M-HTML-01-03 | 测试：`HTML_FOR_DOCX_AVAILABLE` + 保留别名；集成测 complex html.md | P0 | ✅ | `pytest -q tests/unit/test_elements/test_html.py tests/integration/test_html_integration.py` | `tests/unit/test_elements/test_html.py` · `tests/integration/test_html_integration.py` |
+| M-HTML-01-04 | 文档：testing.md / README 可选依赖说明更新 | P1 | 🔧 | 文档含 `html-for-docx` · 安装命令 `mddocx[html]` 不变 | `docs/testing.md` · `README.md` |
 
 **执行顺序**：`M-HTML-01-01` → `M-HTML-01-02` → `M-HTML-01-03` → `M-HTML-01-04`
 

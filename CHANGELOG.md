@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.17] - 2026-06-08
+
+### Added
+- M-HTML-01-03：`HTML_FOR_DOCX_AVAILABLE` 测试与 `html.md` 集成测
+
 ## [0.5.16] - 2026-06-08
 
 ### Changed
