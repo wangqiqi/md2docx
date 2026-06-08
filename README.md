@@ -28,6 +28,7 @@
 - ✅ 代码块（支持语法高亮）
 - ✅ 链接处理（内联链接、引用链接、URL自动链接）
 - ✅ 图片支持（本地图片、在线图片）
+- ✅ Mermaid 流程图（graph / flowchart，经 mermaid.ink 渲染为 PNG 嵌入）
 - ✅ 表格转换（基础表格、对齐方式）
 - ✅ 分隔线
 - ✅ 任务列表（TODO列表）
@@ -76,8 +77,8 @@
 - 🔄 性能优化 (v0.4.0)
 
 **规划中 📋:**
-- 🔲 数学公式支持 (v0.5.0)
-- 🔲 流程图支持 (v0.5.0)
+- 🔲 数学公式支持 (v0.5.x)
+- 🔲 Mermaid 扩展类型（sequence / gantt 等）
 - 🔲 双向转换 (v0.6.0)
 - 🔲 插件系统 (v1.0.0)
 
@@ -142,6 +143,19 @@ pip install .
 - **`pyproject.toml`**：项目配置与依赖管理（唯一依赖源）
 
 ## 使用方法
+
+### Mermaid 流程图
+
+在 Markdown 中使用 ` ```mermaid ` 代码块，首版支持 **graph** / **flowchart** 基础流程图。转换时通过 [mermaid.ink](https://mermaid.ink) 渲染为 PNG 并嵌入 DOCX；渲染失败或不支持的图表类型会保留源码并附提示。
+
+````markdown
+```mermaid
+graph TD
+    A[开始] --> B[结束]
+```
+````
+
+> 需要网络访问 mermaid.ink；sequenceDiagram、gantt 等类型将在后续版本支持。
 
 ### Web界面 (推荐)
 

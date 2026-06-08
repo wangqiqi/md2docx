@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- M-MERMAID-01-04：Mermaid 集成测试与 README 使用说明
+
 ## [0.5.2] - 2026-06-08
 
 ### Added
