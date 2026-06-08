@@ -266,7 +266,7 @@ pytest --cov=src --cov-report=xml
 
 ### 覆盖率要求
 - **语句覆盖率**: ≥ 65%（当前基线 **~81%**，持续提升）
-- **全量回归**: `pytest tests/ src/mddocx/webui/tests/` → **169+ passed, 2 skipped**（v0.5.4 基线）
+- **全量回归**: `pytest tests/ src/mddocx/webui/tests/` → **176 passed, 2 skipped**（v0.5.10 基线）
 - **CI 报告**: `pytest --cov=src --cov-report=term-missing`
 - WebUI 与 `tests/samples` basic/advanced 均已纳入 CI
 

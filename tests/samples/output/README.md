@@ -1,67 +1,35 @@
 # Markdown to DOCX 转换示例文档
 
-本目录包含了所有 `tests/samples` 目录下markdown文档转换生成的DOCX文件。
+本目录为**手工/批量转换**生成的 DOCX 参考输出（非 CI golden file）。源文件位于 `tests/samples/`。
 
-## 📁 文件列表
+## 自动化回归（CI）
 
-### 🎯 主要测试文档
-- **`test.docx`** - 完整的综合测试文档（311行），包含所有Markdown语法
+以下路径已由 pytest 覆盖，无需依赖本目录二进制对比：
 
-### 🏗️ 基础语法示例
+| 样例 | 测试 |
+|------|------|
+| `basic/*.md` | `test_convert_all_samples`（含标题/表格结构断言） |
+| `advanced/*.md` | `test_convert_advanced_samples`（mermaid mock） |
+| `test.md` | `test_convert_root_test_md` |
 
-#### 文档结构
-- **`basic_headings.docx`** - 标题语法（H1-H6）
-- **`basic_text_styles.docx`** - 文本样式（粗体、斜体、删除线、行内代码）
+全量：`pytest tests/ src/mddocx/webui/tests/` → **176 passed, 2 skipped**
 
-#### 内容元素
-- **`basic_lists.docx`** - 列表语法（有序列表、无序列表、嵌套列表）
-- **`basic_links.docx`** - 链接语法
-- **`basic_image.docx`** - 图片语法（注意：此文件较大，因为包含图片处理）
-- **`basic_tables.docx`** - 表格语法
-- **`basic_code.docx`** - 代码块语法
-- **`basic_blockquotes.docx`** - 引用块语法
-- **`basic_hr_and_tasks.docx`** - 分割线和任务列表语法
-- **`basic_html.docx`** - HTML标签处理
+## 文件列表（历史参考）
 
-### 🚀 高级功能示例
-- **`advanced_tables.docx`** - 高级表格功能
-- **`advanced_math.docx`** - 数学公式（转换为普通文本）
-- **`advanced_flowcharts.docx`** - 流程图（转换为普通文本）
+### 基础语法
+- `basic_*.docx` — 对应 `../basic/*.md`
 
-## 🔍 查看方式
+### 高级功能
+- `advanced_tables.docx` · `advanced_math.docx` · `advanced_flowcharts.docx`
 
-你可以使用以下方式查看这些DOCX文件：
+> Mermaid graph 在 v0.5.0+ 已渲染为 PNG 嵌入；sequence 等类型仍回退源码。
 
-1. **Microsoft Word** 或 **WPS Office**
-2. **LibreOffice** 或其他支持DOCX格式的文档查看器
-3. **在线DOCX查看器**（如 Google Docs、Office Online）
+## 重新生成
 
-## 📊 转换统计
-
-- **总文件数**: 14个
-- **转换成功**: 14个 ✅
-- **转换失败**: 0个 ✅
-- **总大小**: ~768KB
-
-## 🎯 验证内容
-
-这些DOCX文件验证了以下功能：
-
-- ✅ Markdown语法解析的完整性
-- ✅ DOCX文档生成的正确性
-- ✅ 各种样式和格式的保持
-- ✅ 复杂嵌套结构的处理
-- ✅ 边界情况的鲁棒性
-
-## 🔗 原始文件
-
-对应的原始Markdown文件位于：
-- `../test.md`
-- `../basic/*.md`
-- `../advanced/*.md`
-
-你可以对比查看转换效果！
+```bash
+python scripts/batch_convert.py --input-dir tests/samples --output-dir tests/samples/output
+```
 
 ---
 
-*生成时间: 2024年12月26日*
+*基线同步：2026-06-08 · T-TEST-01*
