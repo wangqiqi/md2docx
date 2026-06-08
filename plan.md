@@ -4,12 +4,12 @@
 <!-- SPRINT: M-DOC-03 -->
 <!-- PLAN_APPROVED: 2026-06-08 -->
 <!-- AUTONOMOUS: false -->
-<!-- ACTIVE: M-DOC-03-04 -->
-<!-- NEXT: M-DOC-03-04 -->
-<!-- LAST_DONE: M-DOC-03-03 -->
+<!-- ACTIVE: -->
+<!-- NEXT: -->
+<!-- LAST_DONE: M-DOC-03-04 -->
 <!-- VERIFY: pytest -q -->
 <!-- VERSION_LINE: 0.4 -->
-<!-- RELEASED: v0.4.7 -->
+<!-- RELEASED: v0.4.8 -->
 <!-- MAX_LOOPS: 15 -->
 
 > 产品愿景见 [`docs/plan.md`](docs/plan.md)。审查依据：[`审查.md`](审查.md)
