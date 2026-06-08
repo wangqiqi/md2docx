@@ -29,6 +29,7 @@
 - ✅ 链接处理（内联链接、引用链接、URL自动链接）
 - ✅ 图片支持（本地图片、在线图片）
 - ✅ Mermaid 流程图（graph / flowchart，经 mermaid.ink 渲染为 PNG 嵌入）
+- ✅ LaTeX 数学公式（`$…$` / `$$…$$`，经 CodeCogs 渲染为 PNG 嵌入）
 - ✅ 表格转换（基础表格、对齐方式）
 - ✅ 分隔线
 - ✅ 任务列表（TODO列表）
@@ -77,8 +78,8 @@
 - 🔄 性能优化 (v0.4.0)
 
 **规划中 📋:**
-- 🔲 数学公式支持 (v0.5.x)
 - 🔲 Mermaid 扩展类型（sequence / gantt 等）
+- 🔲 公式编号与 `\ref` 引用
 - 🔲 双向转换 (v0.6.0)
 - 🔲 插件系统 (v1.0.0)
 
@@ -156,6 +157,20 @@ graph TD
 ````
 
 > 需要网络访问 mermaid.ink；sequenceDiagram、gantt 等类型将在后续版本支持。
+
+### LaTeX 数学公式
+
+支持行内 `$E=mc^2$` 与块级 `$$…$$`。转换时通过 [CodeCogs](https://www.codecogs.com/) 渲染为 PNG 并嵌入 DOCX；渲染失败则保留 LaTeX 源码并附提示。
+
+```markdown
+行内公式 $E=mc^2$ 示例。
+
+$$
+\sum_{i=1}^n i = \frac{n(n+1)}{2}
+$$
+```
+
+> 需要网络访问 latex.codecogs.com；复杂多行 `align` 环境等可能在首版回退为源码。
 
 ### Web界面 (推荐)
 
