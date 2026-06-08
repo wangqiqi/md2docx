@@ -1,105 +1,85 @@
 # md2docx · Sprint 编排（jwplan / jwrun 真源）
 
 <!-- PLANNING: false -->
-<!-- SPRINT: T-TEST-01 -->
+<!-- SPRINT: M-MATH-01 -->
 <!-- PLAN_APPROVED: 2026-06-08 -->
-<!-- AUTONOMOUS: false -->
-<!-- ACTIVE: (none) -->
-<!-- NEXT: (none) -->
-<!-- LAST_DONE: T-TEST-01-07 -->
+<!-- AUTONOMOUS: true -->
+<!-- ACTIVE: M-MATH-01-02 -->
+<!-- NEXT: M-MATH-01-03 -->
+<!-- LAST_DONE: M-MATH-01-01 -->
 <!-- VERIFY: pytest -q -->
 <!-- VERSION_LINE: 0.5 -->
-<!-- RELEASED: v0.5.10 -->
+<!-- RELEASED: v0.5.11 -->
 <!-- MAX_LOOPS: 15 -->
 
-> 产品愿景见 [`docs/plan.md`](docs/plan.md)。样例：[`tests/samples/advanced/flowcharts.md`](tests/samples/advanced/flowcharts.md)
+> 产品愿景见 [`docs/plan.md`](docs/plan.md)。样例：[`tests/samples/advanced/math.md`](tests/samples/advanced/math.md)
 
 ## ROADMAP
 
 | # | 主题 | 优先级 | 状态 | 备注 |
 |---|------|--------|------|------|
-| 7 | **测试体系补强** | P1 | **已完成** | T-TEST-01 · v0.5.4–v0.5.10 |
-| 3 | Mermaid 流程图支持 | P1 | 已完成 | M-MERMAID-01 · v0.5.0–v0.5.3 |
-| 1 | html2docx 可选依赖文档化 | P2 | 并入 T-TEST-01-05 | 原 T-HTML-01 |
-| 2 | 数学公式 LaTeX 支持 | P1 | 待立项 | v0.5.x+ |
+| 2 | **数学公式 LaTeX 支持** | P1 | **活跃** | M-MATH-01 · v0.5.11+ |
 | 4 | 双向转换 DOCX→MD | P2 | 待立项 | v0.6.0 |
 | 5 | 插件系统基础 | P3 | 待立项 | v1.0.0 |
 | 6 | 架构建议 Suggestions 1-8 | P3 | 远期 | |
+| 7 | 测试体系补强 | P1 | 已完成 | T-TEST-01 · v0.5.4–v0.5.10 |
+| 3 | Mermaid 流程图支持 | P1 | 已完成 | M-MERMAID-01 · v0.5.0–v0.5.3 |
+| 1 | html2docx 可选依赖文档化 | P2 | 已完成 | T-TEST-01-05 |
 
-## 活跃 Sprint · T-TEST-01 测试体系补强
+## 活跃 Sprint · M-MATH-01 数学公式 LaTeX 支持
 
-> **WHY**：`/jwplan` 审计 `tests/` — 体系**扎实但不完备**（169 passed · 81% cov），样例覆盖与断言深度不足  
-> **参照**：`审查.md` §测试缺口 · `docs/testing.md` · 当前 `pytest --cov=src` 报告  
-> **原则**：先补 P0 回归风险 · 断言由弱到强 · 不引入真实外网依赖
+> **WHY**：`docs/plan.md` v0.5.x · ROADMAP #2 · 当前 `$…$` / `$$…$$` 按纯文本输出（见 `tests/samples/output/README.md` advanced_math）  
+> **参照**：`tests/samples/advanced/math.md` · M-MERMAID-01 渲染嵌入模式 · `审查.md` 无 math 专项  
+> **原则**：渐进式 · 复用图片安全体系 · 失败回退 LaTeX 源码 · 不引入 Node/Pandoc
 
-### 测试体系审计结论（2026-06-08）
-
-| 维度 | 现状 | 评价 |
-|------|------|------|
-| **规模** | 171 用例 · **169 passed, 2 skipped** | ✅ 数量充足 |
-| **分层** | unit / integration / webui 三层齐全 | ✅ 结构合理 |
-| **元素覆盖** | 13 个 converter 均有对应 `test_*.py`（含 mermaid） | ✅ 模块映射完整 |
-| **CI** | `tests/` + `webui/tests/` · 多 Python 版本 | ✅ 已对齐审查 M6 |
-| **覆盖率** | 整体 **81%**（审查时 67%） | ✅ 达标；`html.py` **60%** 仍偏低 |
-| **安全测试** | `test_security.py` 11 项（路径/SSRF/mermaid 白名单） | ✅ 基础具备 |
-| **样例数据** | `samples/basic` 纳入集成；**`advanced/` 与 `test.md` 未自动化** | ⚠️ 缺口 |
-| **断言深度** | `test_convert_all_samples` 仅 `size>0`；WebUI 连续转换仅验状态码 | ⚠️ 弱断言 |
-| **可选依赖** | html2docx 路径 2 skipped · 无 optional-deps 文档 | ⚠️ 缺口 |
-| **性能/e2e** | 无 benchmark · 无 `batch_convert` 脚本测试 | 🔲 远期 |
-
-**结论**：测试体系**不算完备**，但已达到「可回归、可 CI」基线；主要债务在 **样例覆盖不全、集成断言偏浅、html/WebUI 深路径**。
-
-### 架构决策（已确认）
+### 架构决策（已确认，无需再问）
 
 | 方案 | 结论 |
 |------|------|
-| 样例策略 | 扩展 `conftest`：`samples_basic` + `samples_advanced`；advanced 中 mermaid 用 mock |
-| 断言策略 | 集成测试增加关键文本/结构断言，**首版不做 golden DOCX 二进制对比** |
-| 外网 | 图片/mermaid 集成继续 mock，不增加真实网络用例 |
-| html2docx | 文档化 optional-deps；CI 保持 skip，不强制安装 |
-| 版本线 | 本 Sprint 打版 **v0.5.4+**（`VERSION_LINE: 0.5`） |
+| 解析 | **`mdit-py-plugins` `dollarmath`** → `math_inline` / `math_block` token（新增依赖） |
+| 渲染 | **latex.codecogs.com** PNG API（服务端构造 URL，非用户任意 URL） |
+| 嵌入 | PNG 字节流 → `add_picture`（复用 Mermaid/Image 模式） |
+| 失败回退 | 渲染失败保留 **LaTeX 源码** + 灰色提示「（公式渲染失败，已保留源码）」 |
+| 安全 | 白名单 `latex.codecogs.com` · 超时 · `MAX_IMAGE_BYTES` · URL 长度上限 |
+| 版本线 | 本 Sprint **v0.5.11+**（`VERSION_LINE: 0.5`） |
 
-**首版范围（IN）**：advanced 样例纳入 · 集成断言加强 · WebUI/CLI 深路径  
-**延后（OUT）**：golden file · 真实网络 · pytest-benchmark · `start_webui.py` 覆盖
+**首版范围（IN）**：行内 `$…$`、块级 `$$…$$`；分数/希腊字母/求和/简单矩阵（math.md 前几节）  
+**延后（OUT）**：公式编号与 `\ref` · `\begin{align}` 多行对齐 · OMML 原生公式 · 离线 LaTeX 引擎
 
-**闭合条件**：P0 全部 ✅ · `pytest -q` 绿 · `docs/testing.md` 基线同步
+**闭合条件**：P0 全部 ✅ · `pytest -q` 绿 · `math.md` 基础公式 DOCX 含图片或合理回退
 
-**执行顺序**：`T-TEST-01-01` → `T-TEST-01-02` → `T-TEST-01-03` → `T-TEST-01-04` → `T-TEST-01-05` → `T-TEST-01-06` → `T-TEST-01-07`
+**执行顺序**：`M-MATH-01-01` → `M-MATH-01-02` → `M-MATH-01-03` → `M-MATH-01-04`
 
 | ID | 任务 | 优先级 | 状态 | 验收 | 落点 |
 |----|------|--------|------|------|------|
-| T-TEST-01-01 | `samples/advanced` + `test.md` 纳入集成测试 | P0 | ✅ | pytest -q tests/integration/test_full_conversion.py -k advanced | conftest.py · test_full_conversion.py |
-| T-TEST-01-02 | `test_convert_all_samples` 增强结构/文本断言 | P0 | ✅ | pytest -q tests/integration/test_full_conversion.py | test_full_conversion.py |
-| T-TEST-01-03 | WebUI 连续转换内容独立性断言（非仅状态码） | P0 | ✅ | pytest -q src/mddocx/webui/tests/test_basic.py -k accumulate | webui/tests/test_basic.py |
-| T-TEST-01-04 | CLI `--lang en` 帮助/输出端到端 | P0 | ✅ | pytest -q tests/unit/test_cli.py -k lang | test_cli.py |
-| T-TEST-01-05 | html2docx optional-deps + skip 策略文档化 | P1 | ✅ | grep -q html2docx pyproject.toml && pytest -q tests/unit/test_elements/test_html.py | pyproject.toml · docs/testing.md |
-| T-TEST-01-06 | `BaseConverter` token 路由边界单测（fence/mermaid/html） | P1 | ✅ | pytest -q tests/unit/test_base_converter.py | tests/unit/test_base_converter.py |
-| T-TEST-01-07 | 同步 `docs/testing.md` / `samples/output/README` 基线 | P1 | ✅ | grep -q '176 passed' docs/testing.md | docs/testing.md · samples/output/README.md |
+| M-MATH-01-01 | 添加 `mdit-py-plugins` + `MathConverter` 骨架 + `base.py` 路由 math token | P0 | ✅ | test -f src/mddocx/converter/elements/math.py | math.py · base.py · pyproject.toml |
+| M-MATH-01-02 | CodeCogs 渲染 PNG 并插入 DOCX（行内/块级） | P0 | 🔧 | pytest -q tests/unit/test_elements/test_math.py | math.py |
+| M-MATH-01-03 | 白名单 URL + 渲染失败回退 LaTeX 源码 | P0 | ⬜ | pytest -q tests/unit/test_elements/test_math.py -k security | security.py · math.py |
+| M-MATH-01-04 | 集成测试（math.md mock）+ README 说明 | P1 | ⬜ | pytest -q tests/integration/test_math_integration.py | tests/ · README.md |
 
 ### 现状（为何做）
 
-- `conftest.samples_dir` 仅指向 `basic/`，`flowcharts.md` 等 advanced 样例无自动化回归
-- `test_multiple_converts_do_not_accumulate`（WebUI）未验证 DOCX/响应内容隔离
-- `审查.md` P2「修复 conftest」已简化修复，但「样例深度覆盖」仍未闭合
+- `MarkdownIt("commonmark")` 未启用 math；`$E=mc^2$` 原样进段落文本
+- `tests/samples/advanced/math.md` 已有 7 类样例，集成测试未覆盖公式路径
+- Mermaid Sprint 已验证「外部渲染 PNG + 白名单 + mock 测试」模式，可直接复用
 
 ### 已具备（不必重复立项）
 
-- 元素级单测齐全；`test_converter_reuse_does_not_accumulate` 覆盖 BaseConverter 复用
-- CI 已含 WebUI；security 单测；Mermaid mock 测试模式可复用
+- `requests`、 `security.py` 白名单模式、`MermaidConverter` 可作模板
+- `test_full_conversion` 已遍历 advanced 样例（math 块当前仅验标题存在）
 
 ## 已闭合 Sprint
 
 | Sprint | 版本 | 归档 |
 |--------|------|------|
-| T-TEST-01 | v0.5.4–v0.5.10 | archive/sprint/（待 §7 归档） |
+| T-TEST-01 | v0.5.4–v0.5.10 | [archive/sprint/20260608_230821_测试体系_T-TEST-01_Sprint闭合_打版_v0.5.10.md](archive/sprint/20260608_230821_测试体系_T-TEST-01_Sprint闭合_打版_v0.5.10.md) |
 | M-MERMAID-01 | v0.5.0–v0.5.3 | archive/sprint/20260608_225947_… |
 | M-CONV-01 | v0.4.9–v0.4.10 | archive/sprint/20260608_225306_… |
 | M-DOC-03 | v0.4.5–v0.4.8 | archive/sprint/20260608_225037_… |
 
 ## 变更记录
 
+- **2026-06-08** · **M-MATH-01 Sprint 规划** · dollarmath + CodeCogs PNG · 行内/块级首版 · handoff jwrun
+- **2026-06-08** · plan 审计快照同步 · jwrun-skill §7B 刷新审计快照
 - **2026-06-08** · **T-TEST-01 §7 闭合** · v0.5.4–v0.5.10 · 176 passed
-- **2026-06-08** · **T-TEST-01 Sprint 规划** · 测试体系审计：扎实但不完备 · 7 项补强 · handoff jwrun
-- **2026-06-08** · **M-MERMAID-01 §7 闭合** · v0.5.0–v0.5.3 · 169 passed
-- **2026-06-08** · **M-MERMAID-01 Sprint 规划** · mermaid.ink 方案 · graph TD 首版 · handoff jwrun
-- **2026-06-08** · M-CONV-01 §7 闭合 · v0.4.10
+- **2026-06-08** · **M-MERMAID-01 §7 闭合** · v0.5.0–v0.5.3
