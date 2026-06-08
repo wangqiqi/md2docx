@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.4.4-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.4.4)
+[![Version](https://img.shields.io/badge/version-0.4.6-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.4.6)
 [![Cursor AI Rules](https://img.shields.io/badge/Cursor%20AI%20Rules-v3.0.0-green.svg)](https://github.com/wangqiqi/cursor-ai-rules)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
@@ -256,7 +256,7 @@ md2docx/
 │       └── advanced/    # 高级语法样例
 ├── docs/                # 项目文档
 ├── scripts/             # 工具脚本目录
-│   ├── batch_convert_test.py    # 批量转换脚本
+│   ├── batch_convert.py         # 批量转换脚本
 │   └── test_roundtrip_demo.py   # 闭环测试演示
 ├── dist/                # 构建产物
 ├── pyproject.toml       # 项目配置和依赖管理
@@ -276,7 +276,7 @@ md2docx/
 
 运行测试：
 ```bash
-pytest tests/
+pytest tests/ src/mddocx/webui/tests/
 ```
 
 ## 贡献指南
@@ -294,8 +294,8 @@ pytest tests/
 
 ```bash
 # 推送版本标签触发自动发布
-git tag v0.4.3
-git push origin v0.4.3
+git tag v0.4.6
+git push origin v0.4.6
 ```
 
 ### 手动发布

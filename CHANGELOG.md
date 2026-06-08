@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.7] - 2026-06-08
+
+### Changed
+- M-DOC-03-03：修正 README 发布节、批量脚本名与 pytest 全量路径
+
 ## [0.4.6] - 2026-06-08
 
 ### Changed
