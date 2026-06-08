@@ -4,12 +4,12 @@
 <!-- SPRINT: M-MERMAID-01 -->
 <!-- PLAN_APPROVED: 2026-06-08 -->
 <!-- AUTONOMOUS: true -->
-<!-- ACTIVE: M-MERMAID-01-01 -->
-<!-- NEXT: M-MERMAID-01-02 -->
-<!-- LAST_DONE: M-CONV-01-02 -->
+<!-- ACTIVE: M-MERMAID-01-02 -->
+<!-- NEXT: M-MERMAID-01-03 -->
+<!-- LAST_DONE: M-MERMAID-01-01 -->
 <!-- VERIFY: pytest -q -->
 <!-- VERSION_LINE: 0.5 -->
-<!-- RELEASED: v0.4.10 -->
+<!-- RELEASED: v0.5.0 -->
 <!-- MAX_LOOPS: 15 -->
 
 > 产品愿景见 [`docs/plan.md`](docs/plan.md)。样例：[`tests/samples/advanced/flowcharts.md`](tests/samples/advanced/flowcharts.md)
@@ -51,8 +51,8 @@
 
 | ID | 任务 | 优先级 | 状态 | 验收 | 落点 |
 |----|------|--------|------|------|------|
-| M-MERMAID-01-01 | `MermaidConverter` 骨架 + `base.py` 按 `info=mermaid` 路由 | P0 | 🔧 | test -f src/mddocx/converter/elements/mermaid.py | mermaid.py · base.py |
-| M-MERMAID-01-02 | mermaid.ink 渲染 PNG 并插入 DOCX（graph TD） | P0 | ⬜ | pytest -q tests/unit/test_elements/test_mermaid.py | mermaid.py |
+| M-MERMAID-01-01 | `MermaidConverter` 骨架 + `base.py` 按 `info=mermaid` 路由 | P0 | ✅ | test -f src/mddocx/converter/elements/mermaid.py | mermaid.py · base.py |
+| M-MERMAID-01-02 | mermaid.ink 渲染 PNG 并插入 DOCX（graph TD） | P0 | 🔧 | pytest -q tests/unit/test_elements/test_mermaid.py | mermaid.py |
 | M-MERMAID-01-03 | 安全白名单 + 失败回退源码块 | P0 | ⬜ | pytest -q tests/unit/test_elements/test_mermaid.py -k security | security.py · mermaid.py |
 | M-MERMAID-01-04 | 集成测试 + README 说明 | P1 | ⬜ | pytest -q tests/integration/test_mermaid_integration.py | tests/ · README.md |
 
