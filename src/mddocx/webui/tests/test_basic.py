@@ -197,11 +197,27 @@ class TestAppRoutes:
 
     def test_multiple_converts_do_not_accumulate(self):
         """测试连续转换不会累积历史内容"""
-        response1 = self.client.post("/convert", data={"markdown": "# 第一次"})
-        assert response1.status_code in [200, 302]
+        from io import BytesIO
 
-        response2 = self.client.post("/convert", data={"markdown": "# 第二次"})
-        assert response2.status_code in [200, 302]
+        from docx import Document
+
+        response1 = self.client.post(
+            "/convert", data={"markdown": "# 第一次\n\n唯一第一段。"}
+        )
+        assert response1.status_code == 200
+        doc1 = Document(BytesIO(response1.data))
+        text1 = "\n".join(p.text for p in doc1.paragraphs)
+        assert "第一次" in text1
+        assert "第二次" not in text1
+
+        response2 = self.client.post(
+            "/convert", data={"markdown": "# 第二次\n\n唯一第二段。"}
+        )
+        assert response2.status_code == 200
+        doc2 = Document(BytesIO(response2.data))
+        text2 = "\n".join(p.text for p in doc2.paragraphs)
+        assert "第二次" in text2
+        assert "第一次" not in text2
 
     def test_preview_sanitizes_script_tags(self):
         """测试预览接口消毒恶意脚本"""
