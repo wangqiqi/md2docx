@@ -180,16 +180,16 @@ def test_table_with_list_integration():
 
 ## 5. 测试数据管理
 
-### 可选依赖 html2docx
+### 可选依赖 html-for-docx
 
-复杂 HTML 转换依赖可选包 **html2docx**（`pyproject.toml` → `[project.optional-dependencies] html`）：
+Markdown 内嵌的**复杂 HTML** 块在自研解析无法处理时，回退依赖 **html-for-docx**（`pyproject.toml` → `[project.optional-dependencies] html`；import 名为 `html4docx`）：
 
 ```bash
 pip install -e ".[html]"   # 或 pip install mddocx[html]
-pytest tests/unit/test_elements/test_html.py
+pytest tests/unit/test_elements/test_html.py tests/integration/test_html_integration.py
 ```
 
-CI 默认**不安装** html2docx；相关用例以 `@pytest.mark.skipif(not HTML2DOCX_AVAILABLE)` 跳过，属预期行为。
+CI 默认**不安装** `[html]`；相关用例以 `@pytest.mark.skipif(not HTML_FOR_DOCX_AVAILABLE)` 跳过，属预期行为。代码中 `HTML2DOCX_AVAILABLE` 为兼容别名，与 `HTML_FOR_DOCX_AVAILABLE` 同值。
 
 ### 样例文件规范
 - **文件位置**: `tests/samples/basic/` 或 `tests/samples/advanced/`

@@ -33,7 +33,7 @@
 - ✅ 表格转换（基础表格、对齐方式）
 - ✅ 分隔线
 - ✅ 任务列表（TODO列表）
-- ✅ 基础HTML标签支持
+- ✅ 基础 HTML 标签支持（复杂 HTML 块可选 `pip install mddocx[html]`，依赖 **html-for-docx**）
 - ✅ Web界面 (Flask + HTML5 + CSS3)
 - ✅ 实时预览功能
 - ✅ 文件上传和下载
@@ -80,8 +80,6 @@
 **规划中 📋:**
 - 🔲 Mermaid 扩展类型（sequence / gantt 等）
 - 🔲 公式编号与 `\ref` 引用
-- 🔲 双向转换 (v0.6.0)
-- 🔲 插件系统 (v1.0.0)
 
 ## 开发环境要求
 
@@ -142,6 +140,7 @@ pip install .
 ### 依赖说明
 
 - **`pyproject.toml`**：项目配置与依赖管理（唯一依赖源）
+- **复杂 HTML**（Markdown 内嵌 `<table>` / `<div>` 等）：可选安装 `pip install mddocx[html]`，引入 [html-for-docx](https://pypi.org/project/html-for-docx/)（PyPI 包名 `html-for-docx`，import `html4docx`）。未安装时仍可用自研解析处理简单标签。
 
 ## 使用方法
 
@@ -285,8 +284,7 @@ md2docx/
 │       └── advanced/    # 高级语法样例
 ├── docs/                # 项目文档
 ├── scripts/             # 工具脚本目录
-│   ├── batch_convert.py         # 批量转换脚本
-│   └── test_roundtrip_demo.py   # 闭环测试演示
+│   └── batch_convert.py         # 批量转换脚本
 ├── dist/                # 构建产物
 ├── pyproject.toml       # 项目配置和依赖管理
 ├── plan.md              # Sprint 编排（jwplan/jwrun）
