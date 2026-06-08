@@ -136,14 +136,17 @@ class TestCLI:
             with pytest.raises(SystemExit):
                 main()
 
-    @patch("sys.stdout")
-    def test_main_help_english(self, mock_stdout):
-        """测试英文帮助信息"""
+    def test_main_lang_en_help(self, capsys):
+        """测试 --lang en 帮助信息端到端输出"""
         test_args = ["md2docx", "--lang", "en", "--help"]
 
         with patch("sys.argv", test_args):
             with pytest.raises(SystemExit):
                 main()
+
+        captured = capsys.readouterr()
+        assert "Markdown to DOCX Converter" in captured.out
+        assert "Path to input Markdown file" in captured.out
 
     def test_convert_file_output_file_exists(self):
         """测试输出文件已存在的情况"""
