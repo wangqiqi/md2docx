@@ -12,39 +12,31 @@
 
 ```
 md2docx/
-├── src/                    # 源代码
-│   ├── converter/         # 转换核心
-│   │   ├── base.py       # 基础转换类
-│   │   ├── __init__.py   # 包初始化
-│   │   └── elements/     # 各类元素转换器
-│   │       ├── base.py   # 基础元素转换器
-│   │       ├── text.py   # 文本相关（段落、样式）
-│   │       ├── heading.py # 标题转换
-│   │       ├── list.py   # 列表转换
-│   │       ├── code.py   # 代码块转换
-│   │       ├── table.py  # 表格转换
-│   │       ├── image.py  # 图片转换
-│   │       ├── links.py  # 链接转换
-│   │       ├── blockquote.py # 引用块转换
-│   │       ├── hr.py     # 分隔线转换
-│   │       ├── task_list.py # 任务列表转换
-│   │       ├── html.py   # HTML标签转换
-│   │       └── __init__.py # 包初始化
-│   └── cli.py          # 命令行接口
-├── tests/               # 测试用例
-│   ├── unit/           # 单元测试
-│   ├── integration/    # 集成测试
-│   └── samples/        # 测试样例
-│       ├── basic/      # 基础语法样例
-│       └── advanced/   # 高级语法样例
-├── docs/               # 项目文档
-│   ├── architecture.md # 架构设计
-│   ├── development.md  # 开发指南
-│   └── testing.md     # 测试规范
-├── batch_convert_test.py # 批量转换脚本
-├── requirements.txt    # 项目依赖
-├── pyproject.toml     # 项目配置
-└── README.md          # 项目说明
+├── src/
+│   └── mddocx/              # PyPI 包名 mddocx
+│       ├── __init__.py
+│       ├── cli.py           # CLI 入口 (mddocx)
+│       ├── converter/       # 转换核心
+│       │   ├── base.py      # BaseConverter · _reset_state()
+│       │   ├── security.py  # 图片 URL/路径安全校验
+│       │   └── elements/    # 元素转换器（heading/text/list/...）
+│       └── webui/           # Flask Web 界面 (mddocx-webui)
+│           ├── app.py       # 路由 · bleach 预览 · CSRF
+│           ├── config.py
+│           ├── templates/
+│           ├── static/
+│           └── tests/
+├── tests/                   # 单元 + 集成测试
+│   ├── unit/
+│   ├── integration/
+│   └── samples/
+├── docs/                    # 项目文档
+├── scripts/
+│   └── batch_convert.py
+├── .github/workflows/       # CI/CD (ci.yml · publish.yml)
+├── pyproject.toml           # 依赖与构建（唯一依赖源）
+├── plan.md                  # Sprint 编排（jwplan/jwrun）
+└── README.md
 ```
 
 ## 3. 功能开发路线
@@ -97,11 +89,11 @@ md2docx/
 2. 流程图（可选）
 3. HTML 标签支持（已完成基础支持）
 
-### 阶段六：界面开发（TODO）
-1. 基础编辑器
-2. 实时预览
-3. 导出功能
-4. 样式配置
+### 阶段六：界面开发（已完成 v0.4.x）
+1. ✅ Web 编辑器与文件上传
+2. ✅ 实时预览（bleach 消毒）
+3. ✅ DOCX 导出下载
+4. 🔲 自定义样式配置（规划中）
 
 ## 4. 核心设计
 
@@ -134,7 +126,8 @@ class HeadingConverter(ElementConverter):
 2. **简单依赖**
    - markdown-it-py：Markdown 解析
    - python-docx：DOCX 生成
-   - PySide6：GUI（TODO - 后期添加）
+   - Flask / bleach / flask-wtf：WebUI 与安全
+   - requests：在线图片下载
 
 3. **测试驱动**
    - 每个功能都有对应测试
@@ -166,8 +159,8 @@ class HeadingConverter(ElementConverter):
 4. ✅ 验证导出功能
 5. ✅ 集成AI协作规则系统
 6. ✅ 实现完整Markdown转换功能
-7. 🔲 开发图形界面（v1.0.0规划）
-8. 🔲 实现高级功能支持（数学公式、流程图）（v1.0.0规划）
+7. ✅ Web 图形界面（Flask WebUI）
+8. 🔲 数学公式、流程图（v0.5.0 规划）
 
 ## 8. 开发规范
 
