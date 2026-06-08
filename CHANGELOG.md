@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.19] - 2026-06-09
+
+### Added
+- M-ARCH-01-01：统一错误码模块，CLI/WebUI `[CODE]` 一致消息
+
 ## [0.5.18] - 2026-06-08
 
 ### Changed
