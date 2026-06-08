@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.8] - 2026-06-08
+
+### Added
+- T-TEST-01-05：html2docx 可选依赖与 skip 策略文档化
+
 ## [0.5.7] - 2026-06-08
 
 ### Added
