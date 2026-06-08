@@ -4,12 +4,12 @@
 <!-- SPRINT: M-HTML-01 -->
 <!-- PLAN_APPROVED: 2026-06-08 -->
 <!-- AUTONOMOUS: true -->
-<!-- ACTIVE: M-HTML-01-03 -->
-<!-- NEXT: M-HTML-01-03 -->
-<!-- LAST_DONE: M-HTML-01-02 -->
+<!-- ACTIVE: M-HTML-01-04 -->
+<!-- NEXT: M-HTML-01-04 -->
+<!-- LAST_DONE: M-HTML-01-03 -->
 <!-- VERIFY: pytest -q -->
 <!-- VERSION_LINE: 0.5 -->
-<!-- RELEASED: v0.5.16 -->
+<!-- RELEASED: v0.5.17 -->
 <!-- MAX_LOOPS: 15 -->
 
 > 产品愿景见 [`docs/plan.md`](docs/plan.md)。样例：[`tests/samples/basic/html.md`](tests/samples/basic/html.md)
