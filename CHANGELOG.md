@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- M-MERMAID-01-02：mermaid.ink 渲染 graph/flowchart PNG 并嵌入 DOCX
+
 ## [0.5.0] - 2026-06-08
 
 ### Added
