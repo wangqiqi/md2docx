@@ -10,6 +10,14 @@ from docx import Document
 from mddocx.converter.elements.image import ImageConverter
 
 
+def _mock_http_response(content=b"fake_image_data"):
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.headers = {}
+    mock_response.iter_content.return_value = [content]
+    return mock_response
+
+
 def test_init():
     """测试初始化"""
     converter = ImageConverter()
@@ -37,24 +45,21 @@ def test_convert_image(mock_get, mock_add_picture):
     converter = ImageConverter()
     converter.set_document(Document())
 
-    # 模拟图片下载
-    mock_response = MagicMock()
-    mock_response.content = b"fake_image_data"
-    mock_response.status_code = 200
-    mock_get.return_value = mock_response
+    mock_get.return_value = _mock_http_response()
 
-    # 创建模拟图片token
     image_token = MagicMock()
     image_token.type = "image"
     image_token.attrs = {"src": "https://example.com/image.png", "title": "测试图片"}
     image_token.content = "测试图片"
 
-    # 转换图片
-    paragraph = converter.convert((image_token, image_token))
+    with patch(
+        "mddocx.converter.elements.image.is_safe_remote_url", return_value=True
+    ):
+        paragraph = converter.convert((image_token, image_token))
 
-    # 验证结果
     assert paragraph is not None
-    mock_get.assert_called_once_with("https://example.com/image.png", timeout=10)
+    mock_get.assert_called_once()
+    assert mock_get.call_args[0][0] == "https://example.com/image.png"
 
 
 @patch("docx.text.run.Run.add_picture")
@@ -121,11 +126,7 @@ def test_convert_image_with_sizes(mock_get, mock_add_picture):
     converter = ImageConverter()
     converter.set_document(Document())
 
-    # 模拟图片下载
-    mock_response = MagicMock()
-    mock_response.content = b"fake_image_data"
-    mock_response.status_code = 200
-    mock_get.return_value = mock_response
+    mock_get.return_value = _mock_http_response()
 
     # 创建模拟图片token（带尺寸）
     image_token = MagicMock()
@@ -133,10 +134,11 @@ def test_convert_image_with_sizes(mock_get, mock_add_picture):
     image_token.attrs = {"src": "https://example.com/image.png", "title": "测试图片"}
     image_token.content = "图片 100x200"
 
-    # 转换图片
-    paragraph = converter.convert((image_token, image_token))
+    with patch(
+        "mddocx.converter.elements.image.is_safe_remote_url", return_value=True
+    ):
+        paragraph = converter.convert((image_token, image_token))
 
-    # 验证结果
     assert paragraph is not None
 
 
@@ -149,21 +151,17 @@ def test_convert_image_debug_mode(mock_get, mock_add_picture):
     converter.debug = True
     converter.set_document(Document())
 
-    # 模拟图片下载
-    mock_response = MagicMock()
-    mock_response.content = b"fake_image_data"
-    mock_response.status_code = 200
-    mock_get.return_value = mock_response
+    mock_get.return_value = _mock_http_response()
 
-    # 创建模拟图片token
     image_token = MagicMock()
     image_token.type = "image"
     image_token.attrs = {"src": "https://example.com/image.png"}
 
-    # 转换图片
-    paragraph = converter.convert((image_token, image_token))
+    with patch(
+        "mddocx.converter.elements.image.is_safe_remote_url", return_value=True
+    ):
+        paragraph = converter.convert((image_token, image_token))
 
-    # 验证结果
     assert paragraph is not None
 
 
@@ -173,44 +171,33 @@ def test_get_image_data_cache(mock_get):
     # 创建转换器
     converter = ImageConverter()
 
-    # 模拟图片下载
-    mock_response = MagicMock()
-    mock_response.content = b"fake_image_data"
-    mock_response.status_code = 200
-    mock_get.return_value = mock_response
+    mock_get.return_value = _mock_http_response()
 
-    # 第一次获取
-    result1 = converter._get_image_data("https://example.com/image.png")
-    assert result1 is not None
+    with patch(
+        "mddocx.converter.elements.image.is_safe_remote_url", return_value=True
+    ):
+        result1 = converter._get_image_data("https://example.com/image.png")
+        assert result1 is not None
+        result2 = converter._get_image_data("https://example.com/image.png")
+        assert result2 is not None
 
-    # 第二次获取（应该从缓存中获取）
-    result2 = converter._get_image_data("https://example.com/image.png")
-    assert result2 is not None
-
-    # 验证只调用了一次网络请求
     assert mock_get.call_count == 1
 
 
 def test_get_image_data_local_file():
     """测试获取本地图片文件"""
-    import os
     import tempfile
+    from pathlib import Path
 
-    # 创建转换器
     converter = ImageConverter()
 
-    # 创建临时图片文件
-    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
-        temp_file.write(b"fake_png_data")
-        temp_path = temp_file.name
-
-    try:
-        # 测试本地文件路径
-        result = converter._get_image_data(temp_path)
+    with tempfile.TemporaryDirectory() as tmpdir:
+        base = Path(tmpdir)
+        image = base / "test.png"
+        image.write_bytes(b"fake_png_data")
+        converter.set_base_dir(base)
+        result = converter._get_image_data("test.png")
         assert result is not None
-
-    finally:
-        os.unlink(temp_path)
 
 
 def test_get_image_data_local_file_not_found():

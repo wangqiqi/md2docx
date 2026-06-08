@@ -24,7 +24,7 @@ class Config:
     MAX_PREVIEW_CONTENT_SIZE = 2 * 1024 * 1024  # 2MB
 
     # 服务器配置
-    HOST = os.environ.get("HOST", "0.0.0.0")
+    HOST = os.environ.get("HOST", "127.0.0.1")
     PORT = int(os.environ.get("PORT", 5000))
     DEBUG = os.environ.get("FLASK_DEBUG", "False").lower() == "true"
 
@@ -34,6 +34,7 @@ class DevelopmentConfig(Config):
 
     DEBUG = True
     SECRET_KEY = "dev-secret-key-change-in-production"
+    HOST = "127.0.0.1"
 
 
 class ProductionConfig(Config):

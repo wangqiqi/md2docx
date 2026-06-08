@@ -3,54 +3,64 @@ Flask Web应用
 提供Markdown转DOCX的Web界面
 """
 
-# 标准库导入
 import logging
 import mimetypes
 import os
-import sys
-from pathlib import Path
+import tempfile
+import uuid
+from html import escape
 
-# 第三方库导入
+import bleach
 from flask import Flask, flash, redirect, render_template, request, send_file, url_for
+from flask_wtf.csrf import CSRFProtect
+from markdown_it import MarkdownIt
 from werkzeug.utils import secure_filename
 
-# 添加项目根目录到Python路径
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
-
-# 本地模块导入
 from ..converter import BaseConverter
 from .config import get_config
 
-# 导入markdown解析器
-try:
-    from markdown_it import MarkdownIt
+# 与转换器保持一致的 Markdown 解析配置
+ALLOWED_PREVIEW_TAGS = [
+    "h1", "h2", "h3", "h4", "h5", "h6",
+    "p", "br", "hr", "ul", "ol", "li",
+    "strong", "em", "del", "code", "pre",
+    "blockquote", "table", "thead", "tbody", "tr", "th", "td",
+    "a", "img", "span", "div",
+]
+ALLOWED_PREVIEW_ATTRS = {
+    "*": ["class"],
+    "a": ["href", "title", "target", "rel"],
+    "img": ["src", "alt", "title", "width", "height"],
+}
 
-    md = MarkdownIt()
-except ImportError:
-    # 如果没有安装markdown-it-py，使用简单的解析
-    md = None
 
-# 配置日志
+def create_markdown_parser() -> MarkdownIt:
+    """创建与 BaseConverter 一致的 Markdown 解析器"""
+    return (
+        MarkdownIt("commonmark", {"breaks": True, "html": True})
+        .enable("strikethrough")
+        .enable("emphasis")
+        .enable("table")
+    )
+
+
+md = create_markdown_parser()
+
 logging.basicConfig(level=logging.INFO)
 
-# 加载配置
 config = get_config()
 
-# 创建Flask应用
 app = Flask(__name__)
 app.config.from_object(config)
+app.config.setdefault("WTF_CSRF_TIME_LIMIT", None)
 
-# 设置应用日志
+csrf = CSRFProtect(app)
+
 app.logger.setLevel(logging.INFO if not config.DEBUG else logging.DEBUG)
-
-# 初始化转换器
-converter = BaseConverter()
 
 
 def allowed_file(filename, file_obj=None):
     """验证文件是否允许上传"""
-    # 检查文件扩展名
     if "." not in filename:
         return False
 
@@ -58,16 +68,12 @@ def allowed_file(filename, file_obj=None):
     if ext not in config.ALLOWED_EXTENSIONS:
         return False
 
-    # 如果提供了文件对象，检查MIME类型
     if file_obj:
         mime_type = mimetypes.guess_type(filename)[0]
         if mime_type and mime_type not in config.ALLOWED_MIME_TYPES:
-            # 额外检查文件头（更严格的验证）
             file_obj.seek(0)
             file_header = file_obj.read(512)
             file_obj.seek(0)
-
-            # 检查是否是文本文件（简单的启发式检查）
             try:
                 file_header.decode("utf-8")
             except UnicodeDecodeError:
@@ -88,18 +94,14 @@ def convert():
     try:
         markdown_content = ""
 
-        # 获取Markdown内容
         if "file" in request.files and request.files["file"].filename:
-            # 文件上传
             file = request.files["file"]
             if file.filename == "":
                 flash("没有选择文件", "error")
                 return redirect(url_for("index"))
 
-            # 使用安全文件名验证
             filename = secure_filename(file.filename)
 
-            # 验证文件类型和内容
             if not allowed_file(filename, file):
                 flash("文件类型不支持或文件内容无效", "error")
                 return redirect(url_for("index"))
@@ -110,24 +112,17 @@ def convert():
                 flash("文件编码错误，请使用UTF-8编码的文件", "error")
                 return redirect(url_for("index"))
         else:
-            # 文本输入
             markdown_content = request.form.get("markdown", "").strip()
 
         if not markdown_content:
             flash("请输入Markdown内容或上传文件", "error")
             return redirect(url_for("index"))
 
-        # 检查内容长度
         if len(markdown_content) > config.MAX_TEXT_CONTENT_SIZE:
             flash("内容过大，请分批处理", "error")
             return redirect(url_for("index"))
 
-        # 执行转换
-        doc = converter.convert(markdown_content)
-
-        # 保存到临时文件 - 使用更安全的方式
-        import tempfile
-        import uuid
+        doc = BaseConverter().convert(markdown_content)
 
         temp_filename = f"md2docx_{uuid.uuid4().hex}.docx"
         temp_dir = tempfile.gettempdir()
@@ -136,7 +131,6 @@ def convert():
         try:
             doc.save(docx_file_path)
 
-            # 返回文件下载
             response = send_file(
                 docx_file_path,
                 as_attachment=True,
@@ -144,7 +138,6 @@ def convert():
                 mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             )
 
-            # 设置清理回调
             @response.call_on_close
             def cleanup():
                 try:
@@ -156,7 +149,6 @@ def convert():
             return response
 
         except Exception as save_error:
-            # 清理可能已创建的文件
             try:
                 if os.path.exists(docx_file_path):
                     os.unlink(docx_file_path)
@@ -179,125 +171,73 @@ def convert():
 def preview():
     """预览功能 - 只返回预览内容的HTML片段"""
     try:
-        # 获取Markdown内容
         markdown_content = ""
         if "file" in request.files and request.files["file"].filename:
             file = request.files["file"]
             filename = secure_filename(file.filename)
 
-            # 验证文件
             if not allowed_file(filename, file):
-                return "<div class='preview-error'><span class='icon'>❌</span><p>不支持的文件类型</p></div>"
+                return _preview_error("不支持的文件类型")
 
             try:
                 markdown_content = file.read().decode("utf-8")
             except UnicodeDecodeError:
-                return "<div class='preview-error'><span class='icon'>❌</span><p>文件编码错误</p></div>"
+                return _preview_error("文件编码错误")
         else:
             markdown_content = request.form.get("markdown", "")
 
         if not markdown_content or len(markdown_content.strip()) == 0:
-            return "<div class='preview-placeholder'><span class='icon'>👁️</span><p>请输入Markdown内容</p></div>"
+            return _preview_placeholder("请输入Markdown内容")
 
-        # 限制预览内容长度
         if len(markdown_content) > config.MAX_PREVIEW_CONTENT_SIZE:
-            return "<div class='preview-error'><span class='icon'>⚠️</span><p>内容过长，无法预览</p></div>"
+            return _preview_error("内容过长，无法预览")
 
-        # 生成预览HTML
         preview_html = generate_preview_html(markdown_content.strip())
-
-        # 返回只包含预览内容的HTML片段
-        return f"""<div class="preview-result"><div class="preview-content-rendered">{preview_html}</div></div>"""
+        return (
+            f'<div class="preview-result">'
+            f'<div class="preview-content-rendered">{preview_html}</div>'
+            f"</div>"
+        )
 
     except Exception as e:
         app.logger.error(f"预览失败: {str(e)}", exc_info=True)
-        error_msg = "预览生成失败，请稍后重试"
-        return f"<div class='preview-error'><span class='icon'>❌</span><p>{error_msg}</p></div>"
+        return _preview_error("预览生成失败，请稍后重试")
+
+
+def _preview_error(message: str) -> str:
+    return (
+        f"<div class='preview-error'>"
+        f"<span class='icon'>❌</span><p>{escape(message)}</p></div>"
+    )
+
+
+def _preview_placeholder(message: str) -> str:
+    return (
+        f"<div class='preview-placeholder'>"
+        f"<span class='icon'>👁️</span><p>{escape(message)}</p></div>"
+    )
+
+
+def sanitize_preview_html(html_content: str) -> str:
+    """消毒预览 HTML，防止 XSS"""
+    return bleach.clean(
+        html_content,
+        tags=ALLOWED_PREVIEW_TAGS,
+        attributes=ALLOWED_PREVIEW_ATTRS,
+        strip=True,
+    )
 
 
 def generate_preview_html(markdown_content):
     """生成预览HTML"""
-    if md:
-        # 使用markdown-it-py生成HTML
-        html_content = md.render(markdown_content)
-        # 添加一些基础样式，让预览更接近DOCX样式
-        styled_html = f"""
-        <div class="markdown-preview" style="font-family: 'Arial', sans-serif; line-height: 1.6;">
-            {html_content}
-        </div>
-        """
-        return styled_html
-    else:
-        # 降级到简单格式化
-        lines = markdown_content.split("\n")
-        html_lines = []
-
-        for line in lines:
-            line = line.strip()
-            if not line:
-                html_lines.append("<br>")
-                continue
-
-            # 标题
-            if line.startswith("#"):
-                level = len(line.split()[0])  # 计算#的数量
-                text = line.lstrip("#").strip()
-                html_lines.append(
-                    f"<h{level} style='margin: 16px 0 8px 0; font-weight: bold;'>{text}</h{level}>"
-                )
-            # 无序列表
-            elif line.startswith("- ") or line.startswith("* "):
-                text = line[2:].strip()
-                html_lines.append(f"<li style='margin-left: 20px;'>{text}</li>")
-            # 有序列表
-            elif line[0].isdigit() and line[1:3] == ". ":
-                text = line[3:].strip()
-                html_lines.append(f"<li style='margin-left: 20px;'>{text}</li>")
-            # 代码块
-            elif line.startswith("```"):
-                if "```" in line[3:]:
-                    code = line[3:-3]
-                    code_style = (
-                        "background: #f4f4f4; padding: 2px 4px; "
-                        "border-radius: 3px; font-family: monospace;"
-                    )
-                    html_lines.append(f"<code style='{code_style}'>{code}</code>")
-                else:
-                    pre_style = (
-                        "background: #f4f4f4; padding: 12px; "
-                        "border-radius: 4px; font-family: monospace; margin: 8px 0;"
-                    )
-                    html_lines.append(f"<pre style='{pre_style}'>")
-            # 内联代码
-            elif "`" in line:
-                # 简单的内联代码处理
-                parts = line.split("`")
-                formatted_parts = []
-                for i, part in enumerate(parts):
-                    if i % 2 == 1:  # 奇数索引是代码
-                        inline_code_style = (
-                            "background: #f4f4f4; padding: 1px 3px; "
-                            "border-radius: 2px; font-family: monospace;"
-                        )
-                        formatted_parts.append(
-                            f"<code style='{inline_code_style}'>{part}</code>"
-                        )
-                    else:
-                        formatted_parts.append(part)
-                html_lines.append(f"<p>{''.join(formatted_parts)}</p>")
-            # 粗体
-            elif "**" in line:
-                text = line.replace("**", "<strong>", 1).replace("**", "</strong>", 1)
-                html_lines.append(f"<p>{text}</p>")
-            # 斜体
-            elif "*" in line:
-                text = line.replace("*", "<em>", 1).replace("*", "</em>", 1)
-                html_lines.append(f"<p>{text}</p>")
-            # 普通段落
-            else:
-                html_lines.append(f"<p style='margin: 8px 0;'>{line}</p>")
-
-        return "\n".join(html_lines)
+    html_content = md.render(markdown_content)
+    safe_html = sanitize_preview_html(html_content)
+    return (
+        '<div class="markdown-preview" '
+        'style="font-family: \'Arial\', sans-serif; line-height: 1.6;">'
+        f"{safe_html}"
+        "</div>"
+    )
 
 
 @app.errorhandler(413)
@@ -322,6 +262,13 @@ def add_security_headers(response):
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self'; "
+        "style-src 'self' 'unsafe-inline'; "
+        "img-src 'self' data: https:; "
+        "frame-ancestors 'none'"
+    )
     return response
 
 

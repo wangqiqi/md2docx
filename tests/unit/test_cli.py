@@ -136,6 +136,15 @@ class TestCLI:
             with pytest.raises(SystemExit):
                 main()
 
+    @patch("sys.stdout")
+    def test_main_help_english(self, mock_stdout):
+        """测试英文帮助信息"""
+        test_args = ["md2docx", "--lang", "en", "--help"]
+
+        with patch("sys.argv", test_args):
+            with pytest.raises(SystemExit):
+                main()
+
     def test_convert_file_output_file_exists(self):
         """测试输出文件已存在的情况"""
         # 创建临时文件

@@ -44,7 +44,7 @@ def convert_file(input_file: str, output_file: str, debug: bool = False) -> None
     try:
         # 初始化转换器并执行转换
         converter = BaseConverter(debug=debug)
-        doc = converter.convert(content)
+        doc = converter.convert(content, base_path=str(input_path))
 
     except MD2DocxError:
         # 转换器自定义错误，直接重新抛出
@@ -210,8 +210,6 @@ def main() -> None:
 
     # 重新解析所有参数
     args = parser.parse_args(remaining)
-
-    args = parser.parse_args()
 
     if not Path(args.input).exists():
         print(f"错误: 输入文件不存在: {args.input}")

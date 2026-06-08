@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- jwplan/jwrun 开发闭环：从 seegrow 适配迁入 `.cursor/`（skills · commands · hooks · `dev_runner.sh`）
+- 根目录 `plan.md` 作为 Sprint 编排真源；`archive/` 本地归档区
+
+## [0.4.4] - 2026-06-08
+
+### Fixed
+- 🔧 **转换器状态复用**：`BaseConverter.convert()` 每次调用前重置文档与内部状态，修复 WebUI 多次转换内容累积问题
+- 📦 **依赖补全**：添加 `requests`、`bleach`、`flask-wtf` 至项目依赖
+- 🛡️ **图片安全**：本地图片路径校验防路径遍历；远程图片 SSRF 防护与大小限制
+- 🐛 **CLI 修复**：删除重复的 `parse_args()` 调用
+- 🔒 **WebUI 安全**：预览 HTML 消毒（bleach）、CSRF 防护、CSP 安全头
+- ⚙️ **配置优化**：开发环境默认监听 `127.0.0.1`；`start_webui.py` 读取配置
+
+### Changed
+- 🧪 **测试增强**：WebUI 测试纳入 CI；新增安全与状态复用测试
+- 📝 **文档修正**：更新 README 命令路径、测试数量说明
+
+## [0.4.3] - 2026-06-08
+
+### Fixed
+- 版本号与 README 徽章同步
+
 ## [0.4.2] - 2025-12-26
 
 ### Added

@@ -3,6 +3,7 @@
 """
 
 from docx.enum.table import WD_ALIGN_VERTICAL
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches
@@ -19,8 +20,7 @@ class TableConverter(ElementConverter):
         Args:
             base_converter: 基础转换器实例，用于处理表格内的内联元素
         """
-        super().__init__()
-        self.base_converter = base_converter
+        super().__init__(base_converter)
         self.debug = False
         self.current_style = {}  # 当前样式
         if base_converter:
@@ -397,11 +397,11 @@ class TableConverter(ElementConverter):
 
         for paragraph in cell.paragraphs:
             if align == "left":
-                paragraph.alignment = 0  # WD_PARAGRAPH_ALIGNMENT.LEFT
+                paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
             elif align == "center":
-                paragraph.alignment = 1  # WD_PARAGRAPH_ALIGNMENT.CENTER
+                paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
             elif align == "right":
-                paragraph.alignment = 2  # WD_PARAGRAPH_ALIGNMENT.RIGHT
+                paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
 
     def _set_header_style(self, cell):
         """设置表头单元格样式

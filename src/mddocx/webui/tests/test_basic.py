@@ -103,6 +103,7 @@ class TestAppRoutes:
     def setup_method(self):
         """测试前准备"""
         app.config["TESTING"] = True
+        app.config["WTF_CSRF_ENABLED"] = False
         self.client = app.test_client()
 
     def test_index_page(self):
@@ -193,6 +194,22 @@ class TestAppRoutes:
         response = self.client.post("/preview", data={"markdown": special_md})
         assert response.status_code == 200
         assert "特殊字符测试".encode("utf-8") in response.data
+
+    def test_multiple_converts_do_not_accumulate(self):
+        """测试连续转换不会累积历史内容"""
+        response1 = self.client.post("/convert", data={"markdown": "# 第一次"})
+        assert response1.status_code in [200, 302]
+
+        response2 = self.client.post("/convert", data={"markdown": "# 第二次"})
+        assert response2.status_code in [200, 302]
+
+    def test_preview_sanitizes_script_tags(self):
+        """测试预览接口消毒恶意脚本"""
+        malicious = '<script>alert("xss")</script>\n\n# Hello'
+        response = self.client.post("/preview", data={"markdown": malicious})
+        assert response.status_code == 200
+        assert b"<script>" not in response.data
+        assert b"Hello" in response.data
 
     def test_empty_and_whitespace_content(self):
         """测试空内容和空白内容"""

@@ -67,6 +67,7 @@ print('Hello World!')
     <div class="action-bar">
         <div class="action-left">
             <form id="convert-form" action="{{ url_for('convert') }}" method="post" enctype="multipart/form-data" style="display: inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <input type="hidden" id="hidden-markdown" name="markdown" value="">
                 <button type="submit" class="btn btn-primary" onclick="updateHiddenInput()">
                     <span class="icon">📥</span>
@@ -139,15 +140,15 @@ print('Hello World!')
     <div class="features-footer">
         <div class="feature-stats">
             <div class="stat">
-                <span class="stat-number">89</span>
+                <span class="stat-number">150+</span>
                 <span class="stat-label">测试用例</span>
             </div>
             <div class="stat">
-                <span class="stat-number">85%+</span>
-                <span class="stat-label">代码覆盖率</span>
+                <span class="stat-number">CI</span>
+                <span class="stat-label">持续验证</span>
             </div>
             <div class="stat">
-                <span class="stat-number">0.3.0</span>
+                <span class="stat-number">0.4.4</span>
                 <span class="stat-label">当前版本</span>
             </div>
         </div>

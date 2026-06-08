@@ -516,12 +516,17 @@ function generatePreview() {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
 
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+    const previewBody = 'markdown=' + encodeURIComponent(content)
+        + (csrfToken ? '&csrf_token=' + encodeURIComponent(csrfToken) : '');
+
     fetch('/preview', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken,
         },
-        body: 'markdown=' + encodeURIComponent(content),
+        body: previewBody,
         signal: controller.signal
     })
     .then(response => {

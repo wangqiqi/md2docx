@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.4.3-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.4.3)
+[![Version](https://img.shields.io/badge/version-0.4.4-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.4.4)
 [![Cursor AI Rules](https://img.shields.io/badge/Cursor%20AI%20Rules-v3.0.0-green.svg)](https://github.com/wangqiqi/cursor-ai-rules)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
@@ -44,11 +44,11 @@
 项目采用专业级的质量保证体系，确保代码可靠性和开发效率：
 
 ### 🧪 测试体系
-- **19个测试用例** - 覆盖核心功能和边界条件
-- **85%+ 代码覆盖率** - 多维度测试保证
+- **150+ 测试用例** - 覆盖核心功能、WebUI 和边界条件
+- **持续集成覆盖率报告** - 多维度测试保证
 - **大文件测试** - 支持1MB+文档处理
 - **边界条件测试** - Unicode、嵌套、异常输入
-- **Web界面测试** - 完整的用户界面功能验证
+- **Web界面测试** - 已纳入 CI 的完整用户界面功能验证
 
 ### 🔄 CI/CD 自动化
 - **GitHub Actions** - 多Python版本测试 (3.8-3.12)
@@ -66,7 +66,7 @@
 📋 详细的开发规划和功能路线图请查看：[项目规划文档](docs/plan.md)
 
 **已完成 ✅:**
-- ✅ 专业测试体系 (89个测试，85%+覆盖率)
+- ✅ 专业测试体系 (150+ 测试，CI 持续验证)
 - ✅ CI/CD自动化 (GitHub Actions多版本测试)
 - ✅ 代码质量保证 (pre-commit + 多工具检查)
 
@@ -90,7 +90,7 @@
 - Python 3.8+
 - python-docx
 - markdown-it-py
-- 其他依赖见 requirements.txt
+- 其他依赖见 `pyproject.toml`
 
 ## 安装
 
@@ -131,26 +131,20 @@ pip install -e .[dev]
 
 ### 生产环境安装
 
-如果您只是想使用 mddocx 进行文档转换：
+```bash
+pip install mddocx
+```
+
+或从源码安装运行时依赖：
 
 ```bash
 pip install -r requirements-prod.txt
 ```
 
-或直接从 PyPI 安装：
-```bash
-pip install mddocx
-```
-
-**安装后即可使用完整功能：**
-- 命令行工具：`mddocx`
-- Web界面：`mddocx-webui`
-
 ### 依赖说明
 
-- **`requirements-prod.txt`**：仅包含运行时必需的依赖，轻量化安装
-- **`pyproject.toml`**：现代化的项目配置，包含依赖管理和构建配置
-- **`requirements.txt`**：指向开发依赖的符号链接，向后兼容
+- **`pyproject.toml`**：项目配置与依赖管理（推荐）
+- **`requirements-prod.txt`**：仅包含运行时必需依赖的清单
 
 ## 使用方法
 
@@ -166,10 +160,10 @@ mddocx-webui
 mddocx-webui
 
 # 方法3：直接运行模块（源码运行）
-python -m webui.app
+python -m mddocx.webui.app
 
 # 方法4：通过导入运行（源码运行）
-python -c "from webui.app import app; app.run(debug=True)"
+python -c "from mddocx.webui.app import app; app.run(debug=True)"
 ```
 
 启动后在浏览器中访问: `http://localhost:5000`
@@ -202,13 +196,13 @@ export FLASK_ENV=development
 #### 单文件转换
 
 ```bash
-python -m src.cli input.md output.docx
+mddocx input.md output.docx
 ```
 
 #### 批量转换
 
 ```bash
-python scripts/batch_convert_test.py --input-dir your_md_folder --output-dir your_docx_folder
+python scripts/batch_convert.py --input-dir your_md_folder --output-dir your_docx_folder
 ```
 
 ## 项目结构

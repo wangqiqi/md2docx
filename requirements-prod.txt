@@ -1,0 +1,8 @@
+# 生产环境运行时依赖（与 pyproject.toml 保持同步）
+python-docx>=0.8.11
+markdown-it-py>=2.1.0
+flask>=2.0.0
+werkzeug>=2.0.0
+requests>=2.28.0
+bleach>=6.0.0
+flask-wtf>=1.2.0

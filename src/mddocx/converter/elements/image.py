@@ -2,15 +2,21 @@
 图片转换器模块
 """
 
-import os
 import re
 from io import BytesIO
-from typing import Any, Optional, Tuple
+from pathlib import Path
+from typing import Any, Optional, Set, Tuple
 
 import requests
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Pt
 
+from ..security import (
+    MAX_IMAGE_BYTES,
+    MAX_IMAGE_CACHE_ENTRIES,
+    is_safe_remote_url,
+    resolve_safe_local_path,
+)
 from .base import ElementConverter
 
 
@@ -20,8 +26,17 @@ class ImageConverter(ElementConverter):
     def __init__(self, base_converter=None) -> None:
         super().__init__(base_converter)
         self.document = None
-        # 图片缓存，避免重复下载
         self._image_cache = {}
+        self._base_dir: Optional[Path] = None
+        self._extra_allowed_dirs: Set[Path] = set()
+
+    def set_base_dir(self, base_dir: Path) -> None:
+        """设置 Markdown 源文件目录，用于本地图片路径校验"""
+        self._base_dir = base_dir.resolve()
+
+    def set_extra_allowed_dirs(self, dirs: Set[Path]) -> None:
+        """设置额外允许的本地图片根目录（如测试样例）"""
+        self._extra_allowed_dirs = {d.resolve() for d in dirs}
 
     def convert(self, tokens: Tuple[Any, Any]) -> Optional[Any]:
         """转换图片元素
@@ -164,6 +179,13 @@ class ImageConverter(ElementConverter):
             if debug:
                 print(f"添加段落内图片失败: {str(e)}")
 
+    def _cache_image(self, src: str, image_data: bytes) -> None:
+        """缓存图片数据，限制条目数量"""
+        if len(self._image_cache) >= MAX_IMAGE_CACHE_ENTRIES:
+            oldest_key = next(iter(self._image_cache))
+            del self._image_cache[oldest_key]
+        self._image_cache[src] = image_data
+
     def _get_image_data(self, src: str) -> Optional[BytesIO]:
         """获取图片数据
 
@@ -180,30 +202,38 @@ class ImageConverter(ElementConverter):
         try:
             # 处理在线图片
             if src.startswith(("http://", "https://")):
-                response = requests.get(src, timeout=10)
-                if response.status_code == 200:
-                    image_data = response.content
-                    # 缓存图片数据
-                    self._image_cache[src] = image_data
-                    return BytesIO(image_data)
-            # 处理本地图片
-            else:
-                # 尝试从当前目录加载
-                if os.path.exists(src):
-                    with open(src, "rb") as f:
-                        image_data = f.read()
-                        # 缓存图片数据
-                        self._image_cache[src] = image_data
-                        return BytesIO(image_data)
+                if not is_safe_remote_url(src):
+                    return None
+                response = requests.get(src, timeout=10, stream=True)
+                if response.status_code != 200:
+                    return None
+                content_length = response.headers.get("Content-Length")
+                if content_length and int(content_length) > MAX_IMAGE_BYTES:
+                    return None
+                chunks = []
+                total = 0
+                for chunk in response.iter_content(chunk_size=8192):
+                    total += len(chunk)
+                    if total > MAX_IMAGE_BYTES:
+                        return None
+                    chunks.append(chunk)
+                image_data = b"".join(chunks)
+                self._cache_image(src, image_data)
+                return BytesIO(image_data)
 
-                # 尝试从测试目录加载
-                test_path = os.path.join("tests", "samples", "basic", src)
-                if os.path.exists(test_path):
-                    with open(test_path, "rb") as f:
-                        image_data = f.read()
-                        # 缓存图片数据
-                        self._image_cache[src] = image_data
-                        return BytesIO(image_data)
+            # 处理本地图片（需通过路径校验）
+            safe_path = resolve_safe_local_path(
+                src,
+                base_dir=self._base_dir,
+                extra_allowed_dirs=self._extra_allowed_dirs or None,
+            )
+            if safe_path:
+                image_data = safe_path.read_bytes()
+                if len(image_data) > MAX_IMAGE_BYTES:
+                    return None
+                self._cache_image(src, image_data)
+                return BytesIO(image_data)
+
         except Exception as e:
             debug = (
                 self.base_converter.debug

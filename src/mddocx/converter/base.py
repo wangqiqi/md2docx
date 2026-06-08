@@ -2,7 +2,8 @@
 基础转换器模块，处理 Markdown 到 DOCX 的核心转换逻辑
 """
 
-from typing import Any, Dict, List, Tuple
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
 from docx import Document
 from markdown_it import MarkdownIt
@@ -71,6 +72,18 @@ class BaseConverter:
         if self.debug:
             print(f"转换器注册完成: {self.converters.keys()}")
 
+    def _reset_state(self) -> None:
+        """重置文档与内部状态，使实例可安全复用"""
+        self.document = Document()
+        self._list_stack = []
+        for converter in self.converters.values():
+            if hasattr(converter, "_last_was_code"):
+                converter._last_was_code = False
+            if hasattr(converter, "_image_cache"):
+                converter._image_cache = {}
+            if hasattr(converter, "set_document"):
+                converter.set_document(self.document)
+
     def _register_default_converters(self) -> None:
         """注册默认的转换器"""
         self.register_converter("heading", HeadingConverter(self))
@@ -84,6 +97,17 @@ class BaseConverter:
         self.register_converter("hr", HRConverter(self))
         self.register_converter("task_list", TaskListConverter(self))
         self.register_converter("html", HtmlConverter(self))  # 注册HTML转换器
+        self._configure_image_allowed_dirs()
+
+    def _configure_image_allowed_dirs(self) -> None:
+        """配置测试样例等额外允许的本地图片目录"""
+        image_converter = self.converters.get("image")
+        if not image_converter or not hasattr(image_converter, "set_extra_allowed_dirs"):
+            return
+        project_root = Path(__file__).resolve().parents[3]
+        samples_basic = project_root / "tests" / "samples" / "basic"
+        if samples_basic.is_dir():
+            image_converter.set_extra_allowed_dirs({samples_basic})
 
     def register_converter(
         self, element_type: str, converter: ElementConverter
@@ -97,11 +121,14 @@ class BaseConverter:
         converter.set_document(self.document)
         self.converters[element_type] = converter
 
-    def convert(self, md_text: str) -> Document:
+    def convert(
+        self, md_text: str, base_path: Optional[str] = None
+    ) -> Document:
         """将 Markdown 文本转换为 DOCX 文档
 
         Args:
             md_text: Markdown 文本
+            base_path: Markdown 源文件路径，用于校验本地图片相对路径
 
         Returns:
             Document: 生成的 DOCX 文档
@@ -111,6 +138,12 @@ class BaseConverter:
             ConvertError: 转换过程错误
         """
         try:
+            self._reset_state()
+            if base_path:
+                image_converter = self.converters.get("image")
+                if image_converter and hasattr(image_converter, "set_base_dir"):
+                    image_converter.set_base_dir(Path(base_path).parent)
+
             # 验证输入参数
             if not isinstance(md_text, str):
                 raise ConvertError(

@@ -1,8 +1,4 @@
 """
-test full conversion 测试
-"""
-
-"""
 完整转换流程的集成测试
 """
 
@@ -10,19 +6,30 @@ test full conversion 测试
 def test_convert_all_samples(converter, samples_dir, tmp_path):
     """测试转换所有基础样例文件"""
     for md_file in samples_dir.glob("*.md"):
-        # 读取 Markdown 文件
         with open(md_file, "r", encoding="utf-8") as f:
             content = f.read()
 
-        # 转换文档
-        doc = converter.convert(content)
+        doc = converter.convert(content, base_path=str(md_file))
         assert doc is not None
 
-        # 保存并验证输出
         output_file = tmp_path / f"{md_file.stem}.docx"
         doc.save(str(output_file))
         assert output_file.exists()
         assert output_file.stat().st_size > 0
+
+
+def test_converter_reuse_does_not_accumulate_content(converter):
+    """同一转换器实例多次转换不应累积内容"""
+    doc1 = converter.convert("# 第一次\n\n第一段。")
+    doc2 = converter.convert("# 第二次\n\n第二段。")
+
+    text1 = "\n".join(p.text for p in doc1.paragraphs)
+    text2 = "\n".join(p.text for p in doc2.paragraphs)
+
+    assert "第一次" in text1
+    assert "第二次" not in text1
+    assert "第二次" in text2
+    assert "第一次" not in text2
 
 
 def test_convert_complex_document(converter, tmp_path):
