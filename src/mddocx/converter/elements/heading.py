@@ -46,8 +46,8 @@ class HeadingConverter(ElementConverter):
         text = content_token.content
 
         # 添加标题段落
-        paragraph = self.document.add_paragraph()
-        paragraph.style = self.document.styles[self.HEADING_STYLES[level]["name"]]
+        paragraph = self.doc.add_paragraph()
+        paragraph.style = self.doc.styles[self.HEADING_STYLES[level]["name"]]
         run = paragraph.add_run(text)
 
         # 应用样式

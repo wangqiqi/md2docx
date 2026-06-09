@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.29] - 2026-06-09
+
+### Changed
+- M-MYPY-01：converter 包 strict mypy（`DocxDocument` 类型、`doc` 属性、elements 全量修复）
+- M-MYPY-01：移除 `mypy.ini` 中 `converter.*` 的 `ignore_errors`；CI 纳入 `mypy src/mddocx/converter`
+
 ## [0.5.28] - 2026-06-09
 
 ### Changed

@@ -39,7 +39,7 @@ class HRConverter(ElementConverter):
             print(f"处理分隔线: {token}")
 
         # 创建一个空段落
-        paragraph = self.document.add_paragraph()
+        paragraph = self.doc.add_paragraph()
         paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
         # 添加水平线

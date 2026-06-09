@@ -127,7 +127,7 @@ class TaskListConverter(ElementConverter):
                             str(child.content) if child.content is not None else ""
                         )
 
-        paragraph = self.document.add_paragraph()
+        paragraph = self.doc.add_paragraph()
 
         if not insert_word_checkbox(paragraph, is_checked):
             checkbox_symbol = "☐ " if not is_checked else "☑ "

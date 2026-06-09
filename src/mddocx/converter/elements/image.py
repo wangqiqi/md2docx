@@ -25,8 +25,7 @@ class ImageConverter(ElementConverter):
 
     def __init__(self, base_converter=None) -> None:
         super().__init__(base_converter)
-        self.document = None
-        self._image_cache = {}
+        self._image_cache: dict[str, bytes] = {}
         self._base_dir: Optional[Path] = None
         self._extra_allowed_dirs: Set[Path] = set()
 
@@ -51,7 +50,7 @@ class ImageConverter(ElementConverter):
 
         # 获取图片信息
         if not hasattr(token, "attrs") or not token.attrs:
-            return
+            return None
 
         # 获取图片URL和标题
         src = token.attrs.get("src", "")
@@ -65,11 +64,7 @@ class ImageConverter(ElementConverter):
             alt = content_token.content
 
         # 调试信息
-        debug = (
-            self.base_converter.debug
-            if hasattr(self.base_converter, "debug")
-            else False
-        )
+        debug = self._debug_enabled()
         if debug:
             print(f"处理图片: src={src}, alt={alt}, title={title}")
 
@@ -79,7 +74,7 @@ class ImageConverter(ElementConverter):
             print(f"图片尺寸: {width}x{height}")
 
         # 创建段落并设置居中对齐
-        paragraph = self.document.add_paragraph()
+        paragraph = self.doc.add_paragraph()
         paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
         # 添加图片
@@ -103,7 +98,7 @@ class ImageConverter(ElementConverter):
 
             # 添加图片标题（如果有）
             if title:
-                caption_paragraph = self.document.add_paragraph()
+                caption_paragraph = self.doc.add_paragraph()
                 caption_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 caption_run = caption_paragraph.add_run(title)
                 caption_run.italic = True
@@ -126,11 +121,7 @@ class ImageConverter(ElementConverter):
             token: 图片标记
             style: 样式信息
         """
-        debug = (
-            self.base_converter.debug
-            if hasattr(self.base_converter, "debug")
-            else False
-        )
+        debug = self._debug_enabled()
 
         # 获取图片信息
         if not hasattr(token, "attrs") or not token.attrs:
@@ -235,12 +226,7 @@ class ImageConverter(ElementConverter):
                 return BytesIO(image_data)
 
         except Exception as e:
-            debug = (
-                self.base_converter.debug
-                if hasattr(self.base_converter, "debug")
-                else False
-            )
-            if debug:
+            if self._debug_enabled():
                 print(f"获取图片数据失败: {str(e)}")
 
         return None
@@ -256,11 +242,7 @@ class ImageConverter(ElementConverter):
         Returns:
             Tuple[Optional[int], Optional[int]]: (宽度, 高度)
         """
-        debug = (
-            self.base_converter.debug
-            if hasattr(self.base_converter, "debug")
-            else False
-        )
+        debug = self._debug_enabled()
 
         if not alt:
             return None, None

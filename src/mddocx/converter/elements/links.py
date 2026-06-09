@@ -15,7 +15,6 @@ class LinkConverter(ElementConverter):
 
     def __init__(self, base_converter=None):
         super().__init__(base_converter)
-        self.document = None
 
     def set_document(self, document):
         if document is None:
@@ -26,8 +25,8 @@ class LinkConverter(ElementConverter):
 
     def _ensure_hyperlink_style(self):
         """确保Hyperlink样式存在"""
-        if "Hyperlink" not in self.document.styles:
-            style = self.document.styles.add_style("Hyperlink", WD_STYLE_TYPE.CHARACTER)
+        if "Hyperlink" not in self.doc.styles:
+            style = self.doc.styles.add_style("Hyperlink", WD_STYLE_TYPE.CHARACTER)
             font = style.font
             font.color.rgb = RGBColor(0, 0, 255)  # 蓝色
             font.underline = True
@@ -60,10 +59,10 @@ class LinkConverter(ElementConverter):
             text = "(空链接)"
 
         # 获取当前段落或创建新段落
-        if self.document.paragraphs:
-            paragraph = self.document.paragraphs[-1]
+        if self.doc.paragraphs:
+            paragraph = self.doc.paragraphs[-1]
         else:
-            paragraph = self.document.add_paragraph()
+            paragraph = self.doc.add_paragraph()
 
         # 创建超链接
         self._add_hyperlink(paragraph, text, url)
@@ -77,11 +76,7 @@ class LinkConverter(ElementConverter):
             style: 样式信息
             link_text: 链接文本，如果提供则使用此文本
         """
-        debug = (
-            self.base_converter.debug
-            if hasattr(self.base_converter, "debug")
-            else False
-        )
+        debug = self._debug_enabled()
         if debug:
             print(
                 f"转换链接: token={token.type}, content={token.content if hasattr(token, 'content') else ''}"
@@ -141,7 +136,7 @@ class LinkConverter(ElementConverter):
             return
 
         # 创建关系ID
-        part = self.document.part
+        part = self.doc.part
         r_id = part.relate_to(
             url,
             "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink",
@@ -179,11 +174,7 @@ class LinkConverter(ElementConverter):
             url: 链接地址
             style: 样式信息，包含bold、italic、strike
         """
-        debug = (
-            self.base_converter.debug
-            if hasattr(self.base_converter, "debug")
-            else False
-        )
+        debug = self._debug_enabled()
         # 调试信息
         if debug:
             print(f"添加带样式的超链接: text='{text}', url='{url}', style={style}")
@@ -220,7 +211,7 @@ class LinkConverter(ElementConverter):
             return
 
         # 创建关系ID
-        part = self.document.part
+        part = self.doc.part
         r_id = part.relate_to(
             url,
             "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink",

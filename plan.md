@@ -6,15 +6,28 @@
 <!-- AUTONOMOUS: false -->
 <!-- ACTIVE: (none) -->
 <!-- NEXT: (none) -->
-<!-- LAST_DONE: M-DOC-04-06 -->
+<!-- LAST_DONE: M-MYPY-01-02 -->
 <!-- VERIFY: pytest -q -->
 <!-- VERSION_LINE: 0.5 -->
-<!-- RELEASED: v0.5.28 -->
+<!-- RELEASED: v0.5.29 -->
 <!-- MAX_LOOPS: 20 -->
 
 > 产品愿景见 [`docs/plan.md`](docs/plan.md)。Sprint 闭合详情见 [`archive/sprint/`](archive/sprint/)。审查来源：[`审查.md`](审查.md)
 
-**当前状态**：无活跃 Sprint · **199 passed** · 最新 **v0.5.28** · 待办 **14 项**
+**当前状态**：无活跃 Sprint · **199 passed** · 最新 **v0.5.29** · mypy converter ✅ · 待办 **13 项**
+
+---
+
+## 已闭合 Sprint · M-MYPY-01（converter strict mypy）
+
+> **WHY**：ARCH-R01 · M-ARCH S2 残余 · **闭合**：v0.5.29 · mypy 19 files 0 errors · 199 passed
+
+**执行顺序**：M-MYPY-01-01 → M-MYPY-01-02
+
+| ID | 任务 | 优先级 | 状态 | 验收 | 落点 | Tag |
+|----|------|--------|------|------|------|-----|
+| M-MYPY-01-01 | DocxDocument 类型 + `doc` 属性 + elements 修复 | P2 | ✅ | `mypy src/mddocx/converter --config-file mypy.ini` | `elements/` · `base.py` | v0.5.29 |
+| M-MYPY-01-02 | 移除 mypy ignore + CI converter 包检查 | P2 | ✅ | `grep -q 'converter package' .github/workflows/ci.yml` | `mypy.ini` · `ci.yml` | v0.5.29 |
 
 ---
 
@@ -48,18 +61,19 @@
 | 3 | Mermaid 流程图（graph/flowchart） | M-MERMAID-01 · v0.5.0–v0.5.3 |
 | 1 | html2docx 文档化 | → M-HTML-01 |
 | 11 | 文档与审查清单同步 | M-DOC-04 · v0.5.27–v0.5.28 |
+| 9a | converter strict mypy | M-MYPY-01 · v0.5.29 |
 
 ### 待立项（ROADMAP）
 
 | # | 主题 | 优先级 | 建议 Sprint |
 |---|------|--------|-------------|
-| 9 | M-ARCH 残余（mypy 全量 / 流式转换） | P2 | M-MYPY-01 / M-PERF-01 |
+| 9b | 大文件流式/分块转换 | P2 | M-PERF-01 |
 | 10 | 审查 Minor 代码质量 | P3 | M-MINOR-01 |
 | 12 | Mermaid 扩展（sequence / gantt） | P2 | M-MERMAID-02 |
 | 13 | 公式编号与 `\ref` | P2 | M-MATH-02 |
 | 14 | 测试覆盖率与缺口补强 | P2 | T-TEST-02 |
 
-**下一 Sprint 建议**：**M-MYPY-01** 或 **M-MINOR-01**
+**下一 Sprint 建议**：**M-PERF-01**（流式）或 **M-MINOR-01**
 
 ## 全量任务台账
 
@@ -90,7 +104,7 @@
 
 | ID | 任务 | 来源 | 状态 | 验收（规划） |
 |----|------|------|------|--------------|
-| ARCH-R01 | elements 包 **strict mypy**（CI 必过） | S2 残余 | ⬜ | `mypy src/mddocx/converter --config-file mypy.ini` 退出 0 |
+| ARCH-R01 | elements 包 **strict mypy**（CI 必过） | S2 残余 | ✅ | M-MYPY-01 · v0.5.29 |
 | ARCH-R02 | 大文件 **流式/分块** 转换 | S3 残余 | ⬜ | 设计文档 + 1MB+ 样例不 OOM |
 | ARCH-R03 | 可观测性 **metrics**（Prometheus 等） | S4 扩展 | ⬜ | 可选；当前仅 INFO 日志 |
 
@@ -152,6 +166,7 @@
 
 | Sprint | 版本 | 归档 |
 |--------|------|------|
+| M-MYPY-01 | v0.5.29 | [archive/sprint/20260609_081200_mypy_M-MYPY-01_Sprint闭合_打版_v0.5.29.md](archive/sprint/20260609_081200_mypy_M-MYPY-01_Sprint闭合_打版_v0.5.29.md) |
 | M-DOC-04 | v0.5.27–v0.5.28 | [archive/sprint/20260609_080940_文档同步_M-DOC-04_Sprint闭合_打版_v0.5.28.md](archive/sprint/20260609_080940_文档同步_M-DOC-04_Sprint闭合_打版_v0.5.28.md) |
 | M-ARCH-01 | v0.5.19–v0.5.26 | [archive/sprint/20260609_080200_架构建议_M-ARCH-01_Sprint闭合_打版_v0.5.26.md](archive/sprint/20260609_080200_架构建议_M-ARCH-01_Sprint闭合_打版_v0.5.26.md) |
 | M-HTML-01 | v0.5.15–v0.5.18 | [archive/sprint/20260609_075534_html-for-docx_M-HTML-01_Sprint闭合_打版_v0.5.18.md](archive/sprint/20260609_075534_html-for-docx_M-HTML-01_Sprint闭合_打版_v0.5.18.md) |
@@ -163,6 +178,7 @@
 
 ## 变更记录
 
+- **2026-06-09** · **M-MYPY-01 §7 闭合** · v0.5.29 · mypy converter 0 errors · 199 passed
 - **2026-06-09** · **M-DOC-04 §7 闭合** · v0.5.27–v0.5.28 · 199 passed · ROADMAP #11 ✅
 - **2026-06-09** · **v0.5.27 打版** · jwplan 台账 + 审查.md 同步 + 移除 roundtrip demo
 - **2026-06-09** · **jwplan 全量台账** · 审查+M-ARCH 残余+Minor+产品+文档 · 22 项待办写入 plan

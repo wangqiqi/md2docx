@@ -62,7 +62,7 @@ class MathConverter(ElementConverter):
             if block:
                 self._embed_block_image(image_data)
             else:
-                paragraph = self.document.add_paragraph()
+                paragraph = self.doc.add_paragraph()
                 self._embed_inline_image(paragraph, image_data)
             return True
         except Exception:
@@ -105,7 +105,7 @@ class MathConverter(ElementConverter):
             return None
 
     def _embed_block_image(self, image_data: bytes) -> None:
-        paragraph = self.document.add_paragraph()
+        paragraph = self.doc.add_paragraph()
         paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
         run = paragraph.add_run()
         run.add_picture(BytesIO(image_data), width=Inches(4.0))
@@ -115,13 +115,13 @@ class MathConverter(ElementConverter):
         run.add_picture(BytesIO(image_data), height=Inches(0.22))
 
     def _fallback_block(self, latex: str) -> None:
-        note_para = self.document.add_paragraph()
+        note_para = self.doc.add_paragraph()
         note_run = note_para.add_run("（公式渲染失败，已保留 LaTeX 源码）")
         note_run.italic = True
         note_run.font.size = Pt(9)
         note_run.font.color.rgb = RGBColor(128, 128, 128)
 
-        code_para = self.document.add_paragraph()
+        code_para = self.doc.add_paragraph()
         try:
             code_para.style = "Code"
         except KeyError:

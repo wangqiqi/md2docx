@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from docx import Document
+from docx.document import Document as DocxDocument
 from markdown_it import MarkdownIt
 
 from mdit_py_plugins.dollarmath import dollarmath_plugin
@@ -135,7 +136,7 @@ class BaseConverter:
 
     def convert(
         self, md_text: str, base_path: Optional[str] = None
-    ) -> Document:
+    ) -> DocxDocument:
         """将 Markdown 文本转换为 DOCX 文档
 
         Args:
@@ -163,7 +164,7 @@ class BaseConverter:
 
     def _convert_tokens(
         self, md_text: str, base_path: Optional[str] = None
-    ) -> Document:
+    ) -> DocxDocument:
         try:
             self._reset_state()
             if base_path:

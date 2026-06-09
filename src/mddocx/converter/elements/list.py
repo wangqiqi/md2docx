@@ -42,12 +42,7 @@ class ListConverter(ElementConverter):
         list_token, content_token = tokens
 
         # 调试信息
-        debug = (
-            hasattr(self, "base_converter")
-            and self.base_converter
-            and hasattr(self.base_converter, "debug")
-            and self.base_converter.debug
-        )
+        debug = self._debug_enabled()
         if debug:
             print(
                 f"ListConverter: 处理列表项, token.type={list_token.type}, "
@@ -87,8 +82,8 @@ class ListConverter(ElementConverter):
         self._update_list_state(level, is_ordered, numbering_id)
 
         # 创建新段落
-        paragraph = self.document.add_paragraph()
-        paragraph.style = self.document.styles[style_name]
+        paragraph = self.doc.add_paragraph()
+        paragraph.style = self.doc.styles[style_name]
 
         # 手动设置段落格式以确保缩进生效
         indent_inches = 0.25 * (level - 1)  # 每级缩进0.25英寸
@@ -347,8 +342,8 @@ class ListConverter(ElementConverter):
             Optional[int]: 编号定义ID
         """
         # 检查样式是否已存在
-        if style_name not in self.document.styles:
-            style = self.document.styles.add_style(style_name, WD_STYLE_TYPE.PARAGRAPH)
+        if style_name not in self.doc.styles:
+            style = self.doc.styles.add_style(style_name, WD_STYLE_TYPE.PARAGRAPH)
             # 设置基本样式
             style.font.size = Pt(12)
             # 设置段落间距

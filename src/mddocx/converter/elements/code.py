@@ -9,7 +9,6 @@ class CodeConverter(ElementConverter):
 
     def __init__(self, base_converter=None):
         super().__init__(base_converter)
-        self.document = None
         self._last_was_code = False
 
     def set_document(self, document):
@@ -18,8 +17,8 @@ class CodeConverter(ElementConverter):
 
         self.document = document
         # 创建代码样式
-        if "Code" not in self.document.styles:
-            style = self.document.styles.add_style("Code", WD_STYLE_TYPE.PARAGRAPH)
+        if "Code" not in self.doc.styles:
+            style = self.doc.styles.add_style("Code", WD_STYLE_TYPE.PARAGRAPH)
             font = style.font
             font.name = "Consolas"  # 使用等宽字体
             font.size = Pt(10)
@@ -40,10 +39,10 @@ class CodeConverter(ElementConverter):
 
         # 如果上一个是代码块，添加空行
         if self._last_was_code:
-            self.document.add_paragraph()
+            self.doc.add_paragraph()
 
         # 创建新段落
-        paragraph = self.document.add_paragraph()
+        paragraph = self.doc.add_paragraph()
         paragraph.style = "Code"
 
         # 获取代码内容

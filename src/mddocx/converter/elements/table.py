@@ -53,7 +53,7 @@ class TableConverter(ElementConverter):
         cols = len(rows[0]) if rows else 0
 
         # 创建表格
-        table = self.document.add_table(rows=len(rows), cols=cols)
+        table = self.doc.add_table(rows=len(rows), cols=cols)
         table.style = "Table Grid"
 
         # 填充表格内容

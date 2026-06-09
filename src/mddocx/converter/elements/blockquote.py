@@ -34,8 +34,8 @@ class BlockquoteConverter(ElementConverter):
         style_name = "Quote" if level == 1 else f"Quote{level}"
         self._ensure_quote_style(style_name, level)
 
-        paragraph = self.document.add_paragraph()
-        paragraph.style = self.document.styles[style_name]
+        paragraph = self.doc.add_paragraph()
+        paragraph.style = self.doc.styles[style_name]
 
         if not content_token:
             paragraph.add_run("")
@@ -172,8 +172,8 @@ class BlockquoteConverter(ElementConverter):
 
     def _ensure_quote_style(self, style_name: str, level: int) -> None:
         """确保引用块样式存在"""
-        if style_name not in self.document.styles:
-            style = self.document.styles.add_style(style_name, WD_STYLE_TYPE.PARAGRAPH)
+        if style_name not in self.doc.styles:
+            style = self.doc.styles.add_style(style_name, WD_STYLE_TYPE.PARAGRAPH)
             style.font.size = Pt(12)
             style.font.color.rgb = RGBColor(102, 102, 102)
             style.paragraph_format.left_indent = Pt(30 * level)

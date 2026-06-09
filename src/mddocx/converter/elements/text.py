@@ -20,7 +20,6 @@ class TextConverter(ElementConverter):
             base_converter: 基础转换器实例，用于访问其他转换器
         """
         super().__init__(base_converter)
-        self.document = None
 
     def convert(self, tokens: Tuple[Any, Any]) -> Optional[Any]:
         """转换段落元素
@@ -34,7 +33,7 @@ class TextConverter(ElementConverter):
         paragraph_token, content_token = tokens
 
         # 创建新段落
-        paragraph = self.document.add_paragraph()
+        paragraph = self.doc.add_paragraph()
 
         # 处理空段落
         if (
@@ -42,15 +41,8 @@ class TextConverter(ElementConverter):
             or not hasattr(content_token, "children")
             or not content_token.children
         ):
-            paragraph.add_run("")
-            return
-
-        # 调试信息：打印段落内容
-        debug = (
-            self.base_converter.debug
-            if hasattr(self.base_converter, "debug")
-            else False
-        )
+            return None
+        debug = self._debug_enabled()
         if debug:
             print(f"处理段落: {content_token.content}")
 
@@ -428,7 +420,7 @@ class TextConverter(ElementConverter):
                 if self.base_converter and "math" in self.base_converter.converters:
                     math_converter = self.base_converter.converters.get("math")
                 if math_converter:
-                    math_converter.set_document(self.document)
+                    math_converter.set_document(self.doc)
                     math_converter.convert_in_paragraph(paragraph, child)
                 else:
                     self._add_inline_code(

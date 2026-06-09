@@ -90,12 +90,12 @@ class MermaidConverter(ElementConverter):
             return None
 
     def _embed_image(self, image_data: bytes) -> None:
-        paragraph = self.document.add_paragraph()
+        paragraph = self.doc.add_paragraph()
         paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
         run = paragraph.add_run()
         run.add_picture(BytesIO(image_data), width=Inches(5.5))
 
-        caption = self.document.add_paragraph()
+        caption = self.doc.add_paragraph()
         caption.alignment = WD_ALIGN_PARAGRAPH.CENTER
         cap_run = caption.add_run("Mermaid 流程图")
         cap_run.italic = True
@@ -110,7 +110,7 @@ class MermaidConverter(ElementConverter):
             if unsupported
             else "（Mermaid 渲染失败，已保留源码）"
         )
-        note_para = self.document.add_paragraph()
+        note_para = self.doc.add_paragraph()
         note_run = note_para.add_run(note)
         note_run.italic = True
         note_run.font.size = Pt(9)
@@ -120,10 +120,10 @@ class MermaidConverter(ElementConverter):
         if self.base_converter:
             code_converter = self.base_converter.converters.get("code")
         if code_converter:
-            code_converter.set_document(self.document)
+            code_converter.set_document(self.doc)
             code_converter.convert(token)
         else:
-            paragraph = self.document.add_paragraph()
+            paragraph = self.doc.add_paragraph()
             try:
                 paragraph.style = "Code"
             except KeyError:

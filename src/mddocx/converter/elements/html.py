@@ -88,14 +88,14 @@ class HtmlConverter(ElementConverter):
 
     def _html_for_docx_convert(self, html_content: str) -> Optional[Paragraph]:
         """使用 html-for-docx 将 HTML 片段写入当前文档。"""
-        paragraph_count_before = len(self.document.paragraphs)
+        paragraph_count_before = len(self.doc.paragraphs)
         parser = HtmlToDocx()
-        parser.add_html_to_document(html_content, self.document)
+        parser.add_html_to_document(html_content, self.doc)
 
-        if len(self.document.paragraphs) > paragraph_count_before:
-            return self.document.paragraphs[-1]
-        if self.document.paragraphs:
-            return self.document.paragraphs[-1]
+        if len(self.doc.paragraphs) > paragraph_count_before:
+            return self.doc.paragraphs[-1]
+        if self.doc.paragraphs:
+            return self.doc.paragraphs[-1]
         return None
 
     def _custom_html_convert(self, html_content: str) -> Optional[Paragraph]:
@@ -117,7 +117,7 @@ class HtmlConverter(ElementConverter):
                 content = re.sub(
                     r"^\s*<p>(.*?)</p>\s*$", r"\1", html_content, flags=re.DOTALL
                 )
-                paragraph = self.document.add_paragraph()
+                paragraph = self.doc.add_paragraph()
 
                 # 处理内部标签
                 content = self._process_inline_tags(content, paragraph)
@@ -135,7 +135,7 @@ class HtmlConverter(ElementConverter):
                     html_content,
                     flags=re.DOTALL,
                 )
-                paragraph = self.document.add_paragraph()
+                paragraph = self.doc.add_paragraph()
 
                 # 处理内部标签
                 content = self._process_inline_tags(content, paragraph)
@@ -156,11 +156,11 @@ class HtmlConverter(ElementConverter):
                     print(f"解析无序列表: {len(list_items)}项")
 
                 for item in list_items:
-                    paragraph = self.document.add_paragraph(style="List Bullet")
+                    paragraph = self.doc.add_paragraph(style="List Bullet")
                     self._process_inline_tags(item, paragraph)
 
                 return (
-                    self.document.paragraphs[-1] if self.document.paragraphs else None
+                    self.doc.paragraphs[-1] if self.doc.paragraphs else None
                 )
 
             # 处理简单的有序列表
@@ -174,11 +174,11 @@ class HtmlConverter(ElementConverter):
                     print(f"解析有序列表: {len(list_items)}项")
 
                 for item in list_items:
-                    paragraph = self.document.add_paragraph(style="List Number")
+                    paragraph = self.doc.add_paragraph(style="List Number")
                     self._process_inline_tags(item, paragraph)
 
                 return (
-                    self.document.paragraphs[-1] if self.document.paragraphs else None
+                    self.doc.paragraphs[-1] if self.doc.paragraphs else None
                 )
 
             # 处理简单的表格
@@ -209,7 +209,7 @@ class HtmlConverter(ElementConverter):
                     return None
 
                 # 创建表格
-                table = self.document.add_table(rows=len(rows), cols=cols)
+                table = self.doc.add_table(rows=len(rows), cols=cols)
                 table.style = "Table Grid"
 
                 # 填充表格内容
@@ -230,7 +230,7 @@ class HtmlConverter(ElementConverter):
                             table.cell(i, j).text = clean_content.strip()
 
                 # 添加一个空段落，以便返回
-                return self.document.add_paragraph()
+                return self.doc.add_paragraph()
 
             # 无法解析，返回None
             return None
@@ -361,7 +361,7 @@ class HtmlConverter(ElementConverter):
             print("使用基本HTML转换")
 
         # 创建新段落
-        paragraph = self.document.add_paragraph()
+        paragraph = self.doc.add_paragraph()
 
         # 简单处理一些基本HTML标签
         # 这里只是一个非常基础的实现，无法处理复杂的HTML

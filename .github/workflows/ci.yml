@@ -68,9 +68,12 @@ jobs:
     - name: Run black check
       run: black --check --diff src tests
 
-    - name: Run mypy (new modules)
+    - name: Run mypy (converter package)
+      run: mypy src/mddocx/converter --config-file mypy.ini
+
+    - name: Run mypy (standalone modules)
       run: |
-        mypy --follow-imports=skip src/mddocx/errors.py src/mddocx/webui/rate_limit.py src/mddocx/converter/token_processor.py --config-file mypy.ini
+        mypy --follow-imports=skip src/mddocx/errors.py src/mddocx/webui/rate_limit.py --config-file mypy.ini
 
     - name: Run isort check
       run: isort --check-only --diff src tests
