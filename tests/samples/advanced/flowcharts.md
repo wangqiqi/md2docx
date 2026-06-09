@@ -1,5 +1,13 @@
 # 流程图测试
 
+## flowchart 关键字
+
+```mermaid
+flowchart LR
+    A[输入] --> B[处理]
+    B --> C[输出]
+```
+
 ## 基础流程图
 
 ```mermaid
