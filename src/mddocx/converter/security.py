@@ -97,7 +97,7 @@ def is_safe_remote_url(url: str) -> bool:
     try:
         for info in socket.getaddrinfo(hostname, None):
             addr = info[4][0]
-            if is_private_ip(addr):
+            if is_private_ip(str(addr)):
                 return False
     except socket.gaierror:
         return False
