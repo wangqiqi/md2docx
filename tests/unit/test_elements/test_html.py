@@ -298,3 +298,116 @@ def test_html_convert_fallback_mode():
 
     # 验证结果 - 应该使用回退方法
     assert result is not None
+
+
+def test_convert_html_from_token_children():
+    """HTML 内容来自 token.children 而非 content。"""
+    converter = HtmlConverter()
+    converter.set_document(Document())
+
+    child = MagicMock()
+    child.content = "<p>子节点段落</p>"
+    token = MagicMock(spec=["children", "type"])
+    token.children = [child]
+
+    result = converter.convert(token)
+
+    assert result is not None
+    assert any("子节点段落" in p.text for p in converter.document.paragraphs)
+
+
+def test_convert_empty_html_returns_none():
+    """空 HTML 内容返回 None。"""
+    converter = HtmlConverter()
+    converter.debug = True
+    converter.set_document(Document())
+
+    token = MagicMock()
+    token.content = ""
+    token.children = None
+
+    assert converter.convert(token) is None
+
+
+@pytest.mark.skipif(not HTML_FOR_DOCX_AVAILABLE, reason="html-for-docx not available")
+def test_html_for_docx_raises_uses_fallback():
+    """html-for-docx 抛错时走 _fallback_convert。"""
+    converter = HtmlConverter()
+    converter.set_document(Document())
+
+    token = MagicMock()
+    token.content = "<section><article>不可解析</article></section>"
+    token.children = None
+
+    with patch(
+        "mddocx.converter.elements.html.HtmlToDocx"
+    ) as mock_cls:
+        mock_cls.return_value.add_html_to_document.side_effect = RuntimeError("fail")
+        result = converter.convert(token)
+
+    assert result is not None
+    assert len(converter.document.paragraphs) >= 1
+
+
+def test_custom_html_table_no_rows():
+    """空 table 无 tr 时返回 None。"""
+    converter = HtmlConverter()
+    converter.set_document(Document())
+
+    html = "<table></table>"
+    assert converter._custom_html_convert(html) is None
+
+
+def test_custom_html_table_zero_cols():
+    """table 行无 th/td 时返回 None。"""
+    converter = HtmlConverter()
+    converter.set_document(Document())
+
+    html = "<table><tr></tr></table>"
+    assert converter._custom_html_convert(html) is None
+
+
+def test_process_inline_strike_and_underline():
+    """内联删除线与下划线样式。"""
+    converter = HtmlConverter()
+    converter.set_document(Document())
+    paragraph = converter.document.add_paragraph()
+
+    converter._process_inline_tags(
+        "普通<u>下划线</u>和<s>删除</s>文本", paragraph
+    )
+
+    runs_text = "".join(r.text for r in paragraph.runs)
+    assert "下划线" in runs_text
+    assert "删除" in runs_text
+
+
+def test_process_inline_tags_exception_fallback():
+    """内联解析异常时回退为纯文本。"""
+    converter = HtmlConverter()
+    converter.set_document(Document())
+    paragraph = converter.document.add_paragraph()
+
+    with patch(
+        "mddocx.converter.elements.html.re.split",
+        side_effect=ValueError("forced"),
+    ):
+        converter._process_inline_tags("<p>容错</p>", paragraph)
+
+    assert paragraph.text.strip() != ""
+
+
+@pytest.mark.skipif(not HTML_FOR_DOCX_AVAILABLE, reason="html-for-docx not available")
+def test_html_for_docx_no_new_paragraphs():
+    """html-for-docx 未新增段落时仍返回已有段落。"""
+    converter = HtmlConverter()
+    converter.set_document(Document())
+    converter.document.add_paragraph("已有")
+
+    with patch(
+        "mddocx.converter.elements.html.HtmlToDocx"
+    ) as mock_cls:
+        mock_cls.return_value.add_html_to_document.return_value = None
+        result = converter._html_for_docx_convert("<span>x</span>")
+
+    assert result is not None

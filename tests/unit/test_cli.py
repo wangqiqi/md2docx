@@ -174,3 +174,55 @@ class TestCLI:
             for path in [md_path, docx_path]:
                 if os.path.exists(path):
                     os.unlink(path)
+
+    def test_convert_file_input_is_directory(self):
+        """输入路径为目录时抛出 ValueError"""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            with tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as docx_file:
+                docx_path = docx_file.name
+            try:
+                with pytest.raises(ValueError, match="不是文件"):
+                    convert_file(tmpdir, docx_path, debug=False)
+            finally:
+                if os.path.exists(docx_path):
+                    os.unlink(docx_path)
+
+    @patch("mddocx.cli.BaseConverter")
+    def test_convert_file_permission_retry(self, mock_converter_cls):
+        """输出被占用时带时间戳重试保存"""
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".md", delete=False, encoding="utf-8"
+        ) as md_file:
+            md_file.write("# 标题")
+            md_path = md_file.name
+
+        with tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as docx_file:
+            docx_path = docx_file.name
+
+        mock_doc = mock_converter_cls.return_value.convert.return_value
+        mock_doc.save.side_effect = [PermissionError(), None]
+
+        try:
+            convert_file(md_path, docx_path, debug=False)
+            assert mock_doc.save.call_count == 2
+        finally:
+            for path in [md_path, docx_path]:
+                if os.path.exists(path):
+                    os.unlink(path)
+
+    @patch("pathlib.Path.exists", return_value=False)
+    def test_main_missing_input_exits(self, mock_exists):
+        """输入不存在时 main 以码 1 退出"""
+        with patch("sys.argv", ["md2docx", "missing.md", "out.docx"]):
+            with pytest.raises(SystemExit) as exc:
+                main()
+        assert exc.value.code == 1
+
+    @patch("mddocx.cli.convert_file", side_effect=RuntimeError("boom"))
+    @patch("pathlib.Path.exists", return_value=True)
+    def test_main_convert_failure_exits(self, mock_exists, mock_convert):
+        """转换异常时 main 以码 1 退出"""
+        with patch("sys.argv", ["md2docx", "in.md", "out.docx"]):
+            with pytest.raises(SystemExit) as exc:
+                main()
+        assert exc.value.code == 1
