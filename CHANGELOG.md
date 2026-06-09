@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.22] - 2026-06-09
+
+### Added
+- M-ARCH-01-04：WebUI per-IP 请求限流（30 req/min）
+
 ## [0.5.21] - 2026-06-09
 
 ### Added
