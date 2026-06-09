@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.32] - 2026-06-09
+
+### Changed
+- T-TEST-02-01：更新 `03_测试指南.md` 覆盖率基线（218 passed · 85% 目标）
+- T-TEST-02-02：实现图片集成测（本地/远程/错误处理，替换占位符）
+- T-TEST-02-03：`html.py` 单元测补强（87% 覆盖率）
+- T-TEST-02-04：CLI/errors 测补强，整体覆盖率 **85%**
+- T-TEST-02-05：README / 审查.md 测试数字与 REV-P2-05 同步
+
 ## [0.5.31] - 2026-06-09
 
 ### Changed
