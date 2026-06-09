@@ -180,9 +180,7 @@ def check_docx_against_expectation(
         failures.append(f"缺少一级标题文本: {h1!r}")
 
     if len(doc.paragraphs) < exp.min_paragraphs:
-        failures.append(
-            f"段落过少: {len(doc.paragraphs)} < {exp.min_paragraphs}"
-        )
+        failures.append(f"段落过少: {len(doc.paragraphs)} < {exp.min_paragraphs}")
 
     if len(doc.tables) < exp.min_tables:
         failures.append(f"表格过少: {len(doc.tables)} < {exp.min_tables}")
@@ -196,9 +194,7 @@ def check_docx_against_expectation(
 
     if exp.text_contains_any:
         if not any(n in text for n in exp.text_contains_any):
-            failures.append(
-                f"正文未命中任一期望: {exp.text_contains_any}"
-            )
+            failures.append(f"正文未命中任一期望: {exp.text_contains_any}")
 
     for i, blob in enumerate(media_blobs, 1):
         if not validate_png_or_jpeg(blob):

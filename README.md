@@ -65,7 +65,7 @@
 
 ## 规划与路线图
 
-📋 开发规划与待办见根目录：[plan.md](plan.md) · 文档索引：[docs/README.md](docs/README.md)
+📋 本地开发编排：根目录 `plan.md`（**不入库**，jwplan/jwrun 自用）· 文档索引：[docs/README.md](docs/README.md)
 
 **已完成 ✅:**
 - ✅ 专业测试体系 (218 测试，覆盖率 ≥85%，CI 持续验证)

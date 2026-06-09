@@ -25,7 +25,6 @@ project_root = script_dir.parent
 sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(project_root / "tests" / "integration"))
 
-from mddocx.converter.base import BaseConverter  # noqa: E402
 from sample_output_checks import (  # noqa: E402
     EXPECTATIONS,
     check_docx_against_expectation,
@@ -33,6 +32,8 @@ from sample_output_checks import (  # noqa: E402
     list_sample_md_files,
     rel_sample_key,
 )
+
+from mddocx.converter.base import BaseConverter  # noqa: E402
 
 
 def convert_sample(md_path: Path, out_path: Path) -> None:
@@ -68,9 +69,7 @@ def run_verify(
             passed += 1
             media_n = len(extract_media_bytes(docx_path))
             size = docx_path.stat().st_size
-            lines.append(
-                f"OK   [{label}] {key} — {size:,} B, media={media_n}"
-            )
+            lines.append(f"OK   [{label}] {key} — {size:,} B, media={media_n}")
 
     return passed, failed, lines
 
@@ -116,9 +115,7 @@ def main() -> int:
             p, f, lines = run_verify(samples_root, fresh_resolver, "fresh")
             total_fail += f
             all_lines.extend(lines)
-            all_lines.append(
-                f"\n--- fresh 转换: {p} 通过, {f} 失败 / {p + f} 项 ---"
-            )
+            all_lines.append(f"\n--- fresh 转换: {p} 通过, {f} 失败 / {p + f} 项 ---")
 
     if use_existing:
         if not output_root.is_dir():
@@ -132,9 +129,7 @@ def main() -> int:
             p, f, lines = run_verify(samples_root, output_resolver, "output")
             total_fail += f
             all_lines.extend(lines)
-            all_lines.append(
-                f"\n--- output 目录: {p} 通过, {f} 失败 / {p + f} 项 ---"
-            )
+            all_lines.append(f"\n--- output 目录: {p} 通过, {f} 失败 / {p + f} 项 ---")
 
     if args.compare_output and use_fresh and output_root.is_dir():
         all_lines.append("\n--- fresh vs output 快照对比 ---")
@@ -163,9 +158,7 @@ def main() -> int:
                     all_lines.append(f"MATCH {key}: {fs:,} B, media={fm}")
 
     print("\n".join(all_lines))
-    print(
-        f"\n{'✅ 全部通过' if total_fail == 0 else f'❌ 共 {total_fail} 项失败'}"
-    )
+    print(f"\n{'✅ 全部通过' if total_fail == 0 else f'❌ 共 {total_fail} 项失败'}")
     return 0 if total_fail == 0 else 1
 
 

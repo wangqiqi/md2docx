@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.42] - 2026-06-09
+
+### Changed
+- `plan.md` 退出 git 跟踪（`.gitignore` 保留，本地 jwplan/jwrun 真源）
+- README / docs 说明 `plan.md` 为本地开发编排，不入库
+
+### Fixed
+- 样例验收脚本 `black`/`isort` 格式化，修复 CI quality job 风险
+
 ## [0.5.41] - 2026-06-09
 
 ### Added

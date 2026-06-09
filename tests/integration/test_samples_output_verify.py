@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from sample_output_checks import (
+from sample_output_checks import (  # isort: skip
     EXPECTATIONS,
     check_docx_against_expectation,
     list_sample_md_files,
@@ -67,6 +67,4 @@ def test_output_dir_docx_if_present():
             failures_all.append((key, failures))
 
     assert not missing, f"output 缺少 docx: {missing}"
-    assert not failures_all, "\n".join(
-        f"{k}: " + "; ".join(v) for k, v in failures_all
-    )
+    assert not failures_all, "\n".join(f"{k}: " + "; ".join(v) for k, v in failures_all)
