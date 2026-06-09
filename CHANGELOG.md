@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.40] - 2026-06-09
+
+### Added
+- T-TEST-03-05：`docs/03_测试指南.md` · `samples/output/README` 同步 259 passed 与样例结构
+
+## [0.5.39] - 2026-06-09
+
+### Added
+- T-TEST-03-03：`flowcharts.md` 增补 `flowchart LR` 关键字样例
+
+## [0.5.38] - 2026-06-09
+
+### Added
+- T-TEST-03-02：`test_convert_image_sample_embeds_local_png` 验证 `image.md` 本地图嵌入
+- T-TEST-03-04：`math.md` `\label`/`\ref` 样例级断言（式号 (5)）
+- T-TEST-03-06：`tests/samples/large/chunked.md` + `test_convert_chunked_sample`
+
 ## [0.5.37] - 2026-06-09
 
 ### Added
