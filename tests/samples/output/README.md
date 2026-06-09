@@ -8,11 +8,12 @@
 
 | 样例 | 测试 |
 |------|------|
-| `basic/*.md` | `test_convert_all_samples`（含标题/表格结构断言） |
-| `advanced/*.md` | `test_convert_advanced_samples`（mermaid mock） |
+| `basic/*.md` + `basic/1.png` | `test_convert_all_samples` · `test_convert_image_sample_embeds_local_png` |
+| `advanced/*.md` | `test_convert_advanced_samples`（mermaid mock）· `test_convert_math_sample_label_ref` |
+| `large/chunked.md` | `test_convert_chunked_sample` |
 | `test.md` | `test_convert_root_test_md` |
 
-全量：`pytest tests/ src/mddocx/webui/tests/` → **176 passed, 2 skipped**
+全量：`pytest tests/ src/mddocx/webui/tests/` → **259 passed**
 
 ## 文件列表（历史参考）
 
@@ -32,4 +33,4 @@ python scripts/batch_convert.py --input-dir tests/samples --output-dir tests/sam
 
 ---
 
-*基线同步：2026-06-08 · T-TEST-01*
+*基线同步：2026-06-09 · T-TEST-03*
