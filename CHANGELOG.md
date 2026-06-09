@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.37] - 2026-06-09
+
+### Added
+- T-TEST-03-01：`tests/samples/basic/1.png` 最小合法 PNG，补全 image.md / tables.md 本地图引用
+
 ## [0.5.36] - 2026-06-09
 
 ### Added
