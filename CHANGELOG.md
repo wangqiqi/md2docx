@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.23] - 2026-06-09
+
+### Changed
+- M-ARCH-01-05：CONTRIBUTING 强调 pre-commit 必装
+
 ## [0.5.22] - 2026-06-09
 
 ### Added
