@@ -1,21 +1,24 @@
 # Markdown to DOCX WebUI
 
-基于Flask的Markdown转DOCX Web界面，提供现代化的用户体验。
+基于 Flask 的 Markdown 转 DOCX Web 界面，提供现代化的用户体验。
 
 ## 🚀 特性
 
 - **现代化界面**: 响应式设计，支持一次性阅读体验
-- **实时预览**: 输入Markdown后实时生成DOCX预览
-- **文件上传**: 支持拖拽上传Markdown文件
-- **安全可靠**: 严格的文件验证和安全头保护
+- **实时预览**: 输入 Markdown 后实时生成 DOCX 预览
+- **文件上传**: 支持拖拽上传 Markdown 文件
+- **安全可靠**: bleach 预览消毒、CSP 头、CSRF 防护、per-IP 限流
 - **高性能**: 防抖优化和异步处理
-- **易于部署**: 支持多种环境配置
+- **易于部署**: 支持 development / production 配置
 
 ## 📦 安装
 
+从项目根目录安装（依赖见 `pyproject.toml`）：
+
 ```bash
-cd webui
-pip install -r ../../requirements.txt
+pip install -e ".[dev]"
+# 或生产环境
+pip install .
 ```
 
 ## 🔧 配置
@@ -23,8 +26,8 @@ pip install -r ../../requirements.txt
 ### 环境变量
 
 - `FLASK_ENV`: 环境设置 (`development` 或 `production`)
-- `SECRET_KEY`: Flask应用密钥（生产环境必需）
-- `HOST`: 服务器主机 (默认: `0.0.0.0`)
+- `SECRET_KEY`: Flask 应用密钥（**生产环境必需**）
+- `HOST`: 服务器主机（默认: `127.0.0.1`；生产可通过环境变量覆盖）
 - `PORT`: 服务器端口 (默认: `5000`)
 - `UPLOAD_FOLDER`: 上传文件夹路径 (默认: `/tmp`)
 
@@ -33,36 +36,40 @@ pip install -r ../../requirements.txt
 ```bash
 export FLASK_ENV=production
 export SECRET_KEY=your-secret-key-here
+export HOST=0.0.0.0   # 生产绑定（开发默认 127.0.0.1）
 export PORT=8000
-python app.py
+mddocx-webui
 ```
 
 ## 🎯 使用方法
 
 1. **启动应用**:
    ```bash
-   python app.py
+   mddocx-webui
+   # 或
+   python -m mddocx.webui.app
    ```
 
 2. **访问界面**:
-   打开浏览器访问 `http://localhost:5000`
+   打开浏览器访问 `http://127.0.0.1:5000`
 
 3. **使用功能**:
-   - 在左侧输入Markdown内容
-   - 右侧实时预览DOCX效果
-   - 点击"转换为DOCX"下载文件
+   - 在左侧输入 Markdown 内容
+   - 右侧实时预览 DOCX 效果
+   - 点击「转换为 DOCX」下载文件
 
 ## 🏗️ 架构
 
 ```
-webui/
-├── app.py          # Flask应用主文件
+src/mddocx/webui/
+├── app.py          # Flask 应用主文件
 ├── config.py       # 配置管理
-├── templates/      # HTML模板
+├── rate_limit.py   # per-IP 限流
+├── templates/      # HTML 模板
 ├── static/         # 静态文件
 │   ├── css/
 │   └── js/
-└── tests/          # 测试文件
+└── tests/          # 测试（已纳入 CI）
 ```
 
 ## 🔒 安全特性
@@ -70,24 +77,24 @@ webui/
 - 文件类型和内容验证
 - 请求大小限制
 - 安全的临时文件处理
-- HTTP安全头保护
-- CSRF防护（推荐添加）
+- HTTP 安全头（CSP 等）
+- Flask-WTF CSRF 防护
+- 预览 HTML bleach 消毒
 
 ## 🧪 测试
 
 ```bash
-cd webui
-python -m pytest tests/
+pytest -q src/mddocx/webui/tests/
 ```
 
 ## 📈 性能优化
 
-- **防抖处理**: 输入防抖800ms，减少服务器请求
-- **内容限制**: 预览内容限制2MB，转换内容限制5MB
+- **防抖处理**: 输入防抖 800ms，减少服务器请求
+- **内容限制**: 预览内容限制 2MB，转换内容限制 5MB
 - **异步处理**: 支持请求超时和取消
 - **缓存优化**: 临时文件安全清理
 
-## 🎨 UI设计
+## 🎨 UI 设计
 
 ### 一次性阅读体验
 - 编辑器和预览面板固定高度，不出现页面滚动
@@ -96,7 +103,7 @@ python -m pytest tests/
 
 ### 交互优化
 - 实时预览带加载状态
-- 键盘快捷键支持 (Ctrl+Enter提交, Ctrl+Shift+P切换预览)
+- 键盘快捷键支持 (Ctrl+Enter 提交, Ctrl+Shift+P 切换预览)
 - 文件上传预览和验证
 
 ## 🔧 开发
@@ -105,36 +112,26 @@ python -m pytest tests/
 1. 在 `app.py` 中添加路由
 2. 在 `templates/` 中添加模板
 3. 在 `static/js/` 中添加交互逻辑
-4. 添加相应的CSS样式
+4. 添加相应的 CSS 样式
 
 ### 代码规范
 - 使用配置管理替代硬编码
 - 添加适当的错误处理和日志
 - 为新功能添加测试
 
-## 📝 API文档
+## 📝 API 文档
+
+详见项目根目录 [`docs/api.md`](../../docs/api.md)。
 
 ### 主要端点
 
 - `GET /`: 主页
-- `POST /convert`: 转换Markdown为DOCX
-- `POST /preview`: 生成预览HTML
-
-### 请求示例
-
-```bash
-# 预览请求
-curl -X POST http://localhost:5000/preview \
-  -d "markdown=# Hello World"
-
-# 转换请求
-curl -X POST http://localhost:5000/convert \
-  -F "markdown=# Hello World"
-```
+- `POST /convert`: 转换 Markdown 为 DOCX
+- `POST /preview`: 生成预览 HTML
 
 ## 🤝 贡献
 
-欢迎提交Issue和Pull Request！
+欢迎提交 Issue 和 Pull Request！
 
 ## 📄 许可证
 

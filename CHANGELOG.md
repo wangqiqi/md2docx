@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.28] - 2026-06-09
+
+### Changed
+- M-DOC-04-02：webui README 默认 HOST 127.0.0.1、CSRF/限流说明、pyproject 安装方式
+- M-DOC-04-03：`docs/development.md` 移除 requirements.txt，修正模块路径
+- M-DOC-04-04：README 版本 badge v0.5.26、199 测试、路线图更新
+- M-DOC-04-05：`docs/architecture.md` 补充 token_processor/errors/rate_limit · v0.5.x 阶段
+- M-DOC-04-06：`docs/plan.md` 与根 plan ROADMAP 同步
+
 ## [0.5.27] - 2026-06-09
 
 ### Changed

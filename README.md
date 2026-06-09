@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.4.6-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.4.6)
+[![Version](https://img.shields.io/badge/version-0.5.26-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.26)
 [![Cursor AI Rules](https://img.shields.io/badge/Cursor%20AI%20Rules-v3.0.0-green.svg)](https://github.com/wangqiqi/cursor-ai-rules)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
@@ -46,7 +46,7 @@
 项目采用专业级的质量保证体系，确保代码可靠性和开发效率：
 
 ### 🧪 测试体系
-- **150+ 测试用例** - 覆盖核心功能、WebUI 和边界条件
+- **199 测试用例** - 覆盖核心功能、WebUI 和边界条件
 - **持续集成覆盖率报告** - 多维度测试保证
 - **大文件测试** - 支持1MB+文档处理
 - **边界条件测试** - Unicode、嵌套、异常输入
@@ -68,14 +68,12 @@
 📋 详细的开发规划和功能路线图请查看：[项目规划文档](docs/plan.md)
 
 **已完成 ✅:**
-- ✅ 专业测试体系 (150+ 测试，CI 持续验证)
+- ✅ 专业测试体系 (199 测试，CI 持续验证)
 - ✅ CI/CD 自动化 (GitHub Actions 多版本测试)
 - ✅ 代码质量保证 (pre-commit + 多工具检查)
-- ✅ Web 界面、实时预览、响应式设计 (Phase 2)
-
-**开发中 🔄:**
-- 🔄 自定义样式配置 (v0.4.0)
-- 🔄 性能优化 (v0.4.0)
+- ✅ Web 界面、实时预览、响应式设计
+- ✅ Mermaid 流程图、LaTeX 数学公式 (v0.5.x)
+- ✅ html-for-docx 复杂 HTML 块 (v0.5.15+)
 
 **规划中 📋:**
 - 🔲 Mermaid 扩展类型（sequence / gantt 等）

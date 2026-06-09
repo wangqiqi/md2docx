@@ -19,7 +19,7 @@ source venv/bin/activate  # Linux/Mac
 # 或 venv\Scripts\activate  # Windows
 
 # 3. 安装依赖
-pip install -r requirements.txt
+pip install -e ".[dev]"
 
 # 4. 运行测试验证环境
 pytest tests/
@@ -29,12 +29,12 @@ pytest tests/
 
 ### 核心模块说明
 
-#### `src/converter/base.py`
+#### `src/mddocx/converter/base.py`
 - **BaseConverter类**: 核心转换器，协调所有元素转换
 - **错误处理**: MD2DocxError、ParseError、ConvertError
 - **调试支持**: 可选的调试信息输出
 
-#### `src/converter/elements/`
+#### `src/mddocx/converter/elements/`
 - **ElementConverter**: 基础转换器接口
 - **各元素转换器**: 针对不同Markdown元素的专门处理
 

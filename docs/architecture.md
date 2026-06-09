@@ -18,11 +18,14 @@ md2docx/
 │       ├── cli.py           # CLI 入口 (mddocx)
 │       ├── converter/       # 转换核心
 │       │   ├── base.py      # BaseConverter · _reset_state()
+│       │   ├── token_processor.py  # token 遍历
 │       │   ├── security.py  # 图片 URL/路径安全校验
+│       │   ├── errors.py    # 统一错误码
 │       │   └── elements/    # 元素转换器（heading/text/list/...）
 │       └── webui/           # Flask Web 界面 (mddocx-webui)
 │           ├── app.py       # 路由 · bleach 预览 · CSRF
-│           ├── config.py
+│           ├── config.py    # 默认 HOST 127.0.0.1
+│           ├── rate_limit.py
 │           ├── templates/
 │           ├── static/
 │           └── tests/
@@ -82,18 +85,19 @@ md2docx/
 2. 分隔线
 3. 任务列表（TODO）
 
-### 阶段五：高级功能（TODO）
-1. 数学公式（可选）
-   - 行内公式
-   - 块级公式
-2. 流程图（可选）
-3. HTML 标签支持（已完成基础支持）
+### 阶段五：高级功能（已完成 v0.5.x）
+1. ✅ 数学公式（LaTeX · CodeCogs PNG）
+2. ✅ Mermaid 流程图（graph/flowchart · mermaid.ink）
+3. ✅ HTML 块（html-for-docx 可选依赖）
+4. ✅ 统一错误码（`errors.py`）
 
-### 阶段六：界面开发（已完成 v0.4.x）
+### 阶段六：界面与架构（已完成 v0.4.x–v0.5.x）
 1. ✅ Web 编辑器与文件上传
 2. ✅ 实时预览（bleach 消毒）
 3. ✅ DOCX 导出下载
-4. 🔲 自定义样式配置（规划中）
+4. ✅ CSRF / CSP / SSRF 防护 · per-IP 限流
+5. ✅ TokenProcessor 拆分（base.py 精简）
+6. 🔲 自定义样式配置（远期）
 
 ## 4. 核心设计
 
@@ -160,7 +164,8 @@ class HeadingConverter(ElementConverter):
 5. ✅ 集成AI协作规则系统
 6. ✅ 实现完整Markdown转换功能
 7. ✅ Web 图形界面（Flask WebUI）
-8. 🔲 数学公式、流程图（v0.5.0 规划）
+8. ✅ 数学公式、Mermaid、html-for-docx（v0.5.0–v0.5.26）
+9. 🔲 Mermaid 扩展类型、公式编号（见根 `plan.md` 台账）
 
 ## 8. 开发规范
 
@@ -230,9 +235,11 @@ class HeadingConverter(ElementConverter):
    - 批量处理界面
    - 主题切换功能
 
-5. **v0.5.0**：完整产品化（规划中）
-   - 数学公式支持（LaTeX）
-   - 图表和图形渲染
+5. **v0.5.0–v0.5.26**：产品化增强（已发布）
+   - LaTeX 数学公式、Mermaid 流程图
+   - html-for-docx 复杂 HTML
+   - 架构建议：错误码、TokenProcessor、限流、Dockerfile、mypy 渐进
+   - 测试 199 passed
 
 6. **v1.0.0**：企业级功能（远期规划）
    - 多格式输出
