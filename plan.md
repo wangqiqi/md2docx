@@ -9,12 +9,12 @@
 <!-- LAST_DONE: T-TEST-03-06 -->
 <!-- VERIFY: pytest -q -->
 <!-- VERSION_LINE: 0.5 -->
-<!-- RELEASED: v0.5.40 -->
+<!-- RELEASED: v0.5.41 -->
 <!-- MAX_LOOPS: 15 -->
 
 > 已完成 Sprint 见 [`archive/sprint/`](archive/sprint/)。文档索引 [`docs/README.md`](docs/README.md)。
 
-**当前**：无活跃 Sprint · **259 passed** · **v0.5.40** · **待办 1 项（可选 ARCH-R03）**
+**当前**：无活跃 Sprint · **275 passed** · **v0.5.41** · **待办 1 项（可选 ARCH-R03）**
 
 ---
 
@@ -79,6 +79,7 @@
 
 ## 变更记录
 
+- **2026-06-09** · **v0.5.41** · 样例 DOCX 程序化验收 + 合法 1.png
 - **2026-06-09** · **T-TEST-03 §7 闭合** · v0.5.37–v0.5.40 · 259 passed · 审计快照已同步
 - **2026-06-09** · **T-TEST-03 Sprint 规划** · 样例 1.png · image/math 断言 · flowchart 样例 · 文档同步
 - **2026-06-09** · **M-MERMAID-03 §7 闭合** · v0.5.36 · state/class/pie

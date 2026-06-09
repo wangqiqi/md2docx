@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.41] - 2026-06-09
+
+### Added
+- 样例 DOCX 程序化验收：`sample_output_checks.py` · `test_samples_output_verify.py`（16 passed）
+- `scripts/verify_samples_output.py`：fresh / output / 对比三种验收模式
+
+### Fixed
+- `tests/samples/basic/1.png` 替换为 Pillow/docx 可嵌入的合法 PNG（修复实装导出无图）
+
 ## [0.5.40] - 2026-06-09
 
 ### Added
