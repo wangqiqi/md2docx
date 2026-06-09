@@ -38,3 +38,54 @@ def test_mermaid_integration_graph_td(mock_get, tmp_path):
     assert output.stat().st_size > 0
     assert mock_get.called
     assert "mermaid.ink" in mock_get.call_args[0][0]
+
+
+SEQUENCE_MD = """# 时序图
+
+```mermaid
+sequenceDiagram
+    A->>B: ping
+```
+"""
+
+GANTT_MD = """# 甘特图
+
+```mermaid
+gantt
+    title Demo
+    section S
+    T1 :2024-01-01, 3d
+```
+"""
+
+
+@patch("mddocx.converter.elements.mermaid.requests.get")
+def test_mermaid_integration_sequence(mock_get, tmp_path):
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.headers = {"Content-Type": "image/png"}
+    mock_resp.iter_content.return_value = [FAKE_PNG]
+    mock_get.return_value = mock_resp
+
+    doc = BaseConverter().convert(SEQUENCE_MD)
+    output = tmp_path / "sequence.docx"
+    doc.save(str(output))
+
+    assert output.exists()
+    assert mock_get.called
+
+
+@patch("mddocx.converter.elements.mermaid.requests.get")
+def test_mermaid_integration_gantt(mock_get, tmp_path):
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.headers = {"Content-Type": "image/png"}
+    mock_resp.iter_content.return_value = [FAKE_PNG]
+    mock_get.return_value = mock_resp
+
+    doc = BaseConverter().convert(GANTT_MD)
+    output = tmp_path / "gantt.docx"
+    doc.save(str(output))
+
+    assert output.exists()
+    assert mock_get.called

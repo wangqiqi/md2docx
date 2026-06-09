@@ -14,7 +14,26 @@ from docx.shared import Inches, Pt, RGBColor
 from ..security import MAX_IMAGE_BYTES, is_allowed_mermaid_ink_url
 from .base import ElementConverter
 
-SUPPORTED_DIAGRAM_PREFIXES = ("graph ", "flowchart ")
+SUPPORTED_DIAGRAM_PREFIXES = (
+    "graph ",
+    "flowchart ",
+    "sequencediagram",
+    "gantt",
+)
+
+
+def mermaid_diagram_kind(source: str) -> str:
+    """返回图表类型中文标签（用于 DOCX 说明文字）。"""
+    if not source or not source.strip():
+        return "图表"
+    first = source.strip().split("\n", 1)[0].strip().lower()
+    if first.startswith("sequencediagram"):
+        return "时序图"
+    if first.startswith("gantt"):
+        return "甘特图"
+    if first.startswith(("graph ", "flowchart ")):
+        return "流程图"
+    return "图表"
 
 
 def _is_valid_image_payload(data: bytes) -> bool:
@@ -26,7 +45,7 @@ def _is_valid_image_payload(data: bytes) -> bool:
 
 
 def is_supported_mermaid_diagram(source: str) -> bool:
-    """首版仅支持 graph / flowchart 基础流程图"""
+    """支持 graph / flowchart / sequenceDiagram / gantt"""
     if not source or not source.strip():
         return False
     first = source.strip().split("\n", 1)[0].strip().lower()
@@ -45,7 +64,7 @@ def build_mermaid_ink_url(diagram: str, image_type: str = "png") -> str:
 
 
 class MermaidConverter(ElementConverter):
-    """将 Mermaid graph/flowchart 渲染为图片并嵌入 DOCX"""
+    """将 Mermaid 图表渲染为图片并嵌入 DOCX"""
 
     def convert(self, token) -> None:
         if not self.document:
@@ -60,7 +79,7 @@ class MermaidConverter(ElementConverter):
         image_data = self._fetch_diagram_image(source)
         if image_data:
             try:
-                self._embed_image(image_data)
+                self._embed_image(image_data, mermaid_diagram_kind(source))
                 return
             except Exception:
                 pass
@@ -89,7 +108,7 @@ class MermaidConverter(ElementConverter):
         except Exception:
             return None
 
-    def _embed_image(self, image_data: bytes) -> None:
+    def _embed_image(self, image_data: bytes, kind: str = "流程图") -> None:
         paragraph = self.doc.add_paragraph()
         paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
         run = paragraph.add_run()
@@ -97,7 +116,7 @@ class MermaidConverter(ElementConverter):
 
         caption = self.doc.add_paragraph()
         caption.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        cap_run = caption.add_run("Mermaid 流程图")
+        cap_run = caption.add_run(f"Mermaid {kind}")
         cap_run.italic = True
         cap_run.font.size = Pt(9)
         cap_run.font.color.rgb = RGBColor(102, 102, 102)

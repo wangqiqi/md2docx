@@ -12,11 +12,22 @@ from mddocx.converter.elements.mermaid import (
     MermaidConverter,
     build_mermaid_ink_url,
     is_supported_mermaid_diagram,
+    mermaid_diagram_kind,
 )
 from mddocx.converter.security import is_allowed_mermaid_ink_url
 
 SAMPLE_GRAPH = """graph TD
     A[开始] --> B[结束]
+"""
+
+SAMPLE_SEQUENCE = """sequenceDiagram
+    A->>B: hi
+"""
+
+SAMPLE_GANTT = """gantt
+    title Plan
+    section S1
+    Task1 :2024-01-01, 7d
 """
 
 # 最小合法 1x1 PNG
@@ -34,9 +45,19 @@ class TestMermaidHelpers:
     def test_supported_flowchart(self):
         assert is_supported_mermaid_diagram("flowchart LR\n  A --> B") is True
 
-    def test_unsupported_sequence(self):
-        src = "sequenceDiagram\n  A->>B: hi"
-        assert is_supported_mermaid_diagram(src) is False
+    def test_supported_sequence(self):
+        assert is_supported_mermaid_diagram(SAMPLE_SEQUENCE) is True
+
+    def test_supported_gantt(self):
+        assert is_supported_mermaid_diagram(SAMPLE_GANTT) is True
+
+    def test_unsupported_pie(self):
+        assert is_supported_mermaid_diagram('pie title X\n  "A" : 1') is False
+
+    def test_diagram_kind_labels(self):
+        assert mermaid_diagram_kind(SAMPLE_GRAPH) == "流程图"
+        assert mermaid_diagram_kind(SAMPLE_SEQUENCE) == "时序图"
+        assert mermaid_diagram_kind(SAMPLE_GANTT) == "甘特图"
 
     def test_build_url_uses_mermaid_ink(self):
         url = build_mermaid_ink_url(SAMPLE_GRAPH)
@@ -83,6 +104,38 @@ class TestMermaidConverter:
 
         assert mock_get.called
         mock_add_picture.assert_called_once()
+        text = "\n".join(p.text for p in converter.document.paragraphs)
+        assert "Mermaid 流程图" in text
+
+    @patch("docx.text.run.Run.add_picture")
+    @patch("mddocx.converter.elements.mermaid.requests.get")
+    def test_render_sequence_embeds_image(self, mock_get, mock_add_picture, converter):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.headers = {"Content-Type": "image/png"}
+        mock_resp.iter_content.return_value = [FAKE_PNG]
+        mock_get.return_value = mock_resp
+
+        converter.convert(self._make_token(SAMPLE_SEQUENCE))
+
+        mock_add_picture.assert_called_once()
+        text = "\n".join(p.text for p in converter.document.paragraphs)
+        assert "Mermaid 时序图" in text
+
+    @patch("docx.text.run.Run.add_picture")
+    @patch("mddocx.converter.elements.mermaid.requests.get")
+    def test_render_gantt_embeds_image(self, mock_get, mock_add_picture, converter):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.headers = {"Content-Type": "image/png"}
+        mock_resp.iter_content.return_value = [FAKE_PNG]
+        mock_get.return_value = mock_resp
+
+        converter.convert(self._make_token(SAMPLE_GANTT))
+
+        mock_add_picture.assert_called_once()
+        text = "\n".join(p.text for p in converter.document.paragraphs)
+        assert "Mermaid 甘特图" in text
 
     @patch("mddocx.converter.elements.mermaid.requests.get")
     def test_render_failure_fallback(self, mock_get, converter):
@@ -95,11 +148,11 @@ class TestMermaidConverter:
         assert "graph TD" in text
 
     def test_unsupported_type_fallback(self, converter):
-        converter.convert(self._make_token("sequenceDiagram\n  A->>B: x"))
+        converter.convert(self._make_token('pie title X\n  "A" : 1'))
 
         text = "\n".join(p.text for p in converter.document.paragraphs)
         assert "不支持" in text
-        assert "sequenceDiagram" in text
+        assert "pie title" in text
 
 
 class TestMermaidRouting:

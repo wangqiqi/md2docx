@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.34] - 2026-06-09
+
+### Added
+- M-MERMAID-02：Mermaid **sequenceDiagram** 时序图与 **gantt** 甘特图经 mermaid.ink 渲染嵌入
+- M-MERMAID-02：图表类型中文说明（流程图 / 时序图 / 甘特图）
+
+### Changed
+- M-MERMAID-02：README / 架构文档同步；pie 等类型仍回退源码
+
 ## [0.5.33] - 2026-06-09
 
 ### Added
