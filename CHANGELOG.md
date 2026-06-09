@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.26] - 2026-06-09
+
+### Changed
+- M-ARCH-01-08：TokenProcessor 轻量提取（base.py 220 行）
+
 ## [0.5.25] - 2026-06-09
 
 ### Changed
