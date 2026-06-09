@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.25] - 2026-06-09
+
+### Changed
+- M-ARCH-01-07：mypy.ini + CI 新模块类型检查
+
 ## [0.5.24] - 2026-06-09
 
 ### Added
