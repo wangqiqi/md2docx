@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.21] - 2026-06-09
+
+### Added
+- M-ARCH-01-03：转换结构化日志（duration_ms / input_bytes）
+
 ## [0.5.20] - 2026-06-09
 
 ### Changed
