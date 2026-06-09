@@ -3,6 +3,7 @@
 from mddocx.converter.base import ConvertError, MD2DocxError, ParseError
 from mddocx.errors import (
     E_CONTENT_EMPTY,
+    E_CONTENT_TOO_LARGE,
     E_CONVERT_FAILED,
     E_INPUT_INVALID,
     E_INPUT_NOT_FOUND,
@@ -66,3 +67,10 @@ def test_error_from_md2docx_error():
 def test_error_from_value_error():
     info = error_from_exception(ValueError("bad path"))
     assert info.code == E_INPUT_INVALID
+
+
+def test_error_from_markdown_too_large():
+    from mddocx.converter.security import MarkdownTooLargeError
+
+    info = error_from_exception(MarkdownTooLargeError(20_000_000))
+    assert info.code == E_CONTENT_TOO_LARGE

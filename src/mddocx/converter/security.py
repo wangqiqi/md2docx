@@ -11,12 +11,56 @@ from urllib.parse import urlparse
 # 允许下载的最大图片大小（10MB）
 MAX_IMAGE_BYTES = 10 * 1024 * 1024
 
+# Markdown 源文最大体积（与 WebUI MAX_CONTENT_LENGTH 对齐）
+MAX_MARKDOWN_BYTES = 16 * 1024 * 1024
+
+# 超过此 UTF-8 字节数时自动按一级标题分块转换
+CHUNKED_THRESHOLD = 512 * 1024
+
 # 图片缓存最大条目数
 MAX_IMAGE_CACHE_ENTRIES = 64
 
 MERMAID_INK_HOST = "mermaid.ink"
 CODECOGS_HOST = "latex.codecogs.com"
 MAX_CODECOGS_URL_LEN = 8192
+
+
+class MarkdownTooLargeError(Exception):
+    """Markdown 文本或文件超过 MAX_MARKDOWN_BYTES。"""
+
+    def __init__(self, size: int, limit: int = MAX_MARKDOWN_BYTES) -> None:
+        self.size = size
+        self.limit = limit
+        super().__init__(
+            f"Markdown 内容过大: {size} 字节，上限 {limit} 字节"
+        )
+
+
+def markdown_utf8_byte_size(text: str) -> int:
+    """返回 Markdown 文本的 UTF-8 字节长度。"""
+    return len(text.encode("utf-8"))
+
+
+def validate_markdown_size(text: str) -> int:
+    """校验 Markdown 体积；超限抛出 MarkdownTooLargeError。"""
+    size = markdown_utf8_byte_size(text)
+    if size > MAX_MARKDOWN_BYTES:
+        raise MarkdownTooLargeError(size)
+    return size
+
+
+def stream_file_byte_size(path: Path, limit: int = MAX_MARKDOWN_BYTES) -> int:
+    """流式统计文件字节数；超过 limit 时立即抛出 MarkdownTooLargeError。"""
+    size = 0
+    with open(path, "rb") as handle:
+        while True:
+            block = handle.read(8192)
+            if not block:
+                break
+            size += len(block)
+            if size > limit:
+                raise MarkdownTooLargeError(size, limit)
+    return size
 
 
 def is_allowed_codecogs_url(url: str) -> bool:

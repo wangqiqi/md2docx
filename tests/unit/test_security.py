@@ -64,3 +64,23 @@ class TestResolveSafeLocalPath:
 
     def test_returns_none_without_base_dir(self):
         assert resolve_safe_local_path("image.png") is None
+
+
+class TestMarkdownSize:
+    def test_validate_markdown_size_within_limit(self):
+        from mddocx.converter.security import validate_markdown_size
+
+        assert validate_markdown_size("# hello") > 0
+
+    def test_validate_markdown_size_exceeds_limit(self):
+        from mddocx.converter.security import MAX_MARKDOWN_BYTES, MarkdownTooLargeError, validate_markdown_size
+
+        with pytest.raises(MarkdownTooLargeError):
+            validate_markdown_size("x" * (MAX_MARKDOWN_BYTES + 1))
+
+    def test_stream_file_byte_size(self, tmp_path):
+        from mddocx.converter.security import stream_file_byte_size
+
+        md = tmp_path / "a.md"
+        md.write_bytes(b"# test\n")
+        assert stream_file_byte_size(md) == len(b"# test\n")

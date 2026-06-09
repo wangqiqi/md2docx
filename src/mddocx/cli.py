@@ -36,17 +36,12 @@ def convert_file(input_file: str, output_file: str, debug: bool = False) -> None
         if not input_path.is_file():
             raise ValueError(f"输入路径不是文件: {input_file}")
 
-        # 读取输入文件
-        with open(input_file, "r", encoding="utf-8") as f:
-            content = f.read()
-
     except (OSError, IOError) as e:
         raise FileNotFoundError(f"无法读取输入文件 {input_file}: {e}")
 
     try:
-        # 初始化转换器并执行转换
         converter = BaseConverter(debug=debug)
-        doc = converter.convert(content, base_path=str(input_path))
+        doc = converter.convert_file(input_path)
 
     except MD2DocxError:
         # 转换器自定义错误，直接重新抛出

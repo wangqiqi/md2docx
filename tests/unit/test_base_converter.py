@@ -69,3 +69,35 @@ class TestBaseConverterRouting:
             with pytest.raises(ConvertError, match="RuntimeError") as exc_info:
                 converter.convert("# x")
             assert isinstance(exc_info.value.__cause__, RuntimeError)
+
+
+class TestBaseConverterSizeAndFile:
+    def test_convert_rejects_oversized_markdown(self):
+        from mddocx.converter.security import MAX_MARKDOWN_BYTES, MarkdownTooLargeError
+
+        huge = "x" * (MAX_MARKDOWN_BYTES + 1)
+        with pytest.raises(MarkdownTooLargeError):
+            BaseConverter().convert(huge)
+
+    def test_convert_file_reads_markdown(self, tmp_path):
+        md = tmp_path / "doc.md"
+        md.write_text("# 文件标题\n\n正文\n", encoding="utf-8")
+        doc = BaseConverter().convert_file(md)
+        text = "\n".join(p.text for p in doc.paragraphs)
+        assert "文件标题" in text
+        assert "正文" in text
+
+    def test_convert_file_missing_raises(self, tmp_path):
+        missing = tmp_path / "nope.md"
+        with pytest.raises(FileNotFoundError):
+            BaseConverter().convert_file(missing)
+
+    def test_convert_file_rejects_oversized_on_disk(self, tmp_path):
+        from mddocx.converter.security import MAX_MARKDOWN_BYTES, MarkdownTooLargeError
+
+        big = tmp_path / "big.md"
+        with open(big, "wb") as handle:
+            handle.write(b"#" + b"x" * MAX_MARKDOWN_BYTES)
+
+        with pytest.raises(MarkdownTooLargeError):
+            BaseConverter().convert_file(big)

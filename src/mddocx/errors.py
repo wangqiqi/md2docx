@@ -56,6 +56,10 @@ def error_info(code: str, message: Optional[str] = None) -> ErrorInfo:
 
 
 def error_from_exception(exc: Exception) -> ErrorInfo:
+    from .converter.security import MarkdownTooLargeError
+
+    if isinstance(exc, MarkdownTooLargeError):
+        return error_info(E_CONTENT_TOO_LARGE, str(exc) or None)
     if isinstance(exc, FileNotFoundError):
         return error_info(E_INPUT_NOT_FOUND, str(exc) or None)
     if isinstance(exc, PermissionError):

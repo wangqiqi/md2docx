@@ -13,6 +13,7 @@ from markdown_it import MarkdownIt
 
 from mdit_py_plugins.dollarmath import dollarmath_plugin
 
+from .chunking import split_markdown_sections
 from .elements import (
     BlockquoteConverter,
     CodeConverter,
@@ -29,6 +30,13 @@ from .elements import (
     TextConverter,
 )
 from .elements.base import ElementConverter
+from .security import (
+    CHUNKED_THRESHOLD,
+    MarkdownTooLargeError,
+    markdown_utf8_byte_size,
+    stream_file_byte_size,
+    validate_markdown_size,
+)
 from .token_processor import TokenProcessor
 
 logger = logging.getLogger(__name__)
@@ -135,13 +143,17 @@ class BaseConverter:
         self.converters[element_type] = converter
 
     def convert(
-        self, md_text: str, base_path: Optional[str] = None
+        self,
+        md_text: str,
+        base_path: Optional[str] = None,
+        chunked: Optional[bool] = None,
     ) -> DocxDocument:
         """将 Markdown 文本转换为 DOCX 文档
 
         Args:
             md_text: Markdown 文本
             base_path: Markdown 源文件路径，用于校验本地图片相对路径
+            chunked: 是否分块转换；None 时在体积 ≥ CHUNKED_THRESHOLD 时自动启用
 
         Returns:
             Document: 生成的 DOCX 文档
@@ -149,30 +161,106 @@ class BaseConverter:
         Raises:
             ParseError: Markdown 解析错误
             ConvertError: 转换过程错误
+            MarkdownTooLargeError: 内容超过 MAX_MARKDOWN_BYTES
         """
         start = time.perf_counter()
-        input_bytes = len(md_text.encode("utf-8")) if isinstance(md_text, str) else 0
+        input_bytes = markdown_utf8_byte_size(md_text) if isinstance(md_text, str) else 0
+        use_chunked = chunked
         try:
+            validate_markdown_size(md_text)
+            use_chunked = (
+                chunked
+                if chunked is not None
+                else input_bytes >= CHUNKED_THRESHOLD
+            )
+            if use_chunked:
+                return self._convert_chunked(md_text, base_path)
             return self._convert_tokens(md_text, base_path)
         finally:
             duration_ms = (time.perf_counter() - start) * 1000
             logger.info(
-                "convert_done duration_ms=%.1f input_bytes=%d",
+                "convert_done duration_ms=%.1f input_bytes=%d chunked=%s",
                 duration_ms,
                 input_bytes,
+                use_chunked,
             )
+
+    def convert_file(
+        self,
+        path: Path,
+        chunked: Optional[bool] = None,
+    ) -> DocxDocument:
+        """从文件路径转换 Markdown（流式校验体积后读取）。
+
+        Args:
+            path: Markdown 文件路径
+            chunked: 是否分块；None 时按体积极限自动决定
+
+        Raises:
+            FileNotFoundError: 文件不存在
+            MarkdownTooLargeError: 文件超过 MAX_MARKDOWN_BYTES
+        """
+        file_path = Path(path)
+        if not file_path.is_file():
+            raise FileNotFoundError(f"输入文件不存在: {file_path}")
+
+        stream_file_byte_size(file_path)
+        content = file_path.read_text(encoding="utf-8")
+        return self.convert(content, base_path=str(file_path.resolve()), chunked=chunked)
+
+    def _setup_base_path(self, base_path: Optional[str]) -> None:
+        if not base_path:
+            return
+        image_converter = self.converters.get("image")
+        if image_converter and hasattr(image_converter, "set_base_dir"):
+            image_converter.set_base_dir(Path(base_path).parent)
+
+    def _convert_chunked(
+        self, md_text: str, base_path: Optional[str] = None
+    ) -> DocxDocument:
+        """按一级标题分块 parse + process，追加到同一 Document。"""
+        try:
+            self._reset_state()
+            self._setup_base_path(base_path)
+
+            if not isinstance(md_text, str):
+                raise ConvertError(
+                    f"输入参数类型错误，期望 str，得到 {type(md_text).__name__}"
+                )
+            if not md_text.strip():
+                return self.document
+
+            sections = split_markdown_sections(md_text)
+            if not sections:
+                return self.document
+
+            processor = TokenProcessor(self)
+            for section in sections:
+                tokens = self.md.parse(section)
+                if self.debug:
+                    print(f"分块转换: section_bytes={markdown_utf8_byte_size(section)}")
+                processor.process(tokens)
+            return self.document
+
+        except MarkdownTooLargeError:
+            raise
+        except (TypeError, ValueError) as e:
+            raise ParseError(f"Markdown解析失败: {str(e)}") from e
+        except MD2DocxError:
+            raise
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except Exception as e:
+            raise ConvertError(
+                f"转换过程发生错误 ({type(e).__name__}): {e}"
+            ) from e
 
     def _convert_tokens(
         self, md_text: str, base_path: Optional[str] = None
     ) -> DocxDocument:
         try:
             self._reset_state()
-            if base_path:
-                image_converter = self.converters.get("image")
-                if image_converter and hasattr(image_converter, "set_base_dir"):
-                    image_converter.set_base_dir(Path(base_path).parent)
-
-            # 验证输入参数
+            self._setup_base_path(base_path)
             if not isinstance(md_text, str):
                 raise ConvertError(
                     f"输入参数类型错误，期望 str，得到 {type(md_text).__name__}"

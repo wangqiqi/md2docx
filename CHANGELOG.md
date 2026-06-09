@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.33] - 2026-06-09
+
+### Added
+- M-PERF-01：`MAX_MARKDOWN_BYTES`（16MB）与 `CHUNKED_THRESHOLD`（512KB）体积常量
+- M-PERF-01：`BaseConverter.convert_file(Path)` 流式计大小后读取
+- M-PERF-01：按一级标题 `# ` 分块 parse + `TokenProcessor`（`chunked` 参数 / 自动触发）
+
+### Changed
+- M-PERF-01：CLI 改用 `convert_file`；超限映射 `E_CONTENT_TOO_LARGE`
+- M-PERF-01：`02_开发指南` 补充大文件与分块策略说明
+
 ## [0.5.32] - 2026-06-09
 
 ### Changed

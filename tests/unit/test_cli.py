@@ -4,7 +4,7 @@ CLI模块单元测试
 
 import os
 import tempfile
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -199,8 +199,9 @@ class TestCLI:
         with tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as docx_file:
             docx_path = docx_file.name
 
-        mock_doc = mock_converter_cls.return_value.convert.return_value
+        mock_doc = MagicMock()
         mock_doc.save.side_effect = [PermissionError(), None]
+        mock_converter_cls.return_value.convert_file.return_value = mock_doc
 
         try:
             convert_file(md_path, docx_path, debug=False)
