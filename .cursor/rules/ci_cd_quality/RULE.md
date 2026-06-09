@@ -58,4 +58,4 @@ globs: [".github/workflows/*.yml", ".flake8", "pyproject.toml", "**/Makefile"]
 
 ## 📚 实施参考
 
-具体配置示例和实施细节请参考：[CI/CD设置文档](../../docs/implementation/ci_cd_setup.md)
+具体配置示例和实施细节请参考：[CI/CD设置文档](../../docs/05_CI_CD配置.md)

@@ -11,13 +11,13 @@ description: md2docx 开发规划 skill（入口 /jwplan）：读需求/代码/�
 
 把模糊需求变成 **可执行的根目录 `plan.md` Sprint**：任务 ID、优先级、验收、落点、闭合条件、执行顺序。规划完成后交接 **`/jwrun`**（`jwrun-skill`）。
 
-**与 `docs/plan.md` 区分**：根 `plan.md` 管 Sprint 编排与 ACTIVE；`docs/plan.md` 为产品愿景与长期路线图参考，勿混为任务真源。
+**真源**：根 `plan.md` 管 Sprint 编排；`docs/` 为阅读向技术文档（见 `docs/README.md`）。
 
 ## 启动时必读
 
 1. 根目录 `plan.md` 顶部元数据、`## 活跃 Sprint`、`## ROADMAP`
 2. 已完成任务见 `archive/plan/*_plan_*.md`，**勿在 plan 重复堆 ✅**
-3. 产品愿景：`docs/plan.md`；实现细节：`docs/architecture.md`、`docs/development.md`、`docs/testing.md`
+3. 待办与 ROADMAP：根 `plan.md`；文档：`docs/README.md` · `docs/01_架构设计.md` 等
 4. 规则：`md2docx-dev-workflow` · `code_quality` · `ci_cd_quality`
 5. 代码落点：grep / 读 `src/mddocx/`、`tests/`（**不写实现**）
 

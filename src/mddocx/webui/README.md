@@ -121,7 +121,7 @@ pytest -q src/mddocx/webui/tests/
 
 ## 📝 API 文档
 
-详见项目根目录 [`docs/api.md`](../../docs/api.md)。
+详见 [`docs/04_API与部署.md`](../../docs/04_API与部署.md)。
 
 ### 主要端点
 

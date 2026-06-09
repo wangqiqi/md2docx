@@ -52,7 +52,7 @@ mv <待删路径> archive/_delete/YYYYMMDD_HHMMSS_删除_简述/
 1. `plan.md` 元数据（`ACTIVE` · `NEXT` · `SPRINT` · `PLAN_APPROVED`）与活跃 Sprint 任务表
 2. `<!-- PLANNING: true -->` 时 **停止**：提示 `/jwplan`
 3. `.cursor/hooks/state/jwrun.json`（若存在）
-4. 规则：`code_quality` · `ci_cd_quality` · `docs/testing.md`
+4. 规则：`code_quality` · `ci_cd_quality` · `docs/03_测试指南.md`
 5. `./.cursor/bin/dev_runner.sh next_version`
 
 ## 单轮流程（严格顺序）
@@ -72,7 +72,7 @@ gate-check → … → patch 打版 → 推进 ACTIVE → [Sprint 全 ✅] → v
 
 - 只改「落点/验收」列涉及文件
 - 不顺手重构无关模块
-- 遵循 `code_quality` 与 `docs/development.md`
+- 遵循 `code_quality` 与 `docs/02_开发指南.md`
 
 ### 3. 分层验收（必须执行，禁止空口完成）
 

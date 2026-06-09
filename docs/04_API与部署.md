@@ -208,5 +208,4 @@ docker run --rm -p 5000:5000 -e SECRET_KEY=change-me mddocx:latest
 
 ---
 
-*此API文档会随着功能的扩展而更新。如有问题或建议，请查看项目Issues。*</contents>
-</xai:function_call">Write contents to /home/saida/workspace/md2docx/docs/api.md
+*此API文档会随着功能的扩展而更新。如有问题或建议，请查看项目Issues。*

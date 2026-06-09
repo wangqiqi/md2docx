@@ -18,7 +18,7 @@ alwaysApply: true
 ## plan 真源
 
 - 根目录 **`plan.md`**：Sprint 编排、ACTIVE、闸门元数据
-- **`docs/plan.md`**：产品愿景与长期路线图（参考，非任务真源）
+- **根 `plan.md`**：Sprint / 待办真源（非 `docs/` 内）
 - 已完成 Sprint 归档 **`archive/sprint/`**
 
 ## 硬闸门（jwrun 未过必停）

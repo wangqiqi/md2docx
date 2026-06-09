@@ -19,7 +19,7 @@
 /jwrun   → gate-check → ACTIVE → task-verify → commit → tag → [全 ✅] verify → **审计快照** → 归档
 ```
 
-- **plan 真源**：根目录 `plan.md`（非 `docs/plan.md`）
+- **plan 真源**：根目录 `plan.md`
 - **验收默认**：`pytest -q`
 - **打版**：`CHANGELOG.md` + `pyproject.toml` + `__version__` + `git tag`
 

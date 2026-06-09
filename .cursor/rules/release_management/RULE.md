@@ -57,4 +57,4 @@ globs: [".github/workflows/publish.yml", "scripts/publish_to_pypi.sh", "**/pypro
 
 ## 📚 实施参考
 
-具体配置步骤和实施细节请参考：[发布流程实施指南](../../docs/implementation/release_process.md)
+具体配置步骤和实施细节请参考：[发布流程实施指南](../../docs/06_发布流程.md)

@@ -65,7 +65,7 @@
 
 ## 规划与路线图
 
-📋 详细的开发规划和功能路线图请查看：[项目规划文档](docs/plan.md)
+📋 开发规划与待办见根目录：[plan.md](plan.md) · 文档索引：[docs/README.md](docs/README.md)
 
 **已完成 ✅:**
 - ✅ 专业测试体系 (199 测试，CI 持续验证)
@@ -280,7 +280,7 @@ md2docx/
 │   └── samples/         # 测试样例
 │       ├── basic/       # 基础语法样例
 │       └── advanced/    # 高级语法样例
-├── docs/                # 项目文档
+├── docs/                # 01–07 阅读序，见 docs/README.md
 ├── scripts/             # 工具脚本目录
 │   └── batch_convert.py         # 批量转换脚本
 ├── dist/                # 构建产物
@@ -295,7 +295,7 @@ md2docx/
 
 ## 开发指南
 
-请参考 `docs/architecture.md` 了解详细的架构设计和开发规范。
+请参考 [`docs/01_架构设计.md`](docs/01_架构设计.md) 了解详细的架构设计和开发规范。
 
 ## 测试
 

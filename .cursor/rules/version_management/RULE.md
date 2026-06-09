@@ -58,4 +58,4 @@ globs: ["**/*.toml", "**/*.py", "**/*.md", "**/.github/workflows/*"]
 
 ## 📚 实施参考
 
-具体实施步骤和工作流程请参考：[版本管理工作流程](../../docs/implementation/version_workflow.md)
+具体实施步骤和工作流程请参考：[版本管理工作流程](../../docs/07_版本工作流.md)
