@@ -173,13 +173,21 @@ python src/mddocx/webui/start_webui.py
 ### 生产环境
 
 ```bash
-# 使用Gunicorn
+# 使用 Gunicorn
 pip install gunicorn
 gunicorn -w 4 -b 0.0.0.0:8000 src.mddocx.webui.app:app
-
-# Docker 部署（规划中，当前未提供 Dockerfile）
-# 后续版本将补充容器化方案；现阶段请使用 pip install + gunicorn
 ```
+
+### Docker 部署
+
+仓库根目录提供 `Dockerfile`，构建 WebUI 镜像：
+
+```bash
+docker build -t mddocx:latest .
+docker run --rm -p 5000:5000 -e SECRET_KEY=change-me mddocx:latest
+```
+
+浏览器访问 `http://localhost:5000`。
 
 ## 监控和日志
 
