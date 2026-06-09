@@ -4,13 +4,14 @@ LaTeX 数学公式转换器
 
 from io import BytesIO
 from typing import Optional
-from urllib.parse import quote
 
 import requests
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches, Pt, RGBColor
 from docx.text.paragraph import Paragraph
+from urllib.parse import quote
 
+from ..equation_labels import EquationRegistry, strip_label
 from ..security import MAX_IMAGE_BYTES, is_allowed_codecogs_url
 from .base import ElementConverter
 from .mermaid import _is_valid_image_payload
@@ -38,9 +39,20 @@ class MathConverter(ElementConverter):
         latex = token.content if hasattr(token, "content") else ""
         if not latex.strip():
             return
-        if self._try_embed(latex, block=True):
+
+        registry = self._equation_registry()
+        equation_number: Optional[int] = None
+        if registry is not None:
+            latex, label_id = strip_label(latex)
+            if not latex.strip():
+                return
+            equation_number = registry.next_number()
+            if label_id:
+                registry.register(label_id, equation_number)
+
+        if self._try_embed(latex, block=True, equation_number=equation_number):
             return
-        self._fallback_block(latex)
+        self._fallback_block(latex, equation_number=equation_number)
 
     def convert_in_paragraph(self, paragraph: Paragraph, token) -> None:
         """行内 math_inline token"""
@@ -54,13 +66,20 @@ class MathConverter(ElementConverter):
         run.font.name = "Consolas"
         run.font.size = Pt(10)
 
-    def _try_embed(self, latex: str, block: bool = False) -> bool:
+    def _equation_registry(self) -> Optional[EquationRegistry]:
+        if self.base_converter and hasattr(self.base_converter, "_equation_registry"):
+            return self.base_converter._equation_registry
+        return None
+
+    def _try_embed(
+        self, latex: str, block: bool = False, equation_number: Optional[int] = None
+    ) -> bool:
         image_data = self._fetch_formula_image(latex, inline=not block)
         if not image_data:
             return False
         try:
             if block:
-                self._embed_block_image(image_data)
+                self._embed_block_image(image_data, equation_number)
             else:
                 paragraph = self.doc.add_paragraph()
                 self._embed_inline_image(paragraph, image_data)
@@ -104,17 +123,29 @@ class MathConverter(ElementConverter):
         except Exception:
             return None
 
-    def _embed_block_image(self, image_data: bytes) -> None:
+    def _embed_block_image(
+        self, image_data: bytes, equation_number: Optional[int] = None
+    ) -> None:
         paragraph = self.doc.add_paragraph()
         paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
         run = paragraph.add_run()
         run.add_picture(BytesIO(image_data), width=Inches(4.0))
 
+        if equation_number is not None:
+            caption = self.doc.add_paragraph()
+            caption.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            cap_run = caption.add_run(f"({equation_number})")
+            cap_run.italic = True
+            cap_run.font.size = Pt(9)
+            cap_run.font.color.rgb = RGBColor(102, 102, 102)
+
     def _embed_inline_image(self, paragraph: Paragraph, image_data: bytes) -> None:
         run = paragraph.add_run()
         run.add_picture(BytesIO(image_data), height=Inches(0.22))
 
-    def _fallback_block(self, latex: str) -> None:
+    def _fallback_block(
+        self, latex: str, equation_number: Optional[int] = None
+    ) -> None:
         note_para = self.doc.add_paragraph()
         note_run = note_para.add_run("（公式渲染失败，已保留 LaTeX 源码）")
         note_run.italic = True
@@ -127,3 +158,11 @@ class MathConverter(ElementConverter):
         except KeyError:
             pass
         code_para.add_run(latex)
+
+        if equation_number is not None:
+            caption = self.doc.add_paragraph()
+            caption.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            cap_run = caption.add_run(f"({equation_number})")
+            cap_run.italic = True
+            cap_run.font.size = Pt(9)
+            cap_run.font.color.rgb = RGBColor(102, 102, 102)

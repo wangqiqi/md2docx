@@ -8,6 +8,7 @@ from docx.shared import Pt
 from docx.text.paragraph import Paragraph
 
 from .base import ElementConverter
+from ..equation_labels import substitute_refs
 
 
 class TextConverter(ElementConverter):
@@ -457,6 +458,12 @@ class TextConverter(ElementConverter):
             text: 要添加的文本
             style: 样式配置
         """
+        if (
+            self.base_converter
+            and hasattr(self.base_converter, "_equation_registry")
+            and text
+        ):
+            text = substitute_refs(text, self.base_converter._equation_registry)
         run = paragraph.add_run(text)
         run.bold = style["bold"]
         run.italic = style["italic"]

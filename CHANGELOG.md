@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.35] - 2026-06-09
+
+### Added
+- M-MATH-02：块级公式自动编号 `(1)(2)…`；`equation_labels` registry
+- M-MATH-02：`$$…\label{eq:id}…$$` 注册标签；正文 `\ref{eq:id}` → `(N)` / `(?)`
+
+### Changed
+- M-MATH-02：CodeCogs 请求前剥离 `\label`；README / 审查 / 架构文档同步
+
 ## [0.5.34] - 2026-06-09
 
 ### Added

@@ -23,6 +23,34 @@ $$
 $$
 """
 
+NUMBERED_MATH_MD = r"""# 编号公式
+
+$$
+E=mc^2 \label{eq:emc}
+$$
+
+见式 \ref{eq:emc}。
+"""
+
+
+@patch("docx.text.run.Run.add_picture")
+@patch("mddocx.converter.elements.math.requests.get")
+def test_math_integration_numbered_ref(mock_get, mock_add_picture, tmp_path):
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.headers = {"Content-Type": "image/png"}
+    mock_resp.iter_content.return_value = [FAKE_PNG]
+    mock_get.return_value = mock_resp
+
+    doc = BaseConverter().convert(NUMBERED_MATH_MD)
+    output = tmp_path / "math_numbered.docx"
+    doc.save(str(output))
+
+    assert output.exists()
+    text = "\n".join(p.text for p in doc.paragraphs)
+    assert "(1)" in text
+    assert "见式 (1)" in text
+
 
 @patch("docx.text.run.Run.add_picture")
 @patch("mddocx.converter.elements.math.requests.get")

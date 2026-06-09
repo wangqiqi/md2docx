@@ -8,6 +8,11 @@ import pytest
 from docx import Document
 
 from mddocx.converter.base import BaseConverter
+from mddocx.converter.equation_labels import (
+    EquationRegistry,
+    strip_label,
+    substitute_refs,
+)
 from mddocx.converter.elements.math import MathConverter, build_codecogs_url
 from mddocx.converter.security import is_allowed_codecogs_url
 
@@ -122,3 +127,101 @@ class TestMathRouting:
         doc = BaseConverter().convert(r"$$\int_0^1 x\\,dx$$\n")
         assert mock_get.called
         assert len(doc.paragraphs) >= 1
+
+
+class TestEquationLabels:
+    def test_strip_label_from_latex(self):
+        cleaned, label = strip_label(r"E=mc^2 \label{eq:emc}")
+        assert label == "eq:emc"
+        assert r"\label" not in cleaned
+        assert "E=mc^2" in cleaned
+
+    def test_strip_label_without_label(self):
+        cleaned, label = strip_label(r"\frac{1}{2}")
+        assert label is None
+        assert cleaned == r"\frac{1}{2}"
+
+    def test_registry_register_and_resolve(self):
+        reg = EquationRegistry()
+        reg.register("eq:a", 1)
+        assert reg.resolve("eq:a") == 1
+        assert reg.resolve_ref_text("eq:a") == "(1)"
+        assert reg.resolve_ref_text("missing") == "(?)"
+
+
+class TestEquationNumbering:
+    @pytest.fixture
+    def converter(self):
+        base = BaseConverter()
+        conv = base.converters["math"]
+        conv.set_document(Document())
+        return conv
+
+    @patch("docx.text.run.Run.add_picture")
+    @patch("mddocx.converter.elements.math.requests.get")
+    def test_block_equation_number_caption(self, mock_get, mock_add_picture, converter):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.headers = {"Content-Type": "image/png"}
+        mock_resp.iter_content.return_value = [FAKE_PNG]
+        mock_get.return_value = mock_resp
+
+        for content in (r"\alpha", r"\beta"):
+            token = MagicMock()
+            token.content = content
+            converter.convert(token)
+
+        text = "\n".join(p.text for p in converter.document.paragraphs)
+        assert "(1)" in text
+        assert "(2)" in text
+
+    @patch("docx.text.run.Run.add_picture")
+    @patch("mddocx.converter.elements.math.requests.get")
+    def test_label_stripped_from_codecogs_request(
+        self, mock_get, mock_add_picture, converter
+    ):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.headers = {"Content-Type": "image/png"}
+        mock_resp.iter_content.return_value = [FAKE_PNG]
+        mock_get.return_value = mock_resp
+
+        token = MagicMock()
+        token.content = r"E=mc^2 \label{eq:emc}"
+        converter.convert(token)
+
+        url = mock_get.call_args[0][0]
+        assert "label" not in url.lower()
+
+
+class TestEquationRef:
+    @patch("docx.text.run.Run.add_picture")
+    @patch("mddocx.converter.elements.math.requests.get")
+    def test_ref_resolves_after_labeled_block(self, mock_get, mock_add_picture):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.headers = {"Content-Type": "image/png"}
+        mock_resp.iter_content.return_value = [FAKE_PNG]
+        mock_get.return_value = mock_resp
+
+        md = r"""
+$$
+E=mc^2 \label{eq:emc}
+$$
+
+见式 \ref{eq:emc} 所示。
+"""
+        doc = BaseConverter().convert(md)
+        text = "\n".join(p.text for p in doc.paragraphs)
+        assert "(1)" in text
+        assert "见式 (1) 所示" in text
+
+    def test_ref_unknown_shows_placeholder(self):
+        doc = BaseConverter().convert("引用 \\ref{unknown} 结束。")
+        text = "\n".join(p.text for p in doc.paragraphs)
+        assert "(?)" in text
+
+    def test_substitute_refs_helper(self):
+        reg = EquationRegistry()
+        reg.register("eq:x", 3)
+        assert substitute_refs("式 \\ref{eq:x} 与 \\ref{bad}", reg) == "式 (3) 与 (?)"

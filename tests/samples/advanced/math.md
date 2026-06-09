@@ -57,3 +57,13 @@ y &= x^2 \\
 &= a^2 + 2ab + b^2
 \end{align}
 $$ 
+
+## 公式编号与引用
+
+块级公式可使用 `\label{eq:id}` 注册标签，正文中用 `\ref{eq:id}` 引用式号：
+
+$$
+\sum_{i=1}^n i = \frac{n(n+1)}{2} \label{eq:sum}
+$$
+
+由上式 \ref{eq:sum} 可得结论。

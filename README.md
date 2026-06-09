@@ -29,7 +29,7 @@
 - ✅ 链接处理（内联链接、引用链接、URL自动链接）
 - ✅ 图片支持（本地图片、在线图片）
 - ✅ Mermaid 图表（graph / flowchart / sequenceDiagram / gantt，经 mermaid.ink 渲染为 PNG 嵌入）
-- ✅ LaTeX 数学公式（`$…$` / `$$…$$`，经 CodeCogs 渲染为 PNG 嵌入）
+- ✅ LaTeX 数学公式（`$…$` / `$$…$$`；块级自动编号 `(1)(2)…`；支持 `\label` / `\ref`）
 - ✅ 表格转换（基础表格、对齐方式）
 - ✅ 分隔线
 - ✅ 任务列表（TODO列表）
@@ -77,7 +77,6 @@
 
 **规划中 📋:**
 - 🔲 Mermaid 扩展类型（stateDiagram / classDiagram / pie 等）
-- 🔲 公式编号与 `\ref` 引用
 
 ## 开发环境要求
 
@@ -161,6 +160,16 @@ graph TD
 
 ```markdown
 行内公式 $E=mc^2$ 示例。
+
+块级公式自动编号，并可用 LaTeX 风格标签与引用：
+
+```markdown
+$$
+E=mc^2 \label{eq:emc}
+$$
+
+见式 \ref{eq:emc}。
+```
 
 $$
 \sum_{i=1}^n i = \frac{n(n+1)}{2}

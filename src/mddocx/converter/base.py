@@ -14,6 +14,7 @@ from markdown_it import MarkdownIt
 from mdit_py_plugins.dollarmath import dollarmath_plugin
 
 from .chunking import split_markdown_sections
+from .equation_labels import EquationRegistry
 from .elements import (
     BlockquoteConverter,
     CodeConverter,
@@ -83,6 +84,7 @@ class BaseConverter:
         self.document = Document()
         self.converters: Dict[str, Any] = {}
         self._list_stack: List[Tuple[str, int]] = []  # [(list_type, level), ...]
+        self._equation_registry = EquationRegistry()
 
         # 自动注册所有转换器
         self._register_default_converters()
@@ -95,6 +97,7 @@ class BaseConverter:
         """重置文档与内部状态，使实例可安全复用"""
         self.document = Document()
         self._list_stack = []
+        self._equation_registry = EquationRegistry()
         for converter in self.converters.values():
             if hasattr(converter, "_last_was_code"):
                 converter._last_was_code = False
