@@ -163,6 +163,18 @@ class TestAppRoutes:
         )
         assert response.status_code in [200, 302]
 
+    def test_rate_limit_returns_429(self):
+        """超过限流阈值应返回 429 与 E_RATE_LIMIT"""
+        from mddocx.webui.rate_limit import reset_rate_limits
+
+        reset_rate_limits()
+        for _ in range(30):
+            self.client.post("/preview", data={"markdown": "# ok"})
+        response = self.client.post("/preview", data={"markdown": "# blocked"})
+        assert response.status_code == 200
+        assert b"[E_RATE_LIMIT]" in response.data
+        reset_rate_limits()
+
     def test_large_content_handling(self):
         """测试大内容处理"""
         # 生成较大的Markdown内容

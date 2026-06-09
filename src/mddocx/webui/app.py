@@ -26,6 +26,7 @@ from ..errors import (
     E_INPUT_ENCODING,
     E_MEMORY,
     E_PREVIEW_FAILED,
+    E_RATE_LIMIT,
     E_SERVER_ERROR,
     error_from_exception,
     error_info,
@@ -108,6 +109,12 @@ def flash_error(code: str, message: Optional[str] = None) -> None:
 @app.route("/convert", methods=["POST"])
 def convert():
     """转换处理"""
+    from .rate_limit import is_rate_limited
+
+    if is_rate_limited(request.remote_addr or "unknown"):
+        flash_error(E_RATE_LIMIT)
+        return redirect(url_for("index")), 429
+
     try:
         markdown_content = ""
 
@@ -187,6 +194,11 @@ def convert():
 @app.route("/preview", methods=["POST"])
 def preview():
     """预览功能 - 只返回预览内容的HTML片段"""
+    from .rate_limit import is_rate_limited
+
+    if is_rate_limited(request.remote_addr or "unknown"):
+        return _preview_error(error_info(E_RATE_LIMIT).format_user())
+
     try:
         markdown_content = ""
         if "file" in request.files and request.files["file"].filename:
