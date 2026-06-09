@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.24] - 2026-06-09
+
+### Added
+- M-ARCH-01-06：Dockerfile 与 docs/api.md 部署说明
+
 ## [0.5.23] - 2026-06-09
 
 ### Changed
