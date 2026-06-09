@@ -38,8 +38,31 @@ def _assert_sample_converted(doc, md_file) -> None:
         assert len(doc.tables) >= 1
     elif stem == "image":
         assert len(text) > 0
+        assert (md_file.parent / "1.png").is_file()
     elif stem == "code":
         assert "代码" in text or "python" in text.lower()
+
+
+@patch("docx.text.run.Run.add_picture")
+@patch("requests.get")
+def test_convert_image_sample_embeds_local_png(
+    mock_get, mock_add_picture, converter, samples_dir, tmp_path
+):
+    """tests/samples/basic/image.md 本地 1.png 端到端嵌入（T-TEST-03-02）"""
+    image_md = samples_dir / "image.md"
+    assert (samples_dir / "1.png").is_file()
+
+    with open(image_md, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    doc = converter.convert(content, base_path=str(image_md))
+    _assert_sample_converted(doc, image_md)
+    assert mock_add_picture.call_count >= 1
+    mock_get.assert_not_called()
+
+    output_file = tmp_path / "image.docx"
+    doc.save(str(output_file))
+    assert output_file.stat().st_size > 0
 
 
 def test_convert_all_samples(converter, samples_dir, tmp_path):
@@ -76,9 +99,59 @@ def test_convert_advanced_samples(
         doc = converter.convert(content, base_path=str(md_file))
         _assert_sample_converted(doc, md_file)
 
+        if md_file.stem == "math":
+            text = _paragraph_text(doc)
+            assert "(5)" in text
+            assert "由上式 (5)" in text
+
         output_file = tmp_path / f"advanced_{md_file.stem}.docx"
         doc.save(str(output_file))
         assert output_file.stat().st_size > 0
+
+
+@patch("docx.text.run.Run.add_picture")
+@patch("mddocx.converter.elements.math.requests.get")
+def test_convert_math_sample_label_ref(
+    mock_get, mock_add_picture, converter, samples_advanced, tmp_path
+):
+    """tests/samples/advanced/math.md \\label/\\ref 端到端（T-TEST-03-04）"""
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.headers = {"Content-Type": "image/png"}
+    mock_resp.iter_content.return_value = [FAKE_PNG]
+    mock_get.return_value = mock_resp
+
+    math_md = samples_advanced / "math.md"
+    with open(math_md, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    doc = converter.convert(content, base_path=str(math_md))
+    text = _paragraph_text(doc)
+    assert "(5)" in text
+    assert "由上式 (5)" in text
+
+    output_file = tmp_path / "advanced_math_ref.docx"
+    doc.save(str(output_file))
+    assert output_file.stat().st_size > 0
+
+
+def test_convert_chunked_sample(converter, samples_root, tmp_path):
+    """tests/samples/large/chunked.md 显式分块转换冒烟（T-TEST-03-06）"""
+    chunked_md = samples_root / "large" / "chunked.md"
+    assert chunked_md.is_file()
+
+    with open(chunked_md, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    doc = converter.convert(content, base_path=str(chunked_md), chunked=True)
+    text = _paragraph_text(doc)
+    assert "大文档分块样例" in text
+    assert "第一节正文" in text
+    assert "第三节结束" in text
+
+    output_file = tmp_path / "chunked.docx"
+    doc.save(str(output_file))
+    assert output_file.stat().st_size > 0
 
 
 def test_convert_root_test_md(converter, samples_root, tmp_path):
