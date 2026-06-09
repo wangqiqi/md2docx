@@ -11,7 +11,7 @@ description: 启动 md2docx 自治开发执行（jwrun）
 5. 更新 plan + CHANGELOG **[Unreleased]**；用 **`next-task`** 推进 ACTIVE/NEXT/LAST_DONE
 6. **git commit**（`{ID} {摘要}`）
 7. **patch 打版**（每任务必须）：`CHANGELOG.md` 升版 + `pyproject.toml` / `__init__.py` 同步 → `git commit` + `git tag v0.4.xx`（读 plan `VERSION_LINE`）→ plan `RELEASED`
-8. Sprint 全部 ✅：**全量** `./.cursor/bin/dev_runner.sh verify` → **归档** `archive/sprint/YYYYMMDD_HHMMSS_*`
+8. Sprint 全部 ✅：**全量** `verify` → **刷新 plan 审计快照（§7B）** → **归档** `archive/sprint/YYYYMMDD_HHMMSS_*` → ROADMAP 标已完成
 9. Sprint 结束后若有 ROADMAP 余项 → 建议 **`/jwplan`**
 10. `AUTONOMOUS: true` 时 stop hook 链下一项
 

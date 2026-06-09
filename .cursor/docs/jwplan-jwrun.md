@@ -16,7 +16,7 @@
 
 ```
 /jwplan  → 拆 Sprint 写入根 plan.md → PLAN_APPROVED
-/jwrun   → gate-check → ACTIVE → task-verify → commit → tag
+/jwrun   → gate-check → ACTIVE → task-verify → commit → tag → [全 ✅] verify → **审计快照** → 归档
 ```
 
 - **plan 真源**：根目录 `plan.md`（非 `docs/plan.md`）

@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.27] - 2026-06-09
+
+### Changed
+- jwplan 全量台账：根 `plan.md` 写入审查/M-ARCH 残余/Minor/测试/文档 22 项待办
+- jwrun §7B：Sprint 闭合须刷新 plan 审计快照（skill/command/docs 同步）
+- `docs/plan.md` / `docs/architecture.md`：收窄产品范围，移除双向转换与插件远期项
+- M-DOC-04-01：[`审查.md`](审查.md) 行动计划 P0/P1/P2 checkbox 与 plan 台账同步
+
+### Removed
+- `scripts/test_roundtrip_demo.py`：与单向 MD→DOCX 定位不一致的闭环演示脚本
+
+### Chore
+- `.gitignore` 忽略本地编排 `plan.md`（已跟踪文件仍保留版本历史）
+- 立项 **M-DOC-04**（文档与审查清单同步 Sprint）
+
 ## [0.5.26] - 2026-06-09
 
 ### Changed

@@ -233,8 +233,6 @@ class HeadingConverter(ElementConverter):
 5. **v0.5.0**：完整产品化（规划中）
    - 数学公式支持（LaTeX）
    - 图表和图形渲染
-   - 双向转换（Word转Markdown）
-   - 插件系统基础
 
 6. **v1.0.0**：企业级功能（远期规划）
    - 多格式输出

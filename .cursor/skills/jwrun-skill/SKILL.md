@@ -58,7 +58,7 @@ mv <待删路径> archive/_delete/YYYYMMDD_HHMMSS_删除_简述/
 ## 单轮流程（严格顺序）
 
 ```
-gate-check → 读 ACTIVE → 标 🔧 → 实现 → task-verify → 绿则 ✅ + CHANGELOG + plan → git commit → **patch 打版** → 推进 ACTIVE → 有下一项则继续
+gate-check → … → patch 打版 → 推进 ACTIVE → [Sprint 全 ✅] → verify → **刷新审计快照** → 归档 → /jwplan
 ```
 
 ### 1. 锁定任务
@@ -148,9 +148,54 @@ git tag "v${ver}"
 
 ### 7. Sprint 闭合归档（表内全部 ✅ 时，在 §6 之后）
 
-**Step A** — `./.cursor/bin/dev_runner.sh verify` 全量  
-**Step B** — plan `AUTONOMOUS: false` · ✅ 迁 `archive/sprint/YYYYMMDD_HHMMSS_{主题}_Sprint闭合_打版_vX.Y.Z.md`  
-**Step C** — ROADMAP 有余项 → 建议 **`/jwplan`**
+**Step A** — `./.cursor/bin/dev_runner.sh verify` 全量（记录 `N passed, M skipped` 与可选 `--cov` 摘要）  
+**Step B** — **刷新 plan 审计快照**（见下节，**禁止**只改任务表而留 jwplan 旧 ⚠️）  
+**Step C** — plan `AUTONOMOUS: false` · Sprint 标题 `活跃` → `已闭合` · ROADMAP 对应行 → **已完成**  
+**Step D** — 写入 `archive/sprint/YYYYMMDD_HHMMSS_{主题}_{SPRINT_ID}_Sprint闭合_打版_vX.Y.Z.md`（含 verify 输出与任务/tag 表）  
+**Step E** — `## 已闭合 Sprint` 表补归档链接 · `## 变更记录` 追加 §7 一行  
+**Step F** — ROADMAP 有余项 → 建议 **`/jwplan`**
+
+#### 7B · 刷新审计快照（Sprint 闭合必做）
+
+jwplan 写入的 **审计叙事**（如 `### …审计结论`、`| 维度 | 现状 |`、`**结论**`、`**WHY**`）是**开工前快照**；Sprint 全部 ✅ 后必须用 **verify 实测** 更新为 **闭合快照**，否则 plan 与代码/CI 脱节。
+
+**触发**：仅 Sprint 表内任务**全部 ✅** 时（最后一项打版后、归档前）。单任务轮次**不**改审计表。
+
+**必改块**（Sprint 节内，按 jwplan 实际标题匹配）：
+
+| 块 | 动作 |
+|----|------|
+| `> **WHY**` | 补闭合后基线（如 `176 passed · ~81% cov`、版本区间） |
+| `### …审计结论` | 改为 **规划快照 vs 闭合快照** 对照表（或更新「闭合后」列） |
+| `**结论**` | 写闭合后评价 + **仍开放的远期债务**（未在本 Sprint 范围者） |
+| `### 现状（为何做）` | 改为 **`### 闭合对照`**：原缺口 → 任务 ID → ✅/🔲 |
+| `## 活跃 Sprint` 标题 | → `## 已闭合 Sprint · {SPRINT_ID}` |
+| `## ROADMAP` | 本 Sprint 行 → **已完成** + 版本备注 |
+| `## 已闭合 Sprint` | 补 `archive/sprint/…` 链接（勿留「待 §7 归档」） |
+
+**闭合快照数据来源**（须实际执行，禁止抄旧数）：
+
+```bash
+./.cursor/bin/dev_runner.sh verify          # passed/skipped 真源
+# 可选：pytest tests/ src/mddocx/webui/tests/ --cov=src --cov-report=term | tail -5
+```
+
+**对照表写法**（三列示例）：
+
+```markdown
+| 维度 | 规划时（jwplan） | 闭合后（jwrun §7） | 评价 |
+| **规模** | 169 passed, 2 skipped | **176 passed, 2 skipped** | ✅ 01-01~06 |
+```
+
+**无专用审计节的 Sprint**：在 Sprint 节末增 **`### 闭合快照（jwrun §7）`** 小节，至少含 verify 结果、版本 tag 区间、闭合条件核对。
+
+**变更记录**追加示例：
+
+```markdown
+- **YYYY-MM-DD** · **{SPRINT_ID} §7 闭合** · vX.Y.A–vX.Y.Z · {N} passed · 审计快照已同步
+```
+
+**禁止**：Sprint 已闭合仍保留 jwplan 时代的 ⚠️（如「advanced 未自动化」）而不标注已闭合。
 
 ### 8. 链式继续
 
@@ -161,6 +206,7 @@ git tag "v${ver}"
 ## 禁止
 
 - 跳过 gate-check / task-verify 宣称完成
+- **Sprint 闭合后仍留 jwplan 审计旧快照**（未执行 §7B）
 - **commit 后不打版**（无 tag）
 - 每任务都跑全量 `pytest`（patch 打版仅需 task-verify）
 - `PLANNING: true` 时编码
