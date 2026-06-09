@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.36] - 2026-06-09
+
+### Added
+- M-MERMAID-03：支持 **stateDiagram** / **classDiagram** / **pie** 经 mermaid.ink 渲染
+- M-MERMAID-03：状态图 / 类图 / 饼图中文说明标签
+
+### Changed
+- M-MERMAID-03：README / 架构 / 样例说明同步；FEAT-03 闭合
+
 ## [0.5.35] - 2026-06-09
 
 ### Added

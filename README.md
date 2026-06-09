@@ -28,7 +28,7 @@
 - ✅ 代码块（支持语法高亮）
 - ✅ 链接处理（内联链接、引用链接、URL自动链接）
 - ✅ 图片支持（本地图片、在线图片）
-- ✅ Mermaid 图表（graph / flowchart / sequenceDiagram / gantt，经 mermaid.ink 渲染为 PNG 嵌入）
+- ✅ Mermaid 图表（graph / flowchart / sequence / gantt / state / class / pie）
 - ✅ LaTeX 数学公式（`$…$` / `$$…$$`；块级自动编号 `(1)(2)…`；支持 `\label` / `\ref`）
 - ✅ 表格转换（基础表格、对齐方式）
 - ✅ 分隔线
@@ -76,7 +76,6 @@
 - ✅ html-for-docx 复杂 HTML 块 (v0.5.15+)
 
 **规划中 📋:**
-- 🔲 Mermaid 扩展类型（stateDiagram / classDiagram / pie 等）
 
 ## 开发环境要求
 
@@ -143,7 +142,7 @@ pip install .
 
 ### Mermaid 流程图
 
-在 Markdown 中使用 ` ```mermaid ` 代码块，支持 **graph** / **flowchart** 流程图、**sequenceDiagram** 时序图与 **gantt** 甘特图。转换时通过 [mermaid.ink](https://mermaid.ink) 渲染为 PNG 并嵌入 DOCX；渲染失败或不支持的图表类型会保留源码并附提示。
+在 Markdown 中使用 ` ```mermaid ` 代码块，支持 **graph** / **flowchart**、**sequenceDiagram**、**gantt**、**stateDiagram**、**classDiagram** 与 **pie**。转换时通过 [mermaid.ink](https://mermaid.ink) 渲染为 PNG 并嵌入 DOCX；渲染失败或不支持的图表类型会保留源码并附提示。
 
 ````markdown
 ```mermaid
@@ -152,7 +151,7 @@ graph TD
 ```
 ````
 
-> 需要网络访问 mermaid.ink；stateDiagram、classDiagram、pie 等类型将在后续版本支持。
+> 需要网络访问 mermaid.ink；journey、ER 等未列类型将回退为源码。
 
 ### LaTeX 数学公式
 

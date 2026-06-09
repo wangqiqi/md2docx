@@ -89,3 +89,74 @@ def test_mermaid_integration_gantt(mock_get, tmp_path):
 
     assert output.exists()
     assert mock_get.called
+
+
+STATE_MD = """# 状态图
+
+```mermaid
+stateDiagram-v2
+    [*] --> Done
+    Done --> [*]
+```
+"""
+
+CLASS_MD = """# 类图
+
+```mermaid
+classDiagram
+    A <|-- B
+```
+"""
+
+PIE_MD = """# 饼图
+
+```mermaid
+pie title Share
+    "X" : 1
+```
+"""
+
+
+@patch("mddocx.converter.elements.mermaid.requests.get")
+def test_mermaid_integration_state(mock_get, tmp_path):
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.headers = {"Content-Type": "image/png"}
+    mock_resp.iter_content.return_value = [FAKE_PNG]
+    mock_get.return_value = mock_resp
+
+    doc = BaseConverter().convert(STATE_MD)
+    output = tmp_path / "state.docx"
+    doc.save(str(output))
+    assert output.exists()
+    assert mock_get.called
+
+
+@patch("mddocx.converter.elements.mermaid.requests.get")
+def test_mermaid_integration_class(mock_get, tmp_path):
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.headers = {"Content-Type": "image/png"}
+    mock_resp.iter_content.return_value = [FAKE_PNG]
+    mock_get.return_value = mock_resp
+
+    doc = BaseConverter().convert(CLASS_MD)
+    output = tmp_path / "class.docx"
+    doc.save(str(output))
+    assert output.exists()
+    assert mock_get.called
+
+
+@patch("mddocx.converter.elements.mermaid.requests.get")
+def test_mermaid_integration_pie(mock_get, tmp_path):
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.headers = {"Content-Type": "image/png"}
+    mock_resp.iter_content.return_value = [FAKE_PNG]
+    mock_get.return_value = mock_resp
+
+    doc = BaseConverter().convert(PIE_MD)
+    output = tmp_path / "pie.docx"
+    doc.save(str(output))
+    assert output.exists()
+    assert mock_get.called

@@ -30,6 +30,20 @@ SAMPLE_GANTT = """gantt
     Task1 :2024-01-01, 7d
 """
 
+SAMPLE_STATE = """stateDiagram-v2
+    [*] --> A
+    A --> [*]
+"""
+
+SAMPLE_CLASS = """classDiagram
+    Animal <|-- Dog
+"""
+
+SAMPLE_PIE = """pie title 分配
+    "A" : 40
+    "B" : 60
+"""
+
 # 最小合法 1x1 PNG
 FAKE_PNG = (
     b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
@@ -51,13 +65,25 @@ class TestMermaidHelpers:
     def test_supported_gantt(self):
         assert is_supported_mermaid_diagram(SAMPLE_GANTT) is True
 
-    def test_unsupported_pie(self):
-        assert is_supported_mermaid_diagram('pie title X\n  "A" : 1') is False
+    def test_supported_state_diagram(self):
+        assert is_supported_mermaid_diagram(SAMPLE_STATE) is True
+
+    def test_supported_class_diagram(self):
+        assert is_supported_mermaid_diagram(SAMPLE_CLASS) is True
+
+    def test_supported_pie(self):
+        assert is_supported_mermaid_diagram(SAMPLE_PIE) is True
+
+    def test_unsupported_journey(self):
+        assert is_supported_mermaid_diagram("journey\n  title: X") is False
 
     def test_diagram_kind_labels(self):
         assert mermaid_diagram_kind(SAMPLE_GRAPH) == "流程图"
         assert mermaid_diagram_kind(SAMPLE_SEQUENCE) == "时序图"
         assert mermaid_diagram_kind(SAMPLE_GANTT) == "甘特图"
+        assert mermaid_diagram_kind(SAMPLE_STATE) == "状态图"
+        assert mermaid_diagram_kind(SAMPLE_CLASS) == "类图"
+        assert mermaid_diagram_kind(SAMPLE_PIE) == "饼图"
 
     def test_build_url_uses_mermaid_ink(self):
         url = build_mermaid_ink_url(SAMPLE_GRAPH)
@@ -137,6 +163,48 @@ class TestMermaidConverter:
         text = "\n".join(p.text for p in converter.document.paragraphs)
         assert "Mermaid 甘特图" in text
 
+    @patch("docx.text.run.Run.add_picture")
+    @patch("mddocx.converter.elements.mermaid.requests.get")
+    def test_render_state_embeds_image(self, mock_get, mock_add_picture, converter):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.headers = {"Content-Type": "image/png"}
+        mock_resp.iter_content.return_value = [FAKE_PNG]
+        mock_get.return_value = mock_resp
+
+        converter.convert(self._make_token(SAMPLE_STATE))
+        mock_add_picture.assert_called_once()
+        text = "\n".join(p.text for p in converter.document.paragraphs)
+        assert "Mermaid 状态图" in text
+
+    @patch("docx.text.run.Run.add_picture")
+    @patch("mddocx.converter.elements.mermaid.requests.get")
+    def test_render_class_embeds_image(self, mock_get, mock_add_picture, converter):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.headers = {"Content-Type": "image/png"}
+        mock_resp.iter_content.return_value = [FAKE_PNG]
+        mock_get.return_value = mock_resp
+
+        converter.convert(self._make_token(SAMPLE_CLASS))
+        mock_add_picture.assert_called_once()
+        text = "\n".join(p.text for p in converter.document.paragraphs)
+        assert "Mermaid 类图" in text
+
+    @patch("docx.text.run.Run.add_picture")
+    @patch("mddocx.converter.elements.mermaid.requests.get")
+    def test_render_pie_embeds_image(self, mock_get, mock_add_picture, converter):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.headers = {"Content-Type": "image/png"}
+        mock_resp.iter_content.return_value = [FAKE_PNG]
+        mock_get.return_value = mock_resp
+
+        converter.convert(self._make_token(SAMPLE_PIE))
+        mock_add_picture.assert_called_once()
+        text = "\n".join(p.text for p in converter.document.paragraphs)
+        assert "Mermaid 饼图" in text
+
     @patch("mddocx.converter.elements.mermaid.requests.get")
     def test_render_failure_fallback(self, mock_get, converter):
         mock_get.side_effect = Exception("network error")
@@ -148,11 +216,11 @@ class TestMermaidConverter:
         assert "graph TD" in text
 
     def test_unsupported_type_fallback(self, converter):
-        converter.convert(self._make_token('pie title X\n  "A" : 1'))
+        converter.convert(self._make_token("journey\n  title: Trip"))
 
         text = "\n".join(p.text for p in converter.document.paragraphs)
         assert "不支持" in text
-        assert "pie title" in text
+        assert "journey" in text
 
 
 class TestMermaidRouting:

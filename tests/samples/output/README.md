@@ -22,7 +22,7 @@
 ### 高级功能
 - `advanced_tables.docx` · `advanced_math.docx` · `advanced_flowcharts.docx`
 
-> Mermaid graph/flowchart/sequence/gantt 在 v0.5.34+ 渲染为 PNG 嵌入；其他类型仍回退源码。
+> Mermaid 七类图表在 v0.5.36+ 经 mermaid.ink 渲染；journey 等仍回退源码。
 
 ## 重新生成
 
