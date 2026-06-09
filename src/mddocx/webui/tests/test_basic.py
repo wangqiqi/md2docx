@@ -2,19 +2,11 @@
 WebUI 基础功能测试
 """
 
-# 添加项目根目录到路径
-import sys
-from pathlib import Path
-
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
-
 import os
 import tempfile
 
 import pytest
 
-# 导入在测试类中进行，避免模块级导入问题
 from mddocx.webui.app import allowed_file, app
 from mddocx.webui.config import get_config
 
@@ -125,6 +117,15 @@ class TestAppRoutes:
         )
         assert response.status_code == 200
         assert b"Test" in response.data
+
+    def test_preview_renders_dollarmath(self):
+        """预览与转换器一致，支持 LaTeX dollarmath"""
+        response = self.client.post(
+            "/preview", data={"markdown": "Energy $E=mc^2$"}
+        )
+        assert response.status_code == 200
+        assert b'math inline' in response.data
+        assert b"E=mc^2" in response.data
 
     def test_convert_endpoint_validation(self):
         """测试转换端点验证"""

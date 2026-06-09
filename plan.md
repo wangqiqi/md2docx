@@ -6,15 +6,29 @@
 <!-- AUTONOMOUS: false -->
 <!-- ACTIVE: (none) -->
 <!-- NEXT: (none) -->
-<!-- LAST_DONE: M-MYPY-01-02 -->
+<!-- LAST_DONE: M-MINOR-01-03 -->
 <!-- VERIFY: pytest -q -->
 <!-- VERSION_LINE: 0.5 -->
-<!-- RELEASED: v0.5.29 -->
+<!-- RELEASED: v0.5.30 -->
 <!-- MAX_LOOPS: 20 -->
 
 > 产品愿景见 [`docs/plan.md`](docs/plan.md)。Sprint 闭合详情见 [`archive/sprint/`](archive/sprint/)。审查来源：[`审查.md`](审查.md)
 
-**当前状态**：无活跃 Sprint · **199 passed** · 最新 **v0.5.29** · mypy converter ✅ · 待办 **13 项**
+**当前状态**：无活跃 Sprint · **201 passed** · 最新 **v0.5.30** · 待办 **7 项**
+
+---
+
+## 已闭合 Sprint · M-MINOR-01（审查 Minor 代码质量）
+
+> **WHY**：台账 C 组 + REV-P2-02 · **闭合**：v0.5.30 · 201 passed
+
+**执行顺序**：M-MINOR-01-01 → M-MINOR-01-02 → M-MINOR-01-03
+
+| ID | 任务 | 优先级 | 状态 | 验收 | 落点 | Tag |
+|----|------|--------|------|------|------|-----|
+| M-MINOR-01-01 | 预览 MarkdownIt 对齐 dollarmath（MIN-06 / REV-P2-02） | P3 | ✅ | `pytest -q -k dollarmath` | `webui/app.py` | v0.5.30 |
+| M-MINOR-01-02 | ConvertError 保留异常类型（MIN-01） | P3 | ✅ | `pytest -q tests/unit/test_base_converter.py -k preserves` | `converter/base.py` | v0.5.30 |
+| M-MINOR-01-03 | 移除 WebUI test sys.path（MIN-05）+ MIN-02/03/04 核验 ✅ | P3 | ✅ | `! grep -q sys.path src/mddocx/webui/tests/test_basic.py` | `webui/tests/` | v0.5.30 |
 
 ---
 
@@ -61,6 +75,7 @@
 | 3 | Mermaid 流程图（graph/flowchart） | M-MERMAID-01 · v0.5.0–v0.5.3 |
 | 1 | html2docx 文档化 | → M-HTML-01 |
 | 11 | 文档与审查清单同步 | M-DOC-04 · v0.5.27–v0.5.28 |
+| 10 | 审查 Minor 代码质量 | M-MINOR-01 · v0.5.30 |
 | 9a | converter strict mypy | M-MYPY-01 · v0.5.29 |
 
 ### 待立项（ROADMAP）
@@ -68,12 +83,11 @@
 | # | 主题 | 优先级 | 建议 Sprint |
 |---|------|--------|-------------|
 | 9b | 大文件流式/分块转换 | P2 | M-PERF-01 |
-| 10 | 审查 Minor 代码质量 | P3 | M-MINOR-01 |
 | 12 | Mermaid 扩展（sequence / gantt） | P2 | M-MERMAID-02 |
 | 13 | 公式编号与 `\ref` | P2 | M-MATH-02 |
 | 14 | 测试覆盖率与缺口补强 | P2 | T-TEST-02 |
 
-**下一 Sprint 建议**：**M-PERF-01**（流式）或 **M-MINOR-01**
+**下一 Sprint 建议**：**M-PERF-01** 或 **T-TEST-02**
 
 ## 全量任务台账
 
@@ -95,7 +109,7 @@
 | REV-P1-06 | 开发默认 `127.0.0.1` / 生产 SECRET_KEY | M4 | ✅ | M-DOC-04-02 webui README |
 | REV-P1-07 | 删除过时 `requirements*.txt` 引用 | M8 | ✅ | M-DOC-04-03 |
 | REV-P2-01 | `conftest.py` converter fixture | M9 / 阶段三 | ✅ | T-TEST-01 |
-| REV-P2-02 | 预览与转换 MarkdownIt 配置一致 | m6 / 阶段三 | ⬜ | 预览缺 dollarmath 等 |
+| REV-P2-02 | 预览与转换 MarkdownIt 配置一致 | m6 / 阶段三 | ✅ | M-MINOR-01-01 dollarmath |
 | REV-P2-03 | html 覆盖率 + html-for-docx 文档 | M12 / 阶段三 | ✅ | M-HTML-01 |
 | REV-P2-04 | `base.py` token 遍历重构 | S1 / 阶段三 | ✅ | M-ARCH-01-08 · TokenProcessor |
 | REV-P2-05 | 补齐 `architecture.md` / `testing.md` | m8/m9 / 阶段三 | 🔶 | architecture ✅；testing 待 T-TEST-02 |
@@ -112,13 +126,13 @@
 
 | ID | 任务 | 来源 | 状态 | 落点 |
 |----|------|------|------|------|
-| MIN-01 | `convert()` 异常勿一律包装丢失类型 | m1 | ⬜ | `converter/base.py` |
-| MIN-02 | `BlockquoteConverter` 支持链接/删除线/行内代码 | m2 | ⬜ | `elements/blockquote.py` |
-| MIN-03 | `TableConverter` 对齐改用枚举非常数 | m3 | ⬜ | `elements/table.py` |
-| MIN-04 | `TableConverter.__init__` 传递 `base_converter` | m4 | ⬜ | `elements/table.py` |
-| MIN-05 | WebUI 移除冗余 `sys.path` 操作 | m5 | ⬜ | `webui/` |
-| MIN-06 | 预览 MarkdownIt 与 BaseConverter 插件对齐 | m6 | ⬜ | `webui/app.py` · `base.py` |
-| MIN-07 | `test_full_conversion.py` 重复模块 docstring | m7 | ⬜ | `tests/integration/` |
+| MIN-01 | `convert()` 异常勿一律包装丢失类型 | m1 | ✅ | v0.5.30 · __cause__ + 类型名 |
+| MIN-02 | `BlockquoteConverter` 支持链接/删除线/行内代码 | m2 | ✅ | 已有 test_blockquote |
+| MIN-03 | `TableConverter` 对齐改用枚举非常数 | m3 | ✅ | WD_PARAGRAPH_ALIGNMENT |
+| MIN-04 | `TableConverter.__init__` 传递 `base_converter` | m4 | ✅ | super().__init__ |
+| MIN-05 | WebUI 移除冗余 `sys.path` 操作 | m5 | ✅ | M-MINOR-01-03 |
+| MIN-06 | 预览 MarkdownIt 与 BaseConverter 插件对齐 | m6 | ✅ | M-MINOR-01-01 |
+| MIN-07 | `test_full_conversion.py` 重复模块 docstring | m7 | ✅ | 无重复；审查误报 |
 | MIN-08 | 图片缓存 LRU | m10 | ✅ | `MAX_IMAGE_CACHE_ENTRIES=64` |
 
 ### D. 测试缺口（[`审查.md`](审查.md) §测试与质量）
@@ -152,13 +166,13 @@
 
 | 分组 | ✅ | 🔶 | ⬜ |
 |------|----|----|-----|
-| A 审查 P0/P1/P2 | 14 | 1 | 1 |
-| B M-ARCH 残余 | 0 | 0 | 3 |
-| C Minor | 1 | 0 | 6 |
+| A 审查 P0/P1/P2 | 15 | 1 | 0 |
+| B M-ARCH 残余 | 1 | 0 | 2 |
+| C Minor | 8 | 0 | 0 |
 | D 测试缺口 | 0 | 0 | 3 |
 | E 产品增强 | 0 | 0 | 2 |
 | F 文档同步 | 5 | 0 | 0 |
-| **合计** | **20** | **1** | **15** |
+| **合计** | **29** | **1** | **7** |
 
 ---
 
@@ -166,6 +180,7 @@
 
 | Sprint | 版本 | 归档 |
 |--------|------|------|
+| M-MINOR-01 | v0.5.30 | [archive/sprint/20260609_082500_Minor_M-MINOR-01_Sprint闭合_打版_v0.5.30.md](archive/sprint/20260609_082500_Minor_M-MINOR-01_Sprint闭合_打版_v0.5.30.md) |
 | M-MYPY-01 | v0.5.29 | [archive/sprint/20260609_081200_mypy_M-MYPY-01_Sprint闭合_打版_v0.5.29.md](archive/sprint/20260609_081200_mypy_M-MYPY-01_Sprint闭合_打版_v0.5.29.md) |
 | M-DOC-04 | v0.5.27–v0.5.28 | [archive/sprint/20260609_080940_文档同步_M-DOC-04_Sprint闭合_打版_v0.5.28.md](archive/sprint/20260609_080940_文档同步_M-DOC-04_Sprint闭合_打版_v0.5.28.md) |
 | M-ARCH-01 | v0.5.19–v0.5.26 | [archive/sprint/20260609_080200_架构建议_M-ARCH-01_Sprint闭合_打版_v0.5.26.md](archive/sprint/20260609_080200_架构建议_M-ARCH-01_Sprint闭合_打版_v0.5.26.md) |
@@ -178,6 +193,7 @@
 
 ## 变更记录
 
+- **2026-06-09** · **M-MINOR-01 §7 闭合** · v0.5.30 · 200 passed · ROADMAP #10 ✅
 - **2026-06-09** · **M-MYPY-01 §7 闭合** · v0.5.29 · mypy converter 0 errors · 199 passed
 - **2026-06-09** · **M-DOC-04 §7 闭合** · v0.5.27–v0.5.28 · 199 passed · ROADMAP #11 ✅
 - **2026-06-09** · **v0.5.27 打版** · jwplan 台账 + 审查.md 同步 + 移除 roundtrip demo

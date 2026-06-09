@@ -15,6 +15,7 @@ import bleach
 from flask import Flask, flash, redirect, render_template, request, send_file, url_for
 from flask_wtf.csrf import CSRFProtect
 from markdown_it import MarkdownIt
+from mdit_py_plugins.dollarmath import dollarmath_plugin
 from werkzeug.utils import secure_filename
 
 from ..converter import BaseConverter
@@ -55,6 +56,7 @@ def create_markdown_parser() -> MarkdownIt:
         .enable("strikethrough")
         .enable("emphasis")
         .enable("table")
+        .use(dollarmath_plugin)
     )
 
 

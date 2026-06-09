@@ -26,7 +26,8 @@
 
 | # | 主题 | 建议 Sprint |
 |---|------|-------------|
-| 9 | M-ARCH 残余（mypy 全量 / 流式转换） | M-MYPY-01 / M-PERF-01 |
+| 9a | converter strict mypy | ✅ M-MYPY-01 · v0.5.29 |
+| 9b | 大文件流式/分块 | M-PERF-01 |
 | 10 | 审查 Minor 代码质量 | M-MINOR-01 |
 | 11 | 文档与审查清单同步 | **M-DOC-04**（进行中） |
 | 12 | Mermaid 扩展（sequence / gantt） | M-MERMAID-02 |

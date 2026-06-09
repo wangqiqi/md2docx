@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.30] - 2026-06-09
+
+### Changed
+- M-MINOR-01-01：WebUI 预览启用 dollarmath，与 BaseConverter 插件对齐
+- M-MINOR-01-02：ConvertError 保留异常类型名与 `__cause__` 链
+- M-MINOR-01-03：移除 WebUI 测试冗余 `sys.path`；核验 MIN-02/03/04 已闭合
+
+### Added
+- 预览 dollarmath 集成测 · ConvertError 类型保留单测
+
 ## [0.5.29] - 2026-06-09
 
 ### Changed

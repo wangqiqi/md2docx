@@ -212,10 +212,12 @@ class BaseConverter:
             return self.document
 
         except (TypeError, ValueError) as e:
-            # Markdown解析相关的错误
-            raise ParseError(f"Markdown解析失败: {str(e)}")
+            raise ParseError(f"Markdown解析失败: {str(e)}") from e
         except MD2DocxError:
-            # 自定义错误，直接重新抛出
+            raise
+        except (KeyboardInterrupt, SystemExit):
             raise
         except Exception as e:
-            raise ConvertError(f"转换过程发生未知错误: {str(e)}") from e
+            raise ConvertError(
+                f"转换过程发生错误 ({type(e).__name__}): {e}"
+            ) from e

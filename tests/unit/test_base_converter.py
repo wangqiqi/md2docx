@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from docx import Document
 
-from mddocx.converter.base import BaseConverter
+from mddocx.converter.base import BaseConverter, ConvertError
 
 FAKE_PNG = (
     b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
@@ -60,3 +60,12 @@ class TestBaseConverterRouting:
         caplog.set_level(logging.INFO, logger="mddocx.converter.base")
         BaseConverter().convert("# Hi")
         assert any("duration_ms=" in r.message for r in caplog.records)
+
+    def test_convert_error_preserves_exception_type(self):
+        """未知异常包装为 ConvertError 并保留 __cause__ 与类型名"""
+        converter = BaseConverter()
+        with patch.object(converter, "md") as mock_md:
+            mock_md.parse.side_effect = RuntimeError("token boom")
+            with pytest.raises(ConvertError, match="RuntimeError") as exc_info:
+                converter.convert("# x")
+            assert isinstance(exc_info.value.__cause__, RuntimeError)
