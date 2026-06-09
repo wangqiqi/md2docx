@@ -28,6 +28,18 @@
    pytest
    ```
 
+4. **安装并启用 pre-commit（必须）**
+
+   提交前请安装 hooks，自动运行 black / isort / flake8 等检查：
+
+   ```bash
+   pip install pre-commit
+   pre-commit install
+   pre-commit run --all-files   # 首次建议全量跑一遍
+   ```
+
+   未安装 hooks 的 PR 可能在 CI `quality` job 中被拒绝。
+
 ### 代码规范
 
 我们使用以下工具确保代码质量：
