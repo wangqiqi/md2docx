@@ -53,3 +53,10 @@ class TestBaseConverterRouting:
         doc = BaseConverter().convert(md)
         text = "\n".join(p.text for p in doc.paragraphs)
         assert "粗体" in text
+
+    def test_convert_logs_duration(self, caplog):
+        import logging
+
+        caplog.set_level(logging.INFO, logger="mddocx.converter.base")
+        BaseConverter().convert("# Hi")
+        assert any("duration_ms=" in r.message for r in caplog.records)
