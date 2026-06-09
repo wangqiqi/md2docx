@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.31] - 2026-06-09
+
+### Changed
+- M-DOC-05：docs 扁平化为 `01_架构设计`–`07_版本工作流`；删除 `docs/plan.md`（根 `plan.md` 为真源）
+- M-DOC-05：新增 `docs/README.md` 阅读索引；全仓链接扫尾（README · `.cursor/` · webui · 审查.md）
+- M-DOC-05：移除 `docs/implementation/` 子目录
+
 ## [0.5.30] - 2026-06-09
 
 ### Changed
