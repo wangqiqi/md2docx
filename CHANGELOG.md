@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- 删除根目录 `审查.md`（审查 ROI 已全部闭合；全文仅保留本地 `archive/20260709_233457_审查报告_全量闭合归档_v0.5.47.md`）
+
 ## [0.5.47] - 2026-07-09
 
 ### Added
