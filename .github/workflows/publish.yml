@@ -61,3 +61,14 @@ jobs:
         echo "   workflow_ref: wangqiqi/md2docx/.github/workflows/publish.yml@refs/tags/${GITHUB_REF#refs/tags/}"
         echo ""
         echo "📝 注意：测试应在 ci.yml 工作流中完成"
+        exit 1
+
+    - name: Verify package on PyPI
+      if: steps.trusted-publish.outcome == 'success'
+      env:
+        PYPI_RETRIES: "3"
+        PYPI_RETRY_SLEEP: "8"
+      run: |
+        VERSION="${GITHUB_REF_NAME#v}"
+        echo "📦 核对 PyPI 版本: mddocx==${VERSION}"
+        bash scripts/verify_pypi_version.sh "${VERSION}"
