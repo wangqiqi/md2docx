@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `scripts/verify_pypi_version.sh`：核对 PyPI 上 `mddocx` 是否已发布指定版本（E-PUB-01）
+- `publish.yml`：Trusted Publisher 成功后自动核对 PyPI 版本（含有限重试）
+
 ### Changed
+- `docs/06_发布流程.md`：补充发布后 PyPI 核对步骤与失败含义
 - README：版本徽章与测试基线对齐 **v0.5.47** / **278**；「规划中」指向本地 `.cursorGrowth/ROADMAP.md`（D-FACADE-01）
 - `docs/README.md`：补充活路线图指针（`.cursorGrowth/ROADMAP.md`，不入库）
 - 删除根目录 `审查.md`（审查 ROI 已全部闭合；全文迁入 `.cursorGrowth/archive/`）
