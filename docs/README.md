@@ -1,6 +1,7 @@
 # md2docx 文档
 
-> **Sprint / 待办真源**：`.cursorGrowth/plan.md`（**本地文件，不入库**；非本目录）。
+> **Sprint / 待办真源**：`.cursorGrowth/plan.md`（**本地文件，不入库**；非本目录）。  
+> **活路线图（产品 / 工程 backlog）**：`.cursorGrowth/ROADMAP.md`（**不入库**；与 plan 候选表同步）。
 
 按序号阅读：
 

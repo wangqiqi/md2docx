@@ -74,8 +74,12 @@
 - ✅ Web 界面、实时预览、响应式设计
 - ✅ Mermaid 流程图、LaTeX 数学公式 (v0.5.x)
 - ✅ html-for-docx 复杂 HTML 块 (v0.5.15+)
+- ✅ 审查 ROI 闭合 · ConvertMetrics · mypy 收紧（v0.5.45–0.5.47）
 
 **规划中 📋:**
+- 活路线图（产品 / 工程 backlog）：本地 **`.cursorGrowth/ROADMAP.md`**（**不入库**；clone 后由 `/learn`·`/plan` 维护）
+- 产品候选：样式/模板 · 转换质量深挖 · WebUI 体验
+- 工程候选：ConvertMetrics 基线 · html/mermaid 覆盖 · tag 后 PyPI 核对
 
 ## 开发环境要求
 
