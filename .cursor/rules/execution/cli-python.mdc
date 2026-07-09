@@ -1,0 +1,15 @@
+---
+description: Python CLI argparse --help SOP
+globs:
+  - "**/*.py"
+alwaysApply: false
+---
+
+# Python CLI · argparse
+
+- `--help`: one-line title, `功能特性:` bullet list (3–6 items), then options table — no long `epilog`.
+- Define `ShortHelpFormatter` inline (stdlib only); no shared formatter modules.
+- Place formatter class immediately above `main()` or `parse_args()` — never between imports.
+- `ArgumentParser(..., formatter_class=ShortHelpFormatter)`.
+- `add_argument` help: prefix `[必选]` or `[可选]`; defaults via formatter, not duplicated in help text.
+- Script runnable as `python path/to/script.py`; no extra repo imports for help formatting only.

@@ -1,0 +1,10 @@
+{
+  "profile": "lite",
+  "workflow": {
+    "enabled": true,
+    "hooks_enabled": false
+  },
+  "autonomous": {
+    "default": false
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "release": {
+    "enabled": true,
+    "mode": "tag-per-commit",
+    "config": ".cursor/config/release.json"
+  }
+}

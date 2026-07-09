@@ -1,0 +1,70 @@
+{
+  "profile": "full",
+  "plan_file": ".cursorGrowth/plan.md",
+  "archive_dir": ".cursorGrowth/archive",
+  "verify_default": "./scripts/verify.sh",
+  "version_line_meta": "VERSION_LINE",
+  "version_tag_glob_env": "VERSION_TAG_GLOB",
+  "workflow": {
+    "enabled": true,
+    "hooks_enabled": true
+  },
+  "growth": {
+    "enabled": true,
+    "dir": ".cursorGrowth",
+    "learn_dir": "learn",
+    "learn_sources": [
+      "CHANGELOG.md",
+      ".cursorGrowth/archive/",
+      ".cursorGrowth/plan.md"
+    ]
+  },
+  "release": {
+    "enabled": true,
+    "mode": "patch-per-task",
+    "config": ".cursor/config/release.json"
+  },
+  "task_id": {
+    "prefixes_autonomous": [
+      "TASK-"
+    ],
+    "prefixes_skip": [
+      "REV-",
+      "SPIKE-",
+      "DOC-"
+    ]
+  },
+  "autonomous": {
+    "default": false,
+    "max_loops_default": 15,
+    "confirm_before": [
+      "high_risk_delete",
+      "outside_repo"
+    ]
+  },
+  "role": {
+    "default": "professional",
+    "config": ".cursor/config/roles.json"
+  },
+  "followup_gate": {
+    "enabled": true,
+    "require_spike_after_patches": 2,
+    "require_spike": false,
+    "symptom_cluster_rules": [
+      "async-progress.mdc",
+      "long-running-ui.mdc",
+      "modal-layering.mdc",
+      "error-context.mdc",
+      "single-detector.mdc"
+    ]
+  },
+  "task_verify_heuristics": {
+    "enabled": false,
+    "fallback_test_script": "./scripts/test.sh",
+    "fallback_verify_script": "./scripts/verify.sh",
+    "frontend_test_dir": ".",
+    "backend_test_dir": ".",
+    "frontend_test_cmd": "npm run test",
+    "backend_test_cmd": "pytest"
+  }
+}

@@ -1,0 +1,5 @@
+/target/
+**/*.rs.bk
+
+# Super Cursor (plan · archive · learn · rules)
+.cursorGrowth/

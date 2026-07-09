@@ -1,0 +1,38 @@
+---
+description: 执行规范 — 修 bug 流程（复现、根因、回归、CHANGELOG）
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
+# 执行规范 · Bug 修复
+
+## 1. 复现与范围
+
+- 确认症状、环境、触发步骤；无法复现时先补最小复现或测试。
+- 区分 **bug** vs **预期变更**；后者走规划而非 hotfix。
+
+## 2. 根因
+
+- 定位根因后再改；避免 symptomatic patch。
+- 引用文件/行号说明因果链。
+
+## 3. 修复
+
+- 最小 diff；优先加回归测试（若项目有测试文化）。
+- 运行 task 验收或项目 verify；勿标记完成而未验证。
+
+## 4. 反馈
+
+- 用户可见修复写入 CHANGELOG `### Fixed`（见 `rules/feedback/changelog.mdc`）。
+- 若暴露流程/约定缺口，运行 **`/learn`** 更新 `.cursorGrowth/learn/`（通用规则缺口 → 用户授权后补 `.cursor/rules/`）
+
+## 5. 与 run
+
+- plan 任务 ID 可用 `TASK-*`；hotfix 可走 **git** + CHANGELOG
+- 阻塞 → plan 标 `⚠️` 回流 `/plan`
+
+## 6. Follow-up 与重复症状
+
+- 同症状 **≥2** 已发布 patch → **不得** 直接第三个 hotfix； **`/plan`** §Follow-up 或 **`SPIKE-*`**（`.cursor/templates/spike-regression-cluster.md`）
+- 改 progress / 长任务 UI / 弹窗 z-index / 错误 message / 格式检测 → 读对应 rule：`async-progress` · `long-running-ui` · `modal-layering` · `error-context` · `single-detector`

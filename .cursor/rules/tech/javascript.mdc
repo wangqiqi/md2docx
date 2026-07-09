@@ -1,0 +1,19 @@
+---
+description: JavaScript (non-TypeScript) coding SOP
+globs:
+  - "**/*.js"
+  - "**/*.jsx"
+  - "**/*.mjs"
+  - "**/*.cjs"
+alwaysApply: false
+---
+
+# JavaScript SOP
+
+- Use strict mode in modules; prefer ESM (`import`/`export`) when project allows.
+- JSDoc types on public APIs when TS migration is not in scope.
+- Prefer `const`/`let`; no implicit globals; handle promise rejections.
+- No secrets in source; validate env at startup.
+- Match eslint/prettier; run lint before commit.
+- Tests: colocate `*.test.js` or `__tests__/` per project convention.
+- Node scripts: shebang only when executable; use `cli-python.mdc` for argparse-heavy CLIs in `.py` — for Node use consistent commander/yargs per repo.

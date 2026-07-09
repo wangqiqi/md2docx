@@ -1,0 +1,27 @@
+---
+description: 执行规范 — Git submodule 与 vendor 目录
+globs:
+  - .gitmodules
+  - "**/vendor/**"
+alwaysApply: false
+---
+
+# 执行规范 · Git submodules
+
+## 更新前
+
+- [ ] 阅读 upstream release notes
+- [ ] 确认 vendored 代码许可证兼容
+- [ ] bump 后跑项目 verify
+
+## 命令
+
+```bash
+git submodule sync --recursive
+git submodule update --init --recursive
+```
+
+## Vendor
+
+- 除非项目明确 fork，`vendor/` 视为只读
+- 用户可见行为变化时在 CHANGELOG 记录 submodule pin

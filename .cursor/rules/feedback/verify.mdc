@@ -1,0 +1,55 @@
+---
+description: 验收反馈 — 见 workflow.mdc
+globs:
+  - plan.md
+  - scripts/verify.sh
+  - scripts/test.sh
+  - .cursor/config/workflow.json
+alwaysApply: false
+---
+
+# 验收
+
+遵循 `rules/workflow.mdc`：`gate-check`/`task-verify` 非 OK 不得 ✅ 或 commit；打 tag 前 `verify`。
+
+## 命令
+
+```bash
+./.cursor/bin/runner.sh gate-check
+./.cursor/bin/runner.sh task-verify    # 当前 ACTIVE 任务
+./.cursor/bin/runner.sh verify         # Sprint / 打版前全量（读 plan VERIFY 后执行脚本）
+```
+
+**勿混淆**：`runner.sh verify` 是 **CLI 入口**；plan 工作副本（`workflow.json` → `plan_file`）里的 `<!-- VERIFY: ... -->` 必须指向 **项目验收脚本**（默认 `./scripts/verify.sh`），**禁止**写 `runner.sh verify`（会无限递归）。
+
+## 验收列约定
+
+| 阶段 | 推荐 |
+|------|------|
+| 开发任务 | `./scripts/test.sh` |
+| 任务收尾 / P0 | `./scripts/verify.sh` |
+
+`task_verify_heuristics.enabled` 默认 **false**（`config/workflow.json`）。设为 `true` 时，描述性验收列回退 `fallback_test_script` / `fallback_verify_script`。
+
+用户可见修复 → CHANGELOG `### Fixed`。
+
+## 分层验收（verify-layers）
+
+大型或跨模块功能：除 `./scripts/test.sh` / `./scripts/verify.sh` 外，项目可增设 **按域脚本**（命名示例 `scripts/verify_<feature>.sh`，路径由项目自定）。
+
+| 层 | 典型内容 | 外部依赖 | 默认 CI |
+|----|----------|----------|---------|
+| **L0** | 关键文件 / 配置存在 | 无 | ✅ |
+| **L1** | import · 单元测试 · 静态检查 | 无 | ✅ |
+| **L2** | schema / migration head / 契约快照断言 | 可选本地工具 | 视项目 |
+| **L3** | `--full`：真实 DB · 服务 · HTTP 冒烟 | 基础设施 | 本地 / nightly |
+
+约定：
+
+- **默认**（无参）：跑到 **L1**（或项目文档约定的最快绿层）
+- **`--full`**：跑到 **L3**
+- **聚合脚本**（示例 `scripts/verify_all.sh`）：顺序调用各域脚本；新域交付时 **注册一行**，勿复制整套逻辑进每个域脚本
+
+plan **验收列**写可执行命令（如 `bash scripts/verify_<feature>.sh`）；Sprint 全量走 `plan VERIFY` 或 `./scripts/verify.sh`。
+
+**L0–L3 真源在本文件**；**test** skill 只引用本表，勿另写一份层定义。测试文件细则 → `rules/execution/testing.mdc` · 垂直切片层序 → `rules/execution/vibe.mdc`。

@@ -1,0 +1,10 @@
+.gradle/
+build/
+bin/
+out/
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Super Cursor (plan · archive · learn · rules)
+.cursorGrowth/

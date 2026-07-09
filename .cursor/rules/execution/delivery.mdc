@@ -1,0 +1,49 @@
+---
+description: 交付验收触发时机 — 7 维清单见 delivery skill；项目路径见 learn/acceptance.md 与 rules/local/
+globs:
+  - plan.md
+  - docs/**
+  - README.md
+  - "**/src/**"
+  - "**/app/**"
+  - "**/components/**"
+  - openapi/**
+  - "**/*openapi*"
+alwaysApply: false
+---
+
+# 执行规范 · 交付验收
+
+通用 **7 维清单**在 **delivery** skill（`/delivery`）。本 rule 约定 **何时走查** 与 **分工**。
+
+## 何时走查
+
+| 时机 | 动作 |
+|------|------|
+| Sprint **Done when** 含 delivery | Sprint 收尾前完整 `/delivery` |
+| UI/功能/feature Sprint | **release** §分支前 **建议** `/delivery`（见 **release** skill） |
+| 用户说「上线前」「生产就绪」 | 立即 **delivery** skill |
+| `REV-*` 含交付范围 | **review** agent + delivery 清单（只读） |
+
+## 与 verify / run 分工
+
+- **task-verify** / **verify** — 自动化脚本绿/红（不变）
+- **run 审计** — 三公理 · scope · README 门面（不变）
+- **delivery** — 产品/文档/UX/对接维度（含 **§5 导航与 IA** 抽检 · `ia.mdc`）；**不替代** 上述两者
+- **ia** / **ux** — 结构层规划；delivery **验收** IA，不代替规划
+
+## 冲突与决策
+
+第 3、4 条（文档 ↔ 实现、API/DB）不一致时：
+
+- 输出 **`Decision needed`**（文档说法 · 实现 · 建议）
+- **等用户决策**后再改 spec 或代码
+
+## 项目特化
+
+| 内容 | 落点 |
+|------|------|
+| design token 路径 · i18n 库 · OpenAPI 文件 | `.cursorGrowth/learn/acceptance.md`（**learn**） |
+| 团队额外门禁 | `.cursor/rules/local/`（用户自建） |
+
+母版 **delivery** skill 保持 **Universal only** — 不写死业务路径。

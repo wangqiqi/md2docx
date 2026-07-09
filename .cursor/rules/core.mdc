@@ -1,0 +1,56 @@
+---
+description: 核心 SOP — 入口、沟通、安全、审计
+alwaysApply: true
+---
+
+# 核心
+
+`.cursor/`=通用SOP · `.cursorGrowth/`=项目特化与产出（plan·archive·learn·rules，git忽略）· 读序：rules → config → `.cursorGrowth/`
+
+| 场景 | 入口 |
+|------|------|
+| **不确定 / 从哪开始** | **`/master`** → **master**（AskQuestion 路由） |
+| 规划 | `/plan` → **plan** |
+| 执行 | `/run` → **run** |
+| 学习 | `/learn` → **learn** |
+| 脚手架 | `/scaffold` → **scaffold** |
+| 打版 | **release** skill · **ship** agent |
+| Git | **git** skill |
+| 安全审查 | **security** skill |
+| API 设计 | **api** skill |
+| UX / 体验（分流） | **`/ux`** · **ux** skill · `rules/execution/ux.mdc` |
+| 信息架构 / 导航 / 角色入口 | **`/ia`** · **ia** skill · `rules/execution/ia.mdc`（UX 结构层） |
+| 调试 / 测试 / 回顾 / 交付 | **debug** · **test** · **review** · **delivery** skill；**review** agent |
+| 长任务 / 异步进度 / 弹窗分层 | `rules/execution/async-progress` · `long-running-ui` · `modal-layering` · `error-context` · `single-detector` |
+| ORM/SQL 大批量 IN / 分块查询 | `rules/execution/data-batch` |
+| 学新技术 | **study** skill（≠ `/learn` 项目认知） |
+
+扩展路由（关键词命中）：**mcp** · **refactor** · **perf** · **spike** agent（`SPIKE-*`）→ **`/master`**
+
+配置：`config/workflow.json` · `config/release.json` · 协作三公理见 `rules/communication/constitution.mdc`
+
+## .cursor 不可变（安装后）
+
+`.cursor/` 自 `install-super-cursor.sh` 复制到目标项目后视为 **只读 SOP**，除非用户**明确**要求修改或完善 `.cursor/`：
+
+| 禁止（默认） | 允许去向 |
+|--------------|----------|
+| 主动/自动改 `rules/` `skills/` `agents/` `hooks/` `bin/` `config/` `templates/` | 项目特化 → `.cursorGrowth/`（plan · learn · archive · rules/local） |
+| 「顺便优化」模板、补 skill、改 config | 团队 rules → `.cursorGrowth/rules/local/`（链 `.cursor/rules/local`） |
+| 因业务任务顺带改 hooks 或 workflow | 行为开关 → 用户自行编辑 `config/*.json`，或明确授权后由 Agent 改 |
+
+发现缺口：**说明 + 建议**，等用户确认后再动 `.cursor/`。日常 `/master` `/plan` `/run` `/learn` **不得**触发对 `.cursor/` 的写入。
+
+## 沟通
+
+**语言与用户一致**：用户用中文提问/发任务 → 思考与回复用中文；用户用英文 → 思考与回复用英文。同一会话以**最新一条用户消息**为准；混合语言时跟用户主要用语。
+
+不清先问 · 小 diff · 引用行号 · 中途改向=steering（非取消，除非明确取消）
+
+## 安全
+
+无密钥 · 默认禁止 force-push / 跳 hook · delete/reset 须确认 · 批量新建前先 `/plan`
+
+## 审计
+
+人定目标 · 结论可验证 · 动作可重建

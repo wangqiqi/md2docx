@@ -1,0 +1,22 @@
+---
+description: 打版与 tag — 清单见 release skill
+globs:
+  - CHANGELOG.md
+  - package.json
+  - pyproject.toml
+  - Cargo.toml
+  - go.mod
+alwaysApply: false
+---
+
+# 打版
+
+Config：`config/release.json` · `config/workflow.json` · `release.mode`（`patch-per-task` | `tag-per-commit`）
+
+清单：**release** skill · 自治：**ship** agent · 命令：**git** skill
+
+## Tag
+
+`runner.sh release-tag`（tag-per-commit）或 `git tag -a <tag> -m "<summary>"`（patch-per-task / ship）· 名依 `release.json` · 打在含 CHANGELOG 的 commit
+
+Tag 后按团队 push；默认分支勿 force-push

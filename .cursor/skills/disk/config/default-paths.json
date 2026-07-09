@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "description": "Default disk snapshot paths. Copy to .cursorGrowth/disk-paths.json to customize.",
+  "paths": [
+    {
+      "key": "disk.root",
+      "path": "/",
+      "label": "根分区",
+      "kind": "filesystem"
+    },
+    {
+      "key": "home.total",
+      "path": "~",
+      "label": "Home 合计"
+    },
+    {
+      "key": "home.workspace",
+      "path": "~/workspace",
+      "label": "workspace"
+    },
+    {
+      "key": "home.projects",
+      "path": "~/projects",
+      "label": "projects"
+    },
+    {
+      "key": "home.miniconda3",
+      "path": "~/miniconda3",
+      "label": "miniconda3"
+    },
+    {
+      "key": "home.venv",
+      "path": "~/.venv",
+      "label": ".venv"
+    },
+    {
+      "key": "home.config",
+      "path": "~/.config",
+      "label": ".config"
+    },
+    {
+      "key": "home.local",
+      "path": "~/.local",
+      "label": ".local"
+    },
+    {
+      "key": "home.npm",
+      "path": "~/.npm",
+      "label": ".npm"
+    },
+    {
+      "key": "home.cache",
+      "path": "~/.cache",
+      "label": ".cache"
+    },
+    {
+      "key": "home.downloads",
+      "path": "~/Downloads",
+      "label": "Downloads"
+    },
+    {
+      "key": "ide.cursor",
+      "path": "~/.cursor",
+      "label": ".cursor"
+    },
+    {
+      "key": "ide.cursor_config",
+      "path": "~/.config/Cursor",
+      "label": ".config/Cursor"
+    },
+    {
+      "key": "ide.cursor_state",
+      "path": "~/.config/Cursor/User/globalStorage/state.vscdb",
+      "label": "Cursor state DB"
+    },
+    {
+      "key": "ide.cursor_state_backup",
+      "path": "~/.config/Cursor/User/globalStorage/state.vscdb.backup",
+      "label": "Cursor state backup"
+    },
+    {
+      "key": "ide.vscode",
+      "path": "~/.config/Code",
+      "label": ".config/Code"
+    },
+    {
+      "key": "pkg.node_modules",
+      "path": "./node_modules",
+      "label": "node_modules",
+      "relative": true
+    },
+    {
+      "key": "pkg.target",
+      "path": "./target",
+      "label": "target/",
+      "relative": true
+    },
+    {
+      "key": "pkg.build",
+      "path": "./build",
+      "label": "build/",
+      "relative": true
+    },
+    {
+      "key": "pkg.dist",
+      "path": "./dist",
+      "label": "dist/",
+      "relative": true
+    },
+    {
+      "key": "pkg.venv",
+      "path": "./.venv",
+      "label": ".venv/",
+      "relative": true
+    }
+  ]
+}

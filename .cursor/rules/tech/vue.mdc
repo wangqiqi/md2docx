@@ -1,0 +1,20 @@
+---
+description: Vue frontend SOP
+globs:
+  - "**/*.vue"
+  - "**/composables/**"
+  - "**/components/**"
+alwaysApply: false
+---
+
+# Vue SOP
+
+- Composition API (`<script setup>`) for new components unless Options-only legacy.
+- Props/emits typed (`defineProps` / `defineEmits`); never mutate props.
+- Extract composables for shared logic; keep SFCs focused on template + wiring.
+- Reactivity: prefer `ref`/`computed` clarity; avoid deep watch when computed suffices.
+- Pinia or project store for cross-route state; no ad-hoc global event buses in new code.
+- Align with design tokens / CSS conventions; scoped styles or project utility system.
+- Tests: Vitest + Vue Test Utils when present; test user-visible behavior.
+- Async: handle loading/error in UI; cancel in-flight requests on unmount when using fetch.
+- Before done: `type-check`, `lint`, `build` (or project verify script).

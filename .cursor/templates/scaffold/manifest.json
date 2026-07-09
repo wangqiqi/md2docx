@@ -1,0 +1,102 @@
+{
+  "version": 2,
+  "tier": "standard+",
+  "tier_notes": "lint+test+verify+CI+env · 8 stacks",
+  "categories": {
+    "frontend": ["react-vite-ts", "vue-vite-ts", "nextjs-ts"],
+    "backend": ["go-api", "rust-axum", "python-fastapi", "java-gradle"],
+    "systems": ["cpp-cmake"]
+  },
+  "test_convention": {
+    "dev_loop": "scripts/test.sh",
+    "full_verify": "scripts/verify.sh",
+    "docs": "tests/README.md or src/test/README.md (java)"
+  },
+  "scaffolds": [
+    {
+      "id": "react-vite-ts",
+      "name": "React + Vite + TypeScript",
+      "category": "frontend",
+      "tags": ["react", "typescript", "vite", "eslint", "vitest"],
+      "description": "SPA · 独立 tests/ · Vitest+RTL · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": ["npm install", "./scripts/verify.sh"]
+    },
+    {
+      "id": "vue-vite-ts",
+      "name": "Vue 3 + Vite + TypeScript",
+      "category": "frontend",
+      "tags": ["vue", "typescript", "vite", "eslint", "vitest"],
+      "description": "SPA · Composition API · Vitest · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": ["npm install", "./scripts/verify.sh"]
+    },
+    {
+      "id": "nextjs-ts",
+      "name": "Next.js + TypeScript",
+      "category": "frontend",
+      "tags": ["nextjs", "react", "typescript", "vitest"],
+      "description": "App Router · next lint · Vitest · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": ["npm install", "./scripts/verify.sh"]
+    },
+    {
+      "id": "go-api",
+      "name": "Go HTTP API",
+      "category": "backend",
+      "tags": ["go", "http"],
+      "description": "cmd/ + internal/ + tests/integration · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": ["go mod tidy", "./scripts/verify.sh"]
+    },
+    {
+      "id": "rust-axum",
+      "name": "Rust + Axum",
+      "category": "backend",
+      "tags": ["rust", "axum", "tokio"],
+      "description": "lib app() 可测 · tests/ 集成 · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": ["cargo test", "./scripts/verify.sh"]
+    },
+    {
+      "id": "python-fastapi",
+      "name": "Python FastAPI",
+      "category": "backend",
+      "tags": ["python", "fastapi", "ruff", "mypy", "pytest"],
+      "description": "tests/unit+integration · ruff+mypy · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": [
+        "python3 -m venv .venv",
+        "source .venv/bin/activate",
+        "pip install -e '.[dev]'",
+        "./scripts/verify.sh"
+      ]
+    },
+    {
+      "id": "java-gradle",
+      "name": "Java + Gradle (Kotlin DSL)",
+      "category": "backend",
+      "tags": ["java", "gradle", "junit"],
+      "description": "内置 Gradle Wrapper · unit/integration · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": ["chmod +x gradlew", "./scripts/verify.sh"]
+    },
+    {
+      "id": "cpp-cmake",
+      "name": "C++ + CMake",
+      "category": "systems",
+      "tags": ["cpp", "cmake", "gtest"],
+      "description": "GoogleTest tests/ · -Wall · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": ["./scripts/verify.sh"]
+    }
+  ]
+}

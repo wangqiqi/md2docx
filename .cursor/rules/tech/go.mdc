@@ -1,0 +1,20 @@
+---
+description: Go coding SOP
+globs:
+  - "**/*.go"
+  - "go.mod"
+  - "go.sum"
+alwaysApply: false
+---
+
+# Go SOP
+
+- `gofmt` / `goimports` before commit; match `staticcheck` / `golangci-lint` when configured.
+- Explicit errors — no silent `_` unless documented; wrap with `%w` for context.
+- `context.Context` on I/O, HTTP, and RPC; honor cancellation and deadlines.
+- Small packages, clear names; avoid `util` / `common` catch-alls.
+- Interfaces at consumer side when practical; keep APIs narrow.
+- Concurrency: prefer errgroup/channels with clear ownership; detect races with `-race` in CI when available.
+- HTTP handlers: validate input, map errors to status codes, no stack traces to clients.
+- Tests: table-driven `_test.go`; `go test ./...` for acceptance when applicable.
+- Modules via `go.mod`; deliberate version pins; secrets via env only.

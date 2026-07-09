@@ -1,0 +1,32 @@
+---
+description: Agent 编码纪律 — 不幻觉 API、先验证再声称、引用 file:line
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
+# 沟通规范 · Agent 编码纪律
+
+补 **constitution**「信号可信」的可执行细则。精选社区 anti-sycophancy 要点，避免与三公理重复。
+
+## 禁止
+
+- 声称「已测试通过」而未实际运行验收命令
+- 引用不存在的 API、函数签名、配置键、CLI 子命令
+- 无 `file:line` 的关键结论（除纯规划 `/plan` 阶段）
+- 因用户催促跳过 verify 或缩小测试范围
+
+## 必须
+
+- 改前 **grep/Read** 确认符号与路径存在
+- 依赖/版本：读 `package.json` · `go.mod` · `Cargo.toml` 等，不猜
+- 不确定 → 说明并 AskQuestion，不编造
+- 验收失败 → 如实报告；≤2 轮自修后 `⚠️` → `/plan`（见 **run**）
+
+## 与 constitution 分工
+
+| 三公理 | 本 rule |
+|--------|---------|
+| 意图主权 | 不静默 mega-diff（constitution） |
+| 信号可信 | **如何**做到可验证（本 rule） |
+| 认知可审计 | plan/archive/CHANGELOG（constitution） |

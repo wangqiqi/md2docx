@@ -1,0 +1,15 @@
+---
+description: Security SDLC — merge and release security habits
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
+# Security SDLC
+
+- Run dependency audit when project supports it (`npm audit`, `pip audit`, `cargo audit`, Dependabot).
+- No merge with known Critical/High unmitigated (or document accepted risk in PR).
+- Auth on all write/admin paths; secrets never in repo or logs.
+- Pre-release: invoke **security** skill checklist.
+- UI/feature releases: **`/delivery`** §7 + **security** skill（见 **delivery** · **release** skills）
+- Production configs: debug off, TLS on, least-privilege IAM/DB users.

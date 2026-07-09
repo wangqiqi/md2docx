@@ -1,0 +1,38 @@
+---
+description: 测试文件 SOP — Vitest/Jest/Playwright/pytest；链 test skill
+globs:
+  - "**/*.test.*"
+  - "**/*.spec.*"
+  - "**/tests/**"
+  - "**/e2e/**"
+  - "**/playwright/**"
+alwaysApply: false
+---
+
+# 执行规范 · 测试文件
+
+编辑测试路径时加载。流程细节见 **test** skill · `rules/feedback/verify.mdc`。
+
+## 单元 / 集成
+
+- 测行为与契约，非实现细节（DOM 选择器、私有函数名）
+- 一断言一意图；表驱动优于复制粘贴 case
+- Vitest/Jest：`describe` 按模块；mock 最小化，优先 fake 边界
+- pytest：fixture 复用；`@pytest.mark` 标 slow/integration
+
+## E2E（Playwright / Cypress）
+
+- 关键用户路径优先；稳定 `data-testid` 或 role 选择器
+- 本地：`npx playwright test` 或项目 script；`webServer` 或先起 dev
+- 不测 flaky 时序；必要时 `expect.poll` / 显式 wait
+
+## 纪律
+
+- **红 → 绿 → 重构**（见 **test** skill TDD 节）
+- 新 bug → 先补回归再修实现
+- 红测不 ✅ plan task
+
+## 验收
+
+- 开发 TASK：`./scripts/test.sh` 或 stack 默认
+- Sprint/P0：`./scripts/verify.sh` 或 `runner.sh verify`

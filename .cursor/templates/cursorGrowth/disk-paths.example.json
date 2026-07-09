@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "description": "Optional override. Copy to .cursorGrowth/disk-paths.json and edit paths for your machine.",
+  "paths": [
+    {
+      "key": "disk.root",
+      "path": "/",
+      "label": "根分区",
+      "kind": "filesystem"
+    },
+    {
+      "key": "home.total",
+      "path": "~",
+      "label": "Home 合计"
+    },
+    {
+      "key": "home.workspace",
+      "path": "~/workspace",
+      "label": "workspace"
+    },
+    {
+      "key": "pkg.build",
+      "path": "./build",
+      "label": "build/",
+      "relative": true
+    }
+  ]
+}

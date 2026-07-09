@@ -1,0 +1,24 @@
+{
+  "changelog_file": "CHANGELOG.md",
+  "unreleased_heading": "## [Unreleased]",
+  "version_heading_pattern": "## [{version}]",
+  "tag_format": "semver",
+  "tag_prefix": "v",
+  "annotated_tags": true,
+  "order": "newest_first",
+  "merge_policy": "one_user_story_per_release",
+  "plan_file": ".cursorGrowth/plan.md",
+  "archive_dir": ".cursorGrowth/archive",
+  "tag_per_commit": false,
+  "bump": {
+    "default": "patch",
+    "auto_minor": false,
+    "auto_major": false
+  },
+  "version_source": {
+    "from_git_tag": true,
+    "plan_meta_version_line": "VERSION_LINE",
+    "plan_meta_version_default": "VERSION_DEFAULT",
+    "plan_meta_release_bump": "RELEASE_BUMP"
+  }
+}

@@ -1,0 +1,35 @@
+---
+description: Next.js App Router SOP
+globs:
+  - "**/app/**"
+  - "**/next.config.*"
+  - "middleware.ts"
+alwaysApply: false
+---
+
+# Next.js SOP
+
+- App Router (`app/`) for new routes; Server Components default; `"use client"` only when needed.
+- Colocate `loading.tsx` / `error.tsx` for route UX boundaries.
+- Env: `NEXT_PUBLIC_*` for browser; secrets server-only.
+
+## SSR / 缓存 / CWV
+
+- Prefer static/ISR where data allows; document revalidate seconds in code comment.
+- `fetch` cache options explicit (`force-cache`, `no-store`, `revalidate`) — no accidental stale UI.
+- Dynamic routes: streaming + Suspense for slow segments; avoid blocking entire page.
+- Images: `next/image` with sizes; fonts via `next/font` to reduce layout shift (CWV).
+- Monitor LCP/CLS/INP in staging; lazy-load below-fold client components.
+- API routes colocated in `app/api/`; validate input; map errors to stable JSON.
+
+## Auth / Supabase（若项目使用）
+
+- Server 侧用 `getUser()` / 校验 session，**勿**仅用 `getSession()` 作授权依据（易伪造 cookie）
+- RLS 默认开启；Service role key **仅** server ·  never `NEXT_PUBLIC_*`
+- Stripe/支付密钥：server-only env；webhook 验签
+- Middleware：保护路由与 redirect 逻辑与 RLS 一致
+
+## 验证
+
+- `npm run lint` · `type-check` · `test` · `build` before marking tasks done.
+- E2E optional Playwright when project has config.

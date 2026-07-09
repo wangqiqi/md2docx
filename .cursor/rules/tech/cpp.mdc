@@ -1,0 +1,23 @@
+---
+description: C++ coding SOP
+globs:
+  - "**/*.cc"
+  - "**/*.cpp"
+  - "**/*.cxx"
+  - "**/*.hpp"
+  - "**/CMakeLists.txt"
+  - "**/*.cmake"
+alwaysApply: false
+---
+
+# C++ SOP
+
+- Prefer modern C++ (C++17/20) when the project allows; RAII for ownership; no raw `new`/`delete` in new code.
+- Const-correctness, explicit ownership (`unique_ptr` / `shared_ptr`); forward-declare when possible.
+- Avoid macros where templates, `constexpr`, or enums suffice; minimize includes in headers.
+- Match build system (CMake, Bazel, Makefile); do not hand-edit generated build files.
+- Exceptions or error codes — follow project style; never mix silently.
+- Move semantics for heavy types; rule of zero/five for resource-owning classes.
+- Concurrency: prefer standard library primitives; document shared state lifetimes.
+- Tests: `ctest`, `ninja test`, `make test`; ASan/UBSan builds when the repo supports them.
+- No undefined behavior shortcuts; validate bounds and lifetimes at API boundaries.

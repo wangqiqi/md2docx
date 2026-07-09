@@ -1,0 +1,14 @@
+---
+description: Evolution — incremental improvement of project knowledge and template
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
+# Evolution SOP
+
+- **Incremental**: small tasks, revertible commits; no big-bang refactors without `/plan`.
+- **Project evolution**: `/learn` updates `.cursorGrowth/learn/` after sprints or releases.
+- **Template evolution**: change `.cursor/` only when user explicitly authorizes; capture ideas in `SPIKE-*` or archive.
+- **Validate**: `task-verify` per task; `verify-super-cursor.sh` or project verify before sprint close.
+- **Feedback**: user steering overrides agent preference; mark deprecated notes instead of silent deletes in learn files.

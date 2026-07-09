@@ -1,0 +1,9 @@
+node_modules/
+.next/
+out/
+.env
+.env.local
+*.tsbuildinfo
+
+# Super Cursor (plan · archive · learn · rules)
+.cursorGrowth/

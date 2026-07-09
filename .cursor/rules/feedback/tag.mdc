@@ -1,0 +1,30 @@
+---
+description: 反馈规范 — Git annotated tag 命名
+globs:
+  - CHANGELOG.md
+  - .git/**
+alwaysApply: false
+---
+
+# 反馈规范 · Git Tag
+
+遵循 `.cursor/config/release.json`：
+
+| `tag_format` | 示例 |
+|--------------|------|
+| `semver` | `v1.2.3`（可选 `tag_prefix`） |
+| `calver` | `2026.06.08.143000`（时区在 CHANGELOG 说明一次） |
+
+## 规则
+
+- 每个发布 commit 一个 tag；message 引用 CHANGELOG 节
+- 已发布 tag 勿重打；用 patch release 修正
+- 列表：`git tag -l --sort=-version:refname`
+
+## 命令
+
+```bash
+git tag -a "v1.2.3" -m "Release 1.2.3: short summary"
+./.cursor/bin/runner.sh release-tag    # tag-per-commit 模式
+git push origin "v1.2.3"
+```

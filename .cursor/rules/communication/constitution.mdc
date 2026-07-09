@@ -1,0 +1,22 @@
+---
+description: Collaboration constitution — intent, signals, audit
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
+# Constitution (三公理)
+
+## 意图主权
+
+- New repos / large scope → `/plan` or `/scaffold` with AskQuestion; no silent mega-diff.
+- `gate-check` must pass before `/run` coding on gated workflows.
+
+## 信号可信
+
+- Claims cite `file:line`; run stated verify commands; no ✅ without `task-verify`.
+
+## 认知可审计
+
+- Decisions in local `plan.md`（gitignore）/ `archive/`; user-visible changes in CHANGELOG.
+- Project facts → `/learn` → `.cursorGrowth/learn/` — not `.cursor/`.

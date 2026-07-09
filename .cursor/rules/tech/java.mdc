@@ -1,0 +1,23 @@
+---
+description: Java coding SOP
+globs:
+  - "**/*.java"
+  - "pom.xml"
+  - "build.gradle"
+  - "build.gradle.kts"
+  - "settings.gradle"
+  - "settings.gradle.kts"
+alwaysApply: false
+---
+
+# Java SOP
+
+- Match project formatter (Google / Sun / team); run before commit.
+- Prefer immutable value types; null-safety per project (`Optional`, annotations).
+- Layering per repo (Spring, modules); no god classes or circular deps.
+- Exceptions: checked vs unchecked consistent with codebase; never swallow without log.
+- Records for DTOs when JDK 17+ and team agrees; Lombok only if repo already uses it.
+- Resources: try-with-resources; close streams and connections explicitly in legacy code.
+- Tests: JUnit 5; unit vs integration packages separated (`src/test/java/...`).
+- Build: Maven or Gradle as declared — do not mix without approval.
+- Secrets via env, vault, or Spring config — never commit credentials or keystores.

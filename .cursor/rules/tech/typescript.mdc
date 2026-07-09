@@ -1,0 +1,20 @@
+---
+description: TypeScript coding SOP
+globs:
+  - "**/*.ts"
+  - "**/*.tsx"
+alwaysApply: false
+---
+
+# TypeScript SOP
+
+- Prefer strict mode (`strict`, `noUncheckedIndexedAccess` when project enables it).
+- Avoid `any`; use `unknown` + narrowing at boundaries; document bounded `any` if unavoidable.
+- Explicit return types on public APIs and exported functions.
+- Prefer discriminated unions and type guards over loose string unions.
+- Utility types (`Pick`, `Omit`, `Partial`) for API evolution; avoid deep nested generics without aliases.
+- Prefer `async/await`; handle errors at boundaries; no floating promises in app code.
+- No secrets in source; validate env at startup with schema (zod/valibot) when the repo uses it.
+- Match eslint/prettier; run `type-check` / `lint` before marking tasks done.
+- Tests: colocate `*.test.ts` / `__tests__`; mock at I/O boundaries, not internals.
+- Imports: prefer type-only imports; avoid barrel files that hurt tree-shaking unless repo convention.

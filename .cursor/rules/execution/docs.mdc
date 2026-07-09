@@ -1,0 +1,49 @@
+---
+description: 执行规范 — 制定与维护项目文档
+globs:
+  - "**/*.md"
+  - docs/**/*
+  - README*
+alwaysApply: false
+---
+
+# 执行规范 · 文档编写
+
+## 原则
+
+- 文档说明**为什么**与**如何操作**，不重复代码里每个标识符。
+- 行为影响用户时，与代码变更同 PR 更新文档。
+- **API 契约**： public REST/GraphQL changes update route docs and examples together.
+- **VIBE 对齐**： multi-layer features — grep shared field names against `docs/` and OpenAPI when present.
+
+## 结构（按仓库适配）
+
+- `README.md` — 安装、运行、验证、贡献
+- `docs/` — 深度指南、ADR、架构
+- `CHANGELOG.md` — 对外发布说明（见 `rules/feedback/changelog.mdc`）
+
+## 功能交付清单
+
+- [ ] CLI、配置或公开 API 变更已更新 README/docs
+- [ ] **Super Cursor 母版**：skills/agents/指令/workflow 变更须 **同 Sprint** 更新根 `README.md`；`bash .cursor/bin/cursor-coherence.sh` 绿（见 **plan** · **run** skill）
+- [ ] 示例可运行或标为 deprecated
+- [ ] 修改文件内断链已修复
+- [ ] UI/功能对外交付：规格与实现一致；冲突走 **`/delivery`** · **`Decision needed`**（见 **delivery** skill）
+
+## 与 .cursorGrowth 的分工
+
+- **通用写法 SOP** → 本 rule（留在 `.cursor/`）
+- **本项目术语、模块地图、历史决策摘要** → `/learn` 写入 `.cursorGrowth/learn/`（git 忽略）
+
+## 文档自洽（doc-coherence）
+
+大型文档 Sprint 或规格↔实现易漂移时：
+
+| 手段 | 内容 |
+|------|------|
+| **脚本** | `docs/scripts/verify_doc_*.sh`（或项目等价）：grep 断链 · 版本锚点 · 表计数 · **防回退**字符串 |
+| **互链** | 相关 doc 双向链接；`docs/README.md`（或索引）列入口 |
+| **版本头** | 主文档顶栏版本号 / 日期与 CHANGELOG 大改同步 |
+
+- 脚本绿 → 可进 `task-verify`；语义完整 → **`/delivery`** §3（见 **delivery** skill「脚本化 vs 人工」）
+- **母版**不写具体章节号；项目锚点 → `learn/dev-conventions.md`

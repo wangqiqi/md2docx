@@ -1,0 +1,30 @@
+---
+description: 执行规范 — 后端 API/schema 与前端类型/客户端同步
+globs:
+  - "**/api/**"
+  - "**/schemas/**"
+  - "**/types/**"
+  - "**/*openapi*"
+  - "**/*swagger*"
+alwaysApply: false
+---
+
+# 执行规范 · API ↔ 客户端契约
+
+## 变更 API 时（同一逻辑变更集，优先同一 PR）
+
+1. **Server**：route/handler + schema/DTO + 必要时 migration
+2. **Client**：types、API client、消费字段的 UI
+3. **Mocks/fixtures**：与生产 schema 一致的默认值与 enum
+4. **CHANGELOG**：用户可见契约变更（见 `rules/feedback/changelog.mdc`）
+
+## 验证
+
+- 对受影响应用跑 typecheck/build/test
+- 若有 OpenAPI，更新 spec 并 diff breaking changes
+- 合并/发版前：对照 **delivery** skill §4（API · DB · 对接文档）与 **api** skill 清单
+
+## 反模式
+
+- 仅改后端字段名而不更新 client
+- Mock enum 与 server 校验不一致

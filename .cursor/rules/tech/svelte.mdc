@@ -1,0 +1,30 @@
+---
+description: Svelte 5 / SvelteKit SOP
+globs:
+  - "**/*.svelte"
+  - "**/*.svelte.ts"
+  - "**/*.svelte.js"
+  - "**/svelte.config.*"
+alwaysApply: false
+---
+
+# Svelte SOP
+
+Svelte 5 runes 优先。复杂组件可配合 **svelte-file-editor** agent · Svelte MCP。
+
+## 组件
+
+- `$props()` · `$state()` · `$derived()` · `$effect()` — 勿混 Svelte 4 响应式语法
+- 事件：`onclick` 等 DOM 属性，非 `on:click`
+- Snippets / `{@render}` 替代部分 slot 模式
+
+## SvelteKit
+
+- `+page.server.ts` / `+layout.server.ts` 做数据加载；表单用 actions
+- `load` 与 `actions` 类型安全；错误用 `error()` / `fail()`
+- 环境变量：`$env/static/private` · `$env/static/public`
+
+## 验证
+
+- `npm run check` / `svelte-check`（若配置）
+- 与 **test** skill · `testing.mdc` 衔接

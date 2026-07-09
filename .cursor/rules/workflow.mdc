@@ -1,0 +1,38 @@
+---
+description: plan/run 闸门、验收、growth 边界
+alwaysApply: true
+---
+
+# 工作流
+
+| 条件 | 动作 |
+|------|------|
+| `PLANNING:true` | 仅 **plan** |
+| 无 `PLAN_APPROVED` | 仅 **plan** |
+| `gate-check`≠OK | 禁止编码 |
+
+CLI：`.cursor/bin/runner.sh` — `gate-check` · `task-verify` · `verify` · `plan-check` · `next-task`
+
+- 每任务：`task-verify` 通过才 ✅/commit
+- Sprint/打版前：`verify`
+- 打版：`release.mode`（`patch-per-task` | `tag-per-commit`；见 `rules/feedback/release.mdc`）
+- `AUTONOMOUS:true` 直接执行；高风险删除须确认；`⚠️` → `/plan`
+
+## 任务 ID
+
+`config/workflow.json` → `task_id`：
+
+| 前缀 | 行为 |
+|------|------|
+| `TASK-*`（`prefixes_autonomous`） | 常规实现任务；`/run` 主路径 |
+| `SPIKE-` `REV-` `DOC-`（`prefixes_skip`） | **`next-task` 自动选下一 ⬜ 时跳过**；不 bypass `gate-check` |
+| `REV-*` | **review** skill · **review** agent（只读） |
+| `SPIKE-*` | **spike** agent · **plan** 调研（只读） |
+
+`plan.md` 须含 **`**执行顺序**`** 行（旧模板 `**Order**` 仍兼容），供 `next-task` 解析。根目录 `plan.md` 默认 **`.gitignore`**，不纳入版本库；模板见 `.cursor/templates/plan.md`。
+
+## Growth
+
+项目特化与产出统一 `.cursorGrowth/`（plan·archive·learn·rules）· 禁止写入 `.cursor/` · 细则 **learn** skill
+
+**`.cursor/` 只读**：见 `core.mdc`「.cursor 不可变」— 非用户明确要求，不得改 `.cursor/**`（含 `config/`）。

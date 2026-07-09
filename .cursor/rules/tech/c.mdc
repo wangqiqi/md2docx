@@ -1,0 +1,19 @@
+---
+description: C language coding SOP (embedded, systems, drivers)
+globs:
+  - "**/*.c"
+alwaysApply: false
+---
+
+# C SOP
+
+- Target C11 or project standard; enable warnings and treat as errors when the build supports it.
+- Check every allocation return; pair every acquire with release (memory, fds, locks).
+- Prefer explicit error paths; use `goto cleanup` for multi-step init/teardown when the repo already does.
+- No undefined behavior: validate lengths, bounds, and null at API boundaries; avoid implicit truncations.
+- Headers: include guards or `#pragma once`; keep `.h` declarations minimal; include what you use in `.c`.
+- Naming: match project convention (`snake_case` typical); static for file scope unless exported.
+- Concurrency: document threading assumptions; use project mutex/lock primitives consistently.
+- Tests: unit tests via project runner (`make test`, `ctest`, custom harness); valgrind/ASan when available.
+- Build: match Makefile/CMake; do not hand-edit generated artifacts.
+- Security: no unchecked `strcpy`/`sprintf`; bounded copies; sanitize external input sizes.

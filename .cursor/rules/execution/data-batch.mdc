@@ -1,0 +1,60 @@
+---
+description: 数据访问批处理护栏 — IN 分块、列表参数上限、多阶段范围一致（通用）
+globs:
+  - "**/*.py"
+  - "**/*.sql"
+  - "**/*.{ts,js,go,rs,java}"
+alwaysApply: false
+---
+
+# 执行规范 · 数据访问批处理
+
+适用于 ORM / SQL / ETL / 运维脚本 / 批处理 CLI。与具体框架无关。
+
+## 必须
+
+1. **不可控长度列表禁止单条 `IN (...)`**
+   - 用户/上游传入的 ID 列表可能上千；拼成一条 SQL 易触驱动/DB 参数上限。
+
+2. **列表参数分块**
+   - 默认 chunk **200–1000**（按驱动上限下调）；循环查询后合并结果。
+
+3. **多阶段范围一致**
+   - `scan(limit/time-window)` 得到的子集须**显式**传入后续 `plan` / `execute`；禁止第二阶段隐式全表重扫。
+
+4. **查询 helper 单点复用**
+   - service 与 CLI 共用同一 `fetch_by_ids`（或等价）；禁止双份实现漂移。
+
+5. **超阈值回归**
+   - 改批处理路径须测「列表长度 > chunk」至少一条。
+
+## 典型上限（参考）
+
+| 引擎 | 常见上限 |
+|------|----------|
+| SQLite | ~999（编译可更高） |
+| PostgreSQL | 单语句参数 ~65535 |
+| SQL Server | ~2100 |
+
+## 推荐模式
+
+```python
+DEFAULT_BATCH_CHUNK = 500
+
+def fetch_by_ids(session, ids, *, chunk=DEFAULT_BATCH_CHUNK):
+    out = []
+    for i in range(0, len(ids), chunk):
+        part = ids[i : i + chunk]
+        out.extend(session.query(Model).filter(Model.id.in_(part)).all())
+    return out
+```
+
+## 自检
+
+```bash
+rg '\.in_\(|IN\s*\(' --glob '*.{py,sql,ts,js}'
+```
+
+## 项目特化
+
+具体 chunk 常量、表名、ORM 封装 → `.cursorGrowth/learn/dev-conventions.md`，**勿**写进本 rule。

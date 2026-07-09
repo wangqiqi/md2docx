@@ -1,0 +1,42 @@
+---
+description: Modal/Overlay 分层 — 集中 z-index 令牌、进度层与决策层顺序（通用）
+globs:
+  - "**/*Modal*"
+  - "**/*Overlay*"
+  - "**/*Dialog*"
+  - "**/zIndex*"
+  - "**/z-index*"
+  - "**/*Drawer*"
+alwaysApply: false
+---
+
+# 执行规范 · 弹窗分层
+
+## 原则
+
+1. **集中令牌表** — 全站 `z-index` 来自单一模块/CSS 变量（如 `zIndex.modal` · `zIndex.toast` · `zIndex.overlay`），**禁止**组件内 magic number `9999`。
+2. **层级语义固定**（由低到高，命名可按项目调整）。叠层编号用 **Z1/Z2/Z3**，**勿**与 `verify.mdc` 的验收层 **L0–L3** 混用：
+   - 页面内容
+   - sticky 工具栏
+   - **Z3** 普通层（可点遮罩关闭）
+   - **Z2** 工作流层（Esc 可关、遮罩慎关）
+   - **Z1** 破坏性确认（遮罩/Esc 不可关 — 见 **delivery** §破坏性确认类模态）
+   - 全屏进度/阻塞层
+   - **决策/治理层**（须在进度层之上，或打开决策层时隐藏进度层）
+   - Toast / 全局错误条
+
+3. **长任务 + 决策并存** — 规格须写清：**谁在上**；实现与 **long-running-ui.mdc** 一致。
+
+## 改前
+
+- Read 项目 `zIndex*` / design token 文件（路径 → `.cursorGrowth/learn/acceptance.md`）
+- grep 新增 overlay 的 `z-index` / `zIndex.`
+
+## 禁止
+
+- 新功能单独抬 z-index 压过既有层而不更新令牌表
+- 进度 0% 因决策层被挡而误报「后台未启动」（应黄条/说明等待用户确认）
+
+## 与 delivery
+
+UI Sprint 走查时对照 **delivery** §1 视觉 + 本 rule §层级语义。

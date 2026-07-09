@@ -1,0 +1,7 @@
+{
+  "profile": "rules-only",
+  "workflow": {
+    "enabled": false,
+    "hooks_enabled": false
+  }
+}

@@ -1,0 +1,46 @@
+---
+description: 多阶段长任务 UI — 状态机、完成态保留、列表刷新、会话续期（通用）
+globs:
+  - "**/*Progress*"
+  - "**/*Upload*"
+  - "**/*Import*"
+  - "**/*Wizard*"
+  - "**/*Install*"
+  - "**/hooks/use*Upload*"
+  - "**/hooks/use*Import*"
+alwaysApply: false
+---
+
+# 执行规范 · 长任务 UI
+
+适用于：上传、导入、安装向导、批量同步等 **多阶段 + 轮询/推送** 的前端流程。
+
+## 状态机
+
+1. **显式 stage 枚举**（如 `upload | extract | persist | done | failed`），禁止隐式布尔组合散落多处。
+2. **完成/失败态不得因 `loading=false` 卸载面板** — 用户须看到结果并主动 dismiss（或产品定义的 auto-close）。
+3. **阶段进度不回跳** — 子阶段已达 100% 时，父阶段/并列阶段不得因后端启动帧 `done=0` 回退 UI。
+4. **成功后 invalidate 列表** — `onSuccess` / 关面板 / 后台完成 toast 须触发数据网格或列表 **refetch**（同一 hook 封装 `refreshAfterComplete`）。
+
+## 会话与鉴权
+
+- 跨分钟级/小时级任务：在 **complete / 最终提交前** 校验或刷新 access token；长传期间 **周期性 silent refresh**（若项目有 refresh 机制）。
+- 401 时 **一次** 自动续期重试，失败则明确错误态（非假死 0%）。
+
+## 与弹窗分层
+
+- 决策弹窗（确认、治理、映射）与进度层 **z-index 契约** 见 `modal-layering.mdc`。
+- 打开决策层时，进度层 **隐藏或降权**，避免「传完看不见确认」。
+
+## 改前 grep
+
+`stage` · `importStage` · `isImporting` · `onSuccess` · `refreshAfter` · `complete` · 进度组件名。
+
+## 验收
+
+- [ ]  happy path：0% → 100% → 完成 UI → 列表含新数据
+- [ ]  failed：错误可见、可关闭、不卡死
+- [ ]  决策弹窗挡进度时仍可操作确认
+- [ ]  **delivery** §8 四问（若 UI Sprint）
+
+项目特有字段名 → `.cursorGrowth/learn/`，不写本 rule。

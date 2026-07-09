@@ -1,0 +1,23 @@
+---
+description: React frontend SOP
+globs:
+  - "**/*.tsx"
+  - "**/*.jsx"
+  - "**/components/**"
+  - "**/hooks/**"
+  - "**/pages/**"
+alwaysApply: false
+---
+
+# React SOP
+
+- Functional components and hooks for new code; no class components unless legacy-only.
+- Keep components small; extract custom hooks for shared state and effects.
+- Props typed; avoid prop drilling — context or state lib per project convention.
+- State: colocate; lift only when multiple consumers need it; avoid redundant derived state.
+- `useEffect`: correct deps; cleanup subscriptions/timers; prefer event handlers over effect sync when possible.
+- Performance: memoize only when measured or list-heavy; stable keys in lists; lazy routes for large pages.
+- Error boundaries for route/feature shells; surface user-safe fallback messages.
+- Styles: CSS modules, Tailwind, or project convention — no one-off globals.
+- Tests: React Testing Library — behavior, roles, accessible queries; not implementation details.
+- Before done: `type-check`, `lint`, `build` (or project verify script).

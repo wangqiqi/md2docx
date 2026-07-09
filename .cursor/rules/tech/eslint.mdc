@@ -1,0 +1,21 @@
+---
+description: ESLint integration SOP for JS/TS projects
+globs:
+  - "**/*.js"
+  - "**/*.jsx"
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/.eslintrc*"
+  - "**/eslint.config.*"
+alwaysApply: false
+---
+
+# ESLint SOP
+
+- Match project config (flat `eslint.config.*` or legacy `.eslintrc`); do not fork rules without reason.
+- Run lint before marking UI/API tasks done (`npm run lint` or project script).
+- Fix auto-fixable issues; suppressions require comment + ticket/issue ref.
+- No unused vars/imports in new code; align import order with repo plugin.
+- Prefer consistent quote/semi rules already in config — no style wars in mixed PRs.
+- Type-aware rules: use `@typescript-eslint` when TS project already does.
+- CI must mirror local lint command when scaffold provides `.github/workflows`.

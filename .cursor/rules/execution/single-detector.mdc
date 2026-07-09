@@ -1,0 +1,33 @@
+---
+description: 格式/协议检测单一真相源 — 一处 detect、多处 import（通用）
+globs:
+  - "**/*detect*"
+  - "**/*mime*"
+  - "**/*archive*"
+  - "**/*parser*"
+  - "**/*validate*"
+alwaysApply: false
+---
+
+# 执行规范 · 单一检测器（Single Detector）
+
+适用于：文件扩展名、MIME、魔数、压缩包类型、API 版本、协议变体等 **「这是哪种 X？」** 判定。
+
+## 必须
+
+1. **一处实现，多处 import** — 路由 A/B、peek/preview、Worker 须同一函数（如 `detect_type()` · `is_archive_filename()`）。
+2. **双后缀优先** — `.tar.gz` 等复合扩展名在单后缀规则之前匹配。
+3. **无后缀 fallback** — 流式/临时路径（如 `data.part`）用魔数 + **会话原始 filename** 辅助，禁止只对无后缀路径做「格式校验」误杀。
+4. **缺依赖错误明确** — 可选库未安装时返回 **可行动** 提示（包名/pip 命令），非笼统 `invalid`。
+
+## 规划
+
+- 新增第二种检测逻辑 → **SPIKE-*** 或 plan **Out of scope** 写「复用现有 detector」
+- 改 detector → 全库 grep 旧判定函数；补 **矩阵单测**（扩展名 × 魔数 × 边界）
+
+## 禁止
+
+- 在 API 路由里复制一份 `if ext in (...)` 与 service 层不一致
+- 「preview 认、upload 不认」的分叉（历史高频重复劳动源）
+
+项目具体格式列表 → `.cursorGrowth/learn/`，不写本 rule。

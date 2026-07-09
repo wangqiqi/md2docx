@@ -1,0 +1,34 @@
+---
+description: 改动范围与最小 diff — 防 scope creep、drive-by 重构
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
+# 执行规范 · 范围与最小 diff
+
+与 **plan** Sprint Goal / **run** 审计 · 用户 min-diff 原则对齐。吸收社区 [anti-overengineering](https://github.com/PatrickJS/awesome-cursorrules) 要点。
+
+## 范围
+
+- 只做 ACTIVE 任务或用户明确请求；无静默扩 scope。
+- 不碰 Sprint **Out of scope**（见 `plan.md`）。
+- 「顺便」重构、格式化全库、重命名无关标识符 → 单独 **TASK** 或 `/plan`。
+
+## 最小正确 diff
+
+- 优先修根因，非 symptomatic patch（见 `bugfix.mdc`）。
+- 不新增仅一行调用的 helper；不过度抽象。
+- 匹配周边命名、类型、import 风格。
+
+## 何时可扩大范围
+
+- 用户 steering 明确扩大
+- 不扩大则无法通过 **task-verify**
+- `/plan` 已更新 Goal / TASK 表
+
+## 分工
+
+- 规划边界 → **plan** · `plan.md`
+- 执行审计 → **run** skill
+- 重构方法论 → **refactor** skill

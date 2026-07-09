@@ -1,0 +1,33 @@
+---
+description: 错误上下文 — 内层细节不得被外层覆盖；看门狗与业务错误字段（通用）
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
+# 执行规范 · 错误上下文
+
+## 必须
+
+1. **内层已写详细错误时，外层禁止覆盖**
+   - 内层 `set status=failed` + `message=入库失败: …` 后，外层 `except Exception as e` **不得**仅用 `str(e)` 覆盖（常为泛化「项目不存在」）。
+   - 模式：`if not already_set: patch(message=…)` 或 **re-raise** 内层已处理路径。
+
+2. **看门狗 / 超时 vs 业务失败**
+   - 超时写入的 `error_message` 与业务层失败 **preserve** 优先规则写清（谁先写、谁可覆盖）。
+   - 前端展示 **failed** 态须能读到最终 `error_message` / `detail`（hover、展开、toast）。
+
+3. **API 响应契约**
+   - 全局 exception handler 返回体含 **`error` 或 `detail`**，与前端 errorHandler 一致；禁止一律「服务器内部错误」吞掉原因。
+
+4. **日志 vs 用户文案**
+   - 日志可含 stack；返回用户 **友好句** + 可选 `error_code`；不暴露内部路径/密钥。
+
+## 与 bugfix
+
+- hotfix 改失败路径 → grep 所有 `_update_*_status` · `setFailed` · `catch` 链
+- 用户可见修复 → CHANGELOG `### Fixed`
+
+## 与 async-progress
+
+Worker/API 双写进度时的 message 字段 — 同规则，见 `async-progress.mdc`。

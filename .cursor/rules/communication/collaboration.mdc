@@ -1,0 +1,46 @@
+---
+description: 沟通规范 — Review、PR 描述与分支协作话术
+globs:
+  - .github/**
+  - "**/PULL_REQUEST_TEMPLATE*"
+  - "**/pull_request_template*"
+alwaysApply: false
+---
+
+# 沟通规范 · 协作与 Review
+
+## 语言
+
+与用户提交语言一致（见 `core.mdc`）：中文消息 → 中文思考与回复；英文消息 → 英文思考与回复。
+
+## Pull Request
+
+- 描述包含：**做了什么、为什么、如何验证**。
+- Review 意见用 follow-up commit 回应；共享分支勿 force-push（除非团队明确允许）。
+
+## PR Review 角度（REV-* 或合并前）
+
+分角输出：**严重度 · file:line · 发现 · 建议**（见 **review** skill）。
+
+| 角度 | 关注点 |
+|------|--------|
+| **Security** | 密钥、auth、注入、依赖 CVE；必要时 **security** skill |
+| **Performance** | N+1、热路径分配、无必要重渲染；必要时 **perf** skill |
+| **Tests** | 行为变更是否有回归；验收命令是否可复现 |
+| **Architecture** | 模块边界、重复逻辑、scope 是否符合 PR/TASK 描述 |
+
+- 无 drive-by 重构；范围不符 → 请求拆 PR 或 **split-to-prs**
+- CI 红：修 scope 内失败；勿改 workflow 仅为通过
+
+## 分支协作
+
+- 短生命周期 feature 分支；rebase/merge 遵循团队规范。
+- 未经同意勿向受保护发布分支直接提交。
+
+## 与执行规范的分工
+
+- **提交**：见 `rules/execution/commit.mdc`
+- **Git**：**git** skill · Sprint/Task 汇入主轨 → **release** skill §分支
+- **安全**：**security** skill
+- PR 维护、CI 循环 → `babysit`（`more` → `git`）
+- 大 diff 拆 PR → `split-to-prs`（须用户批准计划）

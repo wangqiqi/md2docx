@@ -1,0 +1,52 @@
+---
+description: 双进程/异步任务进度 — 单一真相源、超时、跨实例回归（通用）
+globs:
+  - "**/*progress*"
+  - "**/*worker*"
+  - "**/tasks/**"
+  - "**/jobs/**"
+  - "**/queue*"
+  - "**/celery*"
+  - "**/arq*"
+alwaysApply: false
+---
+
+# 执行规范 · 异步进度（API + Worker）
+
+适用于：**API 进程** 写进度、**Worker/队列** 写进度、**客户端轮询/WebSocket** 读进度的架构。与具体队列（ARQ/Celery/RQ/Bull）无关。
+
+## 必须
+
+1. **单一真相源或显式 merge 策略**
+   - 多存储（内存 dict + Redis/DB）时，`get` **必须**按 `updated_at`（或等价版本号）取**较新**者。
+   - 禁止 API 内存命中后直接返回、不再读共享存储。
+
+2. **写失败不得静默**
+   - 共享存储不可达、超时、抛错 → **ERROR 日志** + 可观测字段；禁止仅 WARNING 且上层以为已持久化。
+
+3. **操作超时**
+   - 对共享存储的 `get/set/publish` 使用 **有限 timeout**（如 3–5s）；禁止无限 `await` 挂死请求线程。
+
+4. **任务 ID 契约稳定**
+   - 轮询路径依赖的前缀/命名空间在 **所有 create/fallback 路径** 一致；新增 fallback 须 grep 全链路 `get(id)`。
+
+5. **跨实例回归测**
+   - 改 progress store 须补：**实例 A 写 → 实例 B 读** 集成/单测（真 Redis 或 test double）。
+
+## 禁止
+
+- Worker 已 `failed/done`，API 仍返回陈旧 `running/upload/extract 0%`
+- 内层已写丰富 `message`，外层 `except` 用裸 `str(e)` **覆盖**（见 `error-context.mdc`）
+- 无 timeout 的 Redis/DB client 用于 progress 热路径
+
+## 规划与验收
+
+| 阶段 | 动作 |
+|------|------|
+| **/plan** follow-up 同症状 ≥2 次 | 须 **SPIKE-*** 或合并进原 Sprint（见 **plan** skill §Follow-up） |
+| **task-verify** | 至少 L1 覆盖 merge / timeout / 写失败路径 |
+| **长任务 UI** | 联读 `long-running-ui.mdc` · **delivery** §8 |
+
+## 项目特化
+
+具体 store 类名、Redis key、task_id 前缀 → `.cursorGrowth/learn/dev-conventions.md`，**勿**写进本 rule。

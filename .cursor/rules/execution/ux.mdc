@@ -1,0 +1,43 @@
+---
+description: UX 总览与路由 — IA 为结构层特化；规划用 ia · 上线走查用 delivery · 细则见项目设计规范
+globs:
+  - plan.md
+  - docs/design/**
+  - "**/src/**"
+  - "**/app/**"
+  - "**/components/**"
+alwaysApply: false
+---
+
+# 执行规范 · 用户体验（UX）
+
+**UX** 为总目标；母版按**阶段**拆 skill，避免一个入口包揽全部。路由与分层 → **ux** skill。
+
+## Garrett 分层 · 母版映射
+
+| UX 层 | 典型问题 | 母版入口 | 阶段 |
+|-------|----------|----------|------|
+| 战略 / 范围 | 做啥、给谁 | **plan** · `SPIKE-*` | 规划 |
+| **结构 · 信息架构 IA** | 放哪、怎么找、角色入口、工作流分支 | **ia** · `rules/execution/ia.mdc` | 规划 / 大改前 |
+| 骨架 · 交互 | 线框、步骤、反馈、空错态 | **ia** 分支点 + **delivery** §5 | 规划 + 验收 |
+| 表现 · 视觉 | token、密度、组件一致 | 项目 `设计规范` · **delivery** §1 | 实现 / 验收 |
+| 内容 | 文案、i18n、术语 | **delivery** §2 · `docs.mdc` | 验收 |
+
+**IA ⊂ UX**：`ia` 不是与 UX 平行的学科，而是 **结构层（+ 部分骨架）特化**。
+
+## 何时用哪个入口
+
+| 用户说 / 场景 | 入口 |
+|---------------|------|
+| 迷路、导航、Dashboard 乱、角色首页、工作流分支 | **ia** |
+| 上线前、交付验收、视觉/i18n/空态 | **delivery** |
+| 不确定属于哪类 UX 问题 | **ux** skill（AskQuestion 分流） |
+| 学交互/可用性方法论 | **study**（≠ 本项目 IA 文档） |
+
+## 与 verify 分工
+
+- **task-verify** / **verify** — 自动化（不变）
+- **ia** — 结构是否符合 `docs/design/*-ia*` 与 `ia.mdc` R1–R4（规划或 delivery 抽检）
+- **delivery** — 7 维走查含 **§5 导航与 IA**（见 delivery skill）
+
+项目 IA 实例 → `docs/design/<产品>-ia.md` · 视觉 token → 项目设计规范 · **不**写入本 rule。

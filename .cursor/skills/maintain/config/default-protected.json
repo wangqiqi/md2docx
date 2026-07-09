@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "protected_dirs": [
+    "~/workspace",
+    "~/projects",
+    "~/miniconda3",
+    "~/Downloads",
+    ".cursorGrowth"
+  ],
+  "installer_dirs": [
+    { "path": "~/Downloads", "label": "Downloads", "flag": "CLEAN_DOWNLOADS_INSTALLERS" }
+  ],
+  "cache_dirs": [
+    "~/.cache/google-chrome",
+    "~/.cache/mozilla",
+    "~/.cache/microsoft-edge",
+    "~/.cache/vscode-cpptools",
+    "~/.cache/uv",
+    "~/.cache/thumbnails",
+    "~/.cache/gnome-software",
+    "~/.cache/apt",
+    "~/.cache/pip",
+    "~/.cache/pre-commit",
+    "~/.cache/yarn",
+    "~/.cache/electron",
+    "~/.cache/electron-builder",
+    "~/.cache/ms-playwright",
+    "~/.cache/Cypress",
+    "~/.cache/puppeteer"
+  ],
+  "extra_cache_dirs": [
+    "~/.cache/go-build",
+    "~/.cache/ms-playwright-go",
+    "~/.cache/clangd"
+  ],
+  "build_artifact_dirs": [],
+  "build_artifact_tmp_globs": []
+}

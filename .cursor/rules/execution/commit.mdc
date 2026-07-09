@@ -1,0 +1,23 @@
+---
+description: Git 提交 — 见 git skill
+globs:
+  - CHANGELOG.md
+alwaysApply: false
+---
+
+# 提交
+
+用 **git** skill：`type(scope): summary` · 一逻辑一 commit · plan 任务引用 ID。
+
+**`.cursorGrowth/plan.md`** 与 **`archive/`**：在 **`.gitignore`**（整个 `.cursorGrowth/`），**禁止** `git add` / commit；对外变更写 CHANGELOG；模板在 `.cursor/templates/plan.md`。
+
+**/run` 路径**：每个 TASK/DOC/SPIKE 任务 ✅ 与 Sprint 收尾时 **Agent 必须自动 commit**；`release.mode: tag-per-commit` 时同轮 **`release-tag`**（见 **run** skill · **release** skill）。
+
+## Push 前
+
+- [ ] `git status && git diff --stat` — 无意外文件
+- [ ] `./.cursor/bin/runner.sh task-verify` — 当前任务验收通过（若启用 plan/run）
+- [ ] CHANGELOG 已更新用户可见变更（若有）
+- [ ] commit message 含 plan 任务 ID（如 `TASK-003`）
+
+禁止（除非用户明确）：force-push 共享分支 · reset --hard / clean -fdx · `--no-verify`。

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "description": "Optional override. Copy to .cursorGrowth/maintain-config.json and edit for your machine.",
+  "protected_dirs": [
+    "~/vendor",
+    "~/models"
+  ],
+  "installer_dirs": [
+    {
+      "path": "~/Downloads",
+      "label": "Downloads",
+      "flag": "CLEAN_DOWNLOADS_INSTALLERS"
+    }
+  ],
+  "build_artifact_dirs": [
+    "~/.cache/ccache"
+  ],
+  "build_artifact_tmp_globs": []
+}

@@ -1,0 +1,20 @@
+---
+description: Rust coding SOP
+globs:
+  - "**/*.rs"
+  - "Cargo.toml"
+  - "Cargo.lock"
+alwaysApply: false
+---
+
+# Rust SOP
+
+- `cargo fmt` and `cargo clippy` (deny warnings) before commit when the project uses them.
+- Prefer `Result` and `?` in libraries; document intentional `expect`/`unwrap` with invariants.
+- Ownership: borrow when possible; `Arc`/`Mutex` only with clear lifetimes; avoid lock nesting.
+- Async: Tokio at binary edge; `spawn` with structured shutdown; timeouts on external calls.
+- Errors: use `thiserror`/`anyhow` per repo; map to user-safe messages at API boundary.
+- Public API: minimal surface; hide modules; semver-aware breaking changes in CHANGELOG.
+- Tests: unit in modules; integration in `tests/` against public API.
+- Security: no `unsafe` without comment + review; sanitize lengths on external input.
+- Acceptance: `cargo test` · `./scripts/test.sh` · `./scripts/verify.sh` when present.

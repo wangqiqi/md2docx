@@ -1,0 +1,19 @@
+---
+description: Python coding SOP
+globs:
+  - "**/*.py"
+  - "pyproject.toml"
+  - "requirements*.txt"
+alwaysApply: false
+---
+
+# Python SOP
+
+- PEP 8 + project formatter (`black`, `ruff format`); linter (`ruff`, `flake8`) before commit.
+- Type hints on public functions; `py.typed` if library.
+- Use `venv` / `uv` / project env manager; pin deps in `pyproject.toml` or lockfile.
+- Prefer `pathlib` over `os.path` in new code.
+- Async: one event loop policy per app; timeout external calls.
+- Tests: `pytest`; mark `@pytest.mark.integration` for slow/DB tests.
+- Secrets via env; never commit `.env`.
+- CLI scripts with argparse: follow `rules/execution/cli-python.mdc`.

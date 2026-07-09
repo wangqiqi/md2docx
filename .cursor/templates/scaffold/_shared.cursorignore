@@ -1,0 +1,92 @@
+# Super Cursor scaffold — Cursor Agent 硬排除（apply → 仓库根 .cursorignore）
+# .gitignore 主要管 git/索引；此处硬拦 Agent / Tab / @ 读取
+
+# --- Node / 前端 ---
+node_modules/
+.pnpm-store/
+.yarn/
+.pnp.*
+dist/
+build/
+.next/
+out/
+.nuxt/
+.turbo/
+.parcel-cache/
+.vite/
+coverage/
+*.tsbuildinfo
+
+# --- Python ---
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+*.egg-info/
+.eggs/
+htmlcov/
+.coverage
+.coverage.*
+.hypothesis/
+
+# --- Rust ---
+target/
+
+# --- Go ---
+# 仅根目录编译产物（勿写 bin/ — 会误伤 .cursor/bin/）
+/bin/
+*.exe
+*.test
+coverage.out
+*.out
+
+# --- Java / Kotlin / JVM ---
+.gradle/
+build/
+out/
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# --- C / C++ / CMake ---
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.dll
+
+# --- 通用临时 / 缓存 / 日志 ---
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+.cache/
+.tmp/
+.DS_Store
+Thumbs.db
+
+# --- Super Cursor（learn/ 不忽略 — Agent 需读项目认知）---
+.cursorGrowth/logs/
+.cursorGrowth/perception/
+
+# --- 敏感 ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets.*
