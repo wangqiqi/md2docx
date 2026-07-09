@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- README：版本徽章与测试基线对齐 **v0.5.47** / **278**；「规划中」指向本地 `.cursorGrowth/ROADMAP.md`（D-FACADE-01）
+- `docs/README.md`：补充活路线图指针（`.cursorGrowth/ROADMAP.md`，不入库）
 - 删除根目录 `审查.md`（审查 ROI 已全部闭合；全文迁入 `.cursorGrowth/archive/`）
 - 根目录 `archive/` 合并迁入 `.cursorGrowth/archive/`（含历史 `sprint/`；本地 gitignore）
 
