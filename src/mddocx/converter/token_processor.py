@@ -1,6 +1,6 @@
 """Markdown token 遍历与元素路由（从 BaseConverter 轻量提取）。"""
 
-from typing import Any, Set
+from typing import Any, List
 
 
 class TokenProcessor:
@@ -9,7 +9,7 @@ class TokenProcessor:
     def __init__(self, base_converter: Any) -> None:
         self._base = base_converter
 
-    def process(self, tokens) -> None:
+    def process(self, tokens: List[Any]) -> None:
         # 用于跟踪已处理的段落，避免重复处理
         processed_paragraphs = set()
 
