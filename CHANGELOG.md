@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.46] - 2026-07-09
+
+### Changed
+- `mypy.ini`：启用 `disallow_untyped_defs`；移除 elements 放宽项（M-MYPY-02）
+- `converter/elements` 与 `token_processor.process` 补齐类型注解
+
 ## [0.5.45] - 2026-07-09
 
 ### Changed
