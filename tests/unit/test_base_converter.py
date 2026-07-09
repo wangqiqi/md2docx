@@ -61,6 +61,31 @@ class TestBaseConverterRouting:
         BaseConverter().convert("# Hi")
         assert any("duration_ms=" in r.message for r in caplog.records)
 
+    def test_convert_sets_last_metrics(self):
+        from mddocx.converter.metrics import ConvertMetrics
+
+        converter = BaseConverter()
+        assert converter.last_metrics is None
+        md = "# Hi\n\nbody"
+        converter.convert(md)
+        metrics = converter.last_metrics
+        assert isinstance(metrics, ConvertMetrics)
+        assert metrics.duration_ms >= 0
+        assert metrics.input_bytes == len(md.encode("utf-8"))
+        assert metrics.chunked is False
+
+    def test_convert_file_sets_last_metrics(self, tmp_path):
+        md = tmp_path / "doc.md"
+        content = "# 文件标题\n"
+        md.write_text(content, encoding="utf-8")
+        converter = BaseConverter()
+        converter.convert_file(md)
+        metrics = converter.last_metrics
+        assert metrics is not None
+        assert metrics.input_bytes == len(content.encode("utf-8"))
+        assert metrics.duration_ms >= 0
+        assert metrics.chunked is False
+
     def test_convert_error_preserves_exception_type(self):
         """未知异常包装为 ConvertError 并保留 __cause__ 与类型名"""
         converter = BaseConverter()
@@ -69,6 +94,9 @@ class TestBaseConverterRouting:
             with pytest.raises(ConvertError, match="RuntimeError") as exc_info:
                 converter.convert("# x")
             assert isinstance(exc_info.value.__cause__, RuntimeError)
+            # finally 仍应写入指标
+            assert converter.last_metrics is not None
+            assert converter.last_metrics.chunked is False
 
 
 class TestBaseConverterSizeAndFile:

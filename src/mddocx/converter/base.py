@@ -30,6 +30,7 @@ from .elements import (
 )
 from .elements.base import ElementConverter
 from .equation_labels import EquationRegistry
+from .metrics import ConvertMetrics
 from .security import (
     CHUNKED_THRESHOLD,
     MarkdownTooLargeError,
@@ -84,6 +85,7 @@ class BaseConverter:
         self.converters: Dict[str, Any] = {}
         self._list_stack: List[Tuple[str, int]] = []  # [(list_type, level), ...]
         self._equation_registry = EquationRegistry()
+        self.last_metrics: Optional[ConvertMetrics] = None
 
         # 自动注册所有转换器
         self._register_default_converters()
@@ -174,6 +176,11 @@ class BaseConverter:
             return self._convert_tokens(md_text, base_path)
         finally:
             duration_ms = (time.perf_counter() - start) * 1000
+            self.last_metrics = ConvertMetrics(
+                duration_ms=duration_ms,
+                input_bytes=input_bytes,
+                chunked=bool(use_chunked),
+            )
             logger.info(
                 "convert_done duration_ms=%.1f input_bytes=%d chunked=%s",
                 duration_ms,

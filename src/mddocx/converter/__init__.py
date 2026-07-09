@@ -16,9 +16,11 @@ from .elements import (
     TaskListConverter,
     TextConverter,
 )
+from .metrics import ConvertMetrics
 
 __all__ = [
     "BaseConverter",
+    "ConvertMetrics",
     "ElementConverter",
     "MD2DocxError",
     "ParseError",
