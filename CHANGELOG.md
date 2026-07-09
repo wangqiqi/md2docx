@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.44] - 2026-07-09
+
+### Changed
+- 文档指针：Sprint 真源由根 `plan.md` 改为 `.cursorGrowth/plan.md`（README · docs · 审查）
+
 ## [0.5.43] - 2026-07-09
 
 ### Fixed
