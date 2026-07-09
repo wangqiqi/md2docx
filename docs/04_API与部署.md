@@ -194,11 +194,16 @@ docker run --rm -p 5000:5000 -e SECRET_KEY=change-me mddocx:latest
 ### 应用日志
 - Flask 应用日志输出到控制台
 - 错误信息记录在应用日志中
+- 转换器日志：`convert_done duration_ms=… input_bytes=… chunked=…`（`mddocx.converter.base`）
+
+### 转换指标（ConvertMetrics）
+
+程序可读出口：`BaseConverter.last_metrics`（字段 `duration_ms` / `input_bytes` / `chunked`）。详见 [02_开发指南 · 转换指标](02_开发指南.md#转换指标convertmetrics)。CLI `--debug` 会在转换后打印该快照。
 
 ### 性能监控
-- 转换时间统计
-- 文件大小监控
-- 错误率跟踪
+- 转换时间统计（`duration_ms`）
+- 文件大小监控（`input_bytes`）
+- 分块路径标记（`chunked`）
 
 ## 版本信息
 

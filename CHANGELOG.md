@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.47] - 2026-07-09
+
+### Added
+- `ConvertMetrics` / `BaseConverter.last_metrics`：转换耗时、输入字节、是否分块的程序可读出口（ARCH-R03）
+- CLI `--debug` 打印 metrics 快照；docs/02 · docs/04 字段约定
+
 ## [0.5.46] - 2026-07-09
 
 ### Changed

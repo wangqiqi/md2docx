@@ -38,6 +38,25 @@ class TestCLI:
                 if os.path.exists(path):
                     os.unlink(path)
 
+    def test_convert_file_debug_prints_metrics(self, capsys):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False, encoding="utf-8") as md_file:
+            md_file.write("# 调试指标\n")
+            md_path = md_file.name
+
+        with tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as docx_file:
+            docx_path = docx_file.name
+
+        try:
+            convert_file(md_path, docx_path, debug=True)
+            out = capsys.readouterr().out
+            assert "metrics: duration_ms=" in out
+            assert "input_bytes=" in out
+            assert "chunked=" in out
+        finally:
+            for path in [md_path, docx_path]:
+                if os.path.exists(path):
+                    os.unlink(path)
+
     def test_convert_file_input_not_exists(self):
         """测试输入文件不存在的情况"""
         with tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as docx_file:

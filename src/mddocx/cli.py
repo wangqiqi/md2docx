@@ -42,6 +42,9 @@ def convert_file(input_file: str, output_file: str, debug: bool = False) -> None
     try:
         converter = BaseConverter(debug=debug)
         doc = converter.convert_file(input_path)
+        if debug and converter.last_metrics is not None:
+            m = converter.last_metrics
+            print(f"metrics: duration_ms={m.duration_ms:.1f} " f"input_bytes={m.input_bytes} chunked={m.chunked}")
 
     except MD2DocxError:
         # 转换器自定义错误，直接重新抛出
