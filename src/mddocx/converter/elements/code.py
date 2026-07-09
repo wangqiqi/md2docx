@@ -1,3 +1,6 @@
+from typing import Any, Optional
+
+from docx.document import Document as DocxDocument
 from docx.enum.style import WD_STYLE_TYPE
 from docx.shared import Pt, RGBColor
 
@@ -7,11 +10,11 @@ from .base import ElementConverter
 class CodeConverter(ElementConverter):
     """代码块转换器"""
 
-    def __init__(self, base_converter=None):
+    def __init__(self, base_converter: Optional[Any] = None) -> None:
         super().__init__(base_converter)
         self._last_was_code = False
 
-    def set_document(self, document):
+    def set_document(self, document: DocxDocument) -> None:
         if document is None:
             raise ValueError("Document cannot be None")
 
@@ -28,7 +31,7 @@ class CodeConverter(ElementConverter):
             style.paragraph_format.left_indent = Pt(32)  # 约0.5英寸
             style.paragraph_format.right_indent = Pt(32)  # 约0.5英寸
 
-    def convert(self, token):
+    def convert(self, token: Any) -> None:
         """转换代码块
 
         Args:

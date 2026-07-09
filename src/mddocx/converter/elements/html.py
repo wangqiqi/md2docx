@@ -24,7 +24,7 @@ from .base import ElementConverter
 class HtmlConverter(ElementConverter):
     """HTML转换器，处理Markdown中的HTML标签"""
 
-    def __init__(self, base_converter=None):
+    def __init__(self, base_converter: Optional[Any] = None) -> None:
         """初始化HTML转换器
 
         Args:

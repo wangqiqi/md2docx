@@ -6,7 +6,8 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.oxml.shared import OxmlElement, qn
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
 from docx.shared import Inches, Pt
 from docx.text.paragraph import Paragraph
 
@@ -16,7 +17,7 @@ from .base import ElementConverter
 class ListConverter(ElementConverter):
     """处理列表的转换器"""
 
-    def __init__(self, base_converter=None) -> None:
+    def __init__(self, base_converter: Optional[Any] = None) -> None:
         super().__init__(base_converter)
         # 跟踪当前列表状态：(层级, 是否有序, 编号ID)
         self._current_lists: List[Tuple[int, bool, Optional[int]]] = []

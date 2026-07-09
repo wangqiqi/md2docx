@@ -2,7 +2,7 @@
 标题转换器模块，处理 h1-h6 标题的转换
 """
 
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 from docx.shared import Pt
 
@@ -22,7 +22,7 @@ class HeadingConverter(ElementConverter):
         6: {"name": "Heading 6", "size": 12, "bold": False},
     }
 
-    def __init__(self, base_converter=None):
+    def __init__(self, base_converter: Optional[Any] = None) -> None:
         super().__init__(base_converter)
 
     def convert(self, tokens: Tuple[Any, Any]) -> None:

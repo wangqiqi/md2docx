@@ -14,7 +14,7 @@ from .base import ElementConverter
 class TextConverter(ElementConverter):
     """处理段落和内联文本的转换器"""
 
-    def __init__(self, base_converter=None) -> None:
+    def __init__(self, base_converter: Optional[Any] = None) -> None:
         """初始化文本转换器
 
         Args:

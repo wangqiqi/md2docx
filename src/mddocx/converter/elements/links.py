@@ -2,10 +2,14 @@
 链接转换器模块
 """
 
+from typing import Any, Dict, Optional, Tuple
+
+from docx.document import Document as DocxDocument
 from docx.enum.style import WD_STYLE_TYPE
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import RGBColor
+from docx.text.paragraph import Paragraph
 
 from .base import ElementConverter
 
@@ -13,17 +17,17 @@ from .base import ElementConverter
 class LinkConverter(ElementConverter):
     """链接转换器，处理各种类型的链接"""
 
-    def __init__(self, base_converter=None):
+    def __init__(self, base_converter: Optional[Any] = None) -> None:
         super().__init__(base_converter)
 
-    def set_document(self, document):
+    def set_document(self, document: DocxDocument) -> None:
         if document is None:
             raise ValueError("Document cannot be None")
         self.document = document
         # 创建链接样式
         self._ensure_hyperlink_style()
 
-    def _ensure_hyperlink_style(self):
+    def _ensure_hyperlink_style(self) -> None:
         """确保Hyperlink样式存在"""
         if "Hyperlink" not in self.doc.styles:
             style = self.doc.styles.add_style("Hyperlink", WD_STYLE_TYPE.CHARACTER)
@@ -31,7 +35,7 @@ class LinkConverter(ElementConverter):
             font.color.rgb = RGBColor(0, 0, 255)  # 蓝色
             font.underline = True
 
-    def convert(self, token_pair):
+    def convert(self, token_pair: Tuple[Any, Any]) -> None:
         """转换链接
 
         Args:
@@ -67,7 +71,13 @@ class LinkConverter(ElementConverter):
         # 创建超链接
         self._add_hyperlink(paragraph, text, url)
 
-    def convert_in_paragraph(self, paragraph, token, style=None, link_text=None):
+    def convert_in_paragraph(
+        self,
+        paragraph: Paragraph,
+        token: Any,
+        style: Optional[Dict[str, Any]] = None,
+        link_text: Optional[str] = None,
+    ) -> None:
         """在段落中转换链接
 
         Args:
@@ -112,7 +122,7 @@ class LinkConverter(ElementConverter):
         # 添加带样式的超链接
         self._add_hyperlink_with_style(paragraph, text, url, style or {})
 
-    def _add_hyperlink(self, paragraph, text, url):
+    def _add_hyperlink(self, paragraph: Paragraph, text: str, url: str) -> None:
         """添加超链接到段落
 
         Args:
@@ -163,7 +173,9 @@ class LinkConverter(ElementConverter):
         # 将超链接插入到原来运行元素的位置
         parent.insert(index, hyperlink)
 
-    def _add_hyperlink_with_style(self, paragraph, text, url, style):
+    def _add_hyperlink_with_style(
+        self, paragraph: Paragraph, text: str, url: str, style: Dict[str, Any]
+    ) -> None:
         """添加带样式的超链接到段落
 
         Args:

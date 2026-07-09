@@ -3,7 +3,7 @@ LaTeX 数学公式转换器
 """
 
 from io import BytesIO
-from typing import Optional
+from typing import Any, Optional, cast
 from urllib.parse import quote
 
 import requests
@@ -32,7 +32,7 @@ def build_codecogs_url(latex: str, inline: bool = False) -> str:
 class MathConverter(ElementConverter):
     """将 LaTeX 公式渲染为 PNG 并嵌入 DOCX"""
 
-    def convert(self, token) -> None:
+    def convert(self, token: Any) -> None:
         """块级 math_block token"""
         if not self.document:
             raise ValueError("Document not set")
@@ -54,7 +54,7 @@ class MathConverter(ElementConverter):
             return
         self._fallback_block(latex, equation_number=equation_number)
 
-    def convert_in_paragraph(self, paragraph: Paragraph, token) -> None:
+    def convert_in_paragraph(self, paragraph: Paragraph, token: Any) -> None:
         """行内 math_inline token"""
         latex = token.content if hasattr(token, "content") else ""
         if not latex.strip():
@@ -68,7 +68,7 @@ class MathConverter(ElementConverter):
 
     def _equation_registry(self) -> Optional[EquationRegistry]:
         if self.base_converter and hasattr(self.base_converter, "_equation_registry"):
-            return self.base_converter._equation_registry
+            return cast(Optional[EquationRegistry], self.base_converter._equation_registry)
         return None
 
     def _try_embed(self, latex: str, block: bool = False, equation_number: Optional[int] = None) -> bool:

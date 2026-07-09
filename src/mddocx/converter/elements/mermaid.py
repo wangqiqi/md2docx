@@ -5,7 +5,7 @@ Mermaid 流程图转换器
 import base64
 import json
 from io import BytesIO
-from typing import Optional
+from typing import Any, Optional
 
 import requests
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -76,7 +76,7 @@ def build_mermaid_ink_url(diagram: str, image_type: str = "png") -> str:
 class MermaidConverter(ElementConverter):
     """将 Mermaid 图表渲染为图片并嵌入 DOCX"""
 
-    def convert(self, token) -> None:
+    def convert(self, token: Any) -> None:
         if not self.document:
             raise ValueError("Document not set")
 
@@ -131,7 +131,7 @@ class MermaidConverter(ElementConverter):
         cap_run.font.size = Pt(9)
         cap_run.font.color.rgb = RGBColor(102, 102, 102)
 
-    def _fallback_as_code(self, token, source: str, unsupported: bool = False) -> None:
+    def _fallback_as_code(self, token: Any, source: str, unsupported: bool = False) -> None:
         note = "（不支持的 Mermaid 类型，已保留源码）" if unsupported else "（Mermaid 渲染失败，已保留源码）"
         note_para = self.doc.add_paragraph()
         note_run = note_para.add_run(note)

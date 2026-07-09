@@ -2,9 +2,12 @@
 分隔线转换器模块
 """
 
+from typing import Any, Optional
+
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
+from docx.text.paragraph import Paragraph
 
 from .base import ElementConverter
 
@@ -12,7 +15,7 @@ from .base import ElementConverter
 class HRConverter(ElementConverter):
     """分隔线转换器，处理Markdown中的水平分隔线"""
 
-    def __init__(self, base_converter=None):
+    def __init__(self, base_converter: Optional[Any] = None) -> None:
         """初始化分隔线转换器
 
         Args:
@@ -23,7 +26,7 @@ class HRConverter(ElementConverter):
         if base_converter:
             self.debug = base_converter.debug
 
-    def convert(self, token):
+    def convert(self, token: Any) -> Paragraph:
         """转换分隔线token为DOCX水平线
 
         Args:
@@ -47,7 +50,7 @@ class HRConverter(ElementConverter):
 
         return paragraph
 
-    def _add_horizontal_line(self, paragraph):
+    def _add_horizontal_line(self, paragraph: Paragraph) -> None:
         """向段落添加水平线
 
         Args:

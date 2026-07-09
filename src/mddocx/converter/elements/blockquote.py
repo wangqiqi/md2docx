@@ -2,7 +2,7 @@
 引用块转换器模块，处理引用块的转换
 """
 
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -15,7 +15,7 @@ from .base import ElementConverter
 class BlockquoteConverter(ElementConverter):
     """处理引用块的转换器"""
 
-    def __init__(self, base_converter=None):
+    def __init__(self, base_converter: Optional[Any] = None) -> None:
         super().__init__(base_converter)
 
     def convert(self, tokens: Tuple[Any, Any]) -> None:
@@ -47,7 +47,9 @@ class BlockquoteConverter(ElementConverter):
 
         self._process_inline_children(paragraph, content_token.children, link_converter)
 
-    def _process_inline_children(self, paragraph: Paragraph, children, link_converter) -> None:
+    def _process_inline_children(
+        self, paragraph: Paragraph, children: List[Any], link_converter: Optional[Any]
+    ) -> None:
         """处理引用块内联内容（链接、删除线、行内代码等）"""
         current_text = ""
         current_style: Dict[str, bool] = {

@@ -3,16 +3,18 @@
 """
 
 import re
+from typing import Any, Optional, Tuple
 
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches
+from docx.text.paragraph import Paragraph
 
 from .base import ElementConverter
 from .list import ListConverter
 
 
-def insert_word_checkbox(paragraph, checked: bool = False) -> bool:
+def insert_word_checkbox(paragraph: Paragraph, checked: bool = False) -> bool:
     """向段落插入 Word 2010+ checkbox 内容控件。成功返回 True。"""
     try:
         sdt = OxmlElement("w:sdt")
@@ -50,7 +52,7 @@ def insert_word_checkbox(paragraph, checked: bool = False) -> bool:
 class TaskListConverter(ElementConverter):
     """任务列表转换器，处理Markdown中的任务列表（TODO列表）"""
 
-    def __init__(self, base_converter=None):
+    def __init__(self, base_converter: Optional[Any] = None) -> None:
         """初始化任务列表转换器
 
         Args:
@@ -58,7 +60,7 @@ class TaskListConverter(ElementConverter):
         """
         super().__init__(base_converter)
         self.debug = False
-        self.list_converter = None
+        self.list_converter: Optional[Any] = None
         if base_converter:
             self.debug = base_converter.debug
             # 获取列表转换器，用于处理基本列表结构
@@ -67,7 +69,7 @@ class TaskListConverter(ElementConverter):
             else:
                 self.list_converter = ListConverter(base_converter)
 
-    def convert(self, tokens):
+    def convert(self, tokens: Tuple[Any, Any]) -> Paragraph:
         """转换任务列表token为DOCX带符号的列表
 
         Args:
@@ -142,7 +144,7 @@ class TaskListConverter(ElementConverter):
 
         return paragraph
 
-    def _add_checkbox(self, paragraph, is_checked=False):
+    def _add_checkbox(self, paragraph: Optional[Paragraph], is_checked: bool = False) -> None:
         """向段落添加复选框（兼容旧测试接口）。"""
         if paragraph is None:
             if self.debug:

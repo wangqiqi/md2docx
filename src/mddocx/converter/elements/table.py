@@ -2,11 +2,14 @@
 表格转换器模块
 """
 
+from typing import Any, Dict, List, Optional, cast
+
 from docx.enum.table import WD_ALIGN_VERTICAL
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches
+from docx.table import Table, _Cell
 
 from .base import ElementConverter
 
@@ -14,7 +17,7 @@ from .base import ElementConverter
 class TableConverter(ElementConverter):
     """表格转换器，处理Markdown表格到DOCX表格的转换"""
 
-    def __init__(self, base_converter=None):
+    def __init__(self, base_converter: Optional[Any] = None) -> None:
         """初始化表格转换器
 
         Args:
@@ -22,11 +25,11 @@ class TableConverter(ElementConverter):
         """
         super().__init__(base_converter)
         self.debug = False
-        self.current_style = {}  # 当前样式
+        self.current_style: Dict[str, Any] = {}  # 当前样式
         if base_converter:
             self.debug = base_converter.debug
 
-    def convert(self, token, tokens=None):
+    def convert(self, token: Any, tokens: Optional[List[Any]] = None) -> Optional[Table]:
         """转换表格token为DOCX表格
 
         Args:
@@ -62,9 +65,11 @@ class TableConverter(ElementConverter):
         # 设置表格对齐方式
         self._set_table_alignment(table, token)
 
-        return table
+        return cast(Table, table)
 
-    def _parse_table_structure(self, token, tokens=None):
+    def _parse_table_structure(
+        self, token: Any, tokens: Optional[List[Any]] = None
+    ) -> List[List[Dict[str, Any]]]:
         """解析表格结构
 
         Args:
@@ -222,7 +227,7 @@ class TableConverter(ElementConverter):
 
         return rows
 
-    def _get_cell_alignment(self, cell_token):
+    def _get_cell_alignment(self, cell_token: Any) -> Optional[str]:
         """获取单元格对齐方式
 
         Args:
@@ -242,11 +247,11 @@ class TableConverter(ElementConverter):
 
         # 从token属性中获取align信息
         if hasattr(cell_token, "attrs") and "align" in cell_token.attrs:
-            return cell_token.attrs["align"]
+            return cast(Optional[str], cell_token.attrs["align"])
 
         return None
 
-    def _fill_table_content(self, table, rows):
+    def _fill_table_content(self, table: Table, rows: List[List[Dict[str, Any]]]) -> None:
         """填充表格内容
 
         Args:
@@ -330,7 +335,7 @@ class TableConverter(ElementConverter):
                 if cell_data["is_header"]:
                     self._set_header_style(cell)
 
-    def _get_text_from_tokens(self, tokens):
+    def _get_text_from_tokens(self, tokens: List[Any]) -> str:
         """从tokens中提取文本内容
 
         Args:
@@ -349,7 +354,7 @@ class TableConverter(ElementConverter):
                 text += self._get_text_from_tokens(token.children)
         return text
 
-    def _set_cell_alignment(self, cell, align):
+    def _set_cell_alignment(self, cell: _Cell, align: Optional[str]) -> None:
         """设置单元格水平对齐方式
 
         Args:
@@ -367,7 +372,7 @@ class TableConverter(ElementConverter):
             elif align == "right":
                 paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
 
-    def _set_header_style(self, cell):
+    def _set_header_style(self, cell: _Cell) -> None:
         """设置表头单元格样式
 
         Args:
@@ -377,7 +382,7 @@ class TableConverter(ElementConverter):
             for run in paragraph.runs:
                 run.bold = True
 
-    def _set_table_alignment(self, table, token):
+    def _set_table_alignment(self, table: Table, token: Any) -> None:
         """设置表格整体对齐方式
 
         Args:
@@ -386,13 +391,13 @@ class TableConverter(ElementConverter):
         """
         # 默认表格宽度为页面宽度的90%
         table.autofit = False
-        table.width = Inches(6)
+        table.width = Inches(6)  # type: ignore[attr-defined]
 
         # 如果需要设置表格对齐方式，可以在这里添加代码
         # 例如居中对齐表格
         self._set_table_center_alignment(table)
 
-    def _set_table_center_alignment(self, table):
+    def _set_table_center_alignment(self, table: Table) -> None:
         """设置表格居中对齐
 
         Args:
