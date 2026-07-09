@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.45] - 2026-07-09
+
+### Changed
+- `审查.md`：C/M/m/S 标注已闭合并链 `archive/sprint/`；开放项对齐 ROI 候选 **M-MYPY-02** · **ARCH-R03**（DOC-REV-01）
+
 ## [0.5.44] - 2026-07-09
 
 ### Changed
