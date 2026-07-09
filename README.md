@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.5.26-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.26)
+[![Version](https://img.shields.io/badge/version-0.5.47-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.47)
 [![Cursor AI Rules](https://img.shields.io/badge/Cursor%20AI%20Rules-v3.0.0-green.svg)](https://github.com/wangqiqi/cursor-ai-rules)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
@@ -46,7 +46,7 @@
 项目采用专业级的质量保证体系，确保代码可靠性和开发效率：
 
 ### 🧪 测试体系
-- **218 测试用例** - 覆盖核心功能、WebUI 和边界条件
+- **278 测试用例**（`pytest -q`，随版本增长；以 CI 为准）— 覆盖核心功能、WebUI 和边界条件
 - **持续集成覆盖率报告** - 多维度测试保证
 - **大文件测试** - 支持1MB+文档处理
 - **边界条件测试** - Unicode、嵌套、异常输入
@@ -68,7 +68,7 @@
 📋 本地开发编排：`.cursorGrowth/plan.md`（**不入库**，jwplan/jwrun 自用）· 文档索引：[docs/README.md](docs/README.md)
 
 **已完成 ✅:**
-- ✅ 专业测试体系 (218 测试，覆盖率 ≥85%，CI 持续验证)
+- ✅ 专业测试体系 (278 测试，覆盖率 ≥85%，CI 持续验证)
 - ✅ CI/CD 自动化 (GitHub Actions 多版本测试)
 - ✅ 代码质量保证 (pre-commit + 多工具检查)
 - ✅ Web 界面、实时预览、响应式设计
