@@ -8,11 +8,7 @@ from unittest.mock import patch
 
 import pytest
 
-from mddocx.converter.security import (
-    is_private_ip,
-    is_safe_remote_url,
-    resolve_safe_local_path,
-)
+from mddocx.converter.security import is_private_ip, is_safe_remote_url, resolve_safe_local_path
 
 
 class TestPrivateIP:

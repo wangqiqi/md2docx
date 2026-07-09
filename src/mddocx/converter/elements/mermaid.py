@@ -131,14 +131,8 @@ class MermaidConverter(ElementConverter):
         cap_run.font.size = Pt(9)
         cap_run.font.color.rgb = RGBColor(102, 102, 102)
 
-    def _fallback_as_code(
-        self, token, source: str, unsupported: bool = False
-    ) -> None:
-        note = (
-            "（不支持的 Mermaid 类型，已保留源码）"
-            if unsupported
-            else "（Mermaid 渲染失败，已保留源码）"
-        )
+    def _fallback_as_code(self, token, source: str, unsupported: bool = False) -> None:
+        note = "（不支持的 Mermaid 类型，已保留源码）" if unsupported else "（Mermaid 渲染失败，已保留源码）"
         note_para = self.doc.add_paragraph()
         note_run = note_para.add_run(note)
         note_run.italic = True

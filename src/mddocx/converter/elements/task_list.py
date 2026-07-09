@@ -108,11 +108,7 @@ class TaskListConverter(ElementConverter):
         elif hasattr(content_token, "children"):
             for child in content_token.children:
                 if hasattr(child, "type") and child.type == "checkbox_input":
-                    is_checked = (
-                        child.attrs.get("checked", False)
-                        if hasattr(child, "attrs")
-                        else False
-                    )
+                    is_checked = child.attrs.get("checked", False) if hasattr(child, "attrs") else False
                 elif hasattr(child, "content"):
                     # 使用正则表达式移除内容中的任务标记
                     try:
@@ -123,9 +119,7 @@ class TaskListConverter(ElementConverter):
                         task_text += child_content
                     except TypeError:
                         # 处理 child.content 不是字符串的情况
-                        task_text += (
-                            str(child.content) if child.content is not None else ""
-                        )
+                        task_text += str(child.content) if child.content is not None else ""
 
         paragraph = self.doc.add_paragraph()
 

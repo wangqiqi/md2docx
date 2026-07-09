@@ -7,8 +7,8 @@ from typing import Any, Dict, List, Optional, Tuple
 from docx.shared import Pt
 from docx.text.paragraph import Paragraph
 
-from .base import ElementConverter
 from ..equation_labels import substitute_refs
+from .base import ElementConverter
 
 
 class TextConverter(ElementConverter):
@@ -37,11 +37,7 @@ class TextConverter(ElementConverter):
         paragraph = self.doc.add_paragraph()
 
         # 处理空段落
-        if (
-            not content_token
-            or not hasattr(content_token, "children")
-            or not content_token.children
-        ):
+        if not content_token or not hasattr(content_token, "children") or not content_token.children:
             return None
         debug = self._debug_enabled()
         if debug:
@@ -78,20 +74,14 @@ class TextConverter(ElementConverter):
 
             # 处理标记
             if debug:
-                print(
-                    f"处理标记: type={child.type}, content={child.content if hasattr(child, 'content') else ''}"
-                )
+                print(f"处理标记: type={child.type}, content={child.content if hasattr(child, 'content') else ''}")
 
             if child.type == "text":
                 # 检查是否是带样式的链接的一部分
                 is_styled_link = False
 
                 # 检查是否是粗体链接的开始
-                if (
-                    child.content.endswith("**")
-                    and i + 1 < len(children)
-                    and children[i + 1].type == "link_open"
-                ):
+                if child.content.endswith("**") and i + 1 < len(children) and children[i + 1].type == "link_open":
                     if debug:
                         print("检测到粗体链接开始")
                     # 移除末尾的 **
@@ -100,9 +90,7 @@ class TextConverter(ElementConverter):
 
                     # 添加当前文本
                     if current_text:
-                        self._add_text_with_style(
-                            paragraph, current_text, current_style
-                        )
+                        self._add_text_with_style(paragraph, current_text, current_style)
                         current_text = ""
 
                     # 设置粗体样式
@@ -122,30 +110,18 @@ class TextConverter(ElementConverter):
                         if debug:
                             print(f"处理粗体链接: {link_content.content}")
                         # 传递链接文本
-                        link_text = (
-                            link_content.content
-                            if hasattr(link_content, "content")
-                            else None
-                        )
-                        link_converter.convert_in_paragraph(
-                            paragraph, link_token, current_style.copy(), link_text
-                        )
+                        link_text = link_content.content if hasattr(link_content, "content") else None
+                        link_converter.convert_in_paragraph(paragraph, link_token, current_style.copy(), link_text)
                     else:
                         # 如果没有找到链接转换器，使用普通文本
                         if link_content:
-                            self._add_text_with_style(
-                                paragraph, link_content.content, current_style
-                            )
+                            self._add_text_with_style(paragraph, link_content.content, current_style)
 
                     # 跳过已处理的标记
                     i = j + 1 if j < len(children) else i + 1
 
                     # 检查下一个标记是否是粗体链接的结束
-                    if (
-                        i < len(children)
-                        and children[i].type == "text"
-                        and children[i].content.startswith("**")
-                    ):
+                    if i < len(children) and children[i].type == "text" and children[i].content.startswith("**"):
                         if debug:
                             print("检测到粗体链接结束")
                         # 移除开头的 **
@@ -177,9 +153,7 @@ class TextConverter(ElementConverter):
 
                     # 添加当前文本
                     if current_text:
-                        self._add_text_with_style(
-                            paragraph, current_text, current_style
-                        )
+                        self._add_text_with_style(paragraph, current_text, current_style)
                         current_text = ""
 
                     # 设置斜体样式
@@ -199,20 +173,12 @@ class TextConverter(ElementConverter):
                         if debug:
                             print(f"处理斜体链接: {link_content.content}")
                         # 传递链接文本
-                        link_text = (
-                            link_content.content
-                            if hasattr(link_content, "content")
-                            else None
-                        )
-                        link_converter.convert_in_paragraph(
-                            paragraph, link_token, current_style.copy(), link_text
-                        )
+                        link_text = link_content.content if hasattr(link_content, "content") else None
+                        link_converter.convert_in_paragraph(paragraph, link_token, current_style.copy(), link_text)
                     else:
                         # 如果没有找到链接转换器，使用普通文本
                         if link_content:
-                            self._add_text_with_style(
-                                paragraph, link_content.content, current_style
-                            )
+                            self._add_text_with_style(paragraph, link_content.content, current_style)
 
                     # 跳过已处理的标记
                     i = j + 1 if j < len(children) else i + 1
@@ -241,11 +207,7 @@ class TextConverter(ElementConverter):
                     is_styled_link = True
 
                 # 检查是否是删除线链接的开始
-                elif (
-                    child.content.endswith("~~")
-                    and i + 1 < len(children)
-                    and children[i + 1].type == "link_open"
-                ):
+                elif child.content.endswith("~~") and i + 1 < len(children) and children[i + 1].type == "link_open":
                     if debug:
                         print("检测到删除线链接开始")
                     # 移除末尾的 ~~
@@ -254,9 +216,7 @@ class TextConverter(ElementConverter):
 
                     # 添加当前文本
                     if current_text:
-                        self._add_text_with_style(
-                            paragraph, current_text, current_style
-                        )
+                        self._add_text_with_style(paragraph, current_text, current_style)
                         current_text = ""
 
                     # 设置删除线样式
@@ -276,30 +236,18 @@ class TextConverter(ElementConverter):
                         if debug:
                             print(f"处理删除线链接: {link_content.content}")
                         # 传递链接文本
-                        link_text = (
-                            link_content.content
-                            if hasattr(link_content, "content")
-                            else None
-                        )
-                        link_converter.convert_in_paragraph(
-                            paragraph, link_token, current_style.copy(), link_text
-                        )
+                        link_text = link_content.content if hasattr(link_content, "content") else None
+                        link_converter.convert_in_paragraph(paragraph, link_token, current_style.copy(), link_text)
                     else:
                         # 如果没有找到链接转换器，使用普通文本
                         if link_content:
-                            self._add_text_with_style(
-                                paragraph, link_content.content, current_style
-                            )
+                            self._add_text_with_style(paragraph, link_content.content, current_style)
 
                     # 跳过已处理的标记
                     i = j + 1 if j < len(children) else i + 1
 
                     # 检查下一个标记是否是删除线链接的结束
-                    if (
-                        i < len(children)
-                        and children[i].type == "text"
-                        and children[i].content.startswith("~~")
-                    ):
+                    if i < len(children) and children[i].type == "text" and children[i].content.startswith("~~"):
                         if debug:
                             print("检测到删除线链接结束")
                         # 移除开头的 ~~
@@ -343,20 +291,12 @@ class TextConverter(ElementConverter):
                     if debug:
                         print(f"处理普通链接: {link_content.content}")
                     # 传递链接文本
-                    link_text = (
-                        link_content.content
-                        if hasattr(link_content, "content")
-                        else None
-                    )
-                    link_converter.convert_in_paragraph(
-                        paragraph, child, current_style.copy(), link_text
-                    )
+                    link_text = link_content.content if hasattr(link_content, "content") else None
+                    link_converter.convert_in_paragraph(paragraph, child, current_style.copy(), link_text)
                 else:
                     # 如果没有找到链接转换器，使用普通文本
                     if link_content:
-                        self._add_text_with_style(
-                            paragraph, link_content.content, current_style
-                        )
+                        self._add_text_with_style(paragraph, link_content.content, current_style)
 
                 # 跳过已处理的标记
                 i = j + 1 if j < len(children) else i + 1
@@ -372,9 +312,7 @@ class TextConverter(ElementConverter):
                 if image_converter:
                     if debug:
                         print("处理段落内图片")
-                    image_converter.convert_in_paragraph(
-                        paragraph, child, current_style.copy()
-                    )
+                    image_converter.convert_in_paragraph(paragraph, child, current_style.copy())
 
                 i += 1
             elif child.type == "strong_open":
@@ -424,9 +362,7 @@ class TextConverter(ElementConverter):
                     math_converter.set_document(self.doc)
                     math_converter.convert_in_paragraph(paragraph, child)
                 else:
-                    self._add_inline_code(
-                        paragraph, f"${child.content}$", current_style.copy()
-                    )
+                    self._add_inline_code(paragraph, f"${child.content}$", current_style.copy())
                 i += 1
             elif child.type == "code_inline":
                 # 处理行内代码
@@ -448,9 +384,7 @@ class TextConverter(ElementConverter):
 
         return paragraph
 
-    def _add_text_with_style(
-        self, paragraph: Paragraph, text: str, style: Dict[str, bool]
-    ) -> None:
+    def _add_text_with_style(self, paragraph: Paragraph, text: str, style: Dict[str, bool]) -> None:
         """添加带样式的文本
 
         Args:
@@ -458,20 +392,14 @@ class TextConverter(ElementConverter):
             text: 要添加的文本
             style: 样式配置
         """
-        if (
-            self.base_converter
-            and hasattr(self.base_converter, "_equation_registry")
-            and text
-        ):
+        if self.base_converter and hasattr(self.base_converter, "_equation_registry") and text:
             text = substitute_refs(text, self.base_converter._equation_registry)
         run = paragraph.add_run(text)
         run.bold = style["bold"]
         run.italic = style["italic"]
         run.font.strike = style["strike"]
 
-    def _add_inline_code(
-        self, paragraph: Paragraph, code_text: str, style: Dict[str, bool]
-    ) -> None:
+    def _add_inline_code(self, paragraph: Paragraph, code_text: str, style: Dict[str, bool]) -> None:
         """添加行内代码到段落
 
         Args:

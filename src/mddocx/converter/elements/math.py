@@ -4,12 +4,12 @@ LaTeX 数学公式转换器
 
 from io import BytesIO
 from typing import Optional
+from urllib.parse import quote
 
 import requests
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches, Pt, RGBColor
 from docx.text.paragraph import Paragraph
-from urllib.parse import quote
 
 from ..equation_labels import EquationRegistry, strip_label
 from ..security import MAX_IMAGE_BYTES, is_allowed_codecogs_url
@@ -71,9 +71,7 @@ class MathConverter(ElementConverter):
             return self.base_converter._equation_registry
         return None
 
-    def _try_embed(
-        self, latex: str, block: bool = False, equation_number: Optional[int] = None
-    ) -> bool:
+    def _try_embed(self, latex: str, block: bool = False, equation_number: Optional[int] = None) -> bool:
         image_data = self._fetch_formula_image(latex, inline=not block)
         if not image_data:
             return False
@@ -123,9 +121,7 @@ class MathConverter(ElementConverter):
         except Exception:
             return None
 
-    def _embed_block_image(
-        self, image_data: bytes, equation_number: Optional[int] = None
-    ) -> None:
+    def _embed_block_image(self, image_data: bytes, equation_number: Optional[int] = None) -> None:
         paragraph = self.doc.add_paragraph()
         paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
         run = paragraph.add_run()
@@ -143,9 +139,7 @@ class MathConverter(ElementConverter):
         run = paragraph.add_run()
         run.add_picture(BytesIO(image_data), height=Inches(0.22))
 
-    def _fallback_block(
-        self, latex: str, equation_number: Optional[int] = None
-    ) -> None:
+    def _fallback_block(self, latex: str, equation_number: Optional[int] = None) -> None:
         note_para = self.doc.add_paragraph()
         note_run = note_para.add_run("（公式渲染失败，已保留 LaTeX 源码）")
         note_run.italic = True

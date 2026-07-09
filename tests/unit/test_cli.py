@@ -17,9 +17,7 @@ class TestCLI:
     def test_convert_file_success(self):
         """测试文件转换成功情况"""
         # 创建临时文件
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".md", delete=False, encoding="utf-8"
-        ) as md_file:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False, encoding="utf-8") as md_file:
             md_file.write("# 测试标题\n\n这是一个测试段落。")
             md_path = md_file.name
 
@@ -57,9 +55,7 @@ class TestCLI:
     def test_convert_file_output_directory_not_exists(self):
         """测试输出目录不存在的情况"""
         # 创建临时文件
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".md", delete=False, encoding="utf-8"
-        ) as md_file:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False, encoding="utf-8") as md_file:
             md_file.write("# 测试标题")
             md_path = md_file.name
 
@@ -151,9 +147,7 @@ class TestCLI:
     def test_convert_file_output_file_exists(self):
         """测试输出文件已存在的情况"""
         # 创建临时文件
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".md", delete=False, encoding="utf-8"
-        ) as md_file:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False, encoding="utf-8") as md_file:
             md_file.write("# 测试标题")
             md_path = md_file.name
 
@@ -190,9 +184,7 @@ class TestCLI:
     @patch("mddocx.cli.BaseConverter")
     def test_convert_file_permission_retry(self, mock_converter_cls):
         """输出被占用时带时间戳重试保存"""
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".md", delete=False, encoding="utf-8"
-        ) as md_file:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False, encoding="utf-8") as md_file:
             md_file.write("# 标题")
             md_path = md_file.name
 

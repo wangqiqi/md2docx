@@ -8,12 +8,8 @@ import pytest
 from docx import Document
 
 from mddocx.converter.base import BaseConverter
-from mddocx.converter.equation_labels import (
-    EquationRegistry,
-    strip_label,
-    substitute_refs,
-)
 from mddocx.converter.elements.math import MathConverter, build_codecogs_url
+from mddocx.converter.equation_labels import EquationRegistry, strip_label, substitute_refs
 from mddocx.converter.security import is_allowed_codecogs_url
 
 FAKE_PNG = (
@@ -177,9 +173,7 @@ class TestEquationNumbering:
 
     @patch("docx.text.run.Run.add_picture")
     @patch("mddocx.converter.elements.math.requests.get")
-    def test_label_stripped_from_codecogs_request(
-        self, mock_get, mock_add_picture, converter
-    ):
+    def test_label_stripped_from_codecogs_request(self, mock_get, mock_add_picture, converter):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
         mock_resp.headers = {"Content-Type": "image/png"}

@@ -114,9 +114,7 @@ class HtmlConverter(ElementConverter):
             # 简单的HTML标签解析
             # 处理简单的HTML段落
             if re.match(r"^\s*<p>(.*?)</p>\s*$", html_content, re.DOTALL):
-                content = re.sub(
-                    r"^\s*<p>(.*?)</p>\s*$", r"\1", html_content, flags=re.DOTALL
-                )
+                content = re.sub(r"^\s*<p>(.*?)</p>\s*$", r"\1", html_content, flags=re.DOTALL)
                 paragraph = self.doc.add_paragraph()
 
                 # 处理内部标签
@@ -147,9 +145,7 @@ class HtmlConverter(ElementConverter):
 
             # 处理简单的无序列表
             if re.match(r"^\s*<ul[^>]*>(.*?)</ul>\s*$", html_content, re.DOTALL):
-                list_content = re.sub(
-                    r"^\s*<ul[^>]*>(.*?)</ul>\s*$", r"\1", html_content, flags=re.DOTALL
-                )
+                list_content = re.sub(r"^\s*<ul[^>]*>(.*?)</ul>\s*$", r"\1", html_content, flags=re.DOTALL)
                 list_items = re.findall(r"<li[^>]*>(.*?)</li>", list_content, re.DOTALL)
 
                 if self.debug:
@@ -159,15 +155,11 @@ class HtmlConverter(ElementConverter):
                     paragraph = self.doc.add_paragraph(style="List Bullet")
                     self._process_inline_tags(item, paragraph)
 
-                return (
-                    self.doc.paragraphs[-1] if self.doc.paragraphs else None
-                )
+                return self.doc.paragraphs[-1] if self.doc.paragraphs else None
 
             # 处理简单的有序列表
             if re.match(r"^\s*<ol[^>]*>(.*?)</ol>\s*$", html_content, re.DOTALL):
-                list_content = re.sub(
-                    r"^\s*<ol[^>]*>(.*?)</ol>\s*$", r"\1", html_content, flags=re.DOTALL
-                )
+                list_content = re.sub(r"^\s*<ol[^>]*>(.*?)</ol>\s*$", r"\1", html_content, flags=re.DOTALL)
                 list_items = re.findall(r"<li[^>]*>(.*?)</li>", list_content, re.DOTALL)
 
                 if self.debug:
@@ -177,9 +169,7 @@ class HtmlConverter(ElementConverter):
                     paragraph = self.doc.add_paragraph(style="List Number")
                     self._process_inline_tags(item, paragraph)
 
-                return (
-                    self.doc.paragraphs[-1] if self.doc.paragraphs else None
-                )
+                return self.doc.paragraphs[-1] if self.doc.paragraphs else None
 
             # 处理简单的表格
             if re.match(r"^\s*<table[^>]*>(.*?)</table>\s*$", html_content, re.DOTALL):
@@ -215,9 +205,7 @@ class HtmlConverter(ElementConverter):
                 # 填充表格内容
                 for i, row_html in enumerate(rows):
                     # 提取单元格
-                    header_cells = re.findall(
-                        r"<th[^>]*>(.*?)</th>", row_html, re.DOTALL
-                    )
+                    header_cells = re.findall(r"<th[^>]*>(.*?)</th>", row_html, re.DOTALL)
                     data_cells = re.findall(r"<td[^>]*>(.*?)</td>", row_html, re.DOTALL)
 
                     # 合并单元格列表
@@ -332,9 +320,7 @@ class HtmlConverter(ElementConverter):
                                 print(f"无法设置删除线(方法1): {e}")
                             try:
                                 # 方法2：使用XML元素
-                                run._element.get_or_add_rPr().set(
-                                    qn("w:strike"), "true"
-                                )
+                                run._element.get_or_add_rPr().set(qn("w:strike"), "true")
                             except Exception as e:
                                 if self.debug:
                                     print(f"无法设置删除线(方法2): {e}")

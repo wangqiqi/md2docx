@@ -112,19 +112,15 @@ class TestAppRoutes:
         assert "请输入Markdown内容".encode("utf-8") in response.data
 
         # 测试正常内容
-        response = self.client.post(
-            "/preview", data={"markdown": "# Test\nHello World"}
-        )
+        response = self.client.post("/preview", data={"markdown": "# Test\nHello World"})
         assert response.status_code == 200
         assert b"Test" in response.data
 
     def test_preview_renders_dollarmath(self):
         """预览与转换器一致，支持 LaTeX dollarmath"""
-        response = self.client.post(
-            "/preview", data={"markdown": "Energy $E=mc^2$"}
-        )
+        response = self.client.post("/preview", data={"markdown": "Energy $E=mc^2$"})
         assert response.status_code == 200
-        assert b'math inline' in response.data
+        assert b"math inline" in response.data
         assert b"E=mc^2" in response.data
 
     def test_convert_endpoint_validation(self):
@@ -143,9 +139,7 @@ class TestAppRoutes:
     def test_error_handling(self):
         """测试错误处理"""
         # 测试无效的Markdown内容
-        response = self.client.post(
-            "/preview", data={"markdown": "# Test\n\n```invalid\nunclosed code block"}
-        )
+        response = self.client.post("/preview", data={"markdown": "# Test\n\n```invalid\nunclosed code block"})
         # 即使有解析错误，也应该返回响应
         assert response.status_code == 200
 
@@ -215,18 +209,14 @@ class TestAppRoutes:
 
         from docx import Document
 
-        response1 = self.client.post(
-            "/convert", data={"markdown": "# 第一次\n\n唯一第一段。"}
-        )
+        response1 = self.client.post("/convert", data={"markdown": "# 第一次\n\n唯一第一段。"})
         assert response1.status_code == 200
         doc1 = Document(BytesIO(response1.data))
         text1 = "\n".join(p.text for p in doc1.paragraphs)
         assert "第一次" in text1
         assert "第二次" not in text1
 
-        response2 = self.client.post(
-            "/convert", data={"markdown": "# 第二次\n\n唯一第二段。"}
-        )
+        response2 = self.client.post("/convert", data={"markdown": "# 第二次\n\n唯一第二段。"})
         assert response2.status_code == 200
         doc2 = Document(BytesIO(response2.data))
         text2 = "\n".join(p.text for p in doc2.paragraphs)

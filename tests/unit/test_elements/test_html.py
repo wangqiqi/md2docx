@@ -7,11 +7,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from docx import Document
 
-from mddocx.converter.elements.html import (
-    HTML2DOCX_AVAILABLE,
-    HTML_FOR_DOCX_AVAILABLE,
-    HtmlConverter,
-)
+from mddocx.converter.elements.html import HTML2DOCX_AVAILABLE, HTML_FOR_DOCX_AVAILABLE, HtmlConverter
 
 
 def test_html_for_docx_alias_matches_legacy_flag():
@@ -339,9 +335,7 @@ def test_html_for_docx_raises_uses_fallback():
     token.content = "<section><article>不可解析</article></section>"
     token.children = None
 
-    with patch(
-        "mddocx.converter.elements.html.HtmlToDocx"
-    ) as mock_cls:
+    with patch("mddocx.converter.elements.html.HtmlToDocx") as mock_cls:
         mock_cls.return_value.add_html_to_document.side_effect = RuntimeError("fail")
         result = converter.convert(token)
 
@@ -373,9 +367,7 @@ def test_process_inline_strike_and_underline():
     converter.set_document(Document())
     paragraph = converter.document.add_paragraph()
 
-    converter._process_inline_tags(
-        "普通<u>下划线</u>和<s>删除</s>文本", paragraph
-    )
+    converter._process_inline_tags("普通<u>下划线</u>和<s>删除</s>文本", paragraph)
 
     runs_text = "".join(r.text for r in paragraph.runs)
     assert "下划线" in runs_text
@@ -404,9 +396,7 @@ def test_html_for_docx_no_new_paragraphs():
     converter.set_document(Document())
     converter.document.add_paragraph("已有")
 
-    with patch(
-        "mddocx.converter.elements.html.HtmlToDocx"
-    ) as mock_cls:
+    with patch("mddocx.converter.elements.html.HtmlToDocx") as mock_cls:
         mock_cls.return_value.add_html_to_document.return_value = None
         result = converter._html_for_docx_convert("<span>x</span>")
 

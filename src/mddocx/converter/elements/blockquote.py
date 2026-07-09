@@ -45,13 +45,9 @@ class BlockquoteConverter(ElementConverter):
         if self.base_converter and "link" in self.base_converter.converters:
             link_converter = self.base_converter.converters.get("link")
 
-        self._process_inline_children(
-            paragraph, content_token.children, link_converter
-        )
+        self._process_inline_children(paragraph, content_token.children, link_converter)
 
-    def _process_inline_children(
-        self, paragraph: Paragraph, children, link_converter
-    ) -> None:
+    def _process_inline_children(self, paragraph: Paragraph, children, link_converter) -> None:
         """处理引用块内联内容（链接、删除线、行内代码等）"""
         current_text = ""
         current_style: Dict[str, bool] = {
@@ -83,18 +79,10 @@ class BlockquoteConverter(ElementConverter):
                     j += 1
 
                 if link_content and link_converter:
-                    link_text = (
-                        link_content.content
-                        if hasattr(link_content, "content")
-                        else None
-                    )
-                    link_converter.convert_in_paragraph(
-                        paragraph, child, current_style.copy(), link_text
-                    )
+                    link_text = link_content.content if hasattr(link_content, "content") else None
+                    link_converter.convert_in_paragraph(paragraph, child, current_style.copy(), link_text)
                 elif link_content:
-                    self._add_text_with_style(
-                        paragraph, link_content.content, current_style
-                    )
+                    self._add_text_with_style(paragraph, link_content.content, current_style)
 
                 i = j + 1 if j < len(children) else i + 1
             elif child.type == "link_close":
@@ -150,18 +138,14 @@ class BlockquoteConverter(ElementConverter):
         if current_text:
             self._add_text_with_style(paragraph, current_text, current_style)
 
-    def _add_text_with_style(
-        self, paragraph: Paragraph, text: str, style: Dict[str, bool]
-    ) -> None:
+    def _add_text_with_style(self, paragraph: Paragraph, text: str, style: Dict[str, bool]) -> None:
         """添加带样式的文本"""
         run = paragraph.add_run(text)
         run.bold = style["bold"]
         run.italic = style["italic"]
         run.font.strike = style["strike"]
 
-    def _add_inline_code(
-        self, paragraph: Paragraph, code_text: str, style: Dict[str, bool]
-    ) -> None:
+    def _add_inline_code(self, paragraph: Paragraph, code_text: str, style: Dict[str, bool]) -> None:
         """添加行内代码"""
         run = paragraph.add_run(code_text)
         run.bold = style.get("bold", False)

@@ -195,9 +195,7 @@ class TestLinkConverter:
         link_token.attrs = {"href": "https://example.com"}
 
         # 转换链接，提供自定义文本
-        result = converter.convert_in_paragraph(
-            paragraph, link_token, link_text="自定义链接"
-        )
+        result = converter.convert_in_paragraph(paragraph, link_token, link_text="自定义链接")
 
         # 验证结果
         assert result is None

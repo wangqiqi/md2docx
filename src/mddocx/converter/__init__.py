@@ -2,13 +2,7 @@
 转换器包
 """
 
-from .base import (
-    BaseConverter,
-    ConvertError,
-    ElementConverter,
-    MD2DocxError,
-    ParseError,
-)
+from .base import BaseConverter, ConvertError, ElementConverter, MD2DocxError, ParseError
 from .elements import (
     BlockquoteConverter,
     CodeConverter,

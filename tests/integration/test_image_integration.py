@@ -51,16 +51,12 @@ class TestImageIntegration:
 
     @patch("docx.text.run.Run.add_picture")
     @patch("requests.get")
-    def test_remote_image_with_alt_text(
-        self, mock_get, mock_add_picture, base_converter
-    ):
+    def test_remote_image_with_alt_text(self, mock_get, mock_add_picture, base_converter):
         """远程图片与 alt 文本"""
         mock_get.return_value = _mock_http_response()
 
         content = '![替代文字](https://example.com/image.png "图片标题")\n'
-        with patch(
-            "mddocx.converter.elements.image.is_safe_remote_url", return_value=True
-        ):
+        with patch("mddocx.converter.elements.image.is_safe_remote_url", return_value=True):
             doc = base_converter.convert(content)
 
         assert doc is not None
@@ -74,9 +70,7 @@ class TestImageIntegration:
         mock_get.return_value = _mock_http_response()
 
         content = "![在线](https://example.com/photo.png)\n"
-        with patch(
-            "mddocx.converter.elements.image.is_safe_remote_url", return_value=True
-        ):
+        with patch("mddocx.converter.elements.image.is_safe_remote_url", return_value=True):
             doc = base_converter.convert(content)
 
         assert doc is not None
@@ -88,9 +82,7 @@ class TestImageIntegration:
         mock_get.side_effect = ConnectionError("network down")
 
         content = "![坏链](https://example.com/missing.png)\n"
-        with patch(
-            "mddocx.converter.elements.image.is_safe_remote_url", return_value=True
-        ):
+        with patch("mddocx.converter.elements.image.is_safe_remote_url", return_value=True):
             doc = base_converter.convert(content)
 
         assert doc is not None

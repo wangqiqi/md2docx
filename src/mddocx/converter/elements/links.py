@@ -78,9 +78,7 @@ class LinkConverter(ElementConverter):
         """
         debug = self._debug_enabled()
         if debug:
-            print(
-                f"转换链接: token={token.type}, content={token.content if hasattr(token, 'content') else ''}"
-            )
+            print(f"转换链接: token={token.type}, content={token.content if hasattr(token, 'content') else ''}")
             print(f"链接样式: {style}")
 
         if not hasattr(token, "attrs") or not token.attrs:

@@ -70,9 +70,7 @@ def convert_file(input_file: str, output_file: str, debug: bool = False) -> None
             raise e
 
     # 如果多次尝试后仍然失败
-    raise PermissionError(
-        error_info(E_SAVE_FAILED).format_user()
-    )
+    raise PermissionError(error_info(E_SAVE_FAILED).format_user())
 
 
 def get_help_texts(lang: str = "zh") -> dict:

@@ -104,9 +104,7 @@ class TableConverter(ElementConverter):
         # 确保找到了相同数量的开始和结束标记
         if len(tr_open_indices) != len(tr_close_indices):
             if self.debug:
-                print(
-                    f"警告: 表格行的开始和结束标记数量不匹配: {len(tr_open_indices)} vs {len(tr_close_indices)}"
-                )
+                print(f"警告: 表格行的开始和结束标记数量不匹配: {len(tr_open_indices)} vs {len(tr_close_indices)}")
             # 尝试修复
             if len(tr_open_indices) > len(tr_close_indices):
                 tr_close_indices.append(len(tokens) - 1)
@@ -116,9 +114,7 @@ class TableConverter(ElementConverter):
         # 处理每一行
         for i in range(len(tr_open_indices)):
             start_idx = tr_open_indices[i]
-            end_idx = (
-                tr_close_indices[i] if i < len(tr_close_indices) else len(tokens) - 1
-            )
+            end_idx = tr_close_indices[i] if i < len(tr_close_indices) else len(tokens) - 1
 
             # 提取行内容
             row_tokens = tokens[start_idx : end_idx + 1]
@@ -144,11 +140,7 @@ class TableConverter(ElementConverter):
             cells = []
             for j in range(len(th_open_indices)):
                 start_j = th_open_indices[j]
-                end_j = (
-                    th_close_indices[j]
-                    if j < len(th_close_indices)
-                    else len(row_tokens) - 1
-                )
+                end_j = th_close_indices[j] if j < len(th_close_indices) else len(row_tokens) - 1
 
                 # 提取单元格内容
                 cell_tokens = row_tokens[start_j + 1 : end_j]
@@ -169,18 +161,12 @@ class TableConverter(ElementConverter):
                     if not align and "align" in row_tokens[start_j].attrs:
                         align = row_tokens[start_j].attrs["align"]
 
-                cells.append(
-                    {"content": cell_tokens, "is_header": True, "align": align}
-                )
+                cells.append({"content": cell_tokens, "is_header": True, "align": align})
 
             # 处理数据单元格
             for j in range(len(td_open_indices)):
                 start_j = td_open_indices[j]
-                end_j = (
-                    td_close_indices[j]
-                    if j < len(td_close_indices)
-                    else len(row_tokens) - 1
-                )
+                end_j = td_close_indices[j] if j < len(td_close_indices) else len(row_tokens) - 1
 
                 # 提取单元格内容
                 cell_tokens = row_tokens[start_j + 1 : end_j]
@@ -201,9 +187,7 @@ class TableConverter(ElementConverter):
                     if not align and "align" in row_tokens[start_j].attrs:
                         align = row_tokens[start_j].attrs["align"]
 
-                cells.append(
-                    {"content": cell_tokens, "is_header": False, "align": align}
-                )
+                cells.append({"content": cell_tokens, "is_header": False, "align": align})
 
             if cells:
                 rows.append(cells)
@@ -219,11 +203,7 @@ class TableConverter(ElementConverter):
                             "td",
                         ):
                             # 获取单元格内容
-                            cell_content = (
-                                cell_token.children
-                                if hasattr(cell_token, "children")
-                                else []
-                            )
+                            cell_content = cell_token.children if hasattr(cell_token, "children") else []
                             row.append(
                                 {
                                     "content": cell_content,
@@ -288,15 +268,10 @@ class TableConverter(ElementConverter):
                     if self.base_converter:
                         p = cell.paragraphs[0]
                         for content_token in cell_data["content"]:
-                            if (
-                                hasattr(content_token, "type")
-                                and content_token.type == "inline"
-                            ):
+                            if hasattr(content_token, "type") and content_token.type == "inline":
                                 # 使用基础转换器处理内联内容
                                 if hasattr(self.base_converter, "_process_inline"):
-                                    self.base_converter._process_inline(
-                                        content_token, p
-                                    )
+                                    self.base_converter._process_inline(content_token, p)
                                 # 直接处理内联内容（如果基础转换器没有_process_inline方法）
                                 elif hasattr(content_token, "children"):
                                     for child in content_token.children:
@@ -305,17 +280,11 @@ class TableConverter(ElementConverter):
                                                 run = p.add_run(child.content)
                                                 # 应用当前样式
                                                 if "bold" in self.current_style:
-                                                    run.bold = self.current_style[
-                                                        "bold"
-                                                    ]
+                                                    run.bold = self.current_style["bold"]
                                                 if "italic" in self.current_style:
-                                                    run.italic = self.current_style[
-                                                        "italic"
-                                                    ]
+                                                    run.italic = self.current_style["italic"]
                                                 if "strike" in self.current_style:
-                                                    run.font.strike = (
-                                                        self.current_style["strike"]
-                                                    )
+                                                    run.font.strike = self.current_style["strike"]
                                             elif child.type == "strong_open":
                                                 # 开始加粗
                                                 self.current_style = {"bold": True}
@@ -334,19 +303,14 @@ class TableConverter(ElementConverter):
                                             elif child.type == "s_close":
                                                 # 结束删除线
                                                 self.current_style = {}
-                            elif (
-                                hasattr(content_token, "type")
-                                and content_token.type == "text"
-                            ):
+                            elif hasattr(content_token, "type") and content_token.type == "text":
                                 p.add_run(content_token.content)
                             else:
                                 # 处理其他类型的内容
                                 try:
                                     # 尝试使用基础转换器处理
                                     if hasattr(self.base_converter, "_process_token"):
-                                        self.base_converter._process_token(
-                                            content_token, cell
-                                        )
+                                        self.base_converter._process_token(content_token, cell)
                                     else:
                                         # 简单文本处理
                                         if hasattr(content_token, "content"):

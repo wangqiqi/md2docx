@@ -52,9 +52,7 @@ def test_convert_image(mock_get, mock_add_picture):
     image_token.attrs = {"src": "https://example.com/image.png", "title": "测试图片"}
     image_token.content = "测试图片"
 
-    with patch(
-        "mddocx.converter.elements.image.is_safe_remote_url", return_value=True
-    ):
+    with patch("mddocx.converter.elements.image.is_safe_remote_url", return_value=True):
         paragraph = converter.convert((image_token, image_token))
 
     assert paragraph is not None
@@ -134,9 +132,7 @@ def test_convert_image_with_sizes(mock_get, mock_add_picture):
     image_token.attrs = {"src": "https://example.com/image.png", "title": "测试图片"}
     image_token.content = "图片 100x200"
 
-    with patch(
-        "mddocx.converter.elements.image.is_safe_remote_url", return_value=True
-    ):
+    with patch("mddocx.converter.elements.image.is_safe_remote_url", return_value=True):
         paragraph = converter.convert((image_token, image_token))
 
     assert paragraph is not None
@@ -157,9 +153,7 @@ def test_convert_image_debug_mode(mock_get, mock_add_picture):
     image_token.type = "image"
     image_token.attrs = {"src": "https://example.com/image.png"}
 
-    with patch(
-        "mddocx.converter.elements.image.is_safe_remote_url", return_value=True
-    ):
+    with patch("mddocx.converter.elements.image.is_safe_remote_url", return_value=True):
         paragraph = converter.convert((image_token, image_token))
 
     assert paragraph is not None
@@ -173,9 +167,7 @@ def test_get_image_data_cache(mock_get):
 
     mock_get.return_value = _mock_http_response()
 
-    with patch(
-        "mddocx.converter.elements.image.is_safe_remote_url", return_value=True
-    ):
+    with patch("mddocx.converter.elements.image.is_safe_remote_url", return_value=True):
         result1 = converter._get_image_data("https://example.com/image.png")
         assert result1 is not None
         result2 = converter._get_image_data("https://example.com/image.png")

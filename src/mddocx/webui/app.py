@@ -36,11 +36,34 @@ from .config import get_config
 
 # 与转换器保持一致的 Markdown 解析配置
 ALLOWED_PREVIEW_TAGS = [
-    "h1", "h2", "h3", "h4", "h5", "h6",
-    "p", "br", "hr", "ul", "ol", "li",
-    "strong", "em", "del", "code", "pre",
-    "blockquote", "table", "thead", "tbody", "tr", "th", "td",
-    "a", "img", "span", "div",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "p",
+    "br",
+    "hr",
+    "ul",
+    "ol",
+    "li",
+    "strong",
+    "em",
+    "del",
+    "code",
+    "pre",
+    "blockquote",
+    "table",
+    "thead",
+    "tbody",
+    "tr",
+    "th",
+    "td",
+    "a",
+    "img",
+    "span",
+    "div",
 ]
 ALLOWED_PREVIEW_ATTRS = {
     "*": ["class"],
@@ -224,11 +247,7 @@ def preview():
             return _preview_error(error_info(E_CONTENT_TOO_LARGE).format_user())
 
         preview_html = generate_preview_html(markdown_content.strip())
-        return (
-            f'<div class="preview-result">'
-            f'<div class="preview-content-rendered">{preview_html}</div>'
-            f"</div>"
-        )
+        return f'<div class="preview-result">' f'<div class="preview-content-rendered">{preview_html}</div>' f"</div>"
 
     except Exception as e:
         app.logger.error(f"预览失败: {str(e)}", exc_info=True)
@@ -236,17 +255,11 @@ def preview():
 
 
 def _preview_error(message: str) -> str:
-    return (
-        f"<div class='preview-error'>"
-        f"<span class='icon'>❌</span><p>{escape(message)}</p></div>"
-    )
+    return f"<div class='preview-error'>" f"<span class='icon'>❌</span><p>{escape(message)}</p></div>"
 
 
 def _preview_placeholder(message: str) -> str:
-    return (
-        f"<div class='preview-placeholder'>"
-        f"<span class='icon'>👁️</span><p>{escape(message)}</p></div>"
-    )
+    return f"<div class='preview-placeholder'>" f"<span class='icon'>👁️</span><p>{escape(message)}</p></div>"
 
 
 def sanitize_preview_html(html_content: str) -> str:
@@ -265,7 +278,7 @@ def generate_preview_html(markdown_content):
     safe_html = sanitize_preview_html(html_content)
     return (
         '<div class="markdown-preview" '
-        'style="font-family: \'Arial\', sans-serif; line-height: 1.6;">'
+        "style=\"font-family: 'Arial', sans-serif; line-height: 1.6;\">"
         f"{safe_html}"
         "</div>"
     )

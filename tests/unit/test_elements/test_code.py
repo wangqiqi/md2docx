@@ -25,9 +25,7 @@ function hello() {
     doc = base_converter.convert(markdown)
     paragraphs = doc.paragraphs
     assert len(paragraphs) == 1
-    assert (
-        paragraphs[0].text == 'function hello() {\n    console.log("Hello, World!");\n}'
-    )
+    assert paragraphs[0].text == 'function hello() {\n    console.log("Hello, World!");\n}'
 
 
 def test_code_block_without_language(base_converter):
@@ -78,7 +76,4 @@ def special_chars():
     doc = base_converter.convert(markdown)
     paragraphs = doc.paragraphs
     assert len(paragraphs) == 1
-    assert (
-        paragraphs[0].text
-        == 'def special_chars():\n    # 这是一个注释\n    print("特殊字符：!@#$%^&*()")'
-    )
+    assert paragraphs[0].text == 'def special_chars():\n    # 这是一个注释\n    print("特殊字符：!@#$%^&*()")'

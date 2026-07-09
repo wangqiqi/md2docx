@@ -45,9 +45,7 @@ def _assert_sample_converted(doc, md_file) -> None:
 
 @patch("docx.text.run.Run.add_picture")
 @patch("requests.get")
-def test_convert_image_sample_embeds_local_png(
-    mock_get, mock_add_picture, converter, samples_dir, tmp_path
-):
+def test_convert_image_sample_embeds_local_png(mock_get, mock_add_picture, converter, samples_dir, tmp_path):
     """tests/samples/basic/image.md 本地 1.png 端到端嵌入（T-TEST-03-02）"""
     image_md = samples_dir / "image.md"
     assert (samples_dir / "1.png").is_file()
@@ -82,9 +80,7 @@ def test_convert_all_samples(converter, samples_dir, tmp_path):
 
 @patch("docx.text.run.Run.add_picture")
 @patch("mddocx.converter.elements.mermaid.requests.get")
-def test_convert_advanced_samples(
-    mock_get, mock_add_picture, converter, samples_advanced, tmp_path
-):
+def test_convert_advanced_samples(mock_get, mock_add_picture, converter, samples_advanced, tmp_path):
     """测试转换 advanced 样例（mermaid 走 mock）"""
     mock_resp = MagicMock()
     mock_resp.status_code = 200
@@ -111,9 +107,7 @@ def test_convert_advanced_samples(
 
 @patch("docx.text.run.Run.add_picture")
 @patch("mddocx.converter.elements.math.requests.get")
-def test_convert_math_sample_label_ref(
-    mock_get, mock_add_picture, converter, samples_advanced, tmp_path
-):
+def test_convert_math_sample_label_ref(mock_get, mock_add_picture, converter, samples_advanced, tmp_path):
     """tests/samples/advanced/math.md \\label/\\ref 端到端（T-TEST-03-04）"""
     mock_resp = MagicMock()
     mock_resp.status_code = 200

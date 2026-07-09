@@ -38,9 +38,7 @@ def fresh_docx_dir(tmp_path_factory):
 @pytest.mark.parametrize("sample_key", sorted(EXPECTATIONS.keys()))
 def test_fresh_sample_docx_meets_expectations(fresh_docx_dir, sample_key):
     md_path, docx_path = fresh_docx_dir[sample_key]
-    failures = check_docx_against_expectation(
-        docx_path, md_path, EXPECTATIONS[sample_key]
-    )
+    failures = check_docx_against_expectation(docx_path, md_path, EXPECTATIONS[sample_key])
     assert not failures, "\n".join(failures)
 
 

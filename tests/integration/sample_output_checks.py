@@ -207,11 +207,7 @@ def check_docx_against_expectation(
 
 
 def list_sample_md_files(samples_root: Path) -> List[Path]:
-    return sorted(
-        p
-        for p in samples_root.rglob("*.md")
-        if p.is_file() and p.parent.name != "output"
-    )
+    return sorted(p for p in samples_root.rglob("*.md") if p.is_file() and p.parent.name != "output")
 
 
 def rel_sample_key(md_path: Path, samples_root: Path) -> str:

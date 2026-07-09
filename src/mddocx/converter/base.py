@@ -10,11 +10,9 @@ from typing import Any, Dict, List, Optional, Tuple
 from docx import Document
 from docx.document import Document as DocxDocument
 from markdown_it import MarkdownIt
-
 from mdit_py_plugins.dollarmath import dollarmath_plugin
 
 from .chunking import split_markdown_sections
-from .equation_labels import EquationRegistry
 from .elements import (
     BlockquoteConverter,
     CodeConverter,
@@ -24,13 +22,14 @@ from .elements import (
     ImageConverter,
     LinkConverter,
     ListConverter,
-    MermaidConverter,
     MathConverter,
+    MermaidConverter,
     TableConverter,
     TaskListConverter,
     TextConverter,
 )
 from .elements.base import ElementConverter
+from .equation_labels import EquationRegistry
 from .security import (
     CHUNKED_THRESHOLD,
     MarkdownTooLargeError,
@@ -133,9 +132,7 @@ class BaseConverter:
         if samples_basic.is_dir():
             image_converter.set_extra_allowed_dirs({samples_basic})
 
-    def register_converter(
-        self, element_type: str, converter: ElementConverter
-    ) -> None:
+    def register_converter(self, element_type: str, converter: ElementConverter) -> None:
         """注册一个元素转换器
 
         Args:
@@ -171,11 +168,7 @@ class BaseConverter:
         use_chunked = chunked
         try:
             validate_markdown_size(md_text)
-            use_chunked = (
-                chunked
-                if chunked is not None
-                else input_bytes >= CHUNKED_THRESHOLD
-            )
+            use_chunked = chunked if chunked is not None else input_bytes >= CHUNKED_THRESHOLD
             if use_chunked:
                 return self._convert_chunked(md_text, base_path)
             return self._convert_tokens(md_text, base_path)
@@ -218,18 +211,14 @@ class BaseConverter:
         if image_converter and hasattr(image_converter, "set_base_dir"):
             image_converter.set_base_dir(Path(base_path).parent)
 
-    def _convert_chunked(
-        self, md_text: str, base_path: Optional[str] = None
-    ) -> DocxDocument:
+    def _convert_chunked(self, md_text: str, base_path: Optional[str] = None) -> DocxDocument:
         """按一级标题分块 parse + process，追加到同一 Document。"""
         try:
             self._reset_state()
             self._setup_base_path(base_path)
 
             if not isinstance(md_text, str):
-                raise ConvertError(
-                    f"输入参数类型错误，期望 str，得到 {type(md_text).__name__}"
-                )
+                raise ConvertError(f"输入参数类型错误，期望 str，得到 {type(md_text).__name__}")
             if not md_text.strip():
                 return self.document
 
@@ -254,20 +243,14 @@ class BaseConverter:
         except (KeyboardInterrupt, SystemExit):
             raise
         except Exception as e:
-            raise ConvertError(
-                f"转换过程发生错误 ({type(e).__name__}): {e}"
-            ) from e
+            raise ConvertError(f"转换过程发生错误 ({type(e).__name__}): {e}") from e
 
-    def _convert_tokens(
-        self, md_text: str, base_path: Optional[str] = None
-    ) -> DocxDocument:
+    def _convert_tokens(self, md_text: str, base_path: Optional[str] = None) -> DocxDocument:
         try:
             self._reset_state()
             self._setup_base_path(base_path)
             if not isinstance(md_text, str):
-                raise ConvertError(
-                    f"输入参数类型错误，期望 str，得到 {type(md_text).__name__}"
-                )
+                raise ConvertError(f"输入参数类型错误，期望 str，得到 {type(md_text).__name__}")
 
             if not md_text.strip():
                 # 空文档也创建基本的DOCX结构
@@ -278,13 +261,9 @@ class BaseConverter:
 
             # 调试：打印所有标记
             if self.debug:
-                print(
-                    "-----------------==============================================="
-                )
+                print("-----------------===============================================")
                 print(tokens)
-                print(
-                    "-----------------==============================================="
-                )
+                print("-----------------===============================================")
 
                 for token in tokens:
                     print(
@@ -309,6 +288,4 @@ class BaseConverter:
         except (KeyboardInterrupt, SystemExit):
             raise
         except Exception as e:
-            raise ConvertError(
-                f"转换过程发生错误 ({type(e).__name__}): {e}"
-            ) from e
+            raise ConvertError(f"转换过程发生错误 ({type(e).__name__}): {e}") from e

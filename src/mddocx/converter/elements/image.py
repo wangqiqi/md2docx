@@ -11,12 +11,7 @@ import requests
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Pt
 
-from ..security import (
-    MAX_IMAGE_BYTES,
-    MAX_IMAGE_CACHE_ENTRIES,
-    is_safe_remote_url,
-    resolve_safe_local_path,
-)
+from ..security import MAX_IMAGE_BYTES, MAX_IMAGE_CACHE_ENTRIES, is_safe_remote_url, resolve_safe_local_path
 from .base import ElementConverter
 
 

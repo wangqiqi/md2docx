@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.43] - 2026-07-09
+
+### Fixed
+- 对齐 `black`/`isort` 行宽为 120（`pyproject.toml` `[tool.black]`），消除互相覆盖导致的 CI quality 失败
+- 全库 `src`/`tests` 按 black + isort 重新格式化
+
 ## [0.5.42] - 2026-06-09
 
 ### Changed

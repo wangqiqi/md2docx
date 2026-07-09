@@ -121,10 +121,7 @@ class TestHtmlIntegration:
 
             # 检查表格内容是否包含预期的文本
             assert (
-                "姓名" in table_text
-                or "年龄" in table_text
-                or "张三" in table_text
-                or "25" in table_text
+                "姓名" in table_text or "年龄" in table_text or "张三" in table_text or "25" in table_text
             ), f"表格内容: {table_text}"
 
     @pytest.mark.skipif(not HTML_FOR_DOCX_AVAILABLE, reason="html-for-docx not available")
@@ -164,7 +161,5 @@ class TestHtmlIntegration:
         assert "HTML支持示例" in all_text or "HTML" in all_text
         assert len(doc.paragraphs) > 5
         if doc.tables:
-            table_text = " ".join(
-                cell.text for row in doc.tables[0].rows for cell in row.cells
-            )
+            table_text = " ".join(cell.text for row in doc.tables[0].rows for cell in row.cells)
             assert "姓名" in table_text or "张三" in table_text

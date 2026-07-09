@@ -31,9 +31,7 @@ class MarkdownTooLargeError(Exception):
     def __init__(self, size: int, limit: int = MAX_MARKDOWN_BYTES) -> None:
         self.size = size
         self.limit = limit
-        super().__init__(
-            f"Markdown 内容过大: {size} 字节，上限 {limit} 字节"
-        )
+        super().__init__(f"Markdown 内容过大: {size} 字节，上限 {limit} 字节")
 
 
 def markdown_utf8_byte_size(text: str) -> int:
@@ -104,13 +102,7 @@ def is_private_ip(ip_str: str) -> bool:
         ip = ipaddress.ip_address(ip_str)
     except ValueError:
         return False
-    return (
-        ip.is_private
-        or ip.is_loopback
-        or ip.is_link_local
-        or ip.is_reserved
-        or ip.is_multicast
-    )
+    return ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved or ip.is_multicast
 
 
 def is_safe_remote_url(url: str) -> bool:

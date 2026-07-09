@@ -71,12 +71,8 @@ class ListConverter(ElementConverter):
         # 创建或获取列表样式
         style_name = self._get_style_name(level, is_ordered)
         if debug:
-            print(
-                f"ListConverter: 使用样式 {style_name} (level={level}, is_ordered={is_ordered})"
-            )
-        numbering_id = self._ensure_list_style(
-            style_name, level, is_ordered, need_new_numbering
-        )
+            print(f"ListConverter: 使用样式 {style_name} (level={level}, is_ordered={is_ordered})")
+        numbering_id = self._ensure_list_style(style_name, level, is_ordered, need_new_numbering)
 
         # 更新列表状态
         self._update_list_state(level, is_ordered, numbering_id)
@@ -124,15 +120,9 @@ class ListConverter(ElementConverter):
         current_style = {"bold": False, "italic": False, "strike": False}
 
         # 处理空列表项
-        if (
-            not content_token
-            or not hasattr(content_token, "children")
-            or not content_token.children
-        ):
+        if not content_token or not hasattr(content_token, "children") or not content_token.children:
             # 检查是否为任务列表项（通过内容字符串判断）
-            if hasattr(content_token, "content") and isinstance(
-                content_token.content, str
-            ):
+            if hasattr(content_token, "content") and isinstance(content_token.content, str):
                 content = content_token.content.strip()
                 if content.startswith("[ ] ") or content.startswith("[x] "):
                     # 这是一个任务列表项，但我们在这里不处理它的内容
@@ -246,9 +236,7 @@ class ListConverter(ElementConverter):
 
         return True
 
-    def _update_list_state(
-        self, level: int, is_ordered: bool, numbering_id: Optional[int]
-    ) -> None:
+    def _update_list_state(self, level: int, is_ordered: bool, numbering_id: Optional[int]) -> None:
         """更新列表状态
 
         Args:
@@ -267,9 +255,7 @@ class ListConverter(ElementConverter):
             # 否则添加新的列表状态
             self._current_lists.append((level, is_ordered, numbering_id))
 
-    def _add_text_with_style(
-        self, paragraph: Paragraph, text: str, style: Dict[str, bool]
-    ) -> None:
+    def _add_text_with_style(self, paragraph: Paragraph, text: str, style: Dict[str, bool]) -> None:
         """添加带样式的文本
 
         Args:
