@@ -7,12 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-- `pyproject.toml`：`license = {text = "MIT"}` 兼容 Python 3.8 CI 旧版 setuptools 的 `pip install -e`（SPDX 字符串仅新 setuptools 支持）
-
 ### Added
 
 ### Changed
+
+### Fixed
 
 ## [0.5.49] - 2026-07-10
 
@@ -27,11 +26,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - `docs/02_开发指南.md`：补充基线更新步骤与失败解读
 - WebUI 单文件错误提示拆分为可读的 `[E_*]` 错误码与说明
-- README：工程候选对齐；测试基线 **319**
-- 版本单一真源：`pyproject.toml` 为权威版本；运行时从源码树或 distribution metadata 读取；SPDX `MIT` license
+- README：工程候选对齐；测试基线 **321**
+- 版本单一真源：`pyproject.toml` 为权威版本；运行时从源码树或 distribution metadata 读取；MIT `license = {text = "MIT"}`
 - wheel 不再打包 `mddocx/webui/tests`；新增 `tests/unit/test_packaging.py` 门禁
 - `docs/06_发布流程.md`：补充 `verify_release_candidate.sh` 预检步骤
 - CI 质量门禁：修复 flake8 / black 回归（E-RELREADY-01）
+
+### Fixed
+- `pyproject.toml`：`license = {text = "MIT"}` 兼容 Python 3.8 CI 旧版 setuptools 的 `pip install -e`（避免 SPDX 字符串在 setuptools<77 下失败）
+- packaging 测试：断言 license table 格式，并在 `setuptools<70` 下验证 `pip install -e`
 
 ## [0.5.48] - 2026-07-10
 

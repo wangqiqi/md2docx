@@ -27,6 +27,14 @@ print(data['project']['version'])
 }
 
 VERSION="$(read_version)"
+NEXT_VERSION="$("$PYTHON" -c "
+import tomllib
+from pathlib import Path
+v = tomllib.loads(Path('pyproject.toml').read_text(encoding='utf-8'))['project']['version']
+parts = [int(x) for x in v.split('.')]
+parts[-1] += 1
+print('.'.join(str(p) for p in parts))
+")"
 echo "=== md2docx release candidate verify (pyproject ${VERSION}) ==="
 
 echo ""
@@ -34,7 +42,7 @@ echo "=== PyPI version collision check ==="
 if bash scripts/verify_pypi_version.sh "${VERSION}"; then
   echo ""
   echo "⚠️  PyPI 已存在 mddocx==${VERSION}。"
-  echo "    本 Sprint 不发布；后续 /release 必须升版（建议 0.5.49），勿重复上传 ${VERSION}。"
+  echo "    后续 /release 必须升版（建议 ${NEXT_VERSION}），勿重复上传 ${VERSION}。"
 else
   echo "ℹ️  PyPI 尚无 mddocx==${VERSION}（或网络不可达）；发布前仍须核对 CHANGELOG 与 tag。"
 fi
@@ -146,4 +154,4 @@ fi
 
 echo ""
 echo "✅ release candidate verify passed (version ${VERSION})"
-echo "   下一步：/release 升版（若 PyPI 已有 ${VERSION} → 建议 0.5.49）· tag · push · PyPI"
+echo "   下一步：若 PyPI 已有 ${VERSION} → /release 升 ${NEXT_VERSION} · tag · push · PyPI"
