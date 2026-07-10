@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/02_开发指南.md`：补充基线更新步骤与失败解读
 - WebUI 单文件错误提示拆分为可读的 `[E_*]` 错误码与说明
 - README：工程候选对齐；测试基线 **315**
+- 版本单一真源：`pyproject.toml` 为权威版本；运行时从源码树或 distribution metadata 读取；SPDX `MIT` license
+- wheel 不再打包 `mddocx/webui/tests`；新增 `tests/unit/test_packaging.py` 门禁
 
 ## [0.5.48] - 2026-07-10
 

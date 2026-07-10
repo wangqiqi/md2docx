@@ -1,5 +1,6 @@
-# 包含webui目录
+# 包含 webui（排除测试包，wheel 亦通过 packages.find.exclude）
 recursive-include src/mddocx/webui *.py
+prune src/mddocx/webui/tests
 recursive-include src/mddocx/webui *.html
 recursive-include src/mddocx/webui *.css
 recursive-include src/mddocx/webui *.js
