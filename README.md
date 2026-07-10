@@ -47,7 +47,7 @@
 项目采用专业级的质量保证体系，确保代码可靠性和开发效率：
 
 ### 🧪 测试体系
-- **315 测试用例**（`pytest -q`，随版本增长；以 CI 为准）— 覆盖核心功能、WebUI 和边界条件
+- **319 测试用例**（`pytest -q`，随版本增长；以 CI 为准）— 覆盖核心功能、WebUI 和边界条件
 - **持续集成覆盖率报告** - 多维度测试保证
 - **大文件测试** - 支持1MB+文档处理
 - **边界条件测试** - Unicode、嵌套、异常输入
@@ -69,7 +69,7 @@
 📋 本地开发编排：`.cursorGrowth/plan.md`（**不入库**，jwplan/jwrun 自用）· 文档索引：[docs/README.md](docs/README.md)
 
 **已完成 ✅:**
-- ✅ 专业测试体系 (315 测试，覆盖率 ≥85%，CI 持续验证)
+- ✅ 专业测试体系 (319 测试，覆盖率 ≥85%，CI 持续验证)
 - ✅ CI/CD 自动化 (GitHub Actions 多版本测试)
 - ✅ 代码质量保证 (pre-commit + 多工具检查)
 - ✅ Web 界面、实时预览、响应式设计
@@ -317,6 +317,11 @@ md2docx/
 运行测试：
 ```bash
 pytest tests/ src/mddocx/webui/tests/
+```
+
+发布候选预检（本地 `/release` 前推荐）：
+```bash
+bash scripts/verify_release_candidate.sh
 ```
 
 ## 贡献指南

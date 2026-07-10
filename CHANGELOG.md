@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `scripts/verify_release_candidate.sh`：发布候选一键预检（测试/质量/构建/隔离安装/PyPI 碰撞提示）（E-RELREADY-01）
 - ConvertMetrics **性能基线**：`tests/baselines/convert_metrics.json` + `scripts/collect_convert_metrics.py`（E-METRICS-01）
 - `scripts/check_convert_metrics.sh`：结构字段硬失败；耗时相对阈值（默认 soft，防 CI 抖动）
 - CI `quality`：调用 ConvertMetrics 门禁
@@ -17,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - `docs/02_开发指南.md`：补充基线更新步骤与失败解读
 - WebUI 单文件错误提示拆分为可读的 `[E_*]` 错误码与说明
-- README：工程候选对齐；测试基线 **315**
+- README：工程候选对齐；测试基线 **319**
 - 版本单一真源：`pyproject.toml` 为权威版本；运行时从源码树或 distribution metadata 读取；SPDX `MIT` license
 - wheel 不再打包 `mddocx/webui/tests`；新增 `tests/unit/test_packaging.py` 门禁
 
