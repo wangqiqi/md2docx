@@ -38,6 +38,10 @@ print('.'.join(str(p) for p in parts))
 echo "=== md2docx release candidate verify (pyproject ${VERSION}) ==="
 
 echo ""
+echo "=== release alignment ==="
+bash scripts/verify_release_alignment.sh
+
+echo ""
 echo "=== PyPI version collision check ==="
 if bash scripts/verify_pypi_version.sh "${VERSION}"; then
   echo ""

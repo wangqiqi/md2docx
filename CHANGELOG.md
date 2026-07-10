@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `scripts/verify_release_alignment.sh`：CI / publish 门面一致性门禁（version · README · CHANGELOG · license · tag）
 
 ### Changed
 

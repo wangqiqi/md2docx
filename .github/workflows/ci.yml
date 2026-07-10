@@ -84,6 +84,9 @@ jobs:
         METRICS_SOFT: "1"
       run: bash scripts/check_convert_metrics.sh
 
+    - name: Release alignment gate
+      run: bash scripts/verify_release_alignment.sh
+
   build:
     runs-on: ubuntu-latest
     steps:
