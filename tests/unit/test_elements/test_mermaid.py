@@ -10,11 +10,12 @@ from docx import Document
 from mddocx.converter.base import BaseConverter
 from mddocx.converter.elements.mermaid import (
     MermaidConverter,
+    _is_valid_image_payload,
     build_mermaid_ink_url,
     is_supported_mermaid_diagram,
     mermaid_diagram_kind,
 )
-from mddocx.converter.security import is_allowed_mermaid_ink_url
+from mddocx.converter.security import MAX_IMAGE_BYTES, is_allowed_mermaid_ink_url
 
 SAMPLE_GRAPH = """graph TD
     A[开始] --> B[结束]
@@ -84,6 +85,22 @@ class TestMermaidHelpers:
         assert mermaid_diagram_kind(SAMPLE_STATE) == "状态图"
         assert mermaid_diagram_kind(SAMPLE_CLASS) == "类图"
         assert mermaid_diagram_kind(SAMPLE_PIE) == "饼图"
+
+    def test_diagram_kind_empty_or_unknown(self):
+        assert mermaid_diagram_kind("") == "图表"
+        assert mermaid_diagram_kind("   ") == "图表"
+        assert mermaid_diagram_kind("journey\n  title: X") == "图表"
+
+    def test_is_supported_empty_source(self):
+        assert is_supported_mermaid_diagram("") is False
+        assert is_supported_mermaid_diagram("   ") is False
+
+    def test_is_valid_image_payload(self):
+        assert _is_valid_image_payload(b"") is False
+        assert _is_valid_image_payload(b"short") is False
+        assert _is_valid_image_payload(FAKE_PNG) is True
+        assert _is_valid_image_payload(b"\xff\xd8\xff" + b"x" * 100) is True
+        assert _is_valid_image_payload(b"x" * 100) is True
 
     def test_build_url_uses_mermaid_ink(self):
         url = build_mermaid_ink_url(SAMPLE_GRAPH)
@@ -221,6 +238,99 @@ class TestMermaidConverter:
         text = "\n".join(p.text for p in converter.document.paragraphs)
         assert "不支持" in text
         assert "journey" in text
+
+    def test_document_not_set(self):
+        conv = MermaidConverter()
+        with pytest.raises(ValueError, match="Document not set"):
+            conv.convert(self._make_token(SAMPLE_GRAPH))
+
+    @patch("docx.text.run.Run.add_picture")
+    @patch("mddocx.converter.elements.mermaid.requests.get")
+    def test_embed_failure_falls_back_to_code(self, mock_get, mock_add_picture, converter):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.headers = {"Content-Type": "image/png"}
+        mock_resp.iter_content.return_value = [FAKE_PNG]
+        mock_get.return_value = mock_resp
+        mock_add_picture.side_effect = RuntimeError("embed fail")
+
+        converter.convert(self._make_token(SAMPLE_GRAPH))
+
+        text = "\n".join(p.text for p in converter.document.paragraphs)
+        assert "渲染失败" in text
+
+    @patch("mddocx.converter.elements.mermaid.requests.get")
+    def test_fetch_blocked_url(self, mock_get, converter):
+        with patch(
+            "mddocx.converter.elements.mermaid.is_allowed_mermaid_ink_url",
+            return_value=False,
+        ):
+            converter.convert(self._make_token(SAMPLE_GRAPH))
+
+        mock_get.assert_not_called()
+        text = "\n".join(p.text for p in converter.document.paragraphs)
+        assert "渲染失败" in text
+
+    @patch("mddocx.converter.elements.mermaid.requests.get")
+    def test_fetch_non_200(self, mock_get, converter):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 500
+        mock_get.return_value = mock_resp
+
+        converter.convert(self._make_token(SAMPLE_GRAPH))
+
+        assert "渲染失败" in "\n".join(p.text for p in converter.document.paragraphs)
+
+    @patch("mddocx.converter.elements.mermaid.requests.get")
+    def test_fetch_bad_content_type(self, mock_get, converter):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.headers = {"Content-Type": "text/html"}
+        mock_get.return_value = mock_resp
+
+        converter.convert(self._make_token(SAMPLE_GRAPH))
+
+        assert "渲染失败" in "\n".join(p.text for p in converter.document.paragraphs)
+
+    @patch("mddocx.converter.elements.mermaid.requests.get")
+    def test_fetch_oversized_image(self, mock_get, converter):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.headers = {"Content-Type": "image/png"}
+        chunk = b"x" * 8192
+        mock_resp.iter_content.return_value = [chunk] * (MAX_IMAGE_BYTES // 8192 + 2)
+        mock_get.return_value = mock_resp
+
+        converter.convert(self._make_token(SAMPLE_GRAPH))
+
+        assert "渲染失败" in "\n".join(p.text for p in converter.document.paragraphs)
+
+    def test_fallback_without_code_converter(self, converter):
+        converter.base_converter = None
+        converter.convert(self._make_token("journey\n  title: Trip"))
+
+        text = "\n".join(p.text for p in converter.document.paragraphs)
+        assert "不支持" in text
+        assert "journey" in text
+
+    def test_fallback_plain_run_when_code_style_missing(self, converter):
+        """无 code converter 且 Code 样式不存在时仍写入源码。"""
+        converter.base_converter = MagicMock()
+        converter.base_converter.converters = {}
+        token = self._make_token(SAMPLE_GRAPH)
+
+        paragraph = converter.doc.add_paragraph()
+        with patch.object(
+            type(paragraph),
+            "style",
+            property(
+                lambda self: (_ for _ in ()).throw(KeyError("Code")),
+                lambda self, value: None,
+            ),
+        ), patch.object(converter.doc, "add_paragraph", return_value=paragraph):
+            converter._fallback_as_code(token, SAMPLE_GRAPH, unsupported=False)
+
+        assert SAMPLE_GRAPH in "\n".join(p.text for p in converter.document.paragraphs)
 
 
 class TestMermaidRouting:
