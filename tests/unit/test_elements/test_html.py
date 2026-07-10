@@ -401,3 +401,159 @@ def test_html_for_docx_no_new_paragraphs():
         result = converter._html_for_docx_convert("<span>x</span>")
 
     assert result is not None
+
+
+def test_custom_html_convert_debug_div_ul_ol_table(capsys):
+    """debug 模式下自定义解析各分支打印（覆盖 debug 行）。"""
+    converter = HtmlConverter()
+    converter.debug = True
+    converter.set_document(Document())
+
+    converter._custom_html_convert("<div>div调试</div>")
+    converter._custom_html_convert("<ul><li>项</li></ul>")
+    converter._custom_html_convert("<ol><li>项</li></ol>")
+    converter._custom_html_convert(
+        "<table><tr><th>A</th></tr><tr><td>B</td></tr></table>"
+    )
+
+    captured = capsys.readouterr().out
+    assert "解析div" in captured
+    assert "解析无序列表" in captured
+    assert "解析有序列表" in captured
+    assert "解析表格" in captured
+
+
+def test_custom_html_convert_debug_exception(capsys):
+    """自定义解析异常 + debug 打印。"""
+    converter = HtmlConverter()
+    converter.debug = True
+    converter.set_document(Document())
+
+    with patch.object(converter.doc, "add_paragraph", side_effect=RuntimeError("boom")):
+        assert converter._custom_html_convert("<p>fail</p>") is None
+
+    assert "自定义HTML解析失败" in capsys.readouterr().out
+
+
+def test_convert_debug_fallback_when_html4docx_unavailable(capsys):
+    """html-for-docx 不可用且 debug 时走 fallback 分支。"""
+    converter = HtmlConverter()
+    converter.debug = True
+    converter.set_document(Document())
+
+    token = MagicMock()
+    token.content = "<section><p>回退</p></section>"
+    token.children = None
+
+    with patch("mddocx.converter.elements.html.HTML_FOR_DOCX_AVAILABLE", False), patch(
+        "mddocx.converter.elements.html.HTML2DOCX_AVAILABLE", False
+    ), patch.object(converter, "_custom_html_convert", return_value=None):
+        result = converter.convert(token)
+
+    assert result is not None
+    out = capsys.readouterr().out
+    assert "html-for-docx 不可用" in out
+    assert "使用基本HTML转换" in out
+
+
+@pytest.mark.skipif(not HTML_FOR_DOCX_AVAILABLE, reason="html-for-docx not available")
+def test_convert_debug_html_for_docx_success(capsys):
+    """自定义失败、html-for-docx 成功且 debug。"""
+    converter = HtmlConverter()
+    converter.debug = True
+    converter.set_document(Document())
+
+    token = MagicMock()
+    token.content = "<section><article>复杂</article></section>"
+    token.children = None
+
+    with patch.object(converter, "_custom_html_convert", return_value=None):
+        result = converter.convert(token)
+
+    assert result is not None
+    assert "尝试使用 html-for-docx 转换" in capsys.readouterr().out
+
+
+@pytest.mark.skipif(not HTML_FOR_DOCX_AVAILABLE, reason="html-for-docx not available")
+def test_convert_debug_html_for_docx_failure(capsys):
+    """html-for-docx 抛错且 debug 打印。"""
+    converter = HtmlConverter()
+    converter.debug = True
+    converter.set_document(Document())
+
+    token = MagicMock()
+    token.content = "<section><article>失败</article></section>"
+    token.children = None
+
+    with patch.object(converter, "_custom_html_convert", return_value=None), patch(
+        "mddocx.converter.elements.html.HtmlToDocx"
+    ) as mock_cls:
+        mock_cls.return_value.add_html_to_document.side_effect = RuntimeError("fail")
+        result = converter.convert(token)
+
+    assert result is not None
+    assert "HTML转换失败" in capsys.readouterr().out
+
+
+def test_html_for_docx_convert_empty_document_returns_none():
+    """无段落时 _html_for_docx_convert 返回 None。"""
+    converter = HtmlConverter()
+    converter.set_document(Document())
+
+    with patch("mddocx.converter.elements.html.HtmlToDocx") as mock_cls:
+        mock_cls.return_value.add_html_to_document.return_value = None
+        assert converter._html_for_docx_convert("<span>x</span>") is None
+
+
+def test_process_inline_strike_font_errors_debug(capsys):
+    """删除线 font/XML 双失败且 debug 打印。"""
+    converter = HtmlConverter()
+    converter.debug = True
+    converter.set_document(Document())
+    paragraph = converter.document.add_paragraph()
+
+    mock_run_obj = MagicMock()
+    mock_run_obj.text = "删除"
+
+    def _font_prop(self):
+        raise RuntimeError("font")
+
+    type(mock_run_obj).font = property(_font_prop)
+    mock_run_obj._element.get_or_add_rPr.side_effect = RuntimeError("xml")
+
+    with patch.object(paragraph, "add_run", return_value=mock_run_obj):
+        converter._process_inline_tags("<s>删除</s>", paragraph)
+
+    out = capsys.readouterr().out
+    assert "无法设置删除线(方法1)" in out
+    assert "无法设置删除线(方法2)" in out
+
+
+def test_process_inline_tags_exception_debug(capsys):
+    """内联解析异常 + debug。"""
+    converter = HtmlConverter()
+    converter.debug = True
+    converter.set_document(Document())
+    paragraph = converter.document.add_paragraph()
+
+    with patch(
+        "mddocx.converter.elements.html.re.split",
+        side_effect=ValueError("forced"),
+    ):
+        converter._process_inline_tags("<p>容错</p>", paragraph)
+
+    assert "处理内联标签失败" in capsys.readouterr().out
+
+
+@pytest.mark.skipif(not HTML_FOR_DOCX_AVAILABLE, reason="html-for-docx not available")
+def test_html_for_docx_no_new_paragraphs():
+    """html-for-docx 未新增段落时仍返回已有段落。"""
+    converter = HtmlConverter()
+    converter.set_document(Document())
+    converter.document.add_paragraph("已有")
+
+    with patch("mddocx.converter.elements.html.HtmlToDocx") as mock_cls:
+        mock_cls.return_value.add_html_to_document.return_value = None
+        result = converter._html_for_docx_convert("<span>x</span>")
+
+    assert result is not None
