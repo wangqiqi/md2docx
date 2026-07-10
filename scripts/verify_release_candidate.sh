@@ -18,19 +18,15 @@ METRICS_SOFT="${METRICS_SOFT:-1}"
 SKIP_ISOLATED="${SKIP_ISOLATED:-0}"
 
 read_version() {
-  "$PYTHON" -c "
-import tomllib
-from pathlib import Path
-data = tomllib.loads(Path('pyproject.toml').read_text(encoding='utf-8'))
-print(data['project']['version'])
-"
+  "$PYTHON" -c "import sys; sys.path.insert(0, 'scripts'); from pyproject_util import project_version; print(project_version())"
 }
 
 VERSION="$(read_version)"
 NEXT_VERSION="$("$PYTHON" -c "
-import tomllib
-from pathlib import Path
-v = tomllib.loads(Path('pyproject.toml').read_text(encoding='utf-8'))['project']['version']
+import sys
+sys.path.insert(0, 'scripts')
+from pyproject_util import project_version
+v = project_version()
 parts = [int(x) for x in v.split('.')]
 parts[-1] += 1
 print('.'.join(str(p) for p in parts))
@@ -102,10 +98,11 @@ print(f'OK: {wheel} has no webui/tests')
 echo ""
 echo "=== runtime version vs pyproject ==="
 "$PYTHON" -c "
-import tomllib
-from pathlib import Path
+import sys
+sys.path.insert(0, 'scripts')
+from pyproject_util import project_version
 import mddocx
-want = tomllib.loads(Path('pyproject.toml').read_text(encoding='utf-8'))['project']['version']
+want = project_version()
 got = mddocx.__version__
 assert got == want, f'mddocx.__version__={got!r} != pyproject {want!r}'
 print(f'OK: mddocx.__version__ == {want}')

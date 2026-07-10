@@ -4,23 +4,25 @@ from __future__ import annotations
 
 import subprocess
 import sys
-import tomllib
 import zipfile
 from pathlib import Path
 
 import mddocx
 
 ROOT = Path(__file__).resolve().parents[2]
+SCRIPTS = ROOT / "scripts"
+if str(SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS))
+
+from pyproject_util import load_pyproject, project_version  # noqa: E402
 
 
 def _pyproject_version() -> str:
-    data = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    return str(data["project"]["version"])
+    return project_version(ROOT)
 
 
 def _pyproject_license() -> object:
-    data = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    return data["project"]["license"]
+    return load_pyproject(ROOT)["project"]["license"]
 
 
 def test_license_table_compatible_with_old_setuptools() -> None:

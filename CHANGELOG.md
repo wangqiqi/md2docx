@@ -7,11 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- CI：对齐脚本与单测改用 `tomli` 回退，修复 Python 3.8–3.10 无 `tomllib`；忽略 `GITHUB_REF_NAME=master` 误当 tag
+
 ### Added
 
 ### Changed
-
-### Fixed
 
 ## [0.5.50] - 2026-07-10
 

@@ -13,11 +13,18 @@ def _read_version() -> str:
     """运行时版本：源码树读 pyproject.toml，已安装包读 distribution metadata。"""
     root = Path(__file__).resolve().parents[2]
     pyproject = root / "pyproject.toml"
+    try:
+        import tomllib
+
+        loads = tomllib.loads
+    except ModuleNotFoundError:
+        import tomli
+
+        loads = tomli.loads
+
     if pyproject.is_file():
         try:
-            import tomllib
-
-            data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+            data = loads(pyproject.read_text(encoding="utf-8"))
             if data.get("project", {}).get("name") == "mddocx":
                 return str(data["project"]["version"])
         except Exception:
