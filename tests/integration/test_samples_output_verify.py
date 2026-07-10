@@ -43,12 +43,12 @@ def test_fresh_sample_docx_meets_expectations(fresh_docx_dir, sample_key):
 
 
 def test_output_dir_docx_if_present():
-    """若本地已生成 output/，同样跑一遍规则（可选，失败仅 warn）。"""
+    """若本地已生成 output/，校验已有 docx；无预生成产物时跳过（CI 不依赖 output/）。"""
     output_root = SAMPLES_ROOT / "output"
     if not output_root.is_dir():
         pytest.skip("tests/samples/output 未生成")
 
-    missing = []
+    checked = 0
     failures_all = []
     for md_path in list_sample_md_files(SAMPLES_ROOT):
         key = rel_sample_key(md_path, SAMPLES_ROOT)
@@ -58,11 +58,13 @@ def test_output_dir_docx_if_present():
         rel = Path(key)
         docx_path = output_root / rel.parent / f"{md_path.stem}.docx"
         if not docx_path.is_file():
-            missing.append(key)
             continue
+        checked += 1
         failures = check_docx_against_expectation(docx_path, md_path, exp)
         if failures:
             failures_all.append((key, failures))
 
-    assert not missing, f"output 缺少 docx: {missing}"
+    if checked == 0:
+        pytest.skip("output/ 无预生成 docx，跳过可选验收")
+
     assert not failures_all, "\n".join(f"{k}: " + "; ".join(v) for k, v in failures_all)

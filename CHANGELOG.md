@@ -7,12 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-- `test_batch.py`：补 `from __future__ import annotations`，修复 Python 3.8 CI 收集阶段 `dict[str, bytes]` 报错
-
 ### Added
 
 ### Changed
+
+### Fixed
+
+## [0.5.52] - 2026-07-10
+
+### Fixed
+- CI：修复 3 项 pytest 失败——本地图片测试仅用本地片段（避免在线图触发 `requests.get`）；`output/` 可选验收在无预生成 docx 时 skip；`HtmlToDocx` 单测在无 `[html]` 可选依赖时 skip
+- `test_batch.py`：补 `from __future__ import annotations`，修复 Python 3.8 CI 收集阶段 `dict[str, bytes]` 报错
 
 ## [0.5.51] - 2026-07-10
 

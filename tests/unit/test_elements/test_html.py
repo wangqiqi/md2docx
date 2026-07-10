@@ -479,6 +479,7 @@ def test_convert_debug_html_for_docx_failure(capsys):
     assert "HTML转换失败" in capsys.readouterr().out
 
 
+@pytest.mark.skipif(not HTML_FOR_DOCX_AVAILABLE, reason="html-for-docx not available")
 def test_html_for_docx_convert_empty_document_returns_none():
     """无段落时 _html_for_docx_convert 返回 None。"""
     converter = HtmlConverter()
