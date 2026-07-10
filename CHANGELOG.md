@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.48] - 2026-07-10
+
 ### Added
 - `scripts/verify_pypi_version.sh`：核对 PyPI 上 `mddocx` 是否已发布指定版本（E-PUB-01）
 - `publish.yml`：Trusted Publisher 成功后自动核对 PyPI 版本（含有限重试）
