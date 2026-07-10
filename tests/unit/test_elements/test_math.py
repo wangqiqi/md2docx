@@ -8,7 +8,7 @@ import pytest
 from docx import Document
 
 from mddocx.converter.base import BaseConverter
-from mddocx.converter.elements.math import MathConverter, build_codecogs_url
+from mddocx.converter.elements.math import build_codecogs_url
 from mddocx.converter.equation_labels import EquationRegistry, strip_label, substitute_refs
 from mddocx.converter.security import is_allowed_codecogs_url
 

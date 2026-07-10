@@ -5,7 +5,6 @@ BaseConverter token 路由边界测试
 from unittest.mock import MagicMock, patch
 
 import pytest
-from docx import Document
 
 from mddocx.converter.base import BaseConverter, ConvertError
 
@@ -27,7 +26,7 @@ class TestBaseConverterRouting:
         mock_get.return_value = mock_resp
 
         md = "```mermaid\ngraph TD\n  A --> B\n```"
-        doc = BaseConverter().convert(md)
+        BaseConverter().convert(md)
         assert mock_get.called
 
     def test_fence_python_routes_to_code(self):

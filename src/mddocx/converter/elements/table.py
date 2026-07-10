@@ -67,9 +67,7 @@ class TableConverter(ElementConverter):
 
         return cast(Table, table)
 
-    def _parse_table_structure(
-        self, token: Any, tokens: Optional[List[Any]] = None
-    ) -> List[List[Dict[str, Any]]]:
+    def _parse_table_structure(self, token: Any, tokens: Optional[List[Any]] = None) -> List[List[Dict[str, Any]]]:
         """解析表格结构
 
         Args:

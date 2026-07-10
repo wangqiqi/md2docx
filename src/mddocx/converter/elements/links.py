@@ -173,9 +173,7 @@ class LinkConverter(ElementConverter):
         # 将超链接插入到原来运行元素的位置
         parent.insert(index, hyperlink)
 
-    def _add_hyperlink_with_style(
-        self, paragraph: Paragraph, text: str, url: str, style: Dict[str, Any]
-    ) -> None:
+    def _add_hyperlink_with_style(self, paragraph: Paragraph, text: str, url: str, style: Dict[str, Any]) -> None:
         """添加带样式的超链接到段落
 
         Args:

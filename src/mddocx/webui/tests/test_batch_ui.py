@@ -26,7 +26,7 @@ def test_index_exposes_batch_controls(client):
 
     assert response.status_code == 200
     assert 'id="batch-file-input"' in html
-    assert 'multiple' in html
+    assert "multiple" in html
     assert 'id="batch-convert-button"' in html
     assert 'id="batch-progress-bar"' in html
     assert 'id="batch-progress-count"' in html

@@ -159,7 +159,8 @@ class TokenProcessor:
             elif token.type in ("bullet_list_close", "ordered_list_close"):
                 if self._base.debug:
                     print(
-                        f"列表结束前栈: {self._base._list_stack}, token: {token.type}, level: {getattr(token, 'level', 'N/A')}"
+                        f"列表结束前栈: {self._base._list_stack}, token: {token.type}, "
+                        f"level: {getattr(token, 'level', 'N/A')}"
                     )
                 # 弹出栈中对应的列表
                 # markdown-it-py 的 level 从 0 开始，我们的栈 level 从 1 开始

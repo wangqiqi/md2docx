@@ -108,9 +108,7 @@ class ImageConverter(ElementConverter):
                 print(f"添加图片失败: {str(e)}")
             return paragraph
 
-    def convert_in_paragraph(
-        self, paragraph: Any, token: Any, style: Optional[Any] = None
-    ) -> None:
+    def convert_in_paragraph(self, paragraph: Any, token: Any, style: Optional[Any] = None) -> None:
         """在段落中转换图片
 
         Args:

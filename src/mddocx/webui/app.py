@@ -26,7 +26,6 @@ from ..converter import BaseConverter
 from ..errors import (
     E_CONTENT_EMPTY,
     E_CONTENT_TOO_LARGE,
-    E_CONVERT_FAILED,
     E_FILE_TYPE_INVALID,
     E_INPUT_ENCODING,
     E_MEMORY,

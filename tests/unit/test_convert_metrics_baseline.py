@@ -70,9 +70,7 @@ def test_small_case_not_chunked(collector):
 def test_compare_duration_passes_under_limit(collector):
     live = collector.collect_all()
     baseline = collector.load_baseline(BASELINE)
-    assert (
-        collector.compare_duration(live, baseline, max_ratio=100.0, floor_ms=1.0) == []
-    )
+    assert collector.compare_duration(live, baseline, max_ratio=100.0, floor_ms=1.0) == []
 
 
 def test_compare_duration_fails_when_ratio_and_floor_exceeded(collector):

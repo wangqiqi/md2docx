@@ -1,6 +1,5 @@
 """WebUI 批量转换 API 测试。"""
 
-import io
 import json
 import zipfile
 from io import BytesIO

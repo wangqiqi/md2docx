@@ -389,20 +389,6 @@ def test_process_inline_tags_exception_fallback():
     assert paragraph.text.strip() != ""
 
 
-@pytest.mark.skipif(not HTML_FOR_DOCX_AVAILABLE, reason="html-for-docx not available")
-def test_html_for_docx_no_new_paragraphs():
-    """html-for-docx 未新增段落时仍返回已有段落。"""
-    converter = HtmlConverter()
-    converter.set_document(Document())
-    converter.document.add_paragraph("已有")
-
-    with patch("mddocx.converter.elements.html.HtmlToDocx") as mock_cls:
-        mock_cls.return_value.add_html_to_document.return_value = None
-        result = converter._html_for_docx_convert("<span>x</span>")
-
-    assert result is not None
-
-
 def test_custom_html_convert_debug_div_ul_ol_table(capsys):
     """debug 模式下自定义解析各分支打印（覆盖 debug 行）。"""
     converter = HtmlConverter()
@@ -412,9 +398,7 @@ def test_custom_html_convert_debug_div_ul_ol_table(capsys):
     converter._custom_html_convert("<div>div调试</div>")
     converter._custom_html_convert("<ul><li>项</li></ul>")
     converter._custom_html_convert("<ol><li>项</li></ol>")
-    converter._custom_html_convert(
-        "<table><tr><th>A</th></tr><tr><td>B</td></tr></table>"
-    )
+    converter._custom_html_convert("<table><tr><th>A</th></tr><tr><td>B</td></tr></table>")
 
     captured = capsys.readouterr().out
     assert "解析div" in captured

@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from mddocx.converter.base import BaseConverter
-from mddocx.converter.elements.html import HTML2DOCX_AVAILABLE, HTML_FOR_DOCX_AVAILABLE
+from mddocx.converter.elements.html import HTML_FOR_DOCX_AVAILABLE
 
 SAMPLES_DIR = Path(__file__).resolve().parents[1] / "samples"
 
