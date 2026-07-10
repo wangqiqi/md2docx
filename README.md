@@ -46,7 +46,7 @@
 项目采用专业级的质量保证体系，确保代码可靠性和开发效率：
 
 ### 🧪 测试体系
-- **284 测试用例**（`pytest -q`，随版本增长；以 CI 为准）— 覆盖核心功能、WebUI 和边界条件
+- **303 测试用例**（`pytest -q`，随版本增长；以 CI 为准）— 覆盖核心功能、WebUI 和边界条件
 - **持续集成覆盖率报告** - 多维度测试保证
 - **大文件测试** - 支持1MB+文档处理
 - **边界条件测试** - Unicode、嵌套、异常输入
@@ -68,7 +68,7 @@
 📋 本地开发编排：`.cursorGrowth/plan.md`（**不入库**，jwplan/jwrun 自用）· 文档索引：[docs/README.md](docs/README.md)
 
 **已完成 ✅:**
-- ✅ 专业测试体系 (284 测试，覆盖率 ≥85%，CI 持续验证)
+- ✅ 专业测试体系 (303 测试，覆盖率 ≥85%，CI 持续验证)
 - ✅ CI/CD 自动化 (GitHub Actions 多版本测试)
 - ✅ 代码质量保证 (pre-commit + 多工具检查)
 - ✅ Web 界面、实时预览、响应式设计
@@ -76,11 +76,11 @@
 - ✅ html-for-docx 复杂 HTML 块 (v0.5.15+)
 - ✅ 审查 ROI 闭合 · ConvertMetrics · mypy 收紧（v0.5.45–0.5.47）
 - ✅ ConvertMetrics 性能基线与 CI 门禁（E-METRICS-01）
+- ✅ html/mermaid 元素转换器热路径覆盖（E-COV-01）
 
 **规划中 📋:**
 - 活路线图（产品 / 工程 backlog）：本地 **`.cursorGrowth/ROADMAP.md`**（**不入库**；clone 后由 `/learn`·`/plan` 维护）
 - 产品候选：样式/模板 · 转换质量深挖 · WebUI 体验
-- 工程候选：html/mermaid 覆盖（E-COV）；tag 后 PyPI 核对已交付（E-PUB-01）
 
 ## 开发环境要求
 
