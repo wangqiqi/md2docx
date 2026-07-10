@@ -8,11 +8,12 @@ import mimetypes
 import os
 import tempfile
 import uuid
+import io
 from html import escape
 from typing import Optional
 
 import bleach
-from flask import Flask, flash, redirect, render_template, request, send_file, url_for
+from flask import Flask, flash, jsonify, redirect, render_template, request, send_file, url_for
 from flask_wtf.csrf import CSRFProtect
 from markdown_it import MarkdownIt
 from mdit_py_plugins.dollarmath import dollarmath_plugin
@@ -214,6 +215,37 @@ def convert():
         flash(error_from_exception(e).format_user(), "error")
 
     return redirect(url_for("index"))
+
+
+@app.route("/convert/batch", methods=["POST"])
+def convert_batch():
+    """批量转换：多文件上传，返回 ZIP（含 batch_errors.json 失败清单）。"""
+    from .batch import BatchRequestError, build_batch_zip
+    from .rate_limit import is_rate_limited
+
+    if is_rate_limited(request.remote_addr or "unknown"):
+        info = error_info(E_RATE_LIMIT)
+        return jsonify({"code": info.code, "message": info.message}), 429
+
+    files = request.files.getlist("files")
+    try:
+        result = build_batch_zip(
+            files,
+            max_batch_files=config.MAX_BATCH_FILES,
+            max_text_size=config.MAX_TEXT_CONTENT_SIZE,
+            allowed_file=allowed_file,
+        )
+    except BatchRequestError as exc:
+        return jsonify({"code": exc.code, "message": exc.message}), exc.status
+
+    zip_buffer = io.BytesIO(result.zip_bytes)
+    zip_buffer.seek(0)
+    return send_file(
+        zip_buffer,
+        as_attachment=True,
+        download_name="batch_converted.zip",
+        mimetype="application/zip",
+    )
 
 
 @app.route("/preview", methods=["POST"])
