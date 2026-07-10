@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "schema": [
+    "id",
+    "source",
+    "force_chunked",
+    "duration_ms",
+    "input_bytes",
+    "chunked"
+  ],
+  "cases": [
+    {
+      "id": "small_headings",
+      "source": "tests/samples/basic/headings.md",
+      "force_chunked": false,
+      "duration_ms": 10.239,
+      "input_bytes": 317,
+      "chunked": false
+    },
+    {
+      "id": "large_chunked",
+      "source": "tests/samples/large/chunked.md",
+      "force_chunked": true,
+      "duration_ms": 13.086,
+      "input_bytes": 343,
+      "chunked": true
+    }
+  ]
+}
