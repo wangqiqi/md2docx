@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - `docs/02_开发指南.md`：补充基线更新步骤与失败解读
-- README：工程候选对齐（ConvertMetrics 基线已落地）
+- README：工程候选对齐（ConvertMetrics 基线已落地）；测试基线 **284**
 
 ## [0.5.48] - 2026-07-10
 
