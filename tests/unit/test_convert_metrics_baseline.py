@@ -65,3 +65,31 @@ def test_small_case_not_chunked(collector):
     snap = next(c for c in collector.collect_all() if c.id == "small_headings")
     assert snap.force_chunked is False
     assert snap.chunked is False
+
+
+def test_compare_duration_passes_under_limit(collector):
+    live = collector.collect_all()
+    baseline = collector.load_baseline(BASELINE)
+    assert (
+        collector.compare_duration(live, baseline, max_ratio=100.0, floor_ms=1.0) == []
+    )
+
+
+def test_compare_duration_fails_when_ratio_and_floor_exceeded(collector):
+    live = collector.collect_all()
+    baseline = {
+        "cases": [
+            {
+                "id": c.id,
+                "duration_ms": 0.01,
+                "input_bytes": c.input_bytes,
+                "chunked": c.chunked,
+                "source": c.source,
+                "force_chunked": c.force_chunked,
+            }
+            for c in live
+        ]
+    }
+    errs = collector.compare_duration(live, baseline, max_ratio=1.0, floor_ms=0.001)
+    assert len(errs) >= 1
+    assert any("large_chunked" in e or "small_headings" in e for e in errs)

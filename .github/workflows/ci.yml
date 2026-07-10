@@ -78,6 +78,12 @@ jobs:
     - name: Run isort check
       run: isort --check-only --diff src tests
 
+    - name: ConvertMetrics baseline gate
+      env:
+        # 结构字段硬失败；耗时默认 soft，避免 runner 抖动假红
+        METRICS_SOFT: "1"
+      run: bash scripts/check_convert_metrics.sh
+
   build:
     runs-on: ubuntu-latest
     steps:
