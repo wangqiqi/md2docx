@@ -8,11 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- `scripts/verify_release_alignment.sh`：CI / publish 门面一致性门禁（version · README · CHANGELOG · license · tag）
 
 ### Changed
 
 ### Fixed
+
+## [0.5.50] - 2026-07-10
+
+### Added
+- `scripts/verify_release_alignment.sh`：CI / publish 门面一致性门禁（version · README · CHANGELOG · license · tag）
+
+### Changed
+- `publish.yml` / `ci.yml`：发版前自动跑对齐门禁
 
 ## [0.5.49] - 2026-07-10
 
