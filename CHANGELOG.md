@@ -7,11 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `test_batch.py`：补 `from __future__ import annotations`，修复 Python 3.8 CI 收集阶段 `dict[str, bytes]` 报错
+
 ### Added
 
 ### Changed
-
-### Fixed
 
 ## [0.5.51] - 2026-07-10
 

@@ -1,5 +1,7 @@
 """WebUI 批量转换 API 测试。"""
 
+from __future__ import annotations
+
 import json
 import zipfile
 from io import BytesIO
