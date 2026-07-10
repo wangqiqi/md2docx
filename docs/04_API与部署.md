@@ -198,7 +198,7 @@ docker run --rm -p 5000:5000 -e SECRET_KEY=change-me mddocx:latest
 
 ### 转换指标（ConvertMetrics）
 
-程序可读出口：`BaseConverter.last_metrics`（字段 `duration_ms` / `input_bytes` / `chunked`）。详见 [02_开发指南 · 转换指标](02_开发指南.md#转换指标convertmetrics)。CLI `--debug` 会在转换后打印该快照。
+程序可读出口：`BaseConverter.last_metrics`（字段 `duration_ms` / `input_bytes` / `chunked`）。详见 [02_开发指南 · 转换指标](02_开发指南.md#转换指标convertmetrics)。CLI `--debug` 会在转换后打印该快照。CI 基线门禁见 [02 · ConvertMetrics 性能基线](02_开发指南.md#convertmetrics-性能基线ci)。
 
 ### 性能监控
 - 转换时间统计（`duration_ms`）

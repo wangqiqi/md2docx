@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- ConvertMetrics **性能基线**：`tests/baselines/convert_metrics.json` + `scripts/collect_convert_metrics.py`（E-METRICS-01）
+- `scripts/check_convert_metrics.sh`：结构字段硬失败；耗时相对阈值（默认 soft，防 CI 抖动）
+- CI `quality`：调用 ConvertMetrics 门禁
+
+### Changed
+- `docs/02_开发指南.md`：补充基线更新步骤与失败解读
+- README：工程候选对齐（ConvertMetrics 基线已落地）
+
 ## [0.5.48] - 2026-07-10
 
 ### Added
