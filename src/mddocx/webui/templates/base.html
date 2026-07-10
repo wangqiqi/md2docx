@@ -37,8 +37,20 @@
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
-                        <div class="alert alert-{{ 'error' if category == 'error' else 'success' }}">
-                            {{ message }}
+                        <div class="alert alert-{{ 'error' if category == 'error' else 'success' }}" role="alert">
+                            {% if category == 'error' %}
+                                {% set error = parse_user_error(message) %}
+                                <span class="icon" aria-hidden="true">❌</span>
+                                <span class="error-content">
+                                    {% if error.code %}
+                                        <strong class="error-code">[{{ error.code }}]</strong>
+                                    {% endif %}
+                                    <span class="error-description">{{ error.message }}</span>
+                                </span>
+                            {% else %}
+                                <span class="icon" aria-hidden="true">✅</span>
+                                {{ message }}
+                            {% endif %}
                         </div>
                     {% endfor %}
                 {% endif %}

@@ -36,7 +36,8 @@
 - ✅ 基础 HTML 标签支持（复杂 HTML 块可选 `pip install mddocx[html]`，依赖 **html-for-docx**）
 - ✅ Web界面 (Flask + HTML5 + CSS3)
 - ✅ 实时预览功能
-- ✅ 文件上传和下载
+- ✅ 单文件上传和 DOCX 下载
+- ✅ WebUI 多文件批量转换、阶段进度、ZIP 下载与逐文件错误摘要
 - ✅ 响应式设计 (桌面/移动)
 - ✅ 一次性阅读体验 (无页面滚动)
 - ✅ 防抖优化和安全文件处理
@@ -46,7 +47,7 @@
 项目采用专业级的质量保证体系，确保代码可靠性和开发效率：
 
 ### 🧪 测试体系
-- **303 测试用例**（`pytest -q`，随版本增长；以 CI 为准）— 覆盖核心功能、WebUI 和边界条件
+- **315 测试用例**（`pytest -q`，随版本增长；以 CI 为准）— 覆盖核心功能、WebUI 和边界条件
 - **持续集成覆盖率报告** - 多维度测试保证
 - **大文件测试** - 支持1MB+文档处理
 - **边界条件测试** - Unicode、嵌套、异常输入
@@ -68,7 +69,7 @@
 📋 本地开发编排：`.cursorGrowth/plan.md`（**不入库**，jwplan/jwrun 自用）· 文档索引：[docs/README.md](docs/README.md)
 
 **已完成 ✅:**
-- ✅ 专业测试体系 (303 测试，覆盖率 ≥85%，CI 持续验证)
+- ✅ 专业测试体系 (315 测试，覆盖率 ≥85%，CI 持续验证)
 - ✅ CI/CD 自动化 (GitHub Actions 多版本测试)
 - ✅ 代码质量保证 (pre-commit + 多工具检查)
 - ✅ Web 界面、实时预览、响应式设计
@@ -77,10 +78,11 @@
 - ✅ 审查 ROI 闭合 · ConvertMetrics · mypy 收紧（v0.5.45–0.5.47）
 - ✅ ConvertMetrics 性能基线与 CI 门禁（E-METRICS-01）
 - ✅ html/mermaid 元素转换器热路径覆盖（E-COV-01）
+- ✅ WebUI 批量转换、阶段进度与结构化错误摘要（P-WEBUI-01）
 
 **规划中 📋:**
 - 活路线图（产品 / 工程 backlog）：本地 **`.cursorGrowth/ROADMAP.md`**（**不入库**；clone 后由 `/learn`·`/plan` 维护）
-- 产品候选：样式/模板 · 转换质量深挖 · WebUI 体验
+- 产品候选：样式/模板 · 转换质量深挖
 
 ## 开发环境要求
 

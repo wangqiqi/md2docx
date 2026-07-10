@@ -12,10 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `scripts/check_convert_metrics.sh`：结构字段硬失败；耗时相对阈值（默认 soft，防 CI 抖动）
 - CI `quality`：调用 ConvertMetrics 门禁
 - html / mermaid 元素转换器单测补强，行覆盖 **≥99%**（E-COV-01）
+- WebUI 批量转换：多文件上传、阶段进度与 ZIP 下载；失败项写入 `batch_errors.json` 并在结果面板展示结构化错误（P-WEBUI-01）
 
 ### Changed
 - `docs/02_开发指南.md`：补充基线更新步骤与失败解读
-- README：工程候选对齐；测试基线 **303**
+- WebUI 单文件错误提示拆分为可读的 `[E_*]` 错误码与说明
+- README：工程候选对齐；测试基线 **315**
 
 ## [0.5.48] - 2026-07-10
 

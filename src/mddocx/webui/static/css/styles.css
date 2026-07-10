@@ -554,6 +554,25 @@ body {
     color: #721c24;
 }
 
+.error-content {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.error-code {
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    background: rgba(114, 28, 36, 0.1);
+    font-family: 'Monaco', 'Consolas', monospace;
+    white-space: nowrap;
+}
+
+.error-description {
+    font-weight: 500;
+}
+
 /* 英雄区域 */
 .hero {
     text-align: center;

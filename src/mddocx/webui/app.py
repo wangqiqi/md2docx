@@ -8,6 +8,7 @@ import json
 import logging
 import mimetypes
 import os
+import re
 import tempfile
 import uuid
 from html import escape
@@ -99,6 +100,21 @@ app.config.setdefault("WTF_CSRF_TIME_LIMIT", None)
 csrf = CSRFProtect(app)
 
 app.logger.setLevel(logging.INFO if not config.DEBUG else logging.DEBUG)
+
+
+def parse_user_error(message: str) -> dict:
+    """将 ``[E_*] message`` 拆为模板可读字段，并保留原始文本。"""
+    match = re.match(r"^\[(E_[A-Z0-9_]+)\]\s*(.*)$", message, re.DOTALL)
+    if match is None:
+        return {"code": "", "message": message, "raw": message}
+    return {
+        "code": match.group(1),
+        "message": match.group(2),
+        "raw": message,
+    }
+
+
+app.jinja_env.globals["parse_user_error"] = parse_user_error
 
 
 def allowed_file(filename, file_obj=None):
@@ -253,9 +269,7 @@ def convert_batch():
         "succeeded": result.succeeded,
         "failed": result.failed,
     }
-    response.headers["X-Batch-Summary"] = quote(
-        json.dumps(summary, ensure_ascii=False, separators=(",", ":"))
-    )
+    response.headers["X-Batch-Summary"] = quote(json.dumps(summary, ensure_ascii=False, separators=(",", ":")))
     response.headers["X-Batch-Errors"] = quote(
         json.dumps(
             [item.to_dict() for item in result.errors],

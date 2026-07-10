@@ -7,6 +7,8 @@
 - **现代化界面**: 响应式设计，支持一次性阅读体验
 - **实时预览**: 输入 Markdown 后实时生成 DOCX 预览
 - **文件上传**: 支持拖拽上传 Markdown 文件
+- **批量转换**: 最多选择 20 个文件，下载 DOCX ZIP，并显示成功/失败摘要
+- **错误可读**: 单文件与批量结果展示 `[E_*]` 错误码、说明和文件名
 - **安全可靠**: bleach 预览消毒、CSP 头、CSRF 防护、per-IP 限流
 - **高性能**: 防抖优化和异步处理
 - **易于部署**: 支持 development / production 配置
@@ -57,12 +59,15 @@ mddocx-webui
    - 在左侧输入 Markdown 内容
    - 右侧实时预览 DOCX 效果
    - 点击「转换为 DOCX」下载文件
+   - 点击「批量选择」选取多个文件，再下载 `batch_converted.zip`
+   - 部分文件失败时，页面直接显示失败项；ZIP 内同时包含 `batch_errors.json`
 
 ## 🏗️ 架构
 
 ```
 src/mddocx/webui/
 ├── app.py          # Flask 应用主文件
+├── batch.py        # 批量转换与 ZIP / batch_errors.json 打包
 ├── config.py       # 配置管理
 ├── rate_limit.py   # per-IP 限流
 ├── templates/      # HTML 模板
@@ -91,6 +96,7 @@ pytest -q src/mddocx/webui/tests/
 
 - **防抖处理**: 输入防抖 800ms，减少服务器请求
 - **内容限制**: 预览内容限制 2MB，转换内容限制 5MB
+- **批量限制**: `MAX_BATCH_FILES` 默认 20；批量请求按整批计一次限流
 - **异步处理**: 支持请求超时和取消
 - **缓存优化**: 临时文件安全清理
 
@@ -103,6 +109,7 @@ pytest -q src/mddocx/webui/tests/
 
 ### 交互优化
 - 实时预览带加载状态
+- 批量转换显示阶段进度、成功/失败数量和逐文件错误
 - 键盘快捷键支持 (Ctrl+Enter 提交, Ctrl+Shift+P 切换预览)
 - 文件上传预览和验证
 
@@ -127,6 +134,7 @@ pytest -q src/mddocx/webui/tests/
 
 - `GET /`: 主页
 - `POST /convert`: 转换 Markdown 为 DOCX
+- `POST /convert/batch`: `files` 多文件上传，返回 ZIP；失败清单位于 `batch_errors.json`
 - `POST /preview`: 生成预览 HTML
 
 ## 🤝 贡献

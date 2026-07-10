@@ -129,6 +129,8 @@ class TestAppRoutes:
         response = self.client.post("/convert", data={}, follow_redirects=True)
         assert response.status_code == 200  # 跟随重定向后的状态
         assert b"[E_CONTENT_EMPTY]" in response.data
+        assert b'class="error-code"' in response.data
+        assert b'class="error-description"' in response.data
         assert "Markdown".encode("utf-8") in response.data
 
         # 测试正常内容（这里不会实际生成文件，只是测试路由）
