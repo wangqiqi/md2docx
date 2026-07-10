@@ -18,6 +18,10 @@
                     <button class="btn-small" onclick="document.getElementById('file-input').click()">
                         <span class="icon">📁</span> 上传文件
                     </button>
+                    <input type="file" id="batch-file-input" accept=".md,.markdown,.txt" multiple style="display: none;">
+                    <button class="btn-small" id="batch-select-button" type="button">
+                        <span class="icon">📚</span> 批量选择
+                    </button>
                 </div>
             </div>
             <textarea
@@ -62,6 +66,27 @@ print('Hello World!')
             </div>
         </div>
     </div>
+
+    <section class="batch-panel" id="batch-panel" hidden aria-live="polite">
+        <div class="batch-panel-header">
+            <div>
+                <h3>📚 批量转换</h3>
+                <p id="batch-selection-summary">请选择多个 Markdown 文件</p>
+            </div>
+            <button class="btn btn-primary" id="batch-convert-button" type="button" disabled>
+                <span class="icon">📦</span> 批量转换并下载
+            </button>
+        </div>
+        <div class="batch-progress" id="batch-progress" hidden>
+            <div class="batch-progress-label">
+                <span id="batch-progress-status">准备中</span>
+                <strong id="batch-progress-count">0/0</strong>
+            </div>
+            <progress id="batch-progress-bar" value="0" max="1"></progress>
+        </div>
+        <ul class="batch-file-list" id="batch-file-list"></ul>
+        <div class="batch-result" id="batch-result" hidden></div>
+    </section>
 
     <!-- 操作栏 -->
     <div class="action-bar">

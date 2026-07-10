@@ -17,6 +17,7 @@ function initializeApp() {
 
     // 初始化文件上传
     initializeFileUpload();
+    initializeBatchConvert();
 
     // 初始化键盘快捷键
     initializeKeyboardShortcuts();
@@ -135,6 +136,9 @@ function initializeFileUpload() {
 }
 
 function handleFileSelect(event) {
+    if (event.target.id === 'batch-file-input') {
+        return;
+    }
     const file = event.target.files[0];
     if (!file) return;
 
@@ -145,6 +149,155 @@ function handleFileSelect(event) {
     if (isTextFile(file)) {
         previewTextFile(file);
     }
+}
+
+/**
+ * 初始化批量转换。
+ */
+function initializeBatchConvert() {
+    const input = document.getElementById('batch-file-input');
+    const selectButton = document.getElementById('batch-select-button');
+    const convertButton = document.getElementById('batch-convert-button');
+    if (!input || !selectButton || !convertButton) return;
+
+    selectButton.addEventListener('click', () => input.click());
+    input.addEventListener('change', renderBatchSelection);
+    convertButton.addEventListener('click', convertBatch);
+}
+
+function renderBatchSelection() {
+    const input = document.getElementById('batch-file-input');
+    const panel = document.getElementById('batch-panel');
+    const list = document.getElementById('batch-file-list');
+    const summary = document.getElementById('batch-selection-summary');
+    const convertButton = document.getElementById('batch-convert-button');
+    const result = document.getElementById('batch-result');
+    const files = Array.from(input.files);
+
+    panel.hidden = false;
+    result.hidden = true;
+    list.replaceChildren();
+
+    files.forEach(file => {
+        const item = document.createElement('li');
+        item.textContent = `${file.name} · ${formatFileSize(file.size)}`;
+        list.appendChild(item);
+    });
+
+    summary.textContent = files.length
+        ? `已选择 ${files.length} 个文件`
+        : '请选择多个 Markdown 文件';
+    convertButton.disabled = files.length === 0;
+}
+
+async function convertBatch() {
+    const input = document.getElementById('batch-file-input');
+    const button = document.getElementById('batch-convert-button');
+    const files = Array.from(input.files);
+    if (!files.length) {
+        showBatchRequestError('E_CONTENT_EMPTY', '请先选择文件');
+        return;
+    }
+
+    const progress = document.getElementById('batch-progress');
+    const progressBar = document.getElementById('batch-progress-bar');
+    const progressStatus = document.getElementById('batch-progress-status');
+    const progressCount = document.getElementById('batch-progress-count');
+    const restoreButton = showLoading(button);
+    const formData = new FormData();
+    files.forEach(file => formData.append('files', file));
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+    if (csrfToken) formData.append('csrf_token', csrfToken);
+
+    progress.hidden = false;
+    progressBar.max = files.length;
+    progressBar.value = 0;
+    progressStatus.textContent = '上传并转换中…';
+    progressCount.textContent = `0/${files.length}`;
+
+    try {
+        const response = await fetch('/convert/batch', {
+            method: 'POST',
+            headers: {'X-CSRFToken': csrfToken},
+            body: formData
+        });
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({
+                code: 'E_CONVERT_FAILED',
+                message: `请求失败（HTTP ${response.status}）`
+            }));
+            throw Object.assign(new Error(error.message), {code: error.code});
+        }
+
+        const blob = await response.blob();
+        const summary = parseBatchHeader(response.headers.get('X-Batch-Summary'), {
+            total: files.length,
+            succeeded: files.length,
+            failed: 0
+        });
+        const errors = parseBatchHeader(response.headers.get('X-Batch-Errors'), []);
+
+        progressBar.value = summary.total;
+        progressCount.textContent = `${summary.total}/${summary.total}`;
+        progressStatus.textContent = '转换完成';
+        downloadBatchZip(blob);
+        renderBatchResult(summary, errors);
+    } catch (error) {
+        progressStatus.textContent = '转换失败';
+        showBatchRequestError(error.code || 'E_CONVERT_FAILED', error.message);
+    } finally {
+        restoreButton();
+    }
+}
+
+function parseBatchHeader(value, fallback) {
+    if (!value) return fallback;
+    try {
+        return JSON.parse(decodeURIComponent(value));
+    } catch (error) {
+        console.warn('无法解析批量结果头:', error);
+        return fallback;
+    }
+}
+
+function downloadBatchZip(blob) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'batch_converted.zip';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+}
+
+function renderBatchResult(summary, errors) {
+    const result = document.getElementById('batch-result');
+    result.replaceChildren();
+    result.hidden = false;
+
+    const heading = document.createElement('strong');
+    heading.textContent = `完成：成功 ${summary.succeeded}，失败 ${summary.failed}`;
+    result.appendChild(heading);
+
+    if (errors.length) {
+        const list = document.createElement('ul');
+        errors.forEach(error => {
+            const item = document.createElement('li');
+            item.className = 'batch-error-item';
+            item.textContent = `${error.filename} · [${error.code}] ${error.message}`;
+            list.appendChild(item);
+        });
+        result.appendChild(list);
+    }
+}
+
+function showBatchRequestError(code, message) {
+    renderBatchResult(
+        {succeeded: 0, failed: 1},
+        [{filename: '批量请求', code, message}]
+    );
 }
 
 function showFileInfo(file, inputElement) {

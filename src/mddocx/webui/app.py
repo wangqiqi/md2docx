@@ -3,14 +3,16 @@ Flask Web应用
 提供Markdown转DOCX的Web界面
 """
 
+import io
+import json
 import logging
 import mimetypes
 import os
 import tempfile
 import uuid
-import io
 from html import escape
 from typing import Optional
+from urllib.parse import quote
 
 import bleach
 from flask import Flask, flash, jsonify, redirect, render_template, request, send_file, url_for
@@ -240,12 +242,28 @@ def convert_batch():
 
     zip_buffer = io.BytesIO(result.zip_bytes)
     zip_buffer.seek(0)
-    return send_file(
+    response = send_file(
         zip_buffer,
         as_attachment=True,
         download_name="batch_converted.zip",
         mimetype="application/zip",
     )
+    summary = {
+        "total": result.total,
+        "succeeded": result.succeeded,
+        "failed": result.failed,
+    }
+    response.headers["X-Batch-Summary"] = quote(
+        json.dumps(summary, ensure_ascii=False, separators=(",", ":"))
+    )
+    response.headers["X-Batch-Errors"] = quote(
+        json.dumps(
+            [item.to_dict() for item in result.errors],
+            ensure_ascii=False,
+            separators=(",", ":"),
+        )
+    )
+    return response
 
 
 @app.route("/preview", methods=["POST"])
