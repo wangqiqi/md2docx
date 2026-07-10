@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `pyproject.toml`：`license = {text = "MIT"}` 兼容 Python 3.8 CI 旧版 setuptools 的 `pip install -e`（SPDX 字符串仅新 setuptools 支持）
+
 ### Added
 
 ### Changed
