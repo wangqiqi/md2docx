@@ -6,7 +6,18 @@ disable-model-invocation: true
 
 # learn
 
-边界见 `rules/workflow.mdc` · **`core.mdc`「.cursor 不可变」**。来源：`workflow.json` → `growth.learn_sources`
+**用这个**：沉淀**本仓库**约定 → `.cursorGrowth/learn/`。**不是那个**：学 Rust/新框架等通用技术 → **study**（可写 `SPIKE-*`）。
+
+边界见 **cursor-standalone** · `workflow.json` → `growth.learn_sources`
+
+## Growth 边界（产出 · 非母版 SSOT）
+
+| 层 | 规则 |
+|----|------|
+| **写入** | 本 skill 只产出 `.cursorGrowth/learn/`（及 `/plan`·`/run` 写 plan · archive） |
+| **读取** | `/run` 可**按需**读已有 `learn/`；`/learn` 可吸收本地 `archive/` · `plan` — **仅本机项目上下文** |
+| **母版禁止** | `.cursor/` 文档**不得**链具体 archive 文件名；对外发版由 **release** 写仓库根发版文件（母版正文不链） |
+| **不是** | 把 archive 当安装包内容；把 Growth 路径写进母版业务代码 |
 
 ## 输出（仅 `.cursorGrowth/learn/`）
 
@@ -38,6 +49,52 @@ disable-model-invocation: true
 | 大重构后 | 更新 `module-map` |
 | 发版后 | 更新 `release-rhythm` + `changelog-insights` |
 | 重复劳动审计 | 用户要求或 Sprint 密集 patch 后 → §CHANGELOG 重复模式审计 |
+| 约定缺口 | 用户说「该加规则吗」或反复踩同一坑 → §建议约定 |
+| 命令/验收意外失败 | 记 **ERRORS** 摘要 → §经验捕获 |
+| 用户纠正（「不对」「其实…」） | 记 **LEARNINGS** → §经验捕获 |
+
+## 经验捕获（任务中 · 可选）
+
+**用这个**：可复用教训写入 `.cursorGrowth/learn/`。**不是那个**：改母版 `.cursor/`（须 plan 授权 + TASK）。
+
+| 类型 | 写什么 | 默认落点 |
+|------|--------|----------|
+| **ERRORS** | 失败上下文 · 根因 · 已验证修复 | `dev-conventions.md` §建议约定 或 `changelog-insights.md` |
+| **LEARNINGS** | 偏好 · 纠正 · 可复用模式 | 同上；跨模块边界 → `module-map.md` 一句 |
+
+**晋升门禁**：重复 ≥2 或广泛适用 → 走 §建议约定 → **用户确认** → `learn/` 或 `rules/local/`；**禁止**自动改 `.cursor/skills|rules|config`。单会话草稿可留在回复中，不必每次落盘。
+
+## 建议约定（蒸馏自 suggesting-cursor-rules）
+
+**用这个**：从本仓证据提出「该记哪条约定」。**不是那个**：新开 Sprint 拆 TASK → **plan**；学通用技术 → **study**。
+
+### 何时建议
+
+- Sprint 收尾 / `/learn` 吸收后，发现重复决策或口头约定未落盘
+- CHANGELOG / archive 同症状簇 ≥2（见上节重复模式审计）
+- 用户明确问「要不要加 rule / convention」
+
+### 证据 → 建议 → 落点
+
+| 证据来源 | 建议形态 | 默认落点 |
+|----------|----------|----------|
+| archive · plan Out of scope | 一行「本仓不做什么」 | `learn/plan-conventions.md` 或 `dev-conventions.md` |
+| 命名/目录/verify 命令 | 可执行约定 | `learn/dev-conventions.md` |
+| 模块边界 | 依赖方向一句 | `learn/module-map.md` |
+| 团队特化门禁（仍属本仓） | 短 rule | `.cursorGrowth/rules/local/`（链 `.cursor/rules/local`） |
+| 母版 SOP 缺口 | **仅建议 + 等授权** | **禁止**日常写入 `.cursor/` |
+
+### 输出格式（写给用户确认）
+
+```
+建议约定：
+- 证据：…（CHANGELOG 版本 / archive 名 / file:line）
+- 建议条文：…
+- 落点：learn/… 或 rules/local/…
+- 不写入：.cursor/ 母版（除非用户明确授权 + plan TASK）
+```
+
+**禁止**：无证据空建议；擅自改 `.cursor/rules|skills|config`；把通用技术笔记塞进 learn（去 **study**）。
 
 ## CHANGELOG 重复模式审计（可选）
 

@@ -1,5 +1,5 @@
 ---
-description: 打版与 tag — 清单见 release skill
+description: Sprint 打版触发 — /release · CHANGELOG 定版 · 清单见 release skill
 globs:
   - CHANGELOG.md
   - package.json

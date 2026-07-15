@@ -1,0 +1,6 @@
+{
+  "persona_id": "professional",
+  "resolved_via": "default",
+  "updated_at": "",
+  "note": "Agent 在「呼叫/切换」成功后更新 persona_id。勿 commit（.cursorGrowth gitignore）。空 updated_at 表示尚未呼叫过。"
+}

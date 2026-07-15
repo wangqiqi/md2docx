@@ -29,8 +29,9 @@ alwaysApply: false
 
 - **task-verify** / **verify** — 自动化脚本绿/红（不变）
 - **run 审计** — 三公理 · scope · README 门面（不变）
-- **delivery** — 产品/文档/UX/对接维度（含 **§5 导航与 IA** 抽检 · `ia.mdc`）；**不替代** 上述两者
+- **delivery** — 产品/文档/UX/对接维度（含 **§5 导航与 IA** · 可选 **§8 长任务** · **§9 导入** · 可选 **§10 浏览器走查** · 可选 **§11 无障碍**）；**不替代** 上述两者
 - **ia** / **ux** — 结构层规划；delivery **验收** IA，不代替规划
+- **review** — REV-* 结构化回顾；含交付范围时叠加 delivery（只读）
 
 ## 冲突与决策
 
@@ -43,7 +44,7 @@ alwaysApply: false
 
 | 内容 | 落点 |
 |------|------|
-| design token 路径 · i18n 库 · OpenAPI 文件 | `.cursorGrowth/learn/acceptance.md`（**learn**） |
+| design token 路径 · i18n 库 · OpenAPI 文件 · **浏览器走查默认 URL** | `.cursorGrowth/learn/acceptance.md`（**learn**） |
 | 团队额外门禁 | `.cursor/rules/local/`（用户自建） |
 
-母版 **delivery** skill 保持 **Universal only** — 不写死业务路径。
+母版 **delivery** skill 保持 **Universal only** — 不写死业务路径；**不**强制安装任何 MCP。

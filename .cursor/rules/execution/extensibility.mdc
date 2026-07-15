@@ -1,0 +1,43 @@
+---
+description: 可选扩展宿主 — 能力白名单、默认拒绝、槽位隔离（通用）
+globs:
+  - "**/plugin*/**"
+  - "**/plugins/**"
+  - "**/extension*/**"
+  - "**/extensions/**"
+  - "**/addons/**"
+  - "**/*Manifest*"
+  - "**/*Slot*"
+alwaysApply: false
+---
+
+# 执行规范 · 扩展宿主（可选）
+
+仅当仓库实现 **插件 / 扩展 / 附加组件** 宿主时适用。纯单体应用可忽略。  
+**三级规范**：glob 触发；**无**独立 skill/command。
+
+## 必须
+
+1. **核心 vs 扩展**  
+   可购/可选能力不进核心强制依赖；经扩展面加载。
+
+2. **能力白名单**  
+   扩展只能调用声明的 IPC/API/权限；禁止隐式拿到宿主全部能力。
+
+3. **默认拒绝**  
+   未配置、未签名、未在允许列表 → 不加载（见 `input-bounds.mdc` deny-by-default）。
+
+4. **槽位隔离**  
+   UI Slot / 贡献点渲染须 **ErrorBoundary**（或等价）；单扩展崩溃不得拖垮宿主壳。
+
+5. **清单契约**  
+   Manifest 含 id、版本、权限/能力列表、入口；加载前校验 schema。
+
+## 安全
+
+- 发版/合并前对照 **security** skill（依赖 · 鉴权 · 默认 deny）
+- 远程安装 / 侧载 / 签名 → 单独 SPIKE 或计划项，勿静默上线
+
+## 项目特化
+
+具体 slot 名、官方扩展列表 → `.cursorGrowth/learn/`，不写本 rule。

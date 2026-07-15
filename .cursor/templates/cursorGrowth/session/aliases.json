@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "note": "项目侧昵称覆盖（gitignore）。key=称呼（小写匹配），value=母版 persona id。优先于 roles.json nicknames。示例仅作注释说明，正式映射写在 aliases 对象里。",
+  "aliases": {}
+}

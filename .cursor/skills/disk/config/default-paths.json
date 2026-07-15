@@ -14,21 +14,6 @@
       "label": "Home 合计"
     },
     {
-      "key": "home.workspace",
-      "path": "~/workspace",
-      "label": "workspace"
-    },
-    {
-      "key": "home.projects",
-      "path": "~/projects",
-      "label": "projects"
-    },
-    {
-      "key": "home.miniconda3",
-      "path": "~/miniconda3",
-      "label": "miniconda3"
-    },
-    {
       "key": "home.venv",
       "path": "~/.venv",
       "label": ".venv"

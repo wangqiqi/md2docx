@@ -45,19 +45,19 @@ require_manifest() {
 }
 
 require_json_tool() {
-  jw_require_json_tool
+  sc_require_json_tool
 }
 
 scaffold_exists() {
   local id="$1"
-  [[ -d "$TEMPLATE_ROOT/$id" ]] && jw_manifest_scaffold_exists "$MANIFEST" "$id"
+  [[ -d "$TEMPLATE_ROOT/$id" ]] && sc_manifest_scaffold_exists "$MANIFEST" "$id"
 }
 
 cmd_list() {
   require_manifest
   require_json_tool
   echo "=== Available scaffolds ==="
-  jw_manifest_list "$MANIFEST" | jw_print_columns
+  sc_manifest_list "$MANIFEST" | sc_print_columns
 }
 
 cmd_info() {
@@ -73,7 +73,7 @@ cmd_info() {
     exit 1
   fi
   echo "=== $id ==="
-  jw_manifest_scaffold_info "$MANIFEST" "$id"
+  sc_manifest_scaffold_info "$MANIFEST" "$id"
   echo ""
   echo "Files:"
   (cd "$TEMPLATE_ROOT/$id" && find . -type f ! -path './.git/*' | sort | sed 's|^\./||')
@@ -108,7 +108,7 @@ count_project_files() {
 detect_stack() {
   local hints=()
   if [[ -f "$ROOT/package.json" ]]; then
-    hints+=("$(jw_detect_node_stack "$ROOT/package.json")")
+    hints+=("$(sc_detect_node_stack "$ROOT/package.json")")
   fi
   [[ -f "$ROOT/go.mod" ]] && hints+=("go")
   [[ -f "$ROOT/Cargo.toml" ]] && hints+=("rust")
@@ -214,9 +214,9 @@ cmd_apply() {
   if [[ "$dry_run" != "true" ]]; then
     echo ""
     echo "=== post_apply (run manually) ==="
-    jw_manifest_scaffold_post_apply "$MANIFEST" "$id" | sed 's/^/  /'
+    sc_manifest_scaffold_post_apply "$MANIFEST" "$id" | sed 's/^/  /'
     echo ""
-    echo "verify: ./$(jw_manifest_scaffold_field "$MANIFEST" "$id" verify)"
+    echo "verify: ./$(sc_manifest_scaffold_field "$MANIFEST" "$id" verify)"
   fi
 }
 

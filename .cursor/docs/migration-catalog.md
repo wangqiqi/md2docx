@@ -1,17 +1,17 @@
 # 迁移对照表（旧 cursor-ai-rules → Super Cursor）
 
-> 旧版只读参考：`~/workspace/tools/.cursor` · 本表供 enrich 与审计用。
+> 对照**旧版 cursor-ai-rules** 与 Super Cursor 的能力映射。旧版快照路径由维护者在**本地**只读参考，**勿**写入母版。
 
 ## Skills（37 → 精简）
 
 | 旧 skill / 能力 | Super Cursor | 备注 |
 |-----------------|--------------|------|
-| debug / troubleshoot | **debug** | SPRINT-01 |
+| debug / troubleshoot | **debug** | 核心 |
 | test / e2e | **test** | 含 Playwright/E2E |
-| mcp | **mcp** | SPRINT-01 |
-| refactor | **refactor** | SPRINT-01 |
-| perf | **perf** | SPRINT-01 |
-| review / code-review | **review** + **review** agent | SPRINT-02 · 只读 |
+| mcp | **mcp** | 核心 |
+| refactor | **refactor** | 核心 |
+| perf | **perf** | 核心 |
+| review / code-review | **review** + **review** agent | 只读 |
 | study / learn-tech | **study** | ≠ **learn**（项目认知） |
 | security | **security** + `security-sdlc.mdc` | audit/依赖 |
 | git / commit | **git** | 已有 |
@@ -23,16 +23,16 @@
 
 ## Rules（tech / execution）
 
-| 旧 | 新 | Sprint |
-|----|-----|--------|
-| eslint 细则 | `rules/tech/eslint.mdc` | 02 |
-| 纯 JS | `rules/tech/javascript.mdc` | 02 |
-| java / python 加深 | `java.mdc` · `python.mdc` | 02 |
-| next SSR/CWV | `nextjs.mdc` | 02 |
-| 宪法三公理 | `constitution.mdc` | 01 |
-| 演进 | `evolution.mdc` | 01 |
-| C 与 C++ 拆分 | `c.mdc` · `cpp.mdc` | 01 |
-| vibe / cli-python | `vibe.mdc` · `cli-python.mdc` | 01 |
+| 旧 | 新 |
+|----|-----|
+| eslint 细则 | `rules/tech/eslint.mdc` |
+| 纯 JS | `rules/tech/javascript.mdc` |
+| java / python 加深 | `java.mdc` · `python.mdc` |
+| next SSR/CWV | `nextjs.mdc` |
+| 宪法三公理 | `constitution.mdc` |
+| 演进 | `evolution.mdc` |
+| C 与 C++ 拆分 | `c.mdc` · `cpp.mdc` |
+| vibe / cli-python | `vibe.mdc` · `cli-python.mdc` |
 
 ## Agents
 
@@ -60,9 +60,20 @@
 
 | 范围 | 标准 |
 |------|------|
-| 结构 | 22 skills · 3 agents · 42 rules · commands · config/hooks/bin 齐全 |
+| 结构 | 22 skills · 3 agents · 46 rules · commands · config/hooks/bin 齐全 |
 | 注册 | 每个 `rules/**/*.mdc` 在 `verify-super-cursor.sh` 有 check |
 | 交叉引用 | AGENTS ↔ 磁盘 · routes ↔ skills/agents · roles=12 |
 | 旧版 parity | **不要求** 1:1 全量迁移；上表「刻意不迁移」为产品边界 |
 
 审计旧版时：对照本表 **已迁移** 列即可；未列项视为 intentional skip，非缺口。
+
+## 目标项目升级（install 后）
+
+| 步 | 动作 |
+|----|------|
+| 1 | 备份 `.cursor/` → `.cursorGrowth/archive/pre-super-cursor-YYYYMMDD/`（可选） |
+| 2 | `install-super-cursor.sh <目标> --profile full --replace` |
+| 3 | 业务 rules → `.cursorGrowth/rules/local/`（安装脚本会链 `rules/local`） |
+| 4 | 验收：skills/agents 与母版 `diff` 空 · `rules/local` 符号链接有效 · `platform-check.sh` 绿 |
+
+**勿**用母版 `cursor-coherence.sh` 全绿要求目标项目根 README（门面检查仅母版仓库）。

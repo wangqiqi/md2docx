@@ -15,6 +15,24 @@ description: 测试清单 — 单测、集成、E2E、TDD 红绿重构；衔接 
 
 与 **run** 一致：红测不 ✅ task · 须实际运行 `task-verify`。
 
+## Factory 与 mock（单测 · 集成）
+
+吸收自 SkillsMP `testing-patterns`（协议 only；栈细则仍看 `rules/execution/testing.mdc`）。
+
+| 手法 | 何时用 | 要点 |
+|------|--------|------|
+| **Factory** | 实体/DTO 构造重复、字段组合多 | 默认值 + 每测只覆盖差异字段；避免 20 行 arrange |
+| **Test double** | 外部 I/O、时钟、随机、网络 | 优先接口边界注入；单测不真连 DB/HTTP（除非集成层） |
+| **Mock（函数/模块）** | 断言「被调用方式」或隔离慢依赖 | mock **行为**而非实现细节；一个测试一个主要 mock 面 |
+| **Stub** | 只需固定返回值、不关心调用次数 | 比 mock 更简单时用 stub/fixture 数据 |
+
+**纪律**：
+
+- Arrange 用 factory · Act 一行 · Assert 聚焦一个行为
+- 不过度 mock 被测对象自身（测实现而非契约时换集成测）
+- 异步：await 断言 + 假定时器须 `vi.useFakeTimers` / jest fake timers 等栈等价物
+- 与 **debug** 配合：先红测复现，再 mock 缩小面，最后绿测锁回归
+
 ## 层级
 
 | 类型 | 何时 |
@@ -36,6 +54,41 @@ description: 测试清单 — 单测、集成、E2E、TDD 红绿重构；衔接 
 - 测行为与可见结果，非 DOM 实现细节
 - 本地：`npx playwright test` 或项目 script
 - 先起 dev server 或使用 `webServer` 配置
+
+### 本地 Web 应用 E2E（吸收自 anthropics/skills/webapp-testing）
+
+**脚本**：`scripts/with_server.py`（起停 dev server）· `scripts/examples/`（Playwright 示例）  
+**许可**：`scripts/LICENSE-anthropics.txt`  
+**依赖**：`pip install playwright` · `playwright install chromium`
+
+**黑盒纪律**：先 `python .cursor/skills/test/scripts/with_server.py --help`，**勿**把脚本源码读入上下文。
+
+**决策树**：
+
+```
+任务 → 静态 HTML？
+  ├─ 是 → 直接读 HTML 找 selector → 写 Playwright（见 examples/static_html_automation.py）
+  └─ 否（动态）→ server 已起？
+        ├─ 否 → with_server.py 起服 + 你的 automation.py
+        └─ 是 → 侦察再行动：goto → networkidle → screenshot/DOM → 再操作
+```
+
+**侦察再行动**（动态 SPA）：
+
+1. `page.wait_for_load_state('networkidle')` — **必须先等**
+2. screenshot 或 `page.locator(...).all()` 探 selector
+3. 用发现的 selector 执行操作
+
+**多服**（前后端分离）：
+
+```bash
+python .cursor/skills/test/scripts/with_server.py \
+  --server "cd backend && python server.py" --port 3000 \
+  --server "cd frontend && npm run dev" --port 5173 \
+  -- python your_automation.py
+```
+
+与 **debug** 配合：UI 挂时抓 console（`examples/console_logging.py`）· 先 networkidle 再断言。
 
 ## 纪律
 

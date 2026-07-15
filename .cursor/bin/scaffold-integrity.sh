@@ -12,7 +12,7 @@ FAIL=0
 fail() { echo "FAIL $1"; FAIL=$((FAIL + 1)); }
 ok() { echo "OK  $1"; }
 
-if ! jw_has_json_tool; then
+if ! sc_has_json_tool; then
   echo "FAIL: jq or python3 required" >&2
   exit 1
 fi
@@ -27,8 +27,8 @@ while IFS= read -r id; do
     [[ -f "$dir/$script" ]] || fail "$id: missing $script"
   done
 
-  test_field="$(jw_manifest_scaffold_field "$MANIFEST" "$id" test)"
-  verify_field="$(jw_manifest_scaffold_field "$MANIFEST" "$id" verify)"
+  test_field="$(sc_manifest_scaffold_field "$MANIFEST" "$id" test)"
+  verify_field="$(sc_manifest_scaffold_field "$MANIFEST" "$id" verify)"
   [[ "$test_field" == "scripts/test.sh" ]] || fail "$id: manifest test field"
   [[ "$verify_field" == "scripts/verify.sh" ]] || fail "$id: manifest verify field"
 
@@ -50,7 +50,7 @@ while IFS= read -r id; do
   esac
 
   ok "$id"
-done < <(jw_manifest_ids "$MANIFEST")
+done < <(sc_manifest_ids "$MANIFEST")
 
 [[ "$FAIL" -eq 0 ]] && exit 0
 echo "$FAIL scaffold check(s) failed." >&2

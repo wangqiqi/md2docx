@@ -5,6 +5,7 @@
   "verify_default": "./scripts/verify.sh",
   "version_line_meta": "VERSION_LINE",
   "version_tag_glob_env": "VERSION_TAG_GLOB",
+  "version_default_env": "RELEASE_VERSION_DEFAULT",
   "workflow": {
     "enabled": true,
     "hooks_enabled": true
@@ -35,15 +36,22 @@
     ]
   },
   "autonomous": {
-    "default": false,
+    "default": true,
     "max_loops_default": 15,
     "confirm_before": [
       "high_risk_delete",
       "outside_repo"
+    ],
+    "interrupt_on": [
+      "decision_needed",
+      "blocker",
+      "high_risk",
+      "release",
+      "goal_drift"
     ]
   },
   "role": {
-    "default": "professional",
+    "default": "dashu",
     "config": ".cursor/config/roles.json"
   },
   "followup_gate": {
@@ -57,6 +65,11 @@
       "error-context.mdc",
       "single-detector.mdc"
     ]
+  },
+  "sdd": {
+    "specs_dir": "docs/specs",
+    "principles_file": "docs/principles.md",
+    "feature_id_width": 3
   },
   "task_verify_heuristics": {
     "enabled": false,

@@ -8,6 +8,20 @@ disable-model-invocation: true
 
 闸门见 `rules/workflow.mdc`。配置：`config/workflow.json`
 
+**详文**：`reference/phases.md`（阶段 1/2/3 · 头身一致）· `reference/followup-facade.md`（Follow-up · README 门面）· `reference/prioritization.md`（RICE/ICE/Kano · backlog 排序）· `reference/sdd/source-map.md`（Spec-Driven Development）· `reference/autonomy-chain.md`（Sprint 连跑 · hooks 触点）· `reference/standalone-map.md`（母版独立 · 引用纪律）
+
+配置坐标：`config/workflow.json` → `sdd.specs_dir` · `sdd.principles_file`
+
+## 规模门禁 · plan≥5
+
+| 条件 | 动作 |
+|------|------|
+| 预估 / 已列 **todolist 或 TASK 超过 5 条** | **先**写入 / 更新 `.cursorGrowth/plan.md`（Goal · Done when · TASK 表），**等用户确认**后再 `/run` 编码 |
+| 大改动、跨模块、不确定选型 | 同上；必要时先 `SPIKE-*` |
+| ≤5 且范围清晰的小修 | 可直述执行；仍建议 gate-check |
+
+禁止：脑内排 6+ 步却只在聊天里列 checklist、不落 plan。与用户规则「>5 todolist → plan.md」对齐；可观测落点为本节 + `workflow.mdc`。
+
 ## 必读
 
 `.cursorGrowth/plan.md` 元数据 · **未完成** Sprint/TASK · `.cursorGrowth/archive/` · `learn/plan-conventions.md` · grep 落点（**不写代码**）
@@ -34,7 +48,7 @@ disable-model-invocation: true
 | 不放 | 放哪里 |
 |------|--------|
 | 已闭合 Sprint 全文（Done when · TASK ✅） | `.cursorGrowth/archive/` 一篇摘要 |
-| ROADMAP 全表（含大量 `done` 行） | `archive/` · `CHANGELOG.md` · 项目 `docs/ROADMAP.md` |
+| ROADMAP 全表（含大量 `done` 行） | 运行时 `archive/` · 项目 `docs/ROADMAP.md` |
 | **历史 Sprint** 长链接列表 | `archive/` 目录即可 |
 | 设计拍板长文 · 多段 archive 互链 | `learn/` · `docs/` |
 
@@ -53,121 +67,74 @@ Sprint **全部 TASK ✅** 后：**从 plan 删除整个 Active 区块**（不�
 
 有 Active：**Active 置顶** → 分隔线 → **下一 Sprint 候选**。无 Active：一行空状态说明 → 候选表。勿加「历史 Sprint」列表。
 
-## 规划粒度 · 先总后分
-
-**禁止**在 `PLANNING:true` 阶段直接列一长串 `TASK-*` 而不先对齐全局。两层结构已够用，**不必**引入 Epic/Story 嵌套 ID 或 A1/A2 子编号：
+## 先总后分（摘要）
 
 | 层 | 载体 | 作用 |
 |----|------|------|
 | **总** | Sprint **Goal** · **Done when** · 候选表对齐 | 主题边界、全局验收 |
-| **分** | 扁平 `TASK-*` 表 · **执行顺序** | `/run` 一次一个 `ACTIVE`；`next-task` 解析顺序 |
+| **分** | 扁平 `TASK-*` 表 · **执行顺序** | `/run`：默认 `AUTONOMOUS:true` **Sprint 连跑**；`false` 时一次一个 `ACTIVE` |
 
-大改动 / 跨模块 / 前后端并行：额外读 `rules/execution/vibe.mdc`（API 契约、层序）· `rules/feedback/evolution.mdc`（小步可回滚）。
+1. **阶段 1** — Goal / Done when / Out of scope（**不写** TASK 表）→ 详 `reference/phases.md`
+2. **Follow-up / 门面** — 见 `reference/followup-facade.md`
+3. **阶段 2** — 拆 TASK + 执行顺序 → 详 `reference/phases.md`
+4. **阶段 3 · handoff** — `PLANNING:false` · `PLAN_APPROVED` · `ACTIVE`/`NEXT` · 默认 `AUTONOMOUS:true` → `plan-check` && `gate-check` → 告知用户 **只说一次 `/run`**
 
-### 阶段 1 · 总（先不写 TASK 表）
+大改动 / 跨模块：读 `rules/execution/vibe.mdc` · `rules/feedback/evolution.mdc`。
 
-在 `PLANNING:true` 完成后再进入阶段 2。用 **AskQuestion** 与用户确认：
+## Sprint 连跑（AUTONOMOUS）
 
-- [ ] **Goal** — 本 Sprint 要交付什么（一句话）
-- [ ] **Done when** — 怎样算 Sprint 完成（可执行 verify 命令 + P0 全 ✅）
-- [ ] **与候选表对齐** — 从 plan「下一 Sprint」立项则删对应候选行；新主题直接写 Active
-- [ ] **Scope / 非目标** — 本轮明确不做什么（防 scope creep）
-- [ ] **风险与依赖** — 跨模块顺序、需先定的契约或接口
-- [ ] **SPIKE 门禁** — 选型/方案/范围仍不确定 → 先列 `SPIKE-*`，结论归档后再拆 `TASK-*`（见 **scaffold** · **spike** agent）
-- [ ] **Follow-up 立项闸门** — 见 §Follow-up（同症状重复 patch 时强制）
-- [ ] **PRD 输入（可选）** — 已有 ChatPRD 规格时：读 **implement-from-prd** / **write-prd** 提炼 Goal；交付前 **check-prd-alignment**（ChatPRD 插件 skills）
-- [ ] **对外门面** — 本 Sprint 是否新增/改名 skill、command、agent、hooks 或安装路径？**是** → Done when **必须**含 `bash .cursor/bin/cursor-coherence.sh`（README 与磁盘一致）；**否** → 可省略
-- [ ] **交付验收（可选）** — UI/功能 Sprint → Done when 可加 **交付走查无 Blocker**（Agent 走 **delivery** skill）；纯内部可省略
+**用这个**：Sprint 已批准 · 用户授权自治 · 一次 `/run` 连跑 P0 TASK。**不是那个**：每 TASK 等用户再 `/run` · 无 `PLAN_APPROVED` 编码。
 
-**Done when 勾选项（自然语言，不必记 skill 名）** — 与用户确认后写入 Sprint 头部：
+| 项 | 约定 |
+|----|------|
+| 默认 | `workflow.json` → `autonomous.default: true`；plan 模板 `<!-- AUTONOMOUS: true -->` |
+| handoff 话术 | 「批准完成；请 **`/run` 一次**，我会连跑 TASK，仅决策点打断」 |
+| 决策打断 | `autonomy.interrupt_on` · Sprint 表 **决策打断清单** · `reference/autonomy-chain.md` |
+| 非决策 | TASK 切换 · commit · CHANGELOG · README · closeout Medium/Low — **勿停跑问人** |
+| hooks | `run-stop` 发 followup；Agent **同会话**续下一 `ACTIVE` |
 
-| 勾选意图 | 写入 Done when 示例 |
-|----------|---------------------|
-| 验收脚本绿 | `bash <项目 verify>` 或 plan `VERIFY` 命令 |
-| 上线前走查 | 交付走查无 Blocker（UI/功能 Sprint） |
-| 合并/PR | Sprint 末 `/release` §分支 |
-| 打版本 tag | `/release` §打版 或 **ship** 自治发版 |
-| 母版门面 | `bash .cursor/bin/cursor-coherence.sh` |
+用户显式设 `AUTONOMOUS: false` → 恢复「每 TASK 手动 `/run`」。
 
-阶段 1 产出写入 Sprint 区块头部（**Goal** · **Done when** · 可选 **Out of scope**），**此时仍不写** TASK 表。
+## Spec-Driven Development（SDD · 吸收自 github/spec-kit）
 
-### Follow-up 立项闸门
+**用这个**：新功能从 0→1、要先写清 what/why 再拆 TASK。**不是那个**：常规 Sprint 增量（默认仍走下方「先总后分」）；不记 `/speckit.*` 命令。
 
-候选 Sprint 名含 `follow-up` / `hotfix` / 或与 CHANGELOG/learn **同症状簇** 已 ≥2 次 patch 时：
+### 模式分流（`PLANNING:true` · AskQuestion ≤4）
 
-| 条件 | 必须 |
-|------|------|
-| 同用户可见症状 **≥2** 个已发布 patch | 先 **`SPIKE-*`**（模板 `.cursor/templates/spike-regression-cluster.md`）或 **合并进原 Sprint**，禁止只加第三个 symptomatic patch |
-| 仅 UX 微调、根因已闭环 | **`/delivery`** 走查确认缺口后再立项；plan 写 **与上版差异** |
-| `workflow.followup_gate.require_spike` = true | 无 `SPIKE-*` 归档则 **AskQuestion** 是否豁免 |
+| 选项 id | 用户看到 | 流程 |
+|---------|----------|------|
+| `sprint` | 继续 / 常规 Sprint 增量 | 现有阶段 1→2→3（默认） |
+| `greenfield` | 新功能 · 从规格开始 | principles → spec → clarify → tech plan → tasks → 导入 TASK 表 |
+| `brownfield` | 存量功能增强 | 读代码 + 增量 `spec.md`；可跳过新目录 |
+| `doc` | 写文档 / PRD（非功能 spec） | §协作文档（doc-coauthoring） |
 
-立项表须含：**根因类型**（对照 `async-progress` · `long-running-ui` · `modal-layering` · `error-context` · `single-detector`）· **为何本次一次性修完** · **回归测矩阵**（L1/L2）。
+工具不可用时：同表正文编号（**master** AskQuestion 约定）。
 
-### 对外门面 · README（禁止事后补 DOC Sprint）
+### Greenfield 工件（目标项目）
 
-根目录 `README.md` 是 Super Cursor **产品首页**。凡 Sprint 改变用户可见能力，**须在同一 Sprint 内**同步 README，**禁止**「功能 Sprint ✅ → 另开 SPRINT 专补 README」。
+路径默认读 `workflow.json` → `sdd`（见 `reference/sdd/source-map.md`）：
 
-| 变更类型 | 规划要求 |
-|----------|----------|
-| 新增/改名 skill · agent · `/` 指令 | Done when 含 `cursor-coherence.sh`；最后一项 P0 或各 TASK 的 Target 含 `README.md` |
-| 仅内部 refactor · archive · 无对外行为 | README 可不碰 |
-| 用户抱怨「文档滞后」 | 回流阶段 1：把 README 写进 **Done when**，勿只加 `DOC-*` |
-
-阶段 2 拆 TASK 时：
-
-- **推荐**：末位 P0 · Target `README.md` · Acceptance `bash .cursor/bin/cursor-coherence.sh`（与功能 TASK **同 Sprint**）
-- **或**：每个改 `.cursor/skills/` · `agents/` · `master/` 的 TASK，Target 列 **同时** 写 `README.md`（同 commit 增量同步）
-- **勿** 为补 README 单独开 Sprint，除非 Sprint Goal 本身就是文档重写
-
-### 阶段 2 · 分（再写 TASK 表）
-
-全局对齐后再拆任务。每条 `TASK-*` 宜满足：
-
-- **一个可执行验收命令**（`task-verify` 能判绿/红；见 `rules/feedback/verify.mdc`）
-- **一次 commit 能讲完**（一逻辑一 commit · `rules/execution/commit.mdc`）
-- **Target 列框住落点**（防 drive-by；`/run` 审计对照）
-- **依赖显式出现在执行顺序**（B 依赖 A → 顺序里 A 在前）
-
-**全栈 / 跨持久化+API+UI** Sprint：按 `rules/execution/vibe.mdc` §垂直切片拆 TASK；每条验收对齐 `rules/feedback/verify.mdc`（L1 默认 · L3 进 Done when 可选）。
-
-粒度自检：
-
-| 过粗 | 合适 | 过细 |
-|------|------|------|
-| 一条 TASK 跨多个 Theme / 无单一验收 | 一 TASK ≈ 一可验证增量 | 改一行文案、单文件 typo 单独成 TASK |
-| Sprint 内 >15 条且难排顺序 | Task 列可用 `[主题]` 前缀分组，**ID 仍扁平** | 每个子步骤都占一个 ID |
-
-Sprint 表 + **执行顺序** 行：`TASK-001` → `TASK-002` → …
-
-### Plan 头身一致（通用）
-
-HTML 注释（`ACTIVE` / `LAST_DONE` / `SPRINT_STATUS`）与正文须同步：
-
-| 阶段 | 要求 |
-|------|------|
-| **规划（/plan）** | 团队可选基线 → `learn/plan-conventions.md`；**勿**在 plan 堆已完成 Sprint |
-| **执行（/run）** | 单任务 ✅ 时同步 TASK 表 **✅**；**不得**只改 `LAST_DONE` |
-| **Sprint 收尾** | archive 摘要 + **从 plan 删除已闭合 Active 区块**（见 **run** skill）；候选表保留 |
-
-`runner.sh plan-check`：闭合后 plan 内**不应**仍有「已闭合」Sprint 正文或历史链接表。
-
-### 阶段 3 · handoff
-
-用户确认后设 `PLANNING:false` · `PLAN_APPROVED` · `ACTIVE`/`NEXT`：
-
-```markdown
-<!-- PLANNING: false -->
-<!-- PLAN_APPROVED: YYYY-MM-DD -->
-<!-- SPRINT_STATUS: active -->
-<!-- ACTIVE: TASK-001 -->
-<!-- NEXT: TASK-001 -->
+```
+docs/principles.md          # 可选 · principles-template
+docs/specs/001-<slug>/
+  spec.md                   # spec-template · what/why
+  clarifications.md         # clarify 产出（或 spec 内一节）
+  plan.md                   # tech-plan-template · how
+  tasks.md                  # tasks-template → 阶段 2 导入 plan TASK
 ```
 
-```bash
-./.cursor/bin/runner.sh plan-check && ./.cursor/bin/runner.sh gate-check
-```
+**阶段 2 导入**：从 `tasks.md` 提取可验收项 → `.cursorGrowth/plan.md` 扁平 `TASK-*`；`[P]` 表可并行，写入执行顺序。
 
-完成后建议 `/run`
+### 模板
+
+| 文件 | 用途 |
+|------|------|
+| `reference/sdd/spec-template.md` | 功能 spec |
+| `reference/sdd/tech-plan-template.md` | 技术计划 |
+| `reference/sdd/tasks-template.md` | 任务分解 |
+| `reference/sdd/principles-template.md` | 项目原则（≠ constitution.mdc） |
+
+安装副本：`.cursor/templates/sdd/`（与 reference 同步）。
 
 ## 任务 ID
 
@@ -177,3 +144,36 @@ HTML 注释（`ACTIVE` / `LAST_DONE` / `SPRINT_STATUS`）与正文须同步：
 | `SPIKE-` / `REV-` / `DOC-` | 调研 / 回顾 / 文档；`next-task` 自动推进时跳过，**仍需** `PLAN_APPROVED` 才能 `/run` 编码 |
 
 配置：`workflow.json` → `task_id.prefixes_skip` · `prefixes_autonomous`
+
+## 协作文档（DOC-* · 吸收自 anthropics/skills/doc-coauthoring）
+
+用户说「写文档 / PRD / RFC / 设计 doc / 提案」→ **AskQuestion**（≤4 项，勿填空）：
+
+| 选项 | 动作 |
+|------|------|
+| **结构化协作** | 三阶段工作流（推荐 substantial doc） |
+| **自由撰写** | 直述，不走阶段 |
+| **SPIKE 调研** | `SPIKE-*` 只读 |
+| **同步现有 doc** | `DOC-*` 对齐 `rules/execution/docs.mdc` |
+
+### 三阶段（结构化协作）
+
+1. **Context** — 用户 dump 背景；Agent 5–10 个澄清问题（可编号简答）
+2. **Refine** — 按节：头脑风暴 → 用户勾选 → 起草 → 迭代（`str_replace` 局部改，勿整篇重打）
+3. **Reader Testing** — 用 **review** agent 或新会话「仅持文档」回答 5–10 个读者问题；失败 → 回阶段 2
+
+Sprint 表用 `DOC-*`；验收：Reader Testing 通过或用户明确跳过。
+
+### 需求体检与 PRD 补漏（吸收自 SpaceZephyr/pm-skills）
+
+结构化协作或自由撰写 PRD / 功能说明时，在 Context 之前或 Refine 之后套用 **`reference/doc-prd-enrich.md`**：
+
+1. **需求体检** — 来源 · 用户价值 · 成功指标（见该文件信号表）
+2. **自动补漏** — 异常/埋点/非功能/对接（补入对应节，不堆附录）
+3. **待确认项** — 交付时单独汇总；每条带默认建议与影响范围
+
+信息严重不足 → 需求梳理兜底，不硬写完整 PRD。预审 → **review** §文档预审。
+
+### Backlog 优先级（吸收自 pm-skills）
+
+候选 Sprint · backlog · TASK 的 P0/P1 争议 → **`reference/prioritization.md`**（RICE · ICE · Kano · MoSCoW）。

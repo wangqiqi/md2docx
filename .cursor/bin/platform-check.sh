@@ -30,7 +30,7 @@ probe git optional "needed for tag / release workflow"
 
 if command -v jq >/dev/null 2>&1; then
   echo "OK   jq"
-elif py="$(jw_python 2>/dev/null || true)" && [[ -n "$py" ]]; then
+elif py="$(sc_python 2>/dev/null || true)" && [[ -n "$py" ]]; then
   echo "OK   $py (jq fallback for JSON)"
 else
   echo "FAIL jq/python — install jq or Python for JSON CLI"
@@ -44,7 +44,7 @@ echo "--- smoke ---"
 ts="$(iso8601_now)"
 [[ -n "$ts" ]] && echo "OK   iso8601_now=$ts" || { echo "FAIL iso8601_now"; FAIL=$((FAIL + 1)); }
 
-if jw_has_json_tool; then
+if sc_has_json_tool; then
   pf="$(json_cfg "$CURSOR_DIR/config/workflow.json" plan_file __missing__)"
   if [[ "$pf" == ".cursorGrowth/plan.md" ]]; then
     echo "OK   json_cfg plan_file=$pf"

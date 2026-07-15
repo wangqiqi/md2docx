@@ -1,5 +1,5 @@
 ---
-description: Evolution — incremental improvement of project knowledge and template
+description: 演进纪律 — Sprint 后 /learn · 母版变更须授权；大重构先 /plan
 globs:
   - "**/*"
 alwaysApply: false

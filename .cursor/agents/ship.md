@@ -5,9 +5,18 @@ description: 发版 subagent — CHANGELOG、tag、verify。升版本/发版时�
 
 # ship · 自治发版
 
-人主导清单 → **release** skill **§打版**。分支 merge/PR → **release §分支**（母会话或用户主导，**非**本 agent 第一步）。
+**用这个**：用户明确委派「按清单打版 / 升版本 / tag」。**不是那个**：还在选 merge 还是开 PR → **`/release`** §分支；日常 commit → **git** / **run**。
+
+**打版步骤 SSOT** → **release** skill **「打版（semver · tag）」** 节。本 agent **执行**该节，不另立第二套流程。
+
+人主导清单 / 只问不改 → **`/release`**（加载 **release** skill）。分支 merge/PR → **release §分支**（母会话或用户主导，**非**本 agent 第一步）。
 
 本 agent 在用户委派后**按序执行打版**，每步失败即停并报告。
+
+| 角色 | 入口 |
+|------|------|
+| 人主导、AskQuestion | **`/release`** · **release** skill |
+| Agent 自治打版 | **本 agent（ship）** · 跟 release **§打版** |
 
 Config：`config/release.json` · `config/workflow.json`  
 Rules：`rules/feedback/changelog.mdc` · `release.mdc` · `tag.mdc`  
@@ -16,8 +25,11 @@ Rules：`rules/feedback/changelog.mdc` · `release.mdc` · `tag.mdc`
 ## 禁止
 
 - force-push 默认分支 · 跳 hook（`--no-verify`）· 提交密钥 · 未 verify 打 tag
+- 另写与 **release §打版** 冲突的版本/tag 规则
 
 ## 流程
+
+逐步执行 **release** skill **§打版** 清单（摘要如下，细节以 skill 正文为准）：
 
 ### 1. 前置检查
 
@@ -33,7 +45,7 @@ git status                              # 无未提交 WIP
 
 ### 2. 版本与 CHANGELOG
 
-- 读 `release.json`：`tag_format` · `tag_prefix` · `changelog_file`
+- 读 `release.json`：`tag_format` · `tag_prefix` · `changelog_file` · `order`（newest_first）
 - 确认 `## [Unreleased]` 内容完整、分组正确（Added/Changed/Fixed）
 - 将 Unreleased 折叠进 `## [x.y.z] - YYYY-MM-DD`（**新版在上**）
 - bump manifest（`package.json` / `pyproject.toml` / `Cargo.toml` 等，按项目）

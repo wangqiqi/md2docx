@@ -14,12 +14,19 @@ alwaysApply: false
 - 只做 ACTIVE 任务或用户明确请求；无静默扩 scope。
 - 不碰 Sprint **Out of scope**（见 `plan.md`）。
 - 「顺便」重构、格式化全库、重命名无关标识符 → 单独 **TASK** 或 `/plan`。
+- **禁止无理由自研轮子**：有宽松开源同类时，优先依赖或 vendor 改编（`oss-first.mdc`）；自研须能回答「无同类 / 不适应」的具体点。
 
 ## 最小正确 diff
 
 - 优先修根因，非 symptomatic patch（见 `bugfix.mdc`）。
 - 不新增仅一行调用的 helper；不过度抽象。
 - 匹配周边命名、类型、import 风格。
+
+## 命名与可读性（吸收自 awesome-cursorrules-zh）
+
+- **描述性命名**：变量/函数名表达意图；避免 `d` · `x` · `tmp` 等单字母（循环索引 `i` 除外）。
+- **命名常量**：魔法数字/字符串提为命名常量或枚举/映射；状态码、阈值、协议字段尤其如此。
+- **函数设计**：单一职责；参数过多时考虑对象参数或拆分；纯函数优先于隐式副作用。
 
 ## 何时可扩大范围
 
@@ -30,5 +37,6 @@ alwaysApply: false
 ## 分工
 
 - 规划边界 → **plan** · `plan.md`
+- 开源 vs 自研 → `oss-first.mdc`（二级）
 - 执行审计 → **run** skill
 - 重构方法论 → **refactor** skill

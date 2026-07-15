@@ -1,7 +1,17 @@
 ---
 description: 错误上下文 — 内层细节不得被外层覆盖；看门狗与业务错误字段（通用）
 globs:
-  - "**/*"
+  - "**/api/**"
+  - "**/worker*/**"
+  - "**/workers/**"
+  - "**/handlers/**"
+  - "**/services/**"
+  - "**/*error*"
+  - "**/*Error*"
+  - "**/*progress*"
+  - "**/*status*"
+  - "**/*Status*"
+  - "**/exception*/**"
 alwaysApply: false
 ---
 

@@ -9,7 +9,7 @@ alwaysApply: false
 
 ## 意图主权
 
-- New repos / large scope → `/plan` or `/scaffold` with AskQuestion; no silent mega-diff.
+- New repos / large scope → `/plan` or `/scaffold` with AskQuestion（unavailable → numbered prose options; see **master**）；no silent mega-diff.
 - `gate-check` must pass before `/run` coding on gated workflows.
 
 ## 信号可信

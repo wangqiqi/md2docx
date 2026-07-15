@@ -1,5 +1,5 @@
 ---
-description: Git 提交 — 见 git skill
+description: Git 提交与 push 前检查 — Conventional Commits · task-verify · 见 git skill
 globs:
   - CHANGELOG.md
 alwaysApply: false

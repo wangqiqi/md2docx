@@ -5,7 +5,9 @@ description: UX 总入口与分流（/ux）— IA 为结构层特化。说「UX�
 
 # ux · 用户体验（路由）
 
-**不重复** ia / delivery 的清单；只做 **分层判断 + handoff**。
+**用这个**：体验问题类型不明（「不好用 / 界面乱」）。**不是那个**：已明确导航 → **`/ia`**；已明确上线走查 → **`/delivery`**。
+
+**不重复** ia / delivery 的清单；只做 **分层判断 + handoff**。Garrett 五层详表 → `rules/execution/ux.mdc` §Garrett 分层。
 
 ## UX 在母版中的位置
 
@@ -30,10 +32,12 @@ description: UX 总入口与分流（/ux）— IA 为结构层特化。说「UX�
 
 ## 分流（AskQuestion · ≤4 项）
 
+工具不可用时：同表正文编号选项（见 **master**「AskQuestion 约定」）。
+
 | 选项 | 典型信号 | handoff |
 |------|----------|---------|
 | **结构 / 导航** | 找不到入口、角色不该同一首页、工作流交叉、Dashboard 歧义 | **ia** · `docs/design/*-ia*` |
-| **交付 / 抛光** | 要上线、视觉不一致、缺空态、i18n 漏翻、按钮无反馈 | **delivery** |
+| **交付 / 抛光** | 要上线、视觉不一致、缺空态、i18n 漏翻、按钮无反馈、**新 UI 像 AI 模板** | **delivery**（§1 反模板自检） |
 | **规划 / 范围** | 功能该不该做、拆 Sprint、大改范围 | **plan** |
 | **调研 / 学习** | 学 NN/g、可用性方法、竞品 | **study** · `SPIKE-*` |
 

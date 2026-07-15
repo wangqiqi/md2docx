@@ -1,27 +1,50 @@
 ---
-description: 执行规范 — Git submodule 与 vendor 目录
+description: 执行规范 — Git submodule 与 vendor 溯源目录
 globs:
   - .gitmodules
   - "**/vendor/**"
+  - "**/third_party/**"
+  - "**/3rd/**"
 alwaysApply: false
 ---
 
-# 执行规范 · Git submodules
+# 执行规范 · Submodule 与 vendor
 
-## 更新前
+与 **oss-first** 配套：能包管理器直依且无需改源码 → **不要**进 vendor。
+
+## 目录约定（名称按仓库适配）
+
+常见路径：`vendor/` · `third_party/` · `3rd/`（以项目 README 为准）。
+
+| 规则 | 说明 |
+|------|------|
+| 何时用 | 要改源码、裁剪子系统、钉 commit，或不宜只靠 registry 依赖 |
+| 何时不用 | 包管理器可直接依赖且无需改源码 |
+| 必含 | 上游 **LICENSE**（或副本）· **溯源说明**（常用文件名 `ORIGIN.md`：上游 URL、版本/commit、本仓改动摘要、授权） |
+| 授权 | 仅宽松许可（见 `oss-first.mdc`）；**禁止**将 GPL/AGPL 族作为库 vendor 进产物（除非产品同许可且用户确认） |
+| 引用 | `file:` / workspace / 构建别名；业务侧禁止再复制一份「伪自研」 |
+| 回馈 | 通用修复尽量上游 PR；产品特化留在 vendor diff，并在溯源说明写清 |
+
+## Submodule 更新前
 
 - [ ] 阅读 upstream release notes
-- [ ] 确认 vendored 代码许可证兼容
+- [ ] 确认许可证与 `oss-first` 口径兼容
 - [ ] bump 后跑项目 verify
-
-## 命令
 
 ```bash
 git submodule sync --recursive
 git submodule update --init --recursive
 ```
 
-## Vendor
+## Vendor 只读默认
 
-- 除非项目明确 fork，`vendor/` 视为只读
-- 用户可见行为变化时在 CHANGELOG 记录 submodule pin
+- 除非本仓库明确 fork/改编，第三方快照视为只读
+- 用户可见行为变化时在 CHANGELOG 记录 pin / 改编摘要
+
+## 分工
+
+| 主题 | 落点 |
+|------|------|
+| 先开源还是自研 | `oss-first.mdc` |
+| 漏洞审计 | **security** · `security-sdlc.mdc` |
+| 路由 | **master** → `deps` |

@@ -30,6 +30,15 @@ load_maintain_config() {
 }
 load_maintain_config
 
+# 入口脚本内置白名单（ubuntu-ai-maintenance.sh 通过 MAINTAIN_BUILTIN_PROTECTED 注入）
+if [[ -n "${MAINTAIN_BUILTIN_PROTECTED:-}" ]]; then
+    IFS='|' read -ra _builtin_protected <<< "$MAINTAIN_BUILTIN_PROTECTED"
+    for _p in "${_builtin_protected[@]}"; do
+        [[ -z "$_p" ]] && continue
+        PROTECTED_DIRS+=("$_p")
+    done
+fi
+
 # 颜色定义
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -637,7 +646,7 @@ clean_system() {
             report_freed "$pre" "$post" "$expanded"
         done
     else
-        info "将清理 ~/.cache/go-build、~/.cache/ms-playwright-go、~/.cache/.fr-* 等"
+        info "将清理 ~/.cache/go-build、~/.cache/.fr-* 等（Playwright 浏览器缓存默认保留）"
     fi
 
     # 桌面元数据

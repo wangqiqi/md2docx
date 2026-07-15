@@ -3,6 +3,7 @@ description: 测试文件 SOP — Vitest/Jest/Playwright/pytest；链 test skill
 globs:
   - "**/*.test.*"
   - "**/*.spec.*"
+  - "**/*.feature"
   - "**/tests/**"
   - "**/e2e/**"
   - "**/playwright/**"
@@ -25,6 +26,16 @@ alwaysApply: false
 - 关键用户路径优先；稳定 `data-testid` 或 role 选择器
 - 本地：`npx playwright test` 或项目 script；`webServer` 或先起 dev
 - 不测 flaky 时序；必要时 `expect.poll` / 显式 wait
+
+## BDD / Gherkin（吸收自 awesome-cursorrules-zh）
+
+编辑 `**/*.feature` 时加载。流程细节仍见 **test** skill。
+
+- **用户视角**：Scenario 用业务语言，非实现细节（CSS 选择器、内部函数名）
+- **一行为一场景**：独立、可重复；共享前置放 `Background`
+- **Given/When/Then**：前置状态 · 动作 · 可观察结果；避免 And 链过长
+- **框架**：Cucumber · Behave · SpecFlow · jest-cucumber — 与项目 lockfile 一致
+- **与 E2E 分工**：`.feature` 描述契约；步骤定义（step defs）保持薄，复用页面对象/fixture
 
 ## 纪律
 

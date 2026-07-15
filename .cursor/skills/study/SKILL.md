@@ -5,6 +5,8 @@ description: 学新技术/语言 — 与 /learn（项目认知）区分。
 
 # study
 
+**用这个**：学新技术/语言/框架（通用能力）。**不是那个**：写本仓模块地图/约定 → **`/learn`** → `.cursorGrowth/learn/`。
+
 **study** = 学 Rust、Playwright、新框架等通用技能。  
 **/learn** = 本项目约定 → `.cursorGrowth/learn/`（见 learn skill）。
 

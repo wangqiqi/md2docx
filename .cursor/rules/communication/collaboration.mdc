@@ -18,16 +18,19 @@ alwaysApply: false
 - 描述包含：**做了什么、为什么、如何验证**。
 - Review 意见用 follow-up commit 回应；共享分支勿 force-push（除非团队明确允许）。
 
-## PR Review 角度（REV-* 或合并前）
+## PR Review（REV-* 或合并前）
 
-分角输出：**严重度 · file:line · 发现 · 建议**（见 **review** skill）。
+分角输出：**严重度 · file:line · 发现 · 建议**（见 **review** skill）。建设性反馈 — 以改进为目的，非批评个人。
 
-| 角度 | 关注点 |
-|------|--------|
-| **Security** | 密钥、auth、注入、依赖 CVE；必要时 **security** skill |
-| **Performance** | N+1、热路径分配、无必要重渲染；必要时 **perf** skill |
-| **Tests** | 行为变更是否有回归；验收命令是否可复现 |
-| **Architecture** | 模块边界、重复逻辑、scope 是否符合 PR/TASK 描述 |
+| 角度 | 检查要点 |
+|------|----------|
+| **功能** | 实现预期行为 · 边界与错误路径已覆盖 |
+| **可读性** | 命名清晰 · 函数单一职责 · 复杂逻辑有注释 |
+| **Tests** | 行为变更有回归；验收命令可复现 |
+| **Architecture** | 模块边界 · 无重复逻辑 · scope 符合 PR/TASK |
+| **Performance** | 无多余热路径 · 查询/循环合理（详见 **perf**） |
+| **Security** | 密钥/auth/注入/CVE；详见 **security** skill |
+| **可维护性** | 文档与实现一致 · 模块化 |
 
 - 无 drive-by 重构；范围不符 → 请求拆 PR 或 **split-to-prs**
 - CI 红：修 scope 内失败；勿改 workflow 仅为通过

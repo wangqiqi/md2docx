@@ -12,6 +12,7 @@ alwaysApply: false
 - **API contract**: agree request/response shape before parallel frontend/backend work.
 - **Align often**: grep field names and routes against docs when touching both sides.
 - **Layer order** (B/S): UI → interaction → API surface → backend → persistence — skip only if user confirms.
+- **Deps before NIH**: prefer permissive OSS → thin adapt / vendor → custom only with rationale (`oss-first.mdc`).
 - New projects: prefer `/scaffold` + `/plan` over ad-hoc directory sprawl.
 - **Pre-merge / pre-release product check**: UI/feature sprints → **`/delivery`** before **`/release`** (see **delivery** skill).
 
@@ -36,3 +37,7 @@ alwaysApply: false
 ## 长任务 / 异步进度（横切）
 
 跨 **Worker + API + 轮询 UI** 或 **多阶段上传/导入** 时，除垂直切片外须联读：`async-progress.mdc` · `long-running-ui.mdc` · `modal-layering.mdc` · `error-context.mdc`。
+
+## 选型横切
+
+新依赖、vendor、或大块自研 → `oss-first.mdc` · `submodule.mdc`（规划期可勾选 **plan**「依赖 / 自研选型」）。

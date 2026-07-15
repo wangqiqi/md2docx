@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 # maintain · 开发环境维护
 
+**工具技能**（非 plan/run 主路径）。**用这个**：本机诊断/安全清理（Linux）。**不是那个**：业务 refactor；先看占用 → **`/disk`**。
+
 诊断与本机安全清理（**Linux**）。快照与对比委托 **disk** skill。
 
 ## 何时进入
@@ -55,6 +57,8 @@ disable-model-invocation: true
 |------|------|
 | `skills/maintain/config/default-protected.json` | 默认受保护目录与缓存列表 |
 | `.cursorGrowth/maintain-config.json` | 本机覆盖（模板 `templates/cursorGrowth/maintain-config.example.json`） |
+
+Playwright 浏览器缓存（`~/.cache/ms-playwright*`）默认在 `protected_dirs`，清理时保留。薄封装可通过环境变量 `MAINTAIN_BUILTIN_PROTECTED`（`|` 分隔路径）追加白名单。
 
 **禁止**在配置中写入个人信息；仅路径与标签。
 

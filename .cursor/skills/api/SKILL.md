@@ -27,6 +27,13 @@ description: REST/OpenAPI 设计审查。
 - [ ] 敏感字段不在 GET list 中过度暴露
 - [ ] Rate limit / 体量限制对公开端点有考虑
 
+## 边界与默认（二级 · `input-bounds.mdc`）
+
+- [ ] 数值参数有文档化上下限（越界 clamp 或 4xx）
+- [ ] 枚举/模式字段白名单；未知值拒绝或安全回退
+- [ ] 分页 `limit` 等有上限，禁止无界拉取
+- [ ] 配置类输入非法时可回退并记录，不半开服务
+
 ## 契约同步
 
 - [ ] OpenAPI/spec 与实现同 PR 更新

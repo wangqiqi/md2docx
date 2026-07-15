@@ -27,7 +27,7 @@ disable-model-invocation: true
 ./.cursor/bin/scaffold.sh list
 ```
 
-2. **AskQuestion**（至少确认栈；可多轮）
+2. **AskQuestion**（至少确认栈；可多轮；不可用 → 正文选项，见 **master**「AskQuestion 约定」）
 
 | 问题 | 选项示例 |
 |------|----------|
@@ -56,7 +56,22 @@ disable-model-invocation: true
 - 执行 manifest 中的 `post_apply`（`npm install`、`go mod tidy` 等）
 - 跑 `./scripts/verify.sh` 或更新 `config/workflow.json` → `verify_default`
 - `cp .cursor/templates/plan.md ./plan.md` → **`/plan`** 拆首个 Sprint（`plan.md` 已在 `.gitignore`，不提交）
+- 可选 Greenfield：创建 `docs/specs/`（或 `workflow.json` `sdd.specs_dir`）· 模板见 `.cursor/templates/sdd/` · **`/plan`** §SDD
 - **`/learn`** 写入栈与目录约定到 `.cursorGrowth/learn/`
+- **Super Cursor 已装时**：按 [master routes §DAILY/LIBRARY](../master/routes.md#外网-skill--daily--librarydeps) 列出本仓 **DAILY**（默认启用的 rules/skills）与 **LIBRARY**（离栈保留）；一句写入 `learn/dev-conventions.md` 可选
+
+## Super Cursor 安装后裁剪（DAILY / LIBRARY）
+
+`install-super-cursor.sh` 复制全量母版后，**不要**假设每个 `rules/tech/*` 与外网 skill 都该默认加载。
+
+| 步 | 动作 |
+|----|------|
+| 1 | 读栈证据（见 **master** `routes.md` §DAILY/LIBRARY） |
+| 2 | **DAILY** — 匹配栈的 `rules/tech/*` + 核心 workflow skills（plan · run · learn） |
+| 3 | **LIBRARY** — 离栈 tech rules、偶用 skill（perf · mcp · study 主题）；需要时再手动 `@` 或 slash |
+| 4 | 可选：在 `.cursorGrowth/learn/dev-conventions.md` 记一行「本仓 DAILY 面」供 **plan**/**run** 引用 |
+
+**禁止**：为裁剪再装 ECC/OpenClaw 等第二套 bundle CLI；母版路径保持 `.cursor/` + 可选个人 `~/.cursor/skills/`。
 
 ## 测试闭环（plan/run / 自主开发）
 

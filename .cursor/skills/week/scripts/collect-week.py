@@ -179,8 +179,7 @@ class ShortHelpFormatter(argparse.HelpFormatter):
 
 
 def default_workspace() -> Path:
-    candidate = Path.home() / "workspace"
-    return candidate if candidate.is_dir() else Path.cwd()
+    return Path.cwd()
 
 
 def main() -> int:
@@ -192,7 +191,7 @@ def main() -> int:
         "--workspace",
         type=Path,
         default=None,
-        help="[可选] 工作区根目录（默认 ~/workspace，不存在则用当前目录）",
+        help="[可选] 工作区根目录（默认当前目录）",
     )
     parser.add_argument(
         "--today",

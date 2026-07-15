@@ -20,7 +20,7 @@ alwaysApply: false
 
 - 改前 **grep/Read** 确认符号与路径存在
 - 依赖/版本：读 `package.json` · `go.mod` · `Cargo.toml` 等，不猜
-- 不确定 → 说明并 AskQuestion，不编造
+- 不确定 → 说明并 AskQuestion（**不可用则正文编号选项**，见 **master**「AskQuestion 约定」），不编造
 - 验收失败 → 如实报告；≤2 轮自修后 `⚠️` → `/plan`（见 **run**）
 
 ## 与 constitution 分工

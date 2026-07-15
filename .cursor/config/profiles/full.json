@@ -5,6 +5,6 @@
     "hooks_enabled": true
   },
   "autonomous": {
-    "default": false
+    "default": true
   }
 }

@@ -1,5 +1,5 @@
 ---
-description: 验收反馈 — 见 workflow.mdc
+description: 验收命令与分层 — gate-check · task-verify · verify 脚本；编辑 plan VERIFY 或 scripts/ 时加载
 globs:
   - plan.md
   - scripts/verify.sh

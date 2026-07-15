@@ -19,8 +19,19 @@ alwaysApply: false
 ## 结构（按仓库适配）
 
 - `README.md` — 安装、运行、验证、贡献
-- `docs/` — 深度指南、ADR、架构
-- `CHANGELOG.md` — 对外发布说明（见 `rules/feedback/changelog.mdc`）
+- `docs/` — 深度指南、ADR、架构、**未完成 ROADMAP**（若有）
+- `CHANGELOG.md` — 对外已发布说明（见 `rules/feedback/changelog.mdc`）
+- **已交付里程碑长文** — 迁入 `archive/`（或项目约定归档目录）；勿与未完成 ROADMAP 混在同一「现行计划」文件里无限膨胀
+
+## ROADMAP vs 归档 vs CHANGELOG
+
+| 内容 | 放哪里 |
+|------|--------|
+| 未完成计划、候选能力 | `docs/` ROADMAP（或等价） |
+| 已交付长叙事 / 验收里程碑 | `archive/` 时间戳文件 |
+| 用户可见版本差异 | `CHANGELOG.md`（对外 SSOT） |
+
+禁止：把大量已完成项长期堆在现行 ROADMAP 冒充待办。
 
 ## 功能交付清单
 
@@ -29,6 +40,7 @@ alwaysApply: false
 - [ ] 示例可运行或标为 deprecated
 - [ ] 修改文件内断链已修复
 - [ ] UI/功能对外交付：规格与实现一致；冲突走 **`/delivery`** · **`Decision needed`**（见 **delivery** skill）
+- [ ] 大文档拆分后：ROADMAP / 归档 / CHANGELOG 职责清晰（见上表）
 
 ## 与 .cursorGrowth 的分工
 

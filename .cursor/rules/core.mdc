@@ -9,29 +9,43 @@ alwaysApply: true
 
 | 场景 | 入口 |
 |------|------|
-| **不确定 / 从哪开始** | **`/master`** → **master**（AskQuestion 路由） |
+| **不确定 / 从哪开始** | **`/master`** → **master**（AskQuestion 路由；无工具则正文选项） |
 | 规划 | `/plan` → **plan** |
-| 执行 | `/run` → **run** |
-| 学习 | `/learn` → **learn** |
+| 执行 | `/run` → **run**（`AUTONOMOUS:true`：**一次 `/run` Sprint 连跑**；仅决策打断） |
+| 学习 | `/learn` → **learn**（本仓认知；≠ **study** 学技术） |
 | 脚手架 | `/scaffold` → **scaffold** |
-| 打版 | **release** skill · **ship** agent |
+| 打版 | **`/release`**（人主导）· **ship** agent（自治执行同一 §打版；无 `/ship`） |
 | Git | **git** skill |
-| 安全审查 | **security** skill |
+| 安全审查 | **security** skill（清单）· `security-sdlc`（习惯）· `prompt-security`（Prompt 面） |
 | API 设计 | **api** skill |
-| UX / 体验（分流） | **`/ux`** · **ux** skill · `rules/execution/ux.mdc` |
-| 信息架构 / 导航 / 角色入口 | **`/ia`** · **ia** skill · `rules/execution/ia.mdc`（UX 结构层） |
-| 调试 / 测试 / 回顾 / 交付 | **debug** · **test** · **review** · **delivery** skill；**review** agent |
-| 长任务 / 异步进度 / 弹窗分层 | `rules/execution/async-progress` · `long-running-ui` · `modal-layering` · `error-context` · `single-detector` |
+| UX / 体验（分流） | **`/ux`** · **ux** skill · `ux.mdc` — 类型不明先分流；明导航 → **`/ia`**；明上线 → **`/delivery`** |
+| 信息架构 / 导航 / 角色入口 | **`/ia`** · **ia** skill · `ia.mdc`（UX 结构层；≠ 视觉抛光） |
+| 调试 / 测试 / 回顾 / 交付 | **debug** · **test** · **review** · **`/delivery`**（上线走查；≠ 规划） |
+| 长任务 / 异步进度 / 弹窗分层 | `rules/execution/async-progress.mdc` · `long-running-ui.mdc` · `modal-layering.mdc` · `error-context.mdc` · `single-detector.mdc` |
+| 开源选型 / vendor / 输入边界 | `oss-first.mdc` · `submodule.mdc` · `input-bounds.mdc`（二级；`/master` → deps） |
+| 扩展宿主（可选） | `extensibility`（三级 · glob；无独立 slash） |
+| Prompt / Agent 安全 | `prompt-security`（二级；**security** 清单） |
 | ORM/SQL 大批量 IN / 分块查询 | `rules/execution/data-batch` |
-| 学新技术 | **study** skill（≠ `/learn` 项目认知） |
+| 学新技术 | **study** skill（学技术；≠ `/learn` 本仓认知） |
 
 扩展路由（关键词命中）：**mcp** · **refactor** · **perf** · **spike** agent（`SPIKE-*`）→ **`/master`**
 
-配置：`config/workflow.json` · `config/release.json` · 协作三公理见 `rules/communication/constitution.mdc`
+配置：`config/workflow.json` · `config/release.json` · 协作三公理见 `rules/communication/constitution.mdc` · 母版独立见 **cursor-standalone**
 
-## .cursor 不可变（安装后）
+## 母版独立 vs 安装后只读
 
-`.cursor/` 自 `install-super-cursor.sh` 复制到目标项目后视为 **只读 SOP**，除非用户**明确**要求修改或完善 `.cursor/`：
+| 场景 | `.cursor/` |
+|------|------------|
+| **母版仓库**（Super Cursor 模板仓等） | **可自由演进** — 直接改 rules/skills/config/templates |
+| **安装到目标项目** | 默认 **只读** SOP；特化 → `.cursorGrowth/`（见下节） |
+
+引用纪律 · 文风 → **cursor-standalone** · `docs/library-index.md`。
+
+## .cursor 不可变（仅 · 安装到目标项目后）
+
+`.cursor/` 自 `install-super-cursor.sh` 复制到**目标项目**后视为 **只读 SOP**，除非用户**明确**要求修改或完善 `.cursor/`：
+
+**母版仓库**不受本条限制（见上节「母版独立」）。
 
 | 禁止（默认） | 允许去向 |
 |--------------|----------|
@@ -39,7 +53,7 @@ alwaysApply: true
 | 「顺便优化」模板、补 skill、改 config | 团队 rules → `.cursorGrowth/rules/local/`（链 `.cursor/rules/local`） |
 | 因业务任务顺带改 hooks 或 workflow | 行为开关 → 用户自行编辑 `config/*.json`，或明确授权后由 Agent 改 |
 
-发现缺口：**说明 + 建议**，等用户确认后再动 `.cursor/`。日常 `/master` `/plan` `/run` `/learn` **不得**触发对 `.cursor/` 的写入。
+发现缺口：**说明 + 建议**，等用户确认后再动 **目标项目**的 `.cursor/`。母版仓库日常 Sprint **可直接改**。目标项目 `/master` `/plan` `/run` `/learn` **不得**触发对 `.cursor/` 的写入。
 
 ## 沟通
 

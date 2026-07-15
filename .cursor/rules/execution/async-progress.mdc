@@ -33,6 +33,10 @@ alwaysApply: false
 5. **跨实例回归测**
    - 改 progress store 须补：**实例 A 写 → 实例 B 读** 集成/单测（真 Redis 或 test double）。
 
+6. **持久化重试队列（弱网 / 发布失败）**
+   - 关键发布或同步失败时：入队持久化、周期或重连 flush；出队 `limit` 有上下限（见 `input-bounds.mdc`）。
+   - 禁止仅内存重试导致进程重启丢单；失败须可观测（见 `error-context.mdc`）。
+
 ## 禁止
 
 - Worker 已 `failed/done`，API 仍返回陈旧 `running/upload/extract 0%`
@@ -44,7 +48,7 @@ alwaysApply: false
 | 阶段 | 动作 |
 |------|------|
 | **/plan** follow-up 同症状 ≥2 次 | 须 **SPIKE-*** 或合并进原 Sprint（见 **plan** skill §Follow-up） |
-| **task-verify** | 至少 L1 覆盖 merge / timeout / 写失败路径 |
+| **task-verify** | 至少 L1 覆盖 merge / timeout / 写失败路径；有 outbox 则覆盖 enqueue/flush |
 | **长任务 UI** | 联读 `long-running-ui.mdc` · **delivery** §8 |
 
 ## 项目特化

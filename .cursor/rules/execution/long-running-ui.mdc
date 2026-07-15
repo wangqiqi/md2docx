@@ -21,6 +21,7 @@ alwaysApply: false
 2. **完成/失败态不得因 `loading=false` 卸载面板** — 用户须看到结果并主动 dismiss（或产品定义的 auto-close）。
 3. **阶段进度不回跳** — 子阶段已达 100% 时，父阶段/并列阶段不得因后端启动帧 `done=0` 回退 UI。
 4. **成功后 invalidate 列表** — `onSuccess` / 关面板 / 后台完成 toast 须触发数据网格或列表 **refetch**（同一 hook 封装 `refreshAfterComplete`）。
+5. **可取消 · 可重试 · 速率反馈** — 长传/长导入须提供 **取消**；失败后 **重试**（或明确不可重试原因）；有意义时展示速率 / 剩余时间（ETA），禁止只能干等无出口。
 
 ## 会话与鉴权
 
@@ -34,12 +35,13 @@ alwaysApply: false
 
 ## 改前 grep
 
-`stage` · `importStage` · `isImporting` · `onSuccess` · `refreshAfter` · `complete` · 进度组件名。
+`stage` · `importStage` · `isImporting` · `onSuccess` · `refreshAfter` · `complete` · `cancel` · `retry` · 进度组件名。
 
 ## 验收
 
 - [ ]  happy path：0% → 100% → 完成 UI → 列表含新数据
-- [ ]  failed：错误可见、可关闭、不卡死
+- [ ]  failed：错误可见、可关闭、不卡死；可重试或说明不可重试
+- [ ]  运行中可取消（或产品定义的不可取消须文档化）
 - [ ]  决策弹窗挡进度时仍可操作确认
 - [ ]  **delivery** §8 四问（若 UI Sprint）
 

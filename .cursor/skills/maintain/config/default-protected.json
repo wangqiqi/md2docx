@@ -1,14 +1,16 @@
 {
   "version": 1,
   "protected_dirs": [
-    "~/workspace",
-    "~/projects",
-    "~/miniconda3",
-    "~/Downloads",
-    ".cursorGrowth"
+    ".cursorGrowth",
+    "~/.cache/ms-playwright",
+    "~/.cache/ms-playwright-go"
   ],
   "installer_dirs": [
-    { "path": "~/Downloads", "label": "Downloads", "flag": "CLEAN_DOWNLOADS_INSTALLERS" }
+    {
+      "path": "~/Downloads",
+      "label": "Downloads",
+      "flag": "CLEAN_DOWNLOADS_INSTALLERS"
+    }
   ],
   "cache_dirs": [
     "~/.cache/google-chrome",
@@ -24,13 +26,11 @@
     "~/.cache/yarn",
     "~/.cache/electron",
     "~/.cache/electron-builder",
-    "~/.cache/ms-playwright",
     "~/.cache/Cypress",
     "~/.cache/puppeteer"
   ],
   "extra_cache_dirs": [
     "~/.cache/go-build",
-    "~/.cache/ms-playwright-go",
     "~/.cache/clangd"
   ],
   "build_artifact_dirs": [],

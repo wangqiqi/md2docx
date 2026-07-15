@@ -28,3 +28,4 @@ alwaysApply: false
 
 - 仅改后端字段名而不更新 client
 - Mock enum 与 server 校验不一致
+- 无上下限的数值/分页；敏感能力默认开启（见 `input-bounds.mdc`）

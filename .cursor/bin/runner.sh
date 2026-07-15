@@ -8,7 +8,7 @@ CONFIG="$CURSOR_DIR/config/workflow.json"
 # shellcheck source=../lib/platform.sh
 source "$CURSOR_DIR/lib/platform.sh"
 
-jw_config() {
+sc_config() {
   local key="$1"
   local default="${2:-}"
   local dotted="${key#.}"
@@ -21,7 +21,7 @@ jw_config() {
   echo "$default"
 }
 
-jw_config_join() {
+sc_config_join() {
   local key="$1"
   local default="${2:-}"
   local dotted="${key#.}"
@@ -34,26 +34,58 @@ jw_config_join() {
   echo "$default"
 }
 
-PLAN_REL="$(jw_config '.plan_file' '.cursorGrowth/plan.md')"
+PLAN_REL="$(sc_config '.plan_file' '.cursorGrowth/plan.md')"
 PLAN="$ROOT/$PLAN_REL"
 # Legacy: root plan.md before .cursorGrowth migration
 if [[ ! -f "$PLAN" && -f "$ROOT/plan.md" ]]; then
   PLAN="$ROOT/plan.md"
   PLAN_REL="plan.md"
 fi
-FRONTEND_DIR="$(jw_config '.task_verify_heuristics.frontend_test_dir' '')"
-BACKEND_DIR="$(jw_config '.task_verify_heuristics.backend_test_dir' '')"
-FRONTEND_TEST_CMD="$(jw_config '.task_verify_heuristics.frontend_test_cmd' '')"
-BACKEND_TEST_CMD="$(jw_config '.task_verify_heuristics.backend_test_cmd' '')"
-HEURISTICS_ENABLED="$(jw_config '.task_verify_heuristics.enabled' 'false')"
-FALLBACK_TEST="$(jw_config '.task_verify_heuristics.fallback_test_script' './scripts/test.sh')"
-FALLBACK_VERIFY="$(jw_config '.task_verify_heuristics.fallback_verify_script' './scripts/verify.sh')"
-JW_SKIP_PREFIXES="$(jw_config_join '.task_id.prefixes_skip' 'REV- SPIKE- DOC-')"
-export JW_SKIP_PREFIXES
+FRONTEND_DIR="$(sc_config '.task_verify_heuristics.frontend_test_dir' '')"
+BACKEND_DIR="$(sc_config '.task_verify_heuristics.backend_test_dir' '')"
+FRONTEND_TEST_CMD="$(sc_config '.task_verify_heuristics.frontend_test_cmd' '')"
+BACKEND_TEST_CMD="$(sc_config '.task_verify_heuristics.backend_test_cmd' '')"
+HEURISTICS_ENABLED="$(sc_config '.task_verify_heuristics.enabled' 'false')"
+FALLBACK_TEST="$(sc_config '.task_verify_heuristics.fallback_test_script' './scripts/test.sh')"
+FALLBACK_VERIFY="$(sc_config '.task_verify_heuristics.fallback_verify_script' './scripts/verify.sh')"
+VERSION_TAG_GLOB_ENV="$(sc_config 'version_tag_glob_env' 'VERSION_TAG_GLOB')"
+VERSION_DEFAULT_ENV="$(sc_config 'version_default_env' 'RELEASE_VERSION_DEFAULT')"
+SC_SKIP_PREFIXES="$(sc_config_join '.task_id.prefixes_skip' 'REV- SPIKE- DOC-')"
+export SC_SKIP_PREFIXES
 # shellcheck source=../hooks/lib/plan-parse.sh
 source "$CURSOR_DIR/hooks/lib/plan-parse.sh" "$PLAN"
 
 cmd="${1:-status}"
+
+sc_env_get() {
+  local name="$1"
+  printf '%s' "${!name-}"
+}
+
+resolve_tag_glob() {
+  local version_line="$1"
+  local from_env
+  from_env="$(sc_env_get "$VERSION_TAG_GLOB_ENV")"
+  if [[ -n "$from_env" ]]; then
+    echo "$from_env"
+  elif [[ -n "$version_line" ]]; then
+    echo "v${version_line}.*"
+  else
+    echo "v*"
+  fi
+}
+
+resolve_version_default() {
+  local version_line="$1"
+  local plan_default env_default
+  plan_default="$(plan_meta "VERSION_DEFAULT")"
+  env_default="$(sc_env_get "$VERSION_DEFAULT_ENV")"
+  if [[ -n "$version_line" ]]; then
+    echo "${env_default:-${plan_default:-${version_line}.0}}"
+  else
+    echo "${env_default:-${plan_default:-0.1.0}}"
+  fi
+}
 
 next_version() {
   bump_version patch
@@ -61,12 +93,10 @@ next_version() {
 
 bump_version() {
   local bump="${1:-patch}"
-  local latest ver major minor patch tag_glob default_ver version_line plan_default
+  local latest ver major minor patch tag_glob default_ver version_line
   version_line="$(plan_meta "VERSION_LINE")"
-  version_line="${version_line:-1.0}"
-  tag_glob="${JW_VERSION_TAG_GLOB:-v${version_line}.*}"
-  plan_default="$(plan_meta "VERSION_DEFAULT")"
-  default_ver="${JW_VERSION_DEFAULT:-${plan_default:-${version_line}.0}}"
+  tag_glob="$(resolve_tag_glob "$version_line")"
+  default_ver="$(resolve_version_default "$version_line")"
   latest="$(git -C "$ROOT" tag -l "$tag_glob" --sort=-v:refname 2>/dev/null | head -1 || true)"
   if [[ -z "$latest" ]]; then
     echo "$default_ver"
@@ -129,10 +159,15 @@ release_tag() {
 }
 
 release_check() {
-  local p0_open
+  local p0_open tag_glob version_line latest
   p0_open="$(grep -E '\| P0 \|' "$PLAN" 2>/dev/null | grep -cv '| ✅ |' || true)"
+  version_line="$(plan_meta "VERSION_LINE")"
+  tag_glob="$(resolve_tag_glob "$version_line")"
+  latest="$(git -C "$ROOT" tag -l "$tag_glob" --sort=-v:refname 2>/dev/null | head -1 || true)"
   if [[ "$p0_open" -eq 0 ]]; then
     echo "ready"
+    echo "latest_tag=${latest:-none}"
+    echo "tag_glob=$tag_glob"
     echo "next_version=$(next_version)"
     echo "tag=v$(next_version)"
     return 0
@@ -373,7 +408,7 @@ run_verify() {
     echo "FAIL: plan VERIFY 不得指向 runner.sh verify（会无限递归）" >&2
     echo "      CLI 入口: ./.cursor/bin/runner.sh verify" >&2
     echo "      plan 应设: ./scripts/verify.sh" >&2
-    fallback="$(jw_config 'verify_default' './scripts/verify.sh')"
+    fallback="$(sc_config 'verify_default' './scripts/verify.sh')"
     if [[ -f "$ROOT/${fallback#./}" ]]; then
       echo "==> 回退执行: $fallback"
       verify_cmd="$fallback"
@@ -435,9 +470,9 @@ case "$cmd" in
   release-tag   在当前 HEAD 打 annotated tag（默认 patch bump）
   next_version  下一 patch 版本号
 
-环境变量（跨项目）:
-  JW_VERSION_TAG_GLOB   git tag 匹配（默认读 plan VERSION_LINE，如 v1.0.*）
-  JW_VERSION_DEFAULT    无 tag 时起始版本（默认 plan VERSION_DEFAULT 或 {VERSION_LINE}.0）
+环境变量（跨项目 · 名称见 workflow.json `version_*_env`）:
+  VERSION_TAG_GLOB      git tag 匹配 glob（优先于 plan VERSION_LINE）
+  RELEASE_VERSION_DEFAULT  无 tag 时起始版本（默认 plan VERSION_DEFAULT 或 0.1.0）
   RELEASE_BUMP          patch（默认）| minor | major
   RELEASE_ALLOW_MINOR   minor 时须 true（除非 release.json bump.auto_minor）
   RELEASE_ALLOW_MAJOR   major 时须 true（除非 release.json bump.auto_major）

@@ -1,5 +1,5 @@
 ---
-description: 反馈规范 — Git annotated tag 命名
+description: 打 tag 前 — release-tag · semver/calver；编辑 CHANGELOG 发版节时加载
 globs:
   - CHANGELOG.md
   - .git/**

@@ -14,11 +14,6 @@
       "label": "Home 合计"
     },
     {
-      "key": "home.workspace",
-      "path": "~/workspace",
-      "label": "workspace"
-    },
-    {
       "key": "pkg.build",
       "path": "./build",
       "label": "build/",

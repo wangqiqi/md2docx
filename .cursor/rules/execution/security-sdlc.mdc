@@ -7,9 +7,13 @@ alwaysApply: false
 
 # Security SDLC
 
+**用这个**：日常合并/发版安全习惯（短列表）。**不是那个**：逐条审查勾选 → **security** skill；Prompt 注入拒答 → `prompt-security.mdc`。
+
 - Run dependency audit when project supports it (`npm audit`, `pip audit`, `cargo audit`, Dependabot).
+- License posture for new deps / vendor: follow `oss-first.mdc` (permissive default; no GPL/AGPL as library dependency unless product is same-license and user confirmed).
 - No merge with known Critical/High unmitigated (or document accepted risk in PR).
 - Auth on all write/admin paths; secrets never in repo or logs.
+- Sensitive features and extension loading: deny-by-default (`input-bounds.mdc` · `extensibility.mdc` when applicable).
 - Pre-release: invoke **security** skill checklist.
 - UI/feature releases: **`/delivery`** §7 + **security** skill（见 **delivery** · **release** skills）
 - Production configs: debug off, TLS on, least-privilege IAM/DB users.

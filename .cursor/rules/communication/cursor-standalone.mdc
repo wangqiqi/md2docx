@@ -1,0 +1,43 @@
+---
+description: .cursor 母版独立 — 引用纪律与文风一致（安装后目标项目仍只读）
+alwaysApply: true
+---
+
+# Super Cursor 母版 · 独立与引用
+
+`.cursor/` 是**自洽 SOP 包**；运行时产出在 **Growth**（`workflow.json` 坐标）。审计矩阵 → `skills/plan/reference/standalone-map.md`。
+
+## 母版 vs 安装后
+
+| 场景 | `.cursor/` | 项目特化 |
+|------|------------|----------|
+| **母版仓库**（本仓） | **可自由演进** — Sprint 直接改 rules/skills/config | — |
+| **安装到目标项目** | 默认 **只读**；用户明确授权才可改母版 | `.cursorGrowth/` · `rules/local` |
+
+日常 `/plan` `/run` 在**目标项目**不得擅自改 `.cursor/`；**母版仓库**不受此限。
+
+## 引用纪律
+
+| 允许 | 禁止 |
+|------|------|
+| `config/*.json` · `workflow.json` 键名 | 外网 GitHub URL 作**操作** SSOT（skill 正文） |
+| Growth **目录类**路径（plan · learn · archive · session） | 链 `archive/<具体文件名>.md` |
+| 通用 SOP · 默认配置示例 | 本机绝对路径 · 用户名 · 具体仓库/项目名 · 维护者工作区审计表 |
+| skill ↔ skill · `master/routes.md` | `.cursor/docs` 叙事「去看根 README 某节」 |
+| 外网出处 | 仅 `docs/library-index.md` + `reference/standalone-map.md` |
+| **release** 打版时更新根发版文件 | rules/skills **正文**依赖根 CHANGELOG 讲故事 |
+
+Growth 标准句：`config/workflow.json` → `plan_file` · `archive_dir` · `growth.*`。
+
+## 文风一致
+
+与 **super-cursor-persona** 共用：
+
+- 中文用户 → 中文；**dashu/老周** 默认语气
+- 术语：**Sprint** · **ACTIVE** · **principles**（项目原则，≠ constitution 三公理）
+- 表格优先 · 一句「用这个 / 不是那个」分流
+- 关键结论可 `file:line`；不堆外链条
+
+## 外网吸收
+
+查 **`docs/library-index.md`** — 勿在 skill 正文贴 upstream 仓库链接。

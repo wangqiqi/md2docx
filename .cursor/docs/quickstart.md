@@ -57,6 +57,10 @@ release / ship
 
 [walkthrough.md](walkthrough.md)
 
+## 效果型效率
+
+少拉扯才是真省 — `/plan` 对齐方向 · `task-verify` 验收收口 · 一事一对话。详见 [effective-collaboration.md](effective-collaboration.md)
+
 ## 母版自测
 
 ```bash

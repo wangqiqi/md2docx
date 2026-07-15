@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 # release · Sprint 出口
 
+**用这个**：`/release` 人主导（分支 4 选 1 + 可选打版清单）。**不是那个**：自治执行打版步骤 → 委派 **ship**（同一 §打版 SSOT，无第二套流程）。
+
 Sprint/Task 代码已绿、**run** 归档后：**先汇入主轨，再打版**。不替代日常 **git** commit 纪律。
 
 ```bash
@@ -28,7 +30,7 @@ git status && git diff --stat
 
 ### 流程
 
-**Verify** → **（建议）delivery** → **AskQuestion（4 选 1）** → **执行** → 可选 **worktree 清理**（见 **git** skill）
+**Verify** → **（建议）delivery** → **AskQuestion（4 选 1；不可用 → 正文编号，见 master「AskQuestion 约定」）** → **执行** → 可选 **worktree 清理**（见 **git** skill）
 
 | # | 选项 | 动作 |
 |---|------|------|
@@ -85,12 +87,41 @@ PR 生命周期（评论、CI、拆 PR）：`babysit` · `split-to-prs`（**mast
 
 ### patch-per-task 清单
 
+- [ ] `./.cursor/bin/runner.sh release-check` — 确认 `latest_tag` · `next_version`（见下节）
 - [ ] 版本已定 · plan 本版 ✅（若用）
 - [ ] verify 通过 · 无 WIP
 - [ ] **security**（auth/PII）
 - [ ] UI/功能：**建议** **`/delivery`** 无 Blocker
 - [ ] CHANGELOG `[Unreleased]` · manifest bump · docs
 - [ ] Annotated tag · push 按团队策略
+
+### 多架构打包（可选 · 桌面 / 原生产物）
+
+纯 Web / 无原生安装包时跳过。有安装包或二进制分发时：
+
+- [ ] **架构矩阵显式** — 目标 OS × CPU（如 x64 / arm64）写在 docs 或 CI，非隐式「本机 arch」
+- [ ] **构建脚本 / CI job** 覆盖矩阵中每一格（或文档标明刻意不做的格）
+- [ ] 原生依赖（若有）在矩阵内可解析、可复现
+- [ ] 发版说明或 CHANGELOG 注明支持的平台组合
+
+### 版本解析（打 tag 前必读）
+
+`release-tag` / `next_version` 在**最新 git tag** 上 bump，解析顺序：
+
+| 优先级 | 来源 | tag 匹配 |
+|--------|------|----------|
+| 1 | 环境变量 `VERSION_TAG_GLOB`（`workflow.json` → `version_tag_glob_env`） | 自定义 glob |
+| 2 | plan `<!-- VERSION_LINE: major.minor -->` | `v{line}.*`（例 `4.22` → `v4.22.*`） |
+| 3 | **（缺省）** | `v*` — **仓库最新 semver tag** |
+
+无匹配 tag 时起始版本：plan `VERSION_DEFAULT` · 环境变量 `RELEASE_VERSION_DEFAULT` · `0.1.0`（有 `VERSION_LINE` 时为 `{line}.0`）。
+
+```bash
+./.cursor/bin/runner.sh release-check
+# ready · latest_tag=v4.22.1 · tag_glob=v* · next_version=4.22.2 · tag=v4.22.2
+```
+
+**打版前**：核对 `latest_tag` 与 CHANGELOG 上一版一致；`next_version` 异常时不要打 tag。
 
 ### 命令
 
@@ -100,4 +131,4 @@ PR 生命周期（评论、CI、拆 PR）：`babysit` · `split-to-prs`（**mast
 RELEASE_BUMP=minor RELEASE_ALLOW_MINOR=true ./.cursor/bin/runner.sh release-tag
 ```
 
-自治打版（Agent 按序执行清单）→ **ship** agent · 清单以本节 + `rules/feedback/release.mdc` 为准。
+自治打版（Agent 按序执行清单）→ **ship** agent（**执行本节**；入口指针见 `agents/ship.md`）· 清单以本节 + `rules/feedback/release.mdc` 为准。

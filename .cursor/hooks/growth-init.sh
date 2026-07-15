@@ -11,17 +11,17 @@ source "$HOOKS_DIR/lib/config-load.sh"
 # shellcheck source=lib/json-utils.sh
 source "$HOOKS_DIR/lib/json-utils.sh"
 
-jw_resolve_project_root "$HOOKS_DIR"
-jw_init_config "$CURSOR_DIR"
+sc_resolve_project_root "$HOOKS_DIR"
+sc_init_config "$CURSOR_DIR"
 
-if [[ "$JW_GROWTH_ENABLED" != "true" ]]; then
+if [[ "$SC_GROWTH_ENABLED" != "true" ]]; then
   echo "$INPUT"
   exit 0
 fi
 
 PROJECT_ROOT="$(json_workspace_root "$INPUT")"
 if [[ -z "$PROJECT_ROOT" ]]; then
-  PROJECT_ROOT="$JW_PROJECT_ROOT"
+  PROJECT_ROOT="$SC_PROJECT_ROOT"
 fi
 
 if [[ "$PROJECT_ROOT" == *"/.cursor" || "$(basename "$PROJECT_ROOT")" == ".cursor" ]]; then
@@ -34,15 +34,15 @@ TEMPLATE_DIR="$CURSOR_DIR/templates/cursorGrowth"
 if [[ ! -d "$GROWTH_DIR" ]]; then
   mkdir -p "$GROWTH_DIR"
   if [[ -d "$TEMPLATE_DIR" ]]; then
-    jw_copy_tree "$TEMPLATE_DIR" "$GROWTH_DIR"
+    sc_copy_tree "$TEMPLATE_DIR" "$GROWTH_DIR"
   else
     mkdir -p "$GROWTH_DIR/learn" "$GROWTH_DIR/archive" "$GROWTH_DIR/rules/local" \
-      "$GROWTH_DIR/logs" "$GROWTH_DIR/perception"
+      "$GROWTH_DIR/logs" "$GROWTH_DIR/perception" "$GROWTH_DIR/session"
   fi
 fi
 
 mkdir -p "$GROWTH_DIR/learn" "$GROWTH_DIR/archive" "$GROWTH_DIR/rules/local" \
-  "$GROWTH_DIR/logs" "$GROWTH_DIR/perception"
+  "$GROWTH_DIR/logs" "$GROWTH_DIR/perception" "$GROWTH_DIR/session"
 
 if [[ ! -f "$GROWTH_DIR/README.md" && -f "$TEMPLATE_DIR/README.md" ]]; then
   cp "$TEMPLATE_DIR/README.md" "$GROWTH_DIR/README.md"
@@ -57,6 +57,16 @@ if [[ -d "$TEMPLATE_DIR/learn" ]]; then
       cp "$stub" "$dest"
     fi
   done
+fi
+
+# Seed session/persona.json + aliases.json (idempotent)
+if [[ -f "$TEMPLATE_DIR/session/persona.json" && ! -f "$GROWTH_DIR/session/persona.json" ]]; then
+  mkdir -p "$GROWTH_DIR/session"
+  cp "$TEMPLATE_DIR/session/persona.json" "$GROWTH_DIR/session/persona.json"
+fi
+if [[ -f "$TEMPLATE_DIR/session/aliases.json" && ! -f "$GROWTH_DIR/session/aliases.json" ]]; then
+  mkdir -p "$GROWTH_DIR/session"
+  cp "$TEMPLATE_DIR/session/aliases.json" "$GROWTH_DIR/session/aliases.json"
 fi
 
 if [[ -f "$TEMPLATE_DIR/rules/local/README.md" && ! -f "$GROWTH_DIR/rules/local/README.md" ]]; then
