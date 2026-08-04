@@ -20,6 +20,7 @@ usage() {
   info <id>         查看脚手架详情与文件列表
   detect            检测仓库状态（empty / partial / established）
   apply <id>        应用脚手架到仓库根目录
+  apply-bundle <id> 应用可选附加包（如 user-manual · test-report）
   audit             审计已有项目，输出改进建议
   files <id>        仅列出将创建的文件（等同 apply --dry-run）
 
@@ -33,6 +34,8 @@ usage() {
   $0 info react-vite-ts
   $0 apply react-vite-ts --dry-run
   $0 apply go-api
+  $0 apply-bundle user-manual --dry-run --stack react-vite-ts
+  $0 apply-bundle test-report --dry-run --stack go-api
   $0 audit
 EOF
 }
@@ -58,6 +61,11 @@ cmd_list() {
   require_json_tool
   echo "=== Available scaffolds ==="
   sc_manifest_list "$MANIFEST" | sc_print_columns
+  if jq -e '.bundles | length > 0' "$MANIFEST" >/dev/null 2>&1; then
+    echo ""
+    echo "=== Optional bundles (apply-bundle) ==="
+    jq -r '.bundles[] | "\(.id)\t\(.category)\t\(.name)"' "$MANIFEST" | sc_print_columns
+  fi
 }
 
 cmd_info() {
@@ -229,6 +237,125 @@ audit_check() {
   fi
 }
 
+bundle_exists() {
+  local id="$1"
+  jq -e --arg id "$id" '.bundles[] | select(.id == $id)' "$MANIFEST" >/dev/null 2>&1
+}
+
+bundle_web_stack() {
+  local bundle_id="$1" stack="$2"
+  jq -e --arg id "$bundle_id" --arg s "$stack" \
+    '.bundles[] | select(.id == $id) | .stacks_web[]? | select(. == $s)' "$MANIFEST" >/dev/null 2>&1
+}
+
+apply_bundle_layer() {
+  local bundle_id="$1" layer_key="$2" force="$3" dry_run="$4"
+  local bundle_path layer_sub src_dir rel src dest
+
+  bundle_path="$(jq -r --arg id "$bundle_id" '.bundles[] | select(.id == $id) | .path' "$MANIFEST")"
+  layer_sub="$(jq -r --arg id "$bundle_id" --arg k "$layer_key" \
+    '.bundles[] | select(.id == $id) | .layers[$k]' "$MANIFEST")"
+  [[ -n "$bundle_path" && "$bundle_path" != "null" ]] || {
+    echo "FAIL: bundle path missing for $bundle_id" >&2
+    exit 1
+  }
+  [[ -n "$layer_sub" && "$layer_sub" != "null" ]] || return 0
+
+  src_dir="$TEMPLATE_ROOT/$bundle_path/$layer_sub"
+  [[ -d "$src_dir" ]] || {
+    echo "FAIL: bundle layer missing: $src_dir" >&2
+    exit 1
+  }
+
+  echo "=== layer: $layer_key ($layer_sub) ==="
+  while IFS= read -r -d '' rel; do
+    rel="${rel#./}"
+    src="$src_dir/$rel"
+    dest="$ROOT/$rel"
+    apply_file "$src" "$dest" "$force" "$dry_run"
+  done < <(cd "$src_dir" && find . -type f ! -path './.git/*' -print0)
+}
+
+should_apply_web_layer() {
+  local bundle_id="$1" stack="$2"
+  if [[ -n "$stack" ]]; then
+    bundle_web_stack "$bundle_id" "$stack"
+    return $?
+  fi
+  local detected
+  detected="$(detect_stack)"
+  case "$detected" in
+    *react*|*vue*|*nextjs*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+cmd_apply_bundle() {
+  local bundle_id=""
+  local stack=""
+  local dry_run="false"
+  local force="false"
+  local arg next_is_stack="false"
+
+  while [[ $# -gt 0 ]]; do
+    arg="$1"
+    if [[ "$next_is_stack" == "true" ]]; then
+      stack="$arg"
+      next_is_stack="false"
+      shift
+      continue
+    fi
+    case "$arg" in
+      --dry-run) dry_run="true" ;;
+      --force) force="true" ;;
+      --stack) next_is_stack="true" ;;
+      --stack=*) stack="${arg#--stack=}" ;;
+      -*) echo "FAIL: unknown option: $arg" >&2; exit 1 ;;
+      *)
+        if [[ -n "$bundle_id" ]]; then
+          echo "FAIL: multiple bundle ids" >&2
+          exit 1
+        fi
+        bundle_id="$arg"
+        ;;
+    esac
+    shift
+  done
+
+  [[ "$next_is_stack" != "true" ]] || {
+    echo "FAIL: --stack requires value" >&2
+    exit 1
+  }
+
+  if [[ -z "$bundle_id" ]]; then
+    echo "FAIL: usage: $0 apply-bundle <id> [--stack <scaffold-id>] [--dry-run] [--force]" >&2
+    exit 1
+  fi
+
+  require_manifest
+  require_json_tool
+
+  if ! bundle_exists "$bundle_id"; then
+    echo "FAIL: unknown bundle: $bundle_id" >&2
+    exit 1
+  fi
+
+  echo "=== apply-bundle: $bundle_id (dry_run=$dry_run force=$force stack=${stack:-auto}) ==="
+  apply_bundle_layer "$bundle_id" "shared" "$force" "$dry_run"
+
+  if should_apply_web_layer "$bundle_id" "$stack"; then
+    apply_bundle_layer "$bundle_id" "web" "$force" "$dry_run"
+  else
+    echo "SKIP  web layer (not a frontend stack; use --stack react-vite-ts to preview web files)"
+  fi
+
+  if [[ "$dry_run" != "true" ]]; then
+    echo ""
+    echo "=== post_apply (run manually) ==="
+    jq -r --arg id "$bundle_id" '.bundles[] | select(.id == $id) | .post_apply[]' "$MANIFEST" | sed 's/^/  /'
+  fi
+}
+
 cmd_audit() {
   local stack
   stack="$(detect_stack)"
@@ -275,6 +402,7 @@ main() {
     info) shift; cmd_info "$@" ;;
     detect) cmd_detect ;;
     apply) shift; cmd_apply "$@" ;;
+    apply-bundle) shift; cmd_apply_bundle "$@" ;;
     files) shift; cmd_files "$@" ;;
     audit) cmd_audit ;;
     -h|--help|help|"") usage ;;

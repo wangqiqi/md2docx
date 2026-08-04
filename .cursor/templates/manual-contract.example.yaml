@@ -1,0 +1,60 @@
+# Manual Contract · 示例（占位符 · 勿提交真实密钥）
+
+# 复制为 config/manual.yaml 并按项目填写
+
+manual:
+  id: user-guide
+  doc_path: docs/user-guide.md
+  assets_dir: docs/assets/user-guide
+  version: "1.0"
+  audiences:
+    - admin
+    - operator
+
+capture:
+  profile: web-fullstack
+  stack_command: bash scripts/ops/start_e2e_stack.sh start
+  walkthrough_command: npm run test:e2e:manual
+  sync_command: bash scripts/docs/sync_manual_screenshots.sh
+  intermediate_dir: test-results/manual-walkthrough
+  env:
+    api_base: MANUAL_API_BASE
+    auth_email: MANUAL_AUTH_ADMIN_EMAIL
+    auth_password: MANUAL_AUTH_ADMIN_PASSWORD
+
+roles:
+  - id: admin
+    auth: env
+    default_route: /dashboard
+  - id: operator
+    auth: env
+    default_route: /inbox
+
+storylines:
+  - id: onboarding
+    title: 首次上手
+    audience: admin
+    duration_min: 15
+    shots:
+      - file: 01_dashboard.png
+        step: 1
+        highlights:
+          - '[data-testid="nav-dashboard"]'
+          - .main-content
+      - file: 02_detail.png
+        step: 2
+        highlights:
+          - .detail-panel
+
+  - id: empty-state
+    title: 空数据指引
+    inferred: true
+    shots:
+      - file: 09_empty_list.png
+        highlights:
+          - '[data-testid="empty-state-guide"]'
+
+verify:
+  l1_script: bash scripts/verify/docs/verify_doc_manual.sh
+  reader_test: reference/reader-test.md
+  anchors: [] # 项目填写 grep 关键词

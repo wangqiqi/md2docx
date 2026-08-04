@@ -19,6 +19,13 @@
 
 运行时可选矩阵副本 → `.cursorGrowth/learn/`（`/learn` 吸收，非母版必读）。
 
+## 母版原生（非外网吸收）
+
+| skill | 落点 | 用户自然语言 |
+|-------|------|--------------|
+| user-manual | **user-manual** `/manual` · `reference/` · `templates/manual-contract.example.yaml` | 使用说明书 · 用户手册 · 配图 regen · walkthrough 截图 |
+| test-report | **test-report** `/report` · `reference/` · `templates/test-report-contract.example.yaml` | 测试报告 · 全量 verify · benchmark 文档 · QA 报告 |
+
 ## github/spec-kit（SDD · MIT）
 
 | 能力 | 母版落点 |
@@ -89,7 +96,7 @@
 
 | 能力 | 母版落点 | 用户自然语言 |
 |------|----------|--------------|
-| CLI 生成/迭代 `.pen` + 导出图 | **pencil-design** · `/pencil-design` | 做设计 · mockup · landing page 视觉 · 海报 · App 屏 |
+| CLI 生成/迭代 `.pen` + 导出图 | **pencil-design**（无 slash · 关键词） | 做设计 · mockup · landing page 视觉 · 海报 · App 屏 |
 | 编辑器内 `.pen` 节点操作 | **未纳入**（Cursor Pencil MCP 插件） | 改这个组件 · 调布局 · 设计稿里改色 |
 
 升级 CLI 后同步 skill：`curl -fsSL "https://unpkg.com/@pencil.dev/cli@latest/SKILL.md" -o .cursor/skills/pencil-design/SKILL.md`

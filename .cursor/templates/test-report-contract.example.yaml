@@ -1,0 +1,59 @@
+# Report Contract · 示例（占位符 · 勿提交密钥）
+
+# 复制为 config/test-report.yaml 并按项目填写
+
+report:
+  id: full-stack-benchmark
+  doc_path: docs/test-report.md
+  version: "1.0"
+  title: Full-stack Test Report
+  audiences:
+    - engineering
+    - qa
+    - ops
+
+run:
+  log_dir: data/tmp/test-report
+  collect_script: null # 或 bash scripts/docs/collect_test_report.sh
+  suites:
+    - id: verify_l1
+      tier: l1
+      label: L1 gate
+      command: bash scripts/verify.sh --l1
+      parse: verify_exit
+    - id: verify_full
+      tier: l3
+      label: L3 integration
+      command: bash scripts/verify.sh --full
+      parse: verify_exit
+    - id: unit_backend
+      tier: l1
+      label: Backend unit
+      command: bash backend/scripts/test.sh
+      parse: pytest
+    - id: e2e_smoke
+      tier: e2e
+      label: E2E smoke
+      command: npm run test:e2e
+      cwd: frontend/app
+      parse: playwright
+    - id: perf_gate
+      tier: perf
+      label: Performance gate
+      command: bash scripts/verify/perf/verify_perf.sh
+      parse: verify_exit
+      optional: true
+
+metadata:
+  sprint_key: null
+  environment_hint: local dev stack · no secrets in report
+
+verify:
+  l1_script: bash scripts/verify/docs/verify_test_report.sh
+  anchors:
+    - benchmark
+    - verify.sh --l1
+
+delivery:
+  include: true
+  source: null # 当次 /delivery 或 archive/reviews/…

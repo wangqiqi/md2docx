@@ -5,7 +5,7 @@ description: 交付验收（/delivery）：视觉 · i18n · 文档对齐 · 后
 
 # delivery · 交付验收
 
-**用这个**：功能已绿、要上线前 7 维走查。**不是那个**：还在规划导航结构 → **`/ia`** / **`/ux`**；自动化脚本绿/红 → **verify** / **run**（本 skill 不替代）。
+**用这个**：功能已绿、要上线前 7 维走查。**不是那个**：还在规划导航结构 → **ia** / **ux** skill；自动化脚本绿/红 → **verify** / **run**（本 skill 不替代）。
 
 功能已实现、**task-verify** 已绿之后，在 **`/release`**（merge/PR）或 Sprint **Done when** 要求时，做 **7 维度**走查。不替代 **run** 三公理审计或自动化 **verify**。
 
@@ -55,6 +55,10 @@ description: 交付验收（/delivery）：视觉 · i18n · 文档对齐 · 后
 | **release** | Blocker 须先报告 | 不跳过 verify |
 
 UX 分流不明时 → **ux** skill；结构问题回流 **ia**，非结构抛光留在本 skill。
+
+可发布**操作手册**（故事线 + 配图 regen）→ **user-manual** `/manual`（**不**在本 skill regen 截图）。
+
+可发布**测试报告**（verify 后 benchmark 文档）→ **test-report** `/report`（**不**在本 skill 跑全量套件）。
 
 ## PDF 交付工具（吸收自 anthropics/skills/pdf）
 

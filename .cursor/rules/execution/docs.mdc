@@ -58,4 +58,6 @@ alwaysApply: false
 | **版本头** | 主文档顶栏版本号 / 日期与 CHANGELOG 大改同步 |
 
 - 脚本绿 → 可进 `task-verify`；语义完整 → **`/delivery`** §3（见 **delivery** skill「脚本化 vs 人工」）
+- **可发布操作手册**（故事线 + 配图 regen）→ **user-manual** `/manual`（见该 skill · Manual Contract）
+- **可发布测试报告**（verify 后汇总 · benchmark 文档）→ **test-report** `/report`（见该 skill · Report Contract）
 - **母版**不写具体章节号；项目锚点 → `learn/dev-conventions.md`

@@ -1,6 +1,6 @@
 ---
 name: review
-description: PR/代码结构化回顾（/review · REV-*）— 双轴清单；可委派 review agent（只读）
+description: PR/代码结构化回顾（无 slash · REV-*）— 双轴清单；可委派 review agent（只读）
 ---
 
 # review

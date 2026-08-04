@@ -1,11 +1,11 @@
 ---
 name: ux
-description: UX 总入口与分流（/ux）— IA 为结构层特化。说「UX」「体验」「界面乱」「不好用」且未明确 IA/交付时用；再路由到 ia 或 delivery。
+description: UX 总入口与分流（无 slash · skill-only）— IA 为结构层特化。说「UX」「体验」「界面乱」「不好用」且未明确 IA/交付时用；再路由到 ia 或 delivery。
 ---
 
 # ux · 用户体验（路由）
 
-**用这个**：体验问题类型不明（「不好用 / 界面乱」）。**不是那个**：已明确导航 → **`/ia`**；已明确上线走查 → **`/delivery`**。
+**用这个**：体验问题类型不明（「不好用 / 界面乱」）。**不是那个**：已明确导航 → **ia** skill；已明确上线走查 → **`/delivery`**。
 
 **不重复** ia / delivery 的清单；只做 **分层判断 + handoff**。Garrett 五层详表 → `rules/execution/ux.mdc` §Garrett 分层。
 
@@ -28,7 +28,7 @@ description: UX 总入口与分流（/ux）— IA 为结构层特化。说「UX�
 - `/master` 分流后仍模糊（既像迷路又像 UI 丑）
 - 新功能问「要不要先做 IA」
 
-**不要**拦截已明确的 **`/ia`**、**`/delivery`**、**`/plan`** 路径。
+**不要**拦截已明确的 **ia**、**`/delivery`**、**`/plan`** 路径。
 
 ## 分流（AskQuestion · ≤4 项）
 

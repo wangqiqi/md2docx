@@ -6,8 +6,46 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CUR="$ROOT/.cursor"
 FAIL=0
 
+# Mother-only layout: pure Super Cursor template repo (no co-located business tree).
+# Hybrid: .cursor/ + business code (e.g. sjudge). Auto-detect; override SC_VERIFY_LAYOUT=mother|hybrid.
+is_hybrid_repo() {
+  case "${SC_VERIFY_LAYOUT:-auto}" in
+    hybrid) return 0 ;;
+    mother) return 1 ;;
+  esac
+  [[ -d "$ROOT/scripts" || -d "$ROOT/backend" || -d "$ROOT/frontend" ]]
+}
+
 check() { [[ -e "$1" ]] && echo "OK  $1" || { echo "FAIL $1"; FAIL=$((FAIL+1)); }; }
+check_mother_only() {
+  local path="$1" label="${2:-$1}"
+  if is_hybrid_repo; then
+    echo "SKIP  hybrid (mother-only): $label"
+    return 0
+  fi
+  check "$path"
+}
 check_absent() { [[ -e "$1" ]] && { echo "FAIL must not exist: $1"; FAIL=$((FAIL+1)); } || echo "OK  absent $1"; }
+check_absent_mother_only() {
+  local path="$1" label="${2:-must not exist: $1}"
+  if is_hybrid_repo; then
+    echo "OK  hybrid (skip mother-only): $label"
+    return 0
+  fi
+  check_absent "$path"
+}
+check_verify_workflow() {
+  if is_hybrid_repo; then
+    if [[ -f "$ROOT/scripts/verify.sh" ]]; then
+      echo "OK  hybrid: scripts/verify.sh (skip .github/workflows/verify.yml)"
+    else
+      echo "FAIL hybrid: scripts/verify.sh missing"
+      FAIL=$((FAIL+1))
+    fi
+    return 0
+  fi
+  check "$ROOT/.github/workflows/verify.yml"
+}
 check_grep_absent() {
   local dir="$1" pattern="$2"
   if grep -rq --exclude="verify-super-cursor.sh" "$pattern" "$dir" 2>/dev/null; then
@@ -19,6 +57,11 @@ check_grep_absent() {
 }
 
 echo "=== Super Cursor verify (universal) ==="
+if is_hybrid_repo; then
+  echo "layout mode: hybrid (.cursor + business tree)"
+else
+  echo "layout mode: mother (pure template repo)"
+fi
 check "$CUR/rules/core.mdc"
 check "$CUR/rules/workflow.mdc"
 check "$CUR/rules/feedback/changelog.mdc"
@@ -54,7 +97,7 @@ check "$CUR/skills/master/routes.md"
 check "$CUR/bin/runner-smoke.sh"
 check "$CUR/bin/bootstrap-growth.sh"
 check "$CUR/bin/install-smoke.sh"
-check "$ROOT/install-super-cursor.sh"
+check_mother_only "$ROOT/install-super-cursor.sh"
 check "$CUR/config/profiles/full.json"
 check "$CUR/config/profiles/lite.json"
 check "$CUR/config/profiles/rules-only.json"
@@ -73,18 +116,14 @@ check "$CUR/commands/master.md"
 check "$CUR/commands/learn.md"
 check "$CUR/commands/scaffold.md"
 check "$CUR/commands/release.md"
+check "$CUR/commands/delivery.md"
 check "$CUR/skills/delivery/SKILL.md"
 check "$CUR/skills/ux/SKILL.md"
 check "$CUR/skills/ia/SKILL.md"
-check "$CUR/commands/ux.md"
-check "$CUR/commands/ia.md"
-check "$CUR/commands/delivery.md"
-check "$CUR/commands/debug.md"
-check "$CUR/commands/review.md"
-check "$CUR/commands/week.md"
-check "$CUR/commands/disk.md"
-check "$CUR/commands/maintain.md"
-check "$CUR/commands/pencil-design.md"
+check "$CUR/commands/manual.md"
+check "$CUR/commands/report.md"
+check "$CUR/skills/debug/SKILL.md"
+check "$CUR/skills/review/SKILL.md"
 check "$CUR/skills/week/SKILL.md"
 check "$CUR/skills/disk/SKILL.md"
 check "$CUR/skills/maintain/SKILL.md"
@@ -113,6 +152,8 @@ check "$CUR/rules/tech/javascript.mdc"
 check "$CUR/rules/execution/security-sdlc.mdc"
 check "$CUR/skills/review/SKILL.md"
 check "$CUR/skills/study/SKILL.md"
+check "$CUR/skills/user-manual/SKILL.md"
+check "$CUR/skills/test-report/SKILL.md"
 check "$CUR/agents/review.md"
 check "$CUR/agents/spike.md"
 check "$CUR/docs/migration-catalog.md"
@@ -123,12 +164,12 @@ check "$CUR/docs/training/skills.md"
 check "$CUR/docs/quickstart.md"
 check "$CUR/docs/effective-collaboration.md"
 check "$CUR/docs/platforms.md"
-check "$ROOT/.cursorignore"
+check_mother_only "$ROOT/.cursorignore"
 check "$CUR/templates/scaffold/_shared.cursorignore"
 check "$CUR/bin/template-verify.sh"
-check_absent "$ROOT/scripts"
+check_absent_mother_only "$ROOT/scripts"
 check_absent "$ROOT/examples"
-check "$ROOT/.github/workflows/verify.yml"
+check_verify_workflow
 check "$CUR/skills/release/SKILL.md"
 check "$CUR/agents/ship.md"
 check "$CUR/AGENTS.md"
@@ -267,6 +308,33 @@ if [[ -n "$(echo "$violators" | sed '/^$/d')" ]]; then
   FAIL=$((FAIL+1))
 else
   echo "OK  skills no upstream github URLs"
+fi
+
+echo "--- standalone: no user/machine paths ---"
+path_violators=""
+while IFS= read -r f; do
+  case "$f" in
+    *verify-super-cursor.sh|*maintain/scripts/dev-maintain.sh|*skills/disk/*) continue ;;
+  esac
+  path_violators="${path_violators}${f}"$'\n'
+done < <(grep -rlE '/home/[a-zA-Z0-9._-]+/|/Users/[a-zA-Z0-9._-]+/|/data/workspace' "$CUR" 2>/dev/null || true)
+user_violators=""
+while IFS= read -r f; do
+  case "$f" in
+    *verify-super-cursor.sh) continue ;;
+  esac
+  user_violators="${user_violators}${f}"$'\n'
+done < <(grep -rlE 'saida|wangqiqi' "$CUR" 2>/dev/null || true)
+if [[ -n "$(echo "$path_violators" | sed '/^$/d')" ]]; then
+  echo "FAIL .cursor contains machine-specific absolute paths:"
+  echo "$path_violators" | sed '/^$/d'
+  FAIL=$((FAIL+1))
+elif [[ -n "$(echo "$user_violators" | sed '/^$/d')" ]]; then
+  echo "FAIL .cursor contains user-specific identifiers:"
+  echo "$user_violators" | sed '/^$/d'
+  FAIL=$((FAIL+1))
+else
+  echo "OK  no user/machine paths in SOP"
 fi
 
 echo "---"

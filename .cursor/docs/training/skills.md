@@ -10,7 +10,11 @@
 |----|-------|------|
 | **【日常】** | `/run` · `/plan` · `/master` | 做事 `/run` · 拆 Sprint `/plan` · 真迷路 `/master` |
 | **【生命周期】** | `/scaffold` · `/learn` · `/release` | 空仓/换仓/onboarding · Sprint 出口 |
-| **【高级】** | `/delivery` · `/ux` · `/ia` | Agent 也常自动选用，不必死记 |
+<<<<<<< HEAD
+| **【高级】** | `/delivery` · `/ux` · `/ia` · `/manual` · `/report` | Agent 也常自动选用，不必死记 |
+=======
+| **【高级】** | `/delivery` | 上线走查；ux/ia/debug/review 为 skill-only |
+>>>>>>> f3674bb (release: slash slim, drop java-gradle, portable verify (v4.25.0))
 
 **反例**：plan 里已有 ACTIVE → **`/run`** 不是 `/plan`；已知目标 → 直接 slash，**跳过** `/master`。
 
@@ -20,7 +24,7 @@
 | **plan** | `/plan` · 拆任务 | Sprint · SDD · **AUTONOMOUS 一次 `/run` 连跑** | 写业务代码 |
 | **review** | REV-* · PR 回顾 | Standards/Spec 双轴 · SDD analyze · review agent | 写代码 |
 | **learn** | `/learn` | Growth `learn/` | 改 `.cursor/` |
-| **scaffold** | `/scaffold` | 8 栈骨架 · audit | 未确认覆盖 |
+| **scaffold** | `/scaffold` | 7 栈骨架 · audit | 未确认覆盖 |
 | **git** | commit/push · GitHub 运维 | 提交清单 · **github-ops**（`gh` 有则用） | force-push |
 | **release** | `/release` · merge/PR/打版 | §分支 · §semver/tag · CHANGELOG | 跳过 verify |
 | **security** | 审查 · 支付/webhook | 密钥 · auth · PII · 敏感交易触发 | — |
@@ -34,10 +38,12 @@
 | **perf** | 性能 | 测量优先 | — |
 | **run** | `/run` · 继续 | 实现 · Sprint 连跑 · converge · task-verify · commit | 无闸门硬编码 |
 | **delivery** | `/delivery` · 上线前 | 7 维交付 · PDF 脚本 · 反模板自检 | 替代 task-verify |
+| **user-manual** | `/manual` · 使用说明书 | Manual Contract · 配图 regen · Capture Profile | 替代 delivery 走查 |
+| **test-report** | `/report` · 测试报告 | Report Contract · verify 汇总 · benchmark 文档 | 替代 test 写用例 |
 | **week** | 周报（关键词 / master） | CHANGELOG 汇总 → Growth | 打 tag |
 | **disk** | 磁盘快照（关键词 / master） | 占用 · diff → Growth | 删除文件 |
 | **maintain** | 环境维护（关键词 / master） | 诊断与安全清理 · 委托 disk | 无配置乱删 |
-| **pencil-design** | 视觉设计（关键词 / `/pencil-design`） | Pencil CLI → `.pen` + PNG | IA/上线验收（用 ia/delivery） |
+| **pencil-design** | 视觉设计（关键词 · 无 slash） | Pencil CLI → `.pen` + PNG | IA/上线验收（用 ia/delivery） |
 | **study** | 学新技术 | 最小示例 · SPIKE 归档 | 项目认知（用 learn） |
 
 Agents：**ship**（发版）· **review** · **spike**（后二者只读）
@@ -61,6 +67,8 @@ Agents：**ship**（发版）· **review** · **spike**（后二者只读）
 | 安装后裁剪（DAILY/LIBRARY） | **master** `routes.md` §DAILY/LIBRARY · **scaffold** 收尾 |
 | 浏览器走查（探索） | **delivery** §10 |
 | E2E / Playwright 起服 | **test** `scripts/with_server.py` |
+| 使用说明书 / 配图 regen | **user-manual** `/manual` |
+| 测试报告 / 全量 verify 汇总 | **test-report** `/report` |
 | PDF 表单验收 | **delivery** `scripts/pdf/` |
 | Greenfield 功能 spec | **plan** §SDD · `docs/specs/`（`workflow.json` `sdd.specs_dir`） |
 | 网络抓取选型 | **debug** §网络与抓取 |
@@ -73,9 +81,9 @@ Agents：**ship**（发版）· **review** · **spike**（后二者只读）
 
 **git** §GitHub 运维 · **security** §支付/webhook — 见各 skill 正文。
 
-## 8 栈 scaffold
+## 7 栈 scaffold
 
-`react-vite-ts` · `vue-vite-ts` · `nextjs-ts` · `go-api` · `rust-axum` · `python-fastapi` · `java-gradle` · `cpp-cmake`
+`react-vite-ts` · `vue-vite-ts` · `nextjs-ts` · `go-api` · `rust-axum` · `python-fastapi` · `cpp-cmake`
 
 ## install profile
 

@@ -26,6 +26,19 @@ plan handoff 默认自治时，用户 **只说一次 `/run`**；Agent **同会�
 
 触点矩阵 → **plan** `reference/autonomy-chain.md` · `workflow.json` → `autonomy.interrupt_on`。
 
+## 执行期递归边界
+
+`/run` 只实现当前 `ACTIVE` TASK 所属的 Theme/Slice：
+
+- TASK 内的文件、命令和实现步骤属于 L4 Steps，不自动升级为新的 TASK；
+- 发现仍在当前边界内的细节，继续完成并在同一验收中收敛；
+- 发现新的独立结果，先停在当前任务边界，记录为同层候选，不直接修改；
+- 发现不同 Theme、横向依赖或新的产品/架构决策，标记 `⚠️` 并回 `/plan`；
+- 不以“顺便统一”“顺便补齐”“顺便重构”为理由跨越 `Target` 或 `Out of scope`；
+- 自治只允许沿已批准的执行顺序前进，不允许自治扩展任务树。
+
+判断标准：如果改动不能用当前 TASK 的一个主验收命令证明完成，就不是当前 TASK 的内部步骤。
+
 ## 单轮（含必做 commit）
 
 **禁止**在任务 ✅ 后仅更新 plan/CHANGELOG 却留给用户手动 commit。单轮顺序固定：
@@ -149,6 +162,8 @@ bash .cursor/bin/cursor-coherence.sh   # README ↔ 磁盘 skills/agents 一致
 | PDF 表单/验收 | **delivery** §PDF 工具 |
 | 编辑 docx/pptx/xlsx 深度 | AskQuestion：**装 upstream** anthropics skill / 用 MCP / 跳过 |
 | 新 UI 交付走查 | **delivery** §1 反模板自检 |
+| 使用说明书 / 配图 regen | **user-manual** `/manual` |
+| 测试报告 / verify 汇总 | **test-report** `/report` |
 | MCP 建服 | **mcp** §Eval |
 | 新功能 0→1 / 写 spec / SDD | **plan** §SDD · Greenfield 模式 |
 | 实现后仍有差距 | **run** §converge |
@@ -188,6 +203,7 @@ Ambiguous 时 AskQuestion ≤4 项，禁止开放式「你想用哪个 skill」�
 当前 Sprint 任务表无 ⬜/🔧 时：
 
 1. `./.cursor/bin/runner.sh verify` — **须满足 Sprint Done when**（母版含 `cursor-coherence.sh` · README 与 CHANGELOG 对齐）
+   - **可选** — Done when 含「测试报告」/ QA benchmark / 持久化 `docs/test-report.md` → **`/report`**（**test-report**；步骤 1 刚跑完 verify 时优先 **from-logs**；见 `reference/regen-gates.md` §sprint）
 2. 将本 Sprint 笔记写入 **`.cursorGrowth/archive/`**（命名见 `learn/plan-conventions.md`）
 3. **plan 正文 reconciliation**（与 archive 一致；**必做**，仅 `.cursorGrowth/plan.md`）：
    - [ ] `<!-- SPRINT_STATUS: closed -->` · `<!-- ACTIVE: (none) -->` · `<!-- NEXT: (none) -->`

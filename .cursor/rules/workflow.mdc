@@ -22,6 +22,15 @@ CLI：`.cursor/bin/runner.sh` — `gate-check` · `task-verify` · `verify` · `
 
 预估或已列 **todolist / TASK > 5** → **禁止**直接编码；先 **`/plan`** 写入 `plan.md` 并获确认（见 **plan** skill「规模门禁」）。≤5 的清晰小改可直述执行。
 
+## 递归分解与防漂移闸门
+
+- `/plan` 必须先冻结 L0 Goal、Done when、Out of scope，再划分 L1 Theme 和后续 TASK；
+- 同层 TASK 必须互斥且完备；`Target`、`Owns` 和主验收不得跨多个 Theme；
+- `/run` 只执行当前 `ACTIVE` 分支；发现新 Theme 或横向扩张时标记 `⚠️` 并回 `/plan`，不得把它追加到当前 TASK；
+- 实现步骤留在 TASK 内部，不为单文件、字段或命令单独创建任务；
+- 仍需方案决策的内容使用 `SPIKE-*` / `Decision needed`，不得和实现 TASK 混合；
+- 若单 Sprint 的任务树需要超过 5 个同层节点，先重查分区轴；无法保持上下文闭合时拆 Sprint/Theme，而不是继续细切。
+
 ## 任务 ID
 
 `config/workflow.json` → `task_id`：

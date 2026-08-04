@@ -9,8 +9,8 @@
 | `plan.md` | Sprint / TASK 工作副本（`runner.sh` · `/plan` · `/run`） |
 | `archive/` | Sprint 笔记、审查清单等归档 |
 | `learn/` | `/learn` 维护的项目认知（约定 · 模块地图 · 发版节奏） |
-| `week-report/` | `/week` 生成的周报（本地 Markdown） |
-| `disk-snapshots/` | `/disk` 磁盘快照 JSON 与 diff 报告 |
+| `week-report/` | **week** skill 生成的周报（本地 Markdown） |
+| `disk-snapshots/` | **disk** skill 磁盘快照 JSON 与 diff 报告 |
 | `disk-paths.json` | （可选）自定义磁盘采集路径，模板见 `disk-paths.example.json` |
 | `maintain-config.json` | （可选）维护脚本受保护目录与缓存列表 |
 | `rules/local/` | 团队私有 `.mdc` rules（安装后常链到 `.cursor/rules/local`） |

@@ -6,7 +6,7 @@
 | **review** | **review** skill · 只读 PR/代码回顾 |
 | **spike** | **plan** `SPIKE-*` · 只读调研 |
 
-Skills: **master** · **plan** · **run** · **learn** · **scaffold** · **git** · **security** · **api** · **ux** · **ia** · **release** · **debug** · **test** · **mcp** · **refactor** · **perf** · **review** · **study** · **delivery** · **week** · **disk** · **maintain** · **pencil-design**
+Skills: **master** · **plan** · **run** · **learn** · **scaffold** · **git** · **security** · **api** · **ux** · **ia** · **release** · **debug** · **test** · **mcp** · **refactor** · **perf** · **review** · **study** · **delivery** · **user-manual** · **test-report** · **week** · **disk** · **maintain** · **pencil-design**
 
 Rules: `core.mdc` + `workflow.mdc` (alwaysApply) · 其余按 glob 加载
 

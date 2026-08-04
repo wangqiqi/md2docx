@@ -13,7 +13,7 @@ cd /path/to/your-project
 |----|-------|
 | 【日常】 | `/run` · `/plan` · `/master` |
 | 【生命周期】 | `/scaffold` · `/learn` · `/release` |
-| 【高级】 | `/delivery` · `/ux` · `/ia`（Agent 也常自动选用） |
+| 【高级】 | `/delivery`（其余如 ux/ia/debug → skill-only） |
 
 | profile | 适合 |
 |---------|------|
@@ -21,7 +21,7 @@ cd /path/to/your-project
 | `lite` | 个人，无 hooks |
 | `rules-only` | 只要规范 |
 
-## 2. 空项目：脚手架（8 栈）
+## 2. 空项目：脚手架（7 栈）
 
 ```
 /master  或  /scaffold
@@ -64,8 +64,12 @@ release / ship
 ## 母版自测
 
 ```bash
-bash .cursor/bin/template-verify.sh
+bash .cursor/verify-super-cursor.sh    # layout；混合仓 hybrid 自动
+bash .cursor/bin/cursor-coherence.sh
+bash .cursor/bin/template-verify.sh    # 纯母版全量
 ```
+
+混合仓见 [platforms.md](platforms.md) §自测 · `rules/feedback/verify.mdc`。
 
 ## 跨平台
 

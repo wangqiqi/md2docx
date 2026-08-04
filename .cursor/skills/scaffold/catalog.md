@@ -10,7 +10,6 @@
 | `go-api` | backend | `tests/integration` + internal | 同上 |
 | `rust-axum` | backend | `tests/*.rs` · `app()` | 同上 |
 | `python-fastapi` | backend | unit+integration · pytest | 同上 |
-| `java-gradle` | backend | Gradle Wrapper · JUnit 5 | 同上 |
 | `cpp-cmake` | systems | GoogleTest · `tests/` | 同上 |
 
 ## 与 skill / rules 的关系
@@ -31,9 +30,12 @@
 | go-api | 改 `go.mod` 模块路径 → `go mod tidy` → verify |
 | rust-axum | `cargo test` → verify |
 | python-fastapi | venv → `pip install -e '.[dev]'` → verify |
-| java-gradle | `chmod +x gradlew` → verify（或 `bootstrap-gradle-wrapper.sh` 若缺 wrapper） |
 | cpp-cmake | verify（cmake build + ctest） |
 
 ## 扩展
 
-manifest 现含 **8 栈**（见上表）。用户要 **Spring Boot / Django / 其他未列栈**：AskQuestion 后 Agent 参照 **standard+** 约定手写（README + verify.sh + lint/test），或用户明确要求时再向母版贡献新模板 id。
+<<<<<<< HEAD
+manifest 现含 **8 栈** + **可选 bundles**（`apply-bundle user-manual` · `apply-bundle test-report`）。用户要 **Spring Boot / Django / 其他未列栈**：AskQuestion 后 Agent 参照 **standard+** 约定手写（README + verify.sh + lint/test），或用户明确要求时再向母版贡献新模板 id。
+=======
+manifest 现含 **7 栈**（见上表）。用户要 **Spring Boot / Django / Java / 其他未列栈**：AskQuestion 后 Agent 参照 **standard+** 约定手写（README + verify.sh + lint/test），或用户明确要求时再向母版贡献新模板 id。
+>>>>>>> f3674bb (release: slash slim, drop java-gradle, portable verify (v4.25.0))

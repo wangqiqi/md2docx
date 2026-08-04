@@ -42,6 +42,7 @@ git status                              # 无未提交 WIP
 - [ ] plan 本版 P0 全部 ✅（若用 plan.md）
 - [ ] 跑 **security** 清单（auth/密钥/PII）— 无 Critical/High 未处理
 - [ ] UI/功能本版：**建议** **`/delivery`** 无 Blocker（见 **delivery** skill）
+- [ ] 发版 benchmark：**可选** **`/report`** full regen（**test-report** · verify 绿后；见 **release** §打版）
 
 ### 2. 版本与 CHANGELOG
 

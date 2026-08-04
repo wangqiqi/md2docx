@@ -40,8 +40,7 @@ go mod tidy
 
 ```text
 /run       → gate-check → 实现 → task-verify → commit → next-task
-/ux        → 体验问题分流 → ia（结构）或 delivery（抛光）
-/ia        → 导航/角色/工作流 IA 规划或审查（docs/design/*-ia*）
+ux / ia    → skill-only：体验分流 / 导航 IA（无 slash）
 /delivery  → （UI/功能）release 分支或发版前 7 维走查
 /release   → merge / PR / 打 tag（可选）
 ```
@@ -70,7 +69,6 @@ CLI 自检：
 | Go API | `go-api` |
 | Rust API | `rust-axum` |
 | Python API | `python-fastapi` |
-| Java | `java-gradle` |
 | C++ | `cpp-cmake` |
 
 ## profile 选择

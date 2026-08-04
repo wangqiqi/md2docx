@@ -1,21 +1,21 @@
 ---
 name: week
 description: >-
-  周报（/week）：扫描工作区下 CHANGELOG.md，按年内第 N 周归纳进展，写入 .cursorGrowth/week-report/。
-  说「周报」「本周总结」「weekly report」「总结最近一周」时也触发。
+  周报（无 slash · 关键词）：扫描工作区下 CHANGELOG.md，按年内第 N 周归纳进展，写入 .cursorGrowth/week-report/。
+  说「周报」「本周总结」「weekly report」「总结最近一周」时触发。
 disable-model-invocation: true
 ---
 
 # week · 周报
 
-**工具技能**（非 plan/run 主路径）。**用这个**：汇总多仓 CHANGELOG 周报。**不是那个**：本仓约定沉淀 → **`/learn`**；打版 → **`/release`**。
+**工具技能**（无 slash · 非 plan/run 主路径）。**用这个**：汇总多仓 CHANGELOG 周报。**不是那个**：本仓约定沉淀 → **`/learn`**；打版 → **`/release`**。
 
 扫描工作区各仓库 **CHANGELOG.md**，归纳后写入 **`.cursorGrowth/week-report/第{N}周任务总结.md`**（本地、**不提交 git**）。
 
 ## 何时进入
 
-- 用户说 **`/week`**
-- 「周报」「本周总结」「总结最近一周的成果」
+- 用户说「周报」「本周总结」「总结最近一周的成果」
+- `/master` → more 或关键词命中
 
 ## 周范围
 

@@ -42,15 +42,41 @@ while IFS= read -r id; do
     python-fastapi)
       [[ -d "$dir/tests/unit" && -d "$dir/tests/integration" ]] || fail "$id: missing tests/unit|integration"
       ;;
-    java-gradle)
-      [[ -f "$dir/src/test/README.md" ]] || fail "$id: missing src/test/README.md"
-      [[ -x "$dir/gradlew" ]] || fail "$id: missing executable gradlew"
-      [[ -f "$dir/gradle/wrapper/gradle-wrapper.jar" ]] || fail "$id: missing gradle-wrapper.jar"
-      ;;
   esac
 
   ok "$id"
 done < <(sc_manifest_ids "$MANIFEST")
+
+bundle_root="$TEMPLATE_ROOT/_bundles/user-manual"
+if jq -e '.bundles[] | select(.id == "user-manual")' "$MANIFEST" >/dev/null 2>&1; then
+  echo ""
+  echo "=== bundle integrity ==="
+  for f in \
+    shared/config/manual.yaml \
+    shared/docs/user-guide.md \
+    shared/scripts/docs/sync_manual_screenshots.sh \
+    shared/scripts/verify/docs/verify_doc_manual.sh \
+    web/e2e/manual-walkthrough.spec.ts \
+    web/playwright.manual.config.ts
+  do
+    [[ -f "$bundle_root/$f" ]] && ok "bundle user-manual $f" || fail "bundle missing $f"
+  done
+fi
+
+bundle_root="$TEMPLATE_ROOT/_bundles/test-report"
+if jq -e '.bundles[] | select(.id == "test-report")' "$MANIFEST" >/dev/null 2>&1; then
+  echo ""
+  echo "=== bundle integrity (test-report) ==="
+  for f in \
+    shared/config/test-report.yaml \
+    shared/docs/test-report.md \
+    shared/scripts/docs/collect_test_report.sh \
+    shared/scripts/verify/docs/verify_test_report.sh \
+    shared/design/test-report/README.md
+  do
+    [[ -f "$bundle_root/$f" ]] && ok "bundle test-report $f" || fail "bundle missing $f"
+  done
+fi
 
 [[ "$FAIL" -eq 0 ]] && exit 0
 echo "$FAIL scaffold check(s) failed." >&2

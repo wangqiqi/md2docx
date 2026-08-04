@@ -1,16 +1,16 @@
 {
   "version": 2,
   "tier": "standard+",
-  "tier_notes": "lint+test+verify+CI+env · 8 stacks",
+  "tier_notes": "lint+test+verify+CI+env · 7 stacks · optional bundles",
   "categories": {
     "frontend": ["react-vite-ts", "vue-vite-ts", "nextjs-ts"],
-    "backend": ["go-api", "rust-axum", "python-fastapi", "java-gradle"],
+    "backend": ["go-api", "rust-axum", "python-fastapi"],
     "systems": ["cpp-cmake"]
   },
   "test_convention": {
     "dev_loop": "scripts/test.sh",
     "full_verify": "scripts/verify.sh",
-    "docs": "tests/README.md or src/test/README.md (java)"
+    "docs": "tests/README.md"
   },
   "scaffolds": [
     {
@@ -79,16 +79,6 @@
       ]
     },
     {
-      "id": "java-gradle",
-      "name": "Java + Gradle (Kotlin DSL)",
-      "category": "backend",
-      "tags": ["java", "gradle", "junit"],
-      "description": "内置 Gradle Wrapper · unit/integration · CI",
-      "verify": "scripts/verify.sh",
-      "test": "scripts/test.sh",
-      "post_apply": ["chmod +x gradlew", "./scripts/verify.sh"]
-    },
-    {
       "id": "cpp-cmake",
       "name": "C++ + CMake",
       "category": "systems",
@@ -97,6 +87,44 @@
       "verify": "scripts/verify.sh",
       "test": "scripts/test.sh",
       "post_apply": ["./scripts/verify.sh"]
+    }
+  ],
+  "bundles": [
+    {
+      "id": "user-manual",
+      "name": "User manual skeleton",
+      "category": "docs",
+      "description": "Manual Contract · user guide doc · sync/verify scripts; Playwright walkthrough for frontend stacks",
+      "path": "_bundles/user-manual",
+      "layers": {
+        "shared": "shared",
+        "web": "web"
+      },
+      "stacks_web": ["react-vite-ts", "vue-vite-ts", "nextjs-ts"],
+      "post_apply": [
+        "Edit config/manual.yaml — roles, storylines, capture commands",
+        "Web stacks: npm i -D @playwright/test && npx playwright install chromium",
+        "Add script test:e2e:manual → playwright test -c playwright.manual.config.ts",
+        "Regen: MANUAL_WALKTHROUGH_ENABLED=1 npm run test:e2e:manual && bash scripts/docs/sync_manual_screenshots.sh",
+        "L1: SKIP_MANUAL_ASSETS=1 bash scripts/verify/docs/verify_doc_manual.sh (until PNGs exist)"
+      ]
+    },
+    {
+      "id": "test-report",
+      "name": "Test report skeleton",
+      "category": "docs",
+      "description": "Report Contract · test-report doc · collect/verify scripts for verify-after benchmark docs",
+      "path": "_bundles/test-report",
+      "layers": {
+        "shared": "shared"
+      },
+      "post_apply": [
+        "Edit config/test-report.yaml — run.suites[] and verify.anchors",
+        "Tune suite commands for your stack (default: scripts/verify.sh --l1, scripts/test.sh)",
+        "Collect: bash scripts/docs/collect_test_report.sh",
+        "Regen doc: /report (from-logs if logs fresh)",
+        "L1: bash scripts/verify/docs/verify_test_report.sh"
+      ]
     }
   ]
 }

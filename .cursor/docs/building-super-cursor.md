@@ -99,5 +99,8 @@ Verify template integrity:
 
 ```bash
 bash .cursor/bin/cursor-coherence.sh
-bash .cursor/bin/template-verify.sh
+bash .cursor/verify-super-cursor.sh   # layout；混合仓自动 hybrid
+bash .cursor/bin/template-verify.sh   # 母版全量（含 scaffold · runner smoke）
 ```
+
+**Layout 模式**（`verify-super-cursor.sh`）：**mother** = 纯母版空仓；**hybrid** = `.cursor/` 与业务树共存（自动检测 `scripts/` · `backend/` · `frontend/`）。混合仓不 FAIL 纯母版项；见 `rules/feedback/verify.mdc`。

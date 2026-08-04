@@ -32,9 +32,11 @@ disable-model-invocation: true
 | 问题 | 选项示例 |
 |------|----------|
 | 项目类型 | frontend · backend · systems |
-| 技术栈 | `react-vite-ts` · `vue-vite-ts` · `nextjs-ts` · `go-api` · `rust-axum` · `python-fastapi` · `java-gradle` · `cpp-cmake` |
+| 技术栈 | `react-vite-ts` · `vue-vite-ts` · `nextjs-ts` · `go-api` · `rust-axum` · `python-fastapi` · `cpp-cmake` |
 | 模块路径（Go） | 默认 `example.com/app`，问用户是否替换 |
 | 包管理器 | npm / pnpm（前端）；venv（Python） |
+| **用户手册骨架（可选）** | 是 → `apply-bundle user-manual`；否 → 跳过（见 **user-manual** `reference/scaffold-bundle.md`） |
+| **测试报告骨架（可选）** | 是 → `apply-bundle test-report`；否 → 跳过（见 **test-report** `reference/scaffold-bundle.md`） |
 
 3. **预览** — 用户确认前必须执行：
 
@@ -49,6 +51,15 @@ disable-model-invocation: true
 
 ```bash
 ./.cursor/bin/scaffold.sh apply <id>
+```
+
+可选附加包（**不**改默认 `apply` 文件集）：
+
+```bash
+./.cursor/bin/scaffold.sh apply-bundle user-manual --dry-run
+./.cursor/bin/scaffold.sh apply-bundle user-manual --stack react-vite-ts
+./.cursor/bin/scaffold.sh apply-bundle test-report --dry-run
+./.cursor/bin/scaffold.sh apply-bundle test-report --stack go-api
 ```
 
 5. **收尾**（建议，非自动 commit）
@@ -81,7 +92,7 @@ disable-model-invocation: true
 |------|------|
 | `scripts/test.sh` | **开发中**快速回归（仅测试） |
 | `scripts/verify.sh` | **任务/Sprint**全量验收（lint+test+build 等） |
-| `tests/README.md` | 测试目录说明（Java 为 `src/test/README.md`） |
+| `tests/README.md` | 测试目录说明 |
 
 **plan.md 验收列建议**：
 

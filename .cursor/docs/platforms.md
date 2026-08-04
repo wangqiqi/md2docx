@@ -64,6 +64,9 @@ Hooks 由 Cursor 调用 `.cursor/hooks/*.sh`。在 Windows 上请：
 
 ```bash
 bash .cursor/bin/platform-check.sh
-bash .cursor/verify-super-cursor.sh
-bash .cursor/bin/template-verify.sh
+bash .cursor/verify-super-cursor.sh    # 混合仓自动 hybrid，纯母版空仓为 mother
+bash .cursor/bin/cursor-coherence.sh # 安装后项目优先
+bash .cursor/bin/template-verify.sh  # 纯母版全量（混合仓亦可用）
 ```
+
+混合仓（业务树 + `.cursor/`）：`verify-super-cursor` 对纯母版 layout 项 **SKIP**，不 FAIL。强制空仓标准：`SC_VERIFY_LAYOUT=mother`。

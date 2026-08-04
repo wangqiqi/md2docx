@@ -1,22 +1,22 @@
 ---
 name: maintain
 description: >-
-  开发环境维护（/maintain）：Ubuntu/Linux 诊断与安全清理，委托 disk 快照对比。
-  说「清理环境」「磁盘清理」「dev maintenance」「系统维护」时也触发。
+  开发环境维护（无 slash · 关键词）：Ubuntu/Linux 诊断与安全清理，委托 disk 快照对比。
+  说「清理环境」「磁盘清理」「dev maintenance」「系统维护」时触发。
 disable-model-invocation: true
 ---
 
 # maintain · 开发环境维护
 
-**工具技能**（非 plan/run 主路径）。**用这个**：本机诊断/安全清理（Linux）。**不是那个**：业务 refactor；先看占用 → **`/disk`**。
+**工具技能**（无 slash · 非 plan/run 主路径）。**用这个**：本机诊断/安全清理（Linux）。**不是那个**：业务 refactor；先看占用 → **disk** skill。
 
 诊断与本机安全清理（**Linux**）。快照与对比委托 **disk** skill。
 
 ## 何时进入
 
-- 用户说 **`/maintain`**
-- 「清理环境」「系统维护」「磁盘满了」「dev maintenance」
-- 清理前/后配合 **`/disk`** 观察变动
+- 用户说「清理环境」「系统维护」「磁盘满了」「dev maintenance」
+- 清理前/后配合 **disk** skill 观察变动
+- `/master` 或关键词命中
 
 ## 流程
 

@@ -11,6 +11,7 @@ alwaysApply: false
 
 - New repos / large scope → `/plan` or `/scaffold` with AskQuestion（unavailable → numbered prose options; see **master**）；no silent mega-diff.
 - `gate-check` must pass before `/run` coding on gated workflows.
+- 任务分解遵循“先总后分”：同层互斥且完备，只沿一个 ACTIVE 分支向内推进；发现新 Theme、横向范围或未决策项必须回到 `/plan`，不得静默扩 scope。
 
 ## 信号可信
 

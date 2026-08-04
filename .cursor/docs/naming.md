@@ -8,7 +8,7 @@ Super Cursor 命名：**短、见名知意、不与 Cursor 内置冲突**。
 |------|--------|------|
 | Skill | `master` `plan` `run` `learn` `scaffold` `git` `release` `security` `api` | `shell` `loop` `canvas` `sdk`…（见下） |
 | Agent | **`ship`**（发版 subagent） | **`release`**（Cursor 内置 subagent） |
-| Command | **【日常】** `/run` `/plan` `/master` · **【生命周期】** `/scaffold` `/learn` `/release` · **【高级】** `/delivery` `/ux` `/ia` · **【运维】** `/week` `/disk` `/maintain` |
+| Command | **【日常】** `/run` `/plan` `/master` · **【生命周期】** `/scaffold` `/learn` `/release` · **【高级】** `/delivery`（其余 skill 无 slash） |
 | Config | `workflow.json` `release.json` | — |
 | Hooks 脚本 | `growth-init` `run-start` `run-stop` | 事件名用官方：`sessionStart` `stop` 等 |
 
@@ -41,7 +41,7 @@ Cursor Task 体系有内置 subagent **`release`**。项目 `.cursor/agents/rele
 | `run` | 执行 skill + `/run` | Agent 一次 run（口语） |
 | `release` | Sprint 出口 **skill**（§分支 + §打版） | 内置 **release** subagent（我们用 `ship` 代替） |
 | `review` | 项目 **review** skill + **review** agent（REV-* · PR 清单） | 全局 `~/.cursor/skills-cursor/review`（路由 Bugbot / Security Review） |
-| `week` · `disk` · `maintain` | skill + **`/week` `/disk` `/maintain`** slash | 亦可关键词触发 |
+| `week` · `disk` · `maintain` · `ux` · `ia` · `debug` | **skill-only**（无 project command） | 关键词 / `@skill` / Agent 自动选用 |
 
 ## 官方工具与模型差异（Agent 须知）
 
@@ -61,14 +61,16 @@ Cursor Task 体系有内置 subagent **`release`**。项目 `.cursor/agents/rele
 你记的 slash          commands/*.md（薄）     skills/*.md（SOP）
 【日常】/run /plan /master ────────────────→ run · plan · master
 【生命周期】/scaffold /learn /release ─────→ scaffold · learn · release
-【高级】/delivery /ux /ia ─────────────────→ delivery · ux · ia
-【运维】/week /disk /maintain ─────────────→ week · disk · maintain
-git · test · api … ────────────────────────→ Agent 按 plan 自动读 skill（无 slash）
+【高级】/delivery ─────────────────────────→ delivery
+ux · ia · debug · review · week · disk … ──→ Agent 按意图自动读 skill（无 slash）
+git · test · api · security … ─────────────→ 同上（无 slash）
 
 agents/     仅委派：ship（自治打版）· review/spike（只读）
 rules/      编辑匹配文件时 glob 自动加载
 hooks/      会话：growth-init · plan 上下文注入
 ```
+
+**约定**：slash **永远**命中 `commands/*.md`；同名 skill 是正文。无 command 的 skill **不是**「丢了」，是刻意不进菜单。
 
 **review**（项目内）：同名 **skill**（母会话清单）+ **agent**（只读子进程）— 委派时用 agent。  
 **全局 review**（`skills-cursor/review`）只路由 Bugbot / Security — 与项目 REV-* 无关；安全专项优先 **security** skill。
@@ -91,7 +93,13 @@ hooks/      会话：growth-init · plan 上下文注入
 ## 验证
 
 ```bash
-bash .cursor/verify-super-cursor.sh
+bash .cursor/verify-super-cursor.sh   # mother | hybrid（见下）
+bash .cursor/bin/cursor-coherence.sh
 ```
 
-检查含：无 `agents/release.md`、存在 `agents/ship.md`、无旧版 jw 前缀 skill 名。
+| 模式 | 何时 | 纯母版 layout 项 |
+|------|------|------------------|
+| **mother** | 纯母版空仓 | 必须满足（`install-super-cursor.sh` 等） |
+| **hybrid** | 根有 `scripts/` / `backend/` / `frontend/`（自动） | SKIP；改验 `scripts/verify.sh` |
+
+检查含：无 `agents/release.md`、存在 `agents/ship.md`、无旧版 jw 前缀 skill 名、CHANGELOG 版本序（若有根 `CHANGELOG.md`）。

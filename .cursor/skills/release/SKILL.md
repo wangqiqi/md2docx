@@ -92,6 +92,7 @@ PR 生命周期（评论、CI、拆 PR）：`babysit` · `split-to-prs`（**mast
 - [ ] verify 通过 · 无 WIP
 - [ ] **security**（auth/PII）
 - [ ] UI/功能：**建议** **`/delivery`** 无 Blocker
+- [ ] 发版 benchmark：**可选** **`/report`** full regen（**test-report** · verify 绿后）
 - [ ] CHANGELOG `[Unreleased]` · manifest bump · docs
 - [ ] Annotated tag · push 按团队策略
 

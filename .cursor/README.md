@@ -14,17 +14,19 @@ commands/ 三层 slash（薄入口 → 加载 skill；见下表）
 agents/  ship review spike（子进程委派；日常不必记）
 hooks/   growth-init run-start run-stop
 config/  workflow.json release.json roles.json
-bin/     runner.sh scaffold.sh install-smoke.sh cursor-coherence.sh platform-check.sh template-verify.sh
+bin/     runner.sh scaffold.sh（含 apply-bundle）install-smoke.sh cursor-coherence.sh platform-check.sh template-verify.sh
 lib/     platform.sh（跨平台工具）
 templates/scaffold/   manifest + stack templates
 ```
 
 ```bash
 bash .cursor/bin/template-verify.sh          # 母版全量（推荐）
-bash .cursor/verify-super-cursor.sh          # layout 存在性
+bash .cursor/verify-super-cursor.sh          # layout 存在性（混合仓自动 hybrid 模式）
 bash .cursor/bin/cursor-coherence.sh         # 交叉自洽
 bash .cursor/verify-system.sh                # 同上 layout（alias）
 ```
+
+混合仓（根目录有 `scripts/` · `backend/` · `frontend/` 等业务树）：`verify-super-cursor` 自动 **SKIP** 纯母版项（`install-super-cursor.sh` · 禁止 `scripts/` · `.github/workflows/verify.yml`），改验 `scripts/verify.sh`。强制空仓：`SC_VERIFY_LAYOUT=mother`。
 
 命名：[docs/naming.md](docs/naming.md)
 
@@ -48,15 +50,15 @@ slash 菜单按 **【日常】→【生命周期】→【高级】** 标注；Ag
 | `/learn` | 让 Agent 了解本项目；可据证据**建议约定**（落 Growth / local，不擅自改 `.cursor/`） | learn |
 | `/release` | merge / PR / 打 tag（Sprint 出口） | release |
 
-### 【高级】按需 · Agent 也常自动选用
+### 【高级】按需
 
 | Command | 何时用 | Skill |
 |---------|--------|-------|
 | `/delivery` | UI/功能 Sprint 发版前 7 维走查（**不是**规划导航） | delivery |
-| `/ux` | 体验类型不明 → 分流 ia/delivery（**不是**直接改视觉） | ux |
-| `/ia` | 导航/角色/信息架构大改（**不是** token/i18n 抛光） | ia |
-| `/debug` | 根因不明 / 反复失败 / 系统调试循环（**不是**小修直接 run） | debug |
-| `/review` | REV-* / 合并前结构化回顾（**不是** Bugbot 全局 review） | review |
+| `/manual` | 可发布软件使用说明书 · 配图 regen（**不是** delivery 走查） | user-manual |
+| `/report` | 全量/分层测试报告 · verify 后汇总（**不是** 写测试） | test-report |
+
+**无 slash · skill-only**（Agent 按意图自动选用，或 `@` / 关键词）：**ux** · **ia** · **debug** · **review** · **week** · **disk** · **maintain** · **pencil-design**（以及 api/git/test/…）。
 
 ## 使用场景
 
@@ -67,7 +69,7 @@ slash 菜单按 **【日常】→【生命周期】→【高级】** 标注；Ag
 
 ```
 空仓库:  /master → /scaffold → /learn → /plan → /run → verify
-迭代:    /plan（批准）→ /run **一次**（默认 AUTONOMOUS 连跑 TASK）
+迭代:    /plan（先总后分、同层 MECE）→ /run **一次**（只沿 ACTIVE 分支连跑 TASK）
 卡住:    /master → fix → /run 或 /plan
 迷路:    /master（主菜单 7 项 → 子路由）
 ```
@@ -82,8 +84,8 @@ slash 菜单按 **【日常】→【生命周期】→【高级】** 标注；Ag
 | 后端 / 系统 | `python` · `go` · `rust` · `java` · `cpp` · `c` | `*.py` · `*.go` · `*.rs` · `*.java` · `*.{c,cc,cpp,h,hpp}` |
 
 治理：`constitution.mdc` · `evolution.mdc` · `config/roles.json`（12 人格 · 呼叫可解析 · Growth 会话态 · speech_examples；**skills 全员 full**）。  
-扩展 skills（主路径）：**ux** · **ia** · **debug** · **test** · **review** · **study** · **delivery** · **mcp** · **refactor** · **perf**（入口见 `core.mdc`）。  
-**工具技能**（非日常主路径；`/week` · `/disk` · `/maintain` · `/pencil-design`）：**week** · **disk** · **maintain** · **pencil-design** — full 默认带；lite/rules-only 可不强调（见 `config/README`）。
+扩展 skills（主路径）：**ux** · **ia** · **debug** · **test** · **review** · **study** · **delivery** · **user-manual** · **test-report** · **mcp** · **refactor** · **perf**（入口见 `core.mdc`）。  
+**工具技能**（无 slash · 关键词触发）：**week** · **disk** · **maintain** · **pencil-design** — full 默认带；lite/rules-only 可不强调（见 `config/README`）。
 
 ### 重复劳动 SOP（rules · 通用）
 
@@ -95,7 +97,7 @@ slash 菜单按 **【日常】→【生命周期】→【高级】** 标注；Ag
 | Prompt / Agent 安全 | `rules/execution/prompt-security.mdc` · **security** 清单 |
 | 分层验收 verify-layers | `rules/feedback/verify.mdc` · **test** skill |
 | 全栈垂直切片 | `rules/execution/vibe.mdc` · **api** skill |
-| 文档自洽 doc-coherence | `rules/execution/docs.mdc` · **delivery** skill |
+| 文档自洽 doc-coherence | `rules/execution/docs.mdc` · **delivery** skill · **user-manual** `/manual` · **test-report** `/report` |
 | 浏览器走查（可选） | **delivery** §10（`skills/delivery/reference/checklist-optional.md`）— UI Sprint 建议；可跳过；无强制 MCP |
 | 无障碍（可选） | **delivery** §11（同上 optional 清单）— 键盘·焦点·语义/label·对比度；可跳过；不强制 axe/MCP |
 | 系统调试循环 | **debug** skill — 复现→假设→隔离→验证→记录；无复现不盲改；`/run` 自修≤2 后 `⚠️`→`/plan` |
@@ -115,9 +117,8 @@ slash 菜单按 **【日常】→【生命周期】→【高级】** 标注；Ag
 | 做事 / 写代码 | **`/run`** |
 | 拆 Sprint | **`/plan`** |
 | 真迷路 | **`/master`** |
-| 空仓 / 发版 / 交付 / UX·IA | `/scaffold` · `/release` · `/delivery` · `/ux` · `/ia` |
-| 修 bug / 测挂了 | **`/debug`**（系统循环）· `bugfix.mdc` |
-| 合并前回顾 / REV-* | **`/review`**（结构化清单）· 可委派 review agent |
+| 空仓 / 发版 / 交付 / 说明书 / 测试报告 | `/scaffold` · `/release` · `/delivery` · `/manual` · `/report` |
+| UX·IA / 调试 / 回顾 | skill **ux** · **ia** · **debug** · **review**（无 slash；Agent 自动或 `@`） |
 
 培训表 → [docs/training/skills.md](docs/training/skills.md)。
 

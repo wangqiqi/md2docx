@@ -41,6 +41,10 @@ description: 测试清单 — 单测、集成、E2E、TDD 红绿重构；衔接 
 | 集成 | API、DB、模块边界 |
 | E2E | 关键用户路径（Playwright/Cypress 若项目已有） |
 
+Walkthrough 若用于**说明书配图**（非仅冒烟）→ 与 **user-manual** skill 对齐 Manual Contract；行为断言仍在本 skill。
+
+全量/发版 **测试报告**（汇总 verify · 非写用例）→ **test-report** `/report` · Report Contract。
+
 ## 验收脚本分层（verify-layers）
 
 **层定义真源**：`rules/feedback/verify.mdc` §分层验收（L0–L3）。本 skill **不重复**该表。

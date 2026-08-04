@@ -19,7 +19,7 @@ alwaysApply: false
 - **tag-per-commit**：每 commit 直接写 `## [x.y.z]`，仅本条任务 1～3 条
 - **禁止同版本双节**：同一 `[x.y.z]` 不得出现两个 `## [x.y.z]` 块；follow-up 用同一节下 `### Fixed` / `### Changed` 追加，或合并叙事后只保留一节
 - **follow-up 标注**：连续 patch 修同一症状簇时，条目末尾注明根因 Sprint（如 `` `sprint-N-followup` ``）便于 **`/learn`** 审计
-- **序自检（母版）**：`bash .cursor/verify-super-cursor.sh` 校验根 `CHANGELOG.md` 中 `## [x.y.z]` 严格新→旧；破例 → FAIL（`## [Unreleased]` 可置顶）
+- **序自检（母版）**：`bash .cursor/verify-super-cursor.sh` 校验根 `CHANGELOG.md` 中 `## [x.y.z]` 严格新→旧；破例 → FAIL（`## [Unreleased]` 可置顶）。混合仓 layout 模式见 `rules/feedback/verify.mdc`。
 
 ## 内容
 

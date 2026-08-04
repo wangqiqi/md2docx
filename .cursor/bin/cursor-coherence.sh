@@ -176,25 +176,34 @@ grep -q '刻意不迁移' "$catalog" && grep -q '完整性边界' "$catalog" \
   && ok "migration-catalog completeness boundary" \
   || fail "migration-catalog missing 完整性边界 section"
 
-# 13. root README mentions full template verify chain
+# 13–14. Facade README: mother root README, else .cursor/README.md (installed target)
 root_readme="$CUR/../README.md"
-grep -q 'template-verify' "$root_readme" && grep -q 'cursor-coherence' "$root_readme" \
-  && ok "root README verify chain" \
-  || fail "root README missing template-verify or cursor-coherence"
+cursor_readme="$CUR/README.md"
+facade_readme=""
+if [[ -f "$root_readme" ]] && grep -q 'template-verify' "$root_readme" && grep -q 'cursor-coherence' "$root_readme"; then
+  facade_readme="$root_readme"
+  ok "root README verify chain"
+elif [[ -f "$cursor_readme" ]] && grep -q 'template-verify' "$cursor_readme" && grep -q 'cursor-coherence' "$cursor_readme"; then
+  facade_readme="$cursor_readme"
+  ok "facade via .cursor/README.md (target project)"
+else
+  fail "facade README missing template-verify or cursor-coherence (root or .cursor/README.md)"
+fi
 
-# 14. root README mentions every disk skill and agent (facade sync)
-while IFS= read -r sk; do
-  [[ -z "$sk" ]] && continue
-  grep -qF "$sk" "$root_readme" && ok "README mentions skill $sk" || fail "README missing skill $sk"
-done <<< "$disk_skills"
+if [[ -n "$facade_readme" ]]; then
+  while IFS= read -r sk; do
+    [[ -z "$sk" ]] && continue
+    grep -qF "$sk" "$facade_readme" && ok "README mentions skill $sk" || fail "README missing skill $sk"
+  done <<< "$disk_skills"
 
-for agent_file in "$CUR"/agents/*.md; do
-  [[ -f "$agent_file" ]] || continue
-  agent_name="$(grep -E '^name:\s*' "$agent_file" | head -1 | sed 's/^name:\s*//' | tr -d ' \r')"
-  [[ -z "$agent_name" ]] && continue
-  grep -qF "$agent_name" "$root_readme" && ok "README mentions agent $agent_name" \
-    || fail "README missing agent $agent_name"
-done
+  for agent_file in "$CUR"/agents/*.md; do
+    [[ -f "$agent_file" ]] || continue
+    agent_name="$(grep -E '^name:\s*' "$agent_file" | head -1 | sed 's/^name:\s*//' | tr -d ' \r')"
+    [[ -z "$agent_name" ]] && continue
+    grep -qF "$agent_name" "$facade_readme" && ok "README mentions agent $agent_name" \
+      || fail "README missing agent $agent_name"
+  done
+fi
 
 # 15. rules/local symlink resolves (.cursorGrowth/rules/local)
 repo_root="$(cd "$CUR/.." && pwd)"

@@ -1,21 +1,21 @@
 ---
 name: disk
 description: >-
-  磁盘快照（/disk）：结构化采集 HOME 与可配置路径占用，写入 .cursorGrowth/disk-snapshots/，
-  并与上次快照对比变动。说「磁盘快照」「空间变动」「disk snapshot」时也触发。
+  磁盘快照（无 slash · 关键词）：结构化采集 HOME 与可配置路径占用，写入 .cursorGrowth/disk-snapshots/，
+  并与上次快照对比变动。说「磁盘快照」「空间变动」「disk snapshot」时触发。
 disable-model-invocation: true
 ---
 
 # disk · 磁盘快照
 
-**工具技能**（非 plan/run 主路径）。**用这个**：占用快照与对比。**不是那个**：业务代码清理重构 → **refactor**；系统清理流程 → **`/maintain`**。
+**工具技能**（无 slash · 非 plan/run 主路径）。**用这个**：占用快照与对比。**不是那个**：业务代码清理重构 → **refactor**；系统清理流程 → **maintain** skill。
 
 结构化采集磁盘占用，写入 **`.cursorGrowth/disk-snapshots/`**（本地、**不提交 git**），支持对比两次快照的变动。
 
 ## 何时进入
 
-- 用户说 **`/disk`**
-- 「磁盘快照」「空间占用」「哪个目录变大了」「disk snapshot」
+- 用户说「磁盘快照」「空间占用」「哪个目录变大了」「disk snapshot」
+- `/master` 或关键词命中
 
 ## 流程（Agent 一次跑完）
 

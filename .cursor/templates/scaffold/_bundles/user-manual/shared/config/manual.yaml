@@ -1,0 +1,36 @@
+# Manual Contract · scaffold placeholder (edit after apply)
+# SSOT: user-manual skill · reference/manual-contract-schema.md
+
+manual:
+  id: user-guide
+  doc_path: docs/user-guide.md
+  assets_dir: docs/assets/user-guide
+  version: "0.1"
+  audiences:
+    - primary
+
+capture:
+  profile: web-spa-only
+  walkthrough_command: npm run test:e2e:manual
+  sync_command: bash scripts/docs/sync_manual_screenshots.sh
+  intermediate_dir: test-results/manual-walkthrough
+  env:
+    base_url: MANUAL_BASE_URL
+
+roles:
+  - id: primary
+    auth: env
+
+storylines:
+  - id: onboarding
+    title: Getting started
+    audience: primary
+    shots:
+      - file: 01_home.png
+        step: 1
+        highlights:
+          - '[data-testid="app-root"]'
+
+verify:
+  l1_script: bash scripts/verify/docs/verify_doc_manual.sh
+  anchors: []

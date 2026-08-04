@@ -24,9 +24,17 @@ AskQuestion 选项与关键词 → 下游 skill / agent / rules。
 | `pr` | PR 描述 / Review / babysit | **git** · **review** · `babysit` | collaboration |
 | `security` | 安全审查 | **security** | — |
 | `api` | API 设计 | **api** | `rules/execution/api.mdc` |
+<<<<<<< HEAD
 | `delivery` | 交付验收 / 上线前 | **delivery** | **用这个**上线走查；**不是** `/ia` 规划 |
+| `manual` | 使用说明书 / 配图 regen | **user-manual** `/manual` | **用这个**可发布操作手册；**不是** delivery 走查 |
+| `report` | 测试报告 / verify 汇总 | **test-report** `/report` | **用这个**可发布测试报告；**不是** test 写用例 |
 | `ux` | UX / 体验不好 / 界面乱（未明 IA/交付） | **ux** | **用这个**分流；明导航→**ia** · 明上线→**delivery** |
 | `ia` | 信息架构 / 导航迷路 / 角色首页 | **ia** | **用这个**结构层；**不是** delivery 视觉抛光 |
+=======
+| `delivery` | 交付验收 / 上线前 | **delivery** · `/delivery` | **用这个**上线走查；**不是** ia 规划 |
+| `ux` | UX / 体验不好 / 界面乱（未明 IA/交付） | **ux**（无 slash） | **用这个**分流；明导航→**ia** · 明上线→**delivery** |
+| `ia` | 信息架构 / 导航迷路 / 角色首页 | **ia**（无 slash） | **用这个**结构层；**不是** delivery 视觉抛光 |
+>>>>>>> f3674bb (release: slash slim, drop java-gradle, portable verify (v4.25.0))
 | `docs` | 文档同步 | **plan** `DOC-*` 或直述 | `rules/execution/docs.mdc` |
 | `deps` | 依赖 / 选型 / vendor / submodule / **外网 Agent Skill** | 直述 + 规范 | `oss-first.mdc` · `submodule.mdc` · **security** §外部 Agent Skill · §DAILY/LIBRARY |
 | `config` | verify / 本地 rules / 母版自测 | 见 [扩展场景](#扩展场景) | `config/workflow.json` |
@@ -177,6 +185,8 @@ LIBRARY — 路径 + 何时手动选用
 |--------|------|
 | 调试、隔离、根因 | **debug** |
 | 测试、E2E、Playwright | **test** |
+| 使用说明书、用户手册、配图 regen、walkthrough 截图 | **user-manual** `/manual` |
+| 测试报告、全量测试、verify 报告、benchmark 报告 | **test-report** `/report` |
 | MCP、工具服务器 | **mcp** |
 | 重构 | **refactor** |
 | UX、体验、不好用、界面乱 | **ux** |
@@ -185,10 +195,10 @@ LIBRARY — 路径 + 何时手动选用
 | 代码回顾、REV | **review** · **review** agent |
 | 学新技术、study | **study**（≠ `/learn`） |
 | 调研只读、SPIKE | **spike** agent · **plan** `SPIKE-*` |
-| 周报、本周总结、weekly report | **week** · `/week` |
-| 磁盘快照、空间变动、disk snapshot | **disk** · `/disk` |
-| 环境维护、清理缓存、系统维护 | **maintain** · `/maintain` |
-| 做设计、mockup、landing page 视觉、.pen、生成海报/App 屏 | **pencil-design** · `/pencil-design` |
+| 周报、本周总结、weekly report | **week**（无 slash · 关键词） |
+| 磁盘快照、空间变动、disk snapshot | **disk**（无 slash · 关键词） |
+| 环境维护、清理缓存、系统维护 | **maintain**（无 slash · 关键词） |
+| 做设计、mockup、landing page 视觉、.pen、生成海报/App 屏 | **pencil-design**（无 slash · 关键词） |
 | 分支收尾、merge、开 PR、打 tag | **release** · **git** |
 | PR 评论、CI 循环 | `babysit`（`more` → `git`） |
 | 拆 PR、大 diff | `split-to-prs`（`more` → `git`） |
@@ -201,7 +211,9 @@ README 场景速查中无独立主菜单、经 `more` → `config` 或关键词�
 |-------|------|
 | 配置或排查 verify | `config/workflow.json` · `./.cursor/bin/runner.sh verify` · `rules/feedback/verify.mdc` |
 | 加项目私有 rules | `.cursor/rules/local/`（目标项目自建，不 commit 进母版） |
-| 验证 Super Cursor 母版完整性 | `bash .cursor/verify-super-cursor.sh` 或 `bash .cursor/bin/template-verify.sh` |
+| 验证 Super Cursor 母版 layout | `bash .cursor/verify-super-cursor.sh`（混合仓自动 hybrid · 纯空仓 mother） |
+| 验证母版交叉自洽（安装后项目） | `bash .cursor/bin/cursor-coherence.sh` |
+| 母版全量验收 | `bash .cursor/bin/template-verify.sh`（须用户明确授权才改母版 `.cursor/`） |
 | 自治 Sprint 连跑 | **plan** handoff `AUTONOMOUS:true`（默认）→ **`/run` 一次** → 同会话连跑 TASK；决策清单见 `autonomy-chain.md` |
 | 仅要规范不要闸门 | `workflow.json` → `workflow.enabled: false`（`rules-only` profile） |
 | 技术栈开发细则 | **run**/**plan** 执行时自动加载 `rules/tech/*` glob |
@@ -217,6 +229,8 @@ README 场景速查中无独立主菜单、经 `more` → `config` 或关键词�
 | 规划、Sprint、拆任务、TASK | **plan** |
 | 调研、POC、可行性、SPIKE | **plan** · `SPIKE-*` |
 | 只写文档、README、DOC | **plan** · `DOC-*` · `docs.mdc` |
+| 使用说明书、配图、manual regen | **user-manual** `/manual` |
+| 测试报告、QA 报告、全量回归报告 | **test-report** `/report` |
 | 归档、ROADMAP、Sprint 做完 | **plan** · `archive/` |
 | 继续、实现、ACTIVE | **run** |
 | 了解项目、learn、模块地图 | **learn**（≠ study） |
@@ -231,10 +245,10 @@ README 场景速查中无独立主菜单、经 `more` → `config` 或关键词�
 | 密钥、PII、鉴权、安全 | **more** → **security** |
 | REST、OpenAPI、接口 | **more** → **api** |
 | 交付验收、上线前、生产就绪、i18n、视觉一致性 | **more** → **delivery** · `/delivery` |
-| 周报、本周总结、CHANGELOG 汇总 | **week** · `/week` |
-| 磁盘快照、空间占用、哪个目录变大 | **disk** · `/disk` |
-| 环境维护、清理磁盘、dev maintenance | **maintain** · `/maintain` |
-| 做设计、mockup、视觉稿、.pen、海报、banner、App 屏 | **pencil-design** · `/pencil-design` |
+| 周报、本周总结、CHANGELOG 汇总 | **week**（无 slash · 关键词） |
+| 磁盘快照、空间占用、哪个目录变大 | **disk**（无 slash · 关键词） |
+| 环境维护、清理磁盘、dev maintenance | **maintain**（无 slash · 关键词） |
+| 做设计、mockup、视觉稿、.pen、海报、banner、App 屏 | **pencil-design**（无 slash · 关键词） |
 | submodule、vendor、依赖升级、开源选型、许可证、MIT、GPL | **more** → `deps`（`oss-first.mdc` · `submodule.mdc`） |
 | 外网 skill、安装 skill、发现 skill、有没有能做 X 的 skill | **more** → `deps` → **security** §外部 Agent Skill；个人目录安装须用户确认 |
 | DAILY、LIBRARY、裁剪 skill、精简规则、skill 太多、全量安装 | **more** → `deps` §DAILY/LIBRARY；结论可写入 **learn** |
@@ -252,7 +266,7 @@ README 场景速查中无独立主菜单、经 `more` → `config` 或关键词�
 | `PLANNING:true` | **plan**（继续规划） |
 | `task-verify` / `verify` 失败 | **fix** → **run**；仍失败 **plan** `⚠️` |
 | 用户贴 CHANGELOG / 说升版本 | **ship** |
-| 母版仓库 / 改 `.cursor/` 验收 | `template-verify.sh`（须用户明确授权才改母版） |
+| 母版仓库 / 改 `.cursor/` 验收 | `template-verify.sh` · 混合仓 layout 用 `verify-super-cursor.sh`（hybrid 自动） |
 
 ## 推荐路径（给用户看，一行）
 

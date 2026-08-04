@@ -9,4 +9,4 @@ description: 【高级】上线前 7 维验收（发版前可选 · 不替代 ta
 3. **§5 导航与 IA**：对照 `rules/execution/ia.mdc` R1–R4 · `docs/design/*-ia*`
 4. 输出 Blocker/High/Medium/Low；Blocker 须先报告再 **`/release`**
 
-结构规划 → **ia**；体验类型不明 → **`/ux`** 先分流。Agent 也可按 plan 自动选用，**不必死记**。
+结构规划 → **ia** skill；体验类型不明 → **ux** skill 先分流。Agent 也可按 plan 自动选用，**不必死记**。
