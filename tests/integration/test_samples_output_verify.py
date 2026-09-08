@@ -3,6 +3,7 @@ tests/samples DOCX 程序化验收（pytest 入口，CI 可跑）。
 """
 
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -14,6 +15,15 @@ from sample_output_checks import (  # isort: skip
 )
 
 SAMPLES_ROOT = Path(__file__).resolve().parents[1] / "samples"
+VALID_PNG = (SAMPLES_ROOT / "basic" / "1.png").read_bytes()
+
+
+def _mock_image_response() -> MagicMock:
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.headers = {"Content-Type": "image/png"}
+    mock_resp.iter_content.return_value = [VALID_PNG]
+    return mock_resp
 
 
 @pytest.fixture(scope="module")
@@ -24,14 +34,23 @@ def fresh_docx_dir(tmp_path_factory):
     out_root = tmp_path_factory.mktemp("samples_docx")
     converter = BaseConverter()
     mapping = {}
-    for md_path in list_sample_md_files(SAMPLES_ROOT):
-        key = rel_sample_key(md_path, SAMPLES_ROOT)
-        rel = Path(key)
-        docx_path = out_root / rel.parent / f"{md_path.stem}.docx"
-        docx_path.parent.mkdir(parents=True, exist_ok=True)
-        doc = converter.convert_file(md_path)
-        doc.save(str(docx_path))
-        mapping[key] = (md_path, docx_path)
+    mock_resp = _mock_image_response()
+    # Mermaid / LaTeX 依赖外网，CI 易抖动；与 test_full_conversion 一致走 mock。
+    with patch(
+        "mddocx.converter.elements.mermaid.requests.get",
+        return_value=mock_resp,
+    ), patch(
+        "mddocx.converter.elements.math.requests.get",
+        return_value=mock_resp,
+    ):
+        for md_path in list_sample_md_files(SAMPLES_ROOT):
+            key = rel_sample_key(md_path, SAMPLES_ROOT)
+            rel = Path(key)
+            docx_path = out_root / rel.parent / f"{md_path.stem}.docx"
+            docx_path.parent.mkdir(parents=True, exist_ok=True)
+            doc = converter.convert_file(md_path)
+            doc.save(str(docx_path))
+            mapping[key] = (md_path, docx_path)
     return mapping
 
 

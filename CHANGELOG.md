@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.5.54] - 2026-09-08
+
+### Fixed
+
+- CI：`test_samples_output_verify` 对 Mermaid/LaTeX 外网 mock，避免 mermaid.ink 抖动；flowcharts 验收改为统计 Mermaid 图注（DOCX 会合并相同 PNG）
+
 ## [0.5.53] - 2026-09-08
 
 ### Added

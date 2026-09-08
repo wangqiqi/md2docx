@@ -79,6 +79,18 @@ def validate_png_or_jpeg(blob: bytes) -> bool:
     return len(blob) >= 100
 
 
+def expect_mermaid_diagrams(min_count: int) -> Callable[[Document, str, List[bytes]], List[str]]:
+    """验收 Mermaid 图注数量（同一张 PNG 多次嵌入时 word/media 会去重，不宜只看 min_media）。"""
+
+    def _check(doc: Document, _text: str, _media_blobs: List[bytes]) -> List[str]:
+        captions = sum(1 for p in doc.paragraphs if p.text.strip().startswith("Mermaid "))
+        if captions < min_count:
+            return [f"Mermaid 图注过少: {captions} < {min_count}"]
+        return []
+
+    return _check
+
+
 # 键为相对 tests/samples/ 的路径（POSIX）
 EXPECTATIONS: dict[str, SampleExpectation] = {
     "basic/headings.md": SampleExpectation(
@@ -119,13 +131,14 @@ EXPECTATIONS: dict[str, SampleExpectation] = {
         text_contains=["分隔线", "任务列表"],
     ),
     "advanced/math.md": SampleExpectation(
-        min_media=4,
+        min_media=1,
         min_tables=1,
         text_contains=["数学公式", "(5)", "由上式 (5)"],
     ),
     "advanced/flowcharts.md": SampleExpectation(
-        min_media=5,
+        min_media=1,
         text_contains=["流程图", "时序图", "状态图", "甘特图", "饼图"],
+        custom=expect_mermaid_diagrams(5),
     ),
     "advanced/tables.md": SampleExpectation(
         min_tables=3,
