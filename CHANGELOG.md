@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.5.53] - 2026-09-08
+
+### Added
+
+- 可选 MCP 服务：`pip install mddocx[mcp]`（Python ≥3.10）· 命令 `mddocx-mcp` · 工具 `convert_md_to_docx` / `convert_md_file_to_docx`
+
 ## [0.5.52] - 2026-07-10
 
 ### Fixed

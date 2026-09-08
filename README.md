@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.5.52-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.52)
+[![Version](https://img.shields.io/badge/version-0.5.53-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.53)
 [![Cursor AI Rules](https://img.shields.io/badge/Cursor%20AI%20Rules-v3.0.0-green.svg)](https://github.com/wangqiqi/cursor-ai-rules)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
@@ -144,8 +144,38 @@ pip install .
 
 - **`pyproject.toml`**：项目配置与依赖管理（唯一依赖源）
 - **复杂 HTML**（Markdown 内嵌 `<table>` / `<div>` 等）：可选安装 `pip install mddocx[html]`，引入 [html-for-docx](https://pypi.org/project/html-for-docx/)（PyPI 包名 `html-for-docx`，import `html4docx`）。未安装时仍可用自研解析处理简单标签。
+- **MCP（Cursor / Agent）**：可选安装 `pip install mddocx[mcp]`（**Python ≥3.10**），启动 `mddocx-mcp` 注册到 Cursor。示例配置见 [`examples/mcp-cursor.json`](examples/mcp-cursor.json)。工具：`convert_md_to_docx`（文本）、`convert_md_file_to_docx`（文件路径）。
 
 ## 使用方法
+
+### MCP（Cursor Agent）
+
+将 Markdown 转为 DOCX 供 Agent 调用（与 CLI 共用同一转换引擎）：
+
+```bash
+pip install mddocx[mcp]
+```
+
+在 Cursor 的 MCP 配置中加入（或合并 [`examples/mcp-cursor.json`](examples/mcp-cursor.json)）：
+
+```json
+{
+  "mcpServers": {
+    "mddocx": {
+      "command": "mddocx-mcp",
+      "args": []
+    }
+  }
+}
+```
+
+| 工具 | 用途 |
+|------|------|
+| `convert_md_to_docx` | Markdown 字符串 → 指定 `output_path` |
+| `convert_md_file_to_docx` | 磁盘上的 `.md` 文件 → DOCX（`output_path` 可省略） |
+
+> Mermaid / LaTeX 块仍需访问 mermaid.ink、latex.codecogs.com。深度编辑已有 DOCX 请用专用 docx 工具，不要用本 MCP。
+
 
 ### Mermaid 流程图
 
