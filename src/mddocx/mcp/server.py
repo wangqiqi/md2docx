@@ -19,8 +19,7 @@ def create_server() -> "MCPServer":
     """Build and register MCP tools. Requires ``pip install mddocx[mcp]`` (Python >=3.10)."""
     if MCPServer is None:
         raise ImportError(
-            "MCP support requires: pip install 'mddocx[mcp]' (Python >=3.10). "
-            f"Original error: {_MCP_IMPORT_ERROR}"
+            "MCP support requires: pip install 'mddocx[mcp]' (Python >=3.10). " f"Original error: {_MCP_IMPORT_ERROR}"
         ) from _MCP_IMPORT_ERROR
 
     app = MCPServer(
