@@ -3,7 +3,15 @@
 ## 1. 安装
 
 ```bash
+# 方式 A：指定目标路径
 ./install-super-cursor.sh /path/to/your-project --profile full
+
+# 方式 B：母版首次 setup-shell，之后任意目录 install
+cd /path/to/cursor-ai && ./install-super-cursor.sh --setup-shell
+source ~/.bashrc
+cd /path/to/your-project/src/any/deep/dir
+install-super-cursor --replace
+
 cd /path/to/your-project
 ```
 
@@ -12,8 +20,8 @@ cd /path/to/your-project
 | 层 | Slash |
 |----|-------|
 | 【日常】 | `/run` · `/plan` · `/master` |
-| 【生命周期】 | `/scaffold` · `/learn` · `/release` |
-| 【高级】 | `/delivery`（其余如 ux/ia/debug → skill-only） |
+| 【生命周期】 | `/scaffold` · `/learn` · `/long` · `/release` |
+| 【高级】 | `/delivery` · `/manual` · `/report`（ux/ia/debug 等 → skill-only） |
 
 | profile | 适合 |
 |---------|------|
@@ -47,7 +55,10 @@ cd /path/to/your-project
 
 ```
 /run
+/long              # Epic 长程：多 Sprint plan/run 链（单 Sprint 跳过）
 /delivery          # UI/功能 Sprint：release 或发版前建议走查
+/manual            # 可发布使用说明书（可选）
+/report            # verify 绿后测试报告汇总（可选）
 /release           # merge / PR / 打 tag（可选）
 ./.cursor/bin/runner.sh verify
 release / ship

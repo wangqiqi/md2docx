@@ -8,7 +8,7 @@ Super Cursor 命名：**短、见名知意、不与 Cursor 内置冲突**。
 |------|--------|------|
 | Skill | `master` `plan` `run` `learn` `scaffold` `git` `release` `security` `api` | `shell` `loop` `canvas` `sdk`…（见下） |
 | Agent | **`ship`**（发版 subagent） | **`release`**（Cursor 内置 subagent） |
-| Command | **【日常】** `/run` `/plan` `/master` · **【生命周期】** `/scaffold` `/learn` `/release` · **【高级】** `/delivery`（其余 skill 无 slash） |
+| Command | **【日常】** `/run` `/plan` `/master` · **【生命周期】** `/scaffold` `/learn` `/long` `/release` · **【高级】** `/delivery` `/manual` `/report`（其余 skill 无 slash） |
 | Config | `workflow.json` `release.json` | — |
 | Hooks 脚本 | `growth-init` `run-start` `run-stop` | 事件名用官方：`sessionStart` `stop` 等 |
 
@@ -41,7 +41,7 @@ Cursor Task 体系有内置 subagent **`release`**。项目 `.cursor/agents/rele
 | `run` | 执行 skill + `/run` | Agent 一次 run（口语） |
 | `release` | Sprint 出口 **skill**（§分支 + §打版） | 内置 **release** subagent（我们用 `ship` 代替） |
 | `review` | 项目 **review** skill + **review** agent（REV-* · PR 清单） | 全局 `~/.cursor/skills-cursor/review`（路由 Bugbot / Security Review） |
-| `week` · `disk` · `maintain` · `ux` · `ia` · `debug` | **skill-only**（无 project command） | 关键词 / `@skill` / Agent 自动选用 |
+| `week` · `disk` · `maintain` · `code-stats-viz` · `ux` · `ia` · `debug` | **skill-only**（无 project command） | 关键词 / `@skill` / Agent 自动选用 |
 
 ## 官方工具与模型差异（Agent 须知）
 
@@ -60,8 +60,8 @@ Cursor Task 体系有内置 subagent **`release`**。项目 `.cursor/agents/rele
 ```text
 你记的 slash          commands/*.md（薄）     skills/*.md（SOP）
 【日常】/run /plan /master ────────────────→ run · plan · master
-【生命周期】/scaffold /learn /release ─────→ scaffold · learn · release
-【高级】/delivery ─────────────────────────→ delivery
+【生命周期】/scaffold /learn /long /release → scaffold · learn · long · release
+【高级】/delivery /manual /report ─────────→ delivery · user-manual · test-report
 ux · ia · debug · review · week · disk … ──→ Agent 按意图自动读 skill（无 slash）
 git · test · api · security … ─────────────→ 同上（无 slash）
 

@@ -45,7 +45,7 @@ Project behavior here — not in rules/skills. Learned knowledge → `.cursorGro
 
 Install profiles（`install-super-cursor.sh --profile`）:
 
-| profile | workflow | hooks | 工具技能 week/disk/maintain |
+| profile | workflow | hooks | 工具技能 week/disk/maintain/code-stats-viz |
 |---------|----------|-------|------------------------------|
 | `full` | enabled | enabled | 默认提供（slash + skill；非 plan/run 主路径） |
 | `lite` | enabled | disabled | 磁盘上可有；文档不强调为日常必选 |

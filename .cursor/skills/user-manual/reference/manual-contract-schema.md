@@ -62,6 +62,8 @@ verify:      # L1/L2 验收
 
 ### `shots[]`
 
+**仅 walkthrough 实机截图**；概念示意图用正文 Mermaid，**不**列入 `shots`（见 `pipeline.md` §示意图）。
+
 | 字段 | 类型 | 说明 |
 |------|------|------|
 | `file` | string | PNG 文件名（含扩展名） |

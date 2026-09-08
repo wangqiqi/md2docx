@@ -16,7 +16,8 @@
 在 `PLANNING:true` 完成后再进入阶段 2。用 **AskQuestion**（不可用 → 正文选项；见 **master**「AskQuestion 约定」）与用户确认：
 
 - [ ] **SDD 模式** — Sprint 增量 / Greenfield / Brownfield / 文档（见 **plan** skill §SDD · `reference/sdd/source-map.md`）；Greenfield 须 spec + **clarify** 再技术 plan
-- [ ] **Goal** — 本 Sprint 要交付什么（一句话）
+- [ ] **Goal** — 本 Sprint 要交付什么（一句话 · **须为能力/模块增量**；见 §Sprint 立项门禁）
+- [ ] **Goal 类型** — 能力交付 vs 流程收尾？若为打 tag/merge/专归档 → **不立项**，改 **`/release`** 或并入当前 Sprint（`reference/sprint-goal-gate.md`）
 - [ ] **Done when** — 怎样算 Sprint 完成（可执行 verify 命令 + P0 全 ✅）
 - [ ] **与候选表对齐** — 从 plan「下一 Sprint」立项则删对应候选行；新主题直接写 Active；**候选 >1 行** → 可选 **`reference/prioritization.md`** 排序
 - [ ] **Scope / 非目标** — 本轮明确不做什么（防 scope creep）
@@ -30,12 +31,14 @@
 
 **Done when 勾选项（自然语言，不必记 skill 名）** — 与用户确认后写入 Sprint 头部：
 
+> **注意**：下列「合并/PR」「打 tag」是 **Sprint 完成后的出口动作**（`/release`），**不是** Sprint Goal 本身。Goal 须写**建造什么**，勿写「打版」「release」。
+
 | 勾选意图 | 写入 Done when 示例 |
 |----------|---------------------|
 | 验收脚本绿 | `bash <项目 verify>` 或 plan `VERIFY` 命令 |
 | 上线前走查 | 交付走查无 Blocker（UI/功能 Sprint） |
-| 合并/PR | Sprint 末 `/release` §分支 |
-| 打版本 tag | `/release` §打版 或 **ship** 自治发版 |
+| 合并/PR | Sprint 末 **`/release` §分支**（出口 · 非 Goal） |
+| 打版本 tag | **`/release` §打版** 或 **ship**（出口 · 非 Goal） |
 | 母版门面 | `bash .cursor/bin/cursor-coherence.sh` |
 
 阶段 1 产出写入 Sprint 区块头部（**Goal** · **Done when** · 可选 **Out of scope**），**此时仍不写** TASK 表。
@@ -70,7 +73,10 @@
 | 过粗 | 合适 | 过细 |
 |------|------|------|
 | 一条 TASK 跨多个 Theme / 无单一验收 | 一 TASK ≈ 一可验证增量 | 改一行文案、单文件 typo 单独成 TASK |
+| **整个 Sprint 仅为打 tag/merge/归档**（仪式型 Sprint） | 一 Sprint ≈ 一块能力/模块交付 | 每个子步骤都占一个 ID |
 | Sprint 内 >15 条且难排顺序 | Task 列可用 `[主题]` 前缀分组，**ID 仍扁平** | 每个子步骤都占一个 ID |
+
+Sprint Goal 合格性 → `reference/sprint-goal-gate.md`。
 
 Sprint 表 + **执行顺序** 行：`TASK-001` → `TASK-002` → …
 

@@ -48,6 +48,7 @@ slash 菜单按 **【日常】→【生命周期】→【高级】** 标注；Ag
 |---------|--------|-------|
 | `/scaffold` | 空仓库建栈 · 已有项目 audit | scaffold |
 | `/learn` | 让 Agent 了解本项目；可据证据**建议约定**（落 Growth / local，不擅自改 `.cursor/`） | learn |
+| `/long` | Epic 长程 · 多 Sprint plan/run 链 · checkpoint 续跑 | long |
 | `/release` | merge / PR / 打 tag（Sprint 出口） | release |
 
 ### 【高级】按需
@@ -58,7 +59,7 @@ slash 菜单按 **【日常】→【生命周期】→【高级】** 标注；Ag
 | `/manual` | 可发布软件使用说明书 · 配图 regen（**不是** delivery 走查） | user-manual |
 | `/report` | 全量/分层测试报告 · verify 后汇总（**不是** 写测试） | test-report |
 
-**无 slash · skill-only**（Agent 按意图自动选用，或 `@` / 关键词）：**ux** · **ia** · **debug** · **review** · **week** · **disk** · **maintain** · **pencil-design**（以及 api/git/test/…）。
+**无 slash · skill-only**（Agent 按意图自动选用，或 `@` / 关键词）：**ux** · **ia** · **debug** · **review** · **week** · **disk** · **maintain** · **code-stats-viz** · **pencil-design**（以及 api/git/test/…）。
 
 ## 使用场景
 
@@ -70,6 +71,7 @@ slash 菜单按 **【日常】→【生命周期】→【高级】** 标注；Ag
 ```
 空仓库:  /master → /scaffold → /learn → /plan → /run → verify
 迭代:    /plan（先总后分、同层 MECE）→ /run **一次**（只沿 ACTIVE 分支连跑 TASK）
+长程:    /long <Epic> → 拆 Sprint → 每 Sprint plan+run → checkpoint；易断连可配系统 /loop
 卡住:    /master → fix → /run 或 /plan
 迷路:    /master（主菜单 7 项 → 子路由）
 ```
@@ -85,7 +87,7 @@ slash 菜单按 **【日常】→【生命周期】→【高级】** 标注；Ag
 
 治理：`constitution.mdc` · `evolution.mdc` · `config/roles.json`（12 人格 · 呼叫可解析 · Growth 会话态 · speech_examples；**skills 全员 full**）。  
 扩展 skills（主路径）：**ux** · **ia** · **debug** · **test** · **review** · **study** · **delivery** · **user-manual** · **test-report** · **mcp** · **refactor** · **perf**（入口见 `core.mdc`）。  
-**工具技能**（无 slash · 关键词触发）：**week** · **disk** · **maintain** · **pencil-design** — full 默认带；lite/rules-only 可不强调（见 `config/README`）。
+**工具技能**（无 slash · 关键词触发）：**week** · **disk** · **maintain** · **code-stats-viz** · **pencil-design** — full 默认带；lite/rules-only 可不强调（见 `config/README`）。
 
 ### 重复劳动 SOP（rules · 通用）
 

@@ -12,6 +12,8 @@ disable-model-invocation: true
 
 Sprint/Task 代码已绿、**run** 归档后：**先汇入主轨，再打版**。不替代日常 **git** commit 纪律。
 
+**不是 Sprint**：单独「打版 / 打 tag / merge」主题 — 见 **plan** `reference/sprint-goal-gate.md`；能力交付走 `/plan`，出口走本节。
+
 ```bash
 ./.cursor/bin/runner.sh task-verify   # 或 verify（Sprint 收尾）
 git status && git diff --stat

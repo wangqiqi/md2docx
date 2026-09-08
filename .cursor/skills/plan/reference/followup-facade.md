@@ -27,3 +27,15 @@
 - **推荐**：末位 P0 · Target `README.md` · Acceptance `bash .cursor/bin/cursor-coherence.sh`（与功能 TASK **同 Sprint**）
 - **或**：每个改 `.cursor/skills/` · `agents/` · `master/` 的 TASK，Target 列 **同时** 写 `README.md`（同 commit 增量同步）
 - **勿** 为补 README 单独开 Sprint，除非 Sprint Goal 本身就是文档重写
+
+### 仪式型 Sprint（release · tag · merge）
+
+与上节同类反模式 → **`reference/sprint-goal-gate.md`**：
+
+| 禁止单独 Sprint | 改走 |
+|-----------------|------|
+| 打 tag · 发版 · release | **`/release` §打版** |
+| merge · 开 PR | **`/release` §分支** |
+| 专更新 CHANGELOG / 归档 / verify | Sprint **Done when** 或 **run** 收尾 |
+
+Done when 可勾「打 tag」，但 **Goal 不得**写成「打版 Sprint」。

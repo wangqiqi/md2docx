@@ -11,6 +11,7 @@ alwaysApply: true
 |------|------|
 | **不确定 / 从哪开始** | **`/master`** → **master**（AskQuestion 路由；无工具则正文选项） |
 | 规划 | `/plan` → **plan** |
+| 长程 Epic | `/long` → **long**（多 Sprint plan/run 链；单 Sprint 仍用 plan+run） |
 | 执行 | `/run` → **run**（`AUTONOMOUS:true`：**一次 `/run` Sprint 连跑**；仅决策打断） |
 | 学习 | `/learn` → **learn**（本仓认知；≠ **study** 学技术） |
 | 脚手架 | `/scaffold` → **scaffold** |

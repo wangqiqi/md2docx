@@ -5,7 +5,7 @@ description: 可发布软件使用说明书（/manual）— 故事线 · 配图 
 
 # user-manual · 软件使用说明书
 
-**用这个**：生成或更新**可单独发布**的操作手册（故事线 + 实机截图 + 双层验收）。**不是那个**：上线前文档↔实现走查 → **`/delivery`**；行为红绿测试 → **test**；大改版 Sprint 编排 → **plan** `DOC-*`。
+**用这个**：生成或更新**可单独发布**的操作手册（故事线 + **实机截图** + 可选 **Mermaid 示意图** + 双层验收）。**不是那个**：上线前文档↔实现走查 → **`/delivery`**；行为红绿测试 → **test**；大改版 Sprint 编排 → **plan** `DOC-*`。
 
 母版正文**零**业务词、零演示账号、零具体仓库路径。项目命令与命名 → **Manual Contract**（`config/manual.yaml` 优先；无则 `learn/user-manual.md`）。
 
@@ -22,8 +22,9 @@ description: 可发布软件使用说明书（/manual）— 故事线 · 配图 
 1. **读 Contract** — `config/manual.yaml` 或 `learn/user-manual.md`；无则 AskQuestion + 用 `templates/manual-contract.example.yaml` 起草
 2. **提取 / 学习** — 按 `reference/extract-sources.md` 优先级补全 storylines · shots
 3. **门禁** — 项目 `verify` / `task-verify` 全绿后才 regen（发版档）；见 `reference/regen-gates.md`
-4. **Capture regen** — 按 `capture.profile` 跑 walkthrough → sync assets → 更新 doc
-5. **验收** — L1 脚本（文件/链接）+ L2 Reader Test（`reference/reader-test.md`）
+4. **Capture regen** — 按 `capture.profile` 跑 walkthrough → sync assets → 更新 doc（**仅** `storylines[].shots` 列出的实机图）
+5. **示意图** — 概念/数据流类图号 → 正文内嵌 **Mermaid**（见 `reference/pipeline.md` §示意图）；**不**进 walkthrough · **不**默认 `mmdc` 导 PNG
+6. **验收** — L1 脚本（文件/链接）+ L2 Reader Test（`reference/reader-test.md`）
 
 ## 与下游分工
 
@@ -53,3 +54,5 @@ Contract 未指定时：有 DOM/可访问树 → Playwright 系；仅窗口像�
 - 无 `verify` 绿仍声称「配图已更新」
 - 用 manual regen 替代 **delivery** 或 **task-verify**
 - 无 Contract 时编造故事线而不标 `inferred`
+- 把 **概念示意图** 登记进 `storylines[].shots` 或指望 walkthrough 产出（易缺 CJK 字体 → 方框乱码）
+- 无字体链的 `mmdc`/插件 **静默** 导出中文 PNG 嵌入手册（须显式配置 CJK 或改用 Mermaid 源码）

@@ -30,6 +30,7 @@ CLI：`.cursor/bin/runner.sh` — `gate-check` · `task-verify` · `verify` · `
 - 实现步骤留在 TASK 内部，不为单文件、字段或命令单独创建任务；
 - 仍需方案决策的内容使用 `SPIKE-*` / `Decision needed`，不得和实现 TASK 混合；
 - 若单 Sprint 的任务树需要超过 5 个同层节点，先重查分区轴；无法保持上下文闭合时拆 Sprint/Theme，而不是继续细切。
+- Sprint **Goal** 须为能力/模块交付；打 tag · merge · 专归档等 **出口动作** 不得单独立项 — 见 **plan** `reference/sprint-goal-gate.md` · **`/release`**。
 
 ## 任务 ID
 

@@ -40,8 +40,11 @@ go mod tidy
 
 ```text
 /run       → gate-check → 实现 → task-verify → commit → next-task
+/long      → Epic 多 Sprint：拆 Sprint + checkpoint（单 Sprint 跳过）
 ux / ia    → skill-only：体验分流 / 导航 IA（无 slash）
 /delivery  → （UI/功能）release 分支或发版前 7 维走查
+/manual    → 可发布使用说明书 · 配图 regen（可选）
+/report    → verify 绿后测试报告汇总（可选）
 /release   → merge / PR / 打 tag（可选）
 ```
 

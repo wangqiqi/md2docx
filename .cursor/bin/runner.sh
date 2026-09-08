@@ -223,6 +223,11 @@ plan_check() {
     echo "WARN: <!-- SPRINT --> 未设置"
     issues=$((issues + 1))
   fi
+  if [[ "$(plan_sprint_status)" == "active" ]] && plan_sprint_goal_ritual_only; then
+    echo "WARN: Sprint Goal 似仪式/出口动作（非能力交付）— 改 /release 或并入功能 Sprint（plan reference/sprint-goal-gate.md）"
+    echo "      Goal: $(plan_sprint_goal_text)"
+    issues=$((issues + 1))
+  fi
   if plan_planning; then
     echo "INFO: PLANNING=true — 仅 plan"
   elif [[ -z "$(plan_plan_approved)" ]]; then
