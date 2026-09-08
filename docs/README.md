@@ -1,16 +1,33 @@
 # md2docx 文档
 
-> **Sprint / 待办真源**：`.cursorGrowth/plan.md`（**本地文件，不入库**；非本目录）。  
-> **活路线图（产品 / 工程 backlog）**：`.cursorGrowth/ROADMAP.md`（**不入库**；与 plan 候选表同步）。
+本站由 [VitePress](https://vitepress.dev/) 构建，部署于 GitHub Pages。
 
-按序号阅读：
+## 在线阅读
 
-| 序号 | 文档 | 说明 |
-|------|------|------|
-| 01 | [架构设计](01_架构设计.md) | 项目结构、模块划分、版本路线 |
-| 02 | [开发指南](02_开发指南.md) | 环境搭建、编码规范、贡献流程 |
-| 03 | [测试指南](03_测试指南.md) | 测试分层、覆盖率、CI 验证 |
-| 04 | [API与部署](04_API与部署.md) | WebUI/API、Docker、安全说明 |
-| 05 | [CI/CD配置](05_CI_CD配置.md) | GitHub Actions 与质量门禁 |
-| 06 | [发布流程](06_发布流程.md) | PyPI 发布与检查清单 |
-| 07 | [版本工作流](07_版本工作流.md) | CHANGELOG、tag、版本号同步 |
+**https://wangqiqi.github.io/md2docx/**
+
+在仓库 **About → Website** 也可直接进入。
+
+## 本地预览
+
+```bash
+npm install
+npm run docs:dev
+```
+
+浏览器打开终端提示的本地地址（默认 `http://localhost:5173/md2docx/`）。
+
+## 指南目录
+
+| 文档 | 路径 |
+|------|------|
+| 架构设计 | [/guide/architecture](/guide/architecture) |
+| 开发指南 | [/guide/development](/guide/development) |
+| 测试指南 | [/guide/testing](/guide/testing) |
+| API 与部署 | [/guide/api-deployment](/guide/api-deployment) |
+| CI/CD 配置 | [/guide/ci-cd](/guide/ci-cd) |
+| 发布流程 | [/guide/release](/guide/release) |
+| 版本工作流 | [/guide/version-workflow](/guide/version-workflow) |
+
+> **Sprint / 待办真源**：`.cursorGrowth/plan.md`（本地，不入库）。  
+> **活路线图**：`.cursorGrowth/ROADMAP.md`（本地，不入库）。

@@ -398,7 +398,7 @@ src/mddocx/webui/
 Web界面提供了REST API接口：
 - `POST /convert` - 文档转换
 - `POST /preview` - 预览功能
-- 详细 API 文档见 [`04_API与部署.md`](04_API与部署.md)
+- 详细 API 文档见 [API 与部署](/guide/api-deployment)
 
 ### 部署Web界面
 ```bash

@@ -183,6 +183,6 @@ would reformat tests/integration/test_hr_integration.py
 
 ## 📚 相关链接
 
-- [通用CI/CD质量规范](../rules/ci_cd_quality.md) - 通用原则和规则
+- 通用 CI/CD 质量规范（项目内以本文与 `.github/workflows/` 为准）
 - [GitHub Actions官方文档](https://docs.github.com/en/actions)
 - [Flake8配置文档](https://flake8.pycqa.org/en/latest/user/configuration.html)

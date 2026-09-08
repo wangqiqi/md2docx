@@ -194,12 +194,13 @@ Closes #123
 ## 📚 文档更新
 
 ### 更新现有文档
-- 修改 `docs/` 目录下的相应文件
+- 修改 `docs/guide/` 下对应 Markdown 文件
+- 本地预览：`npm run docs:dev`
 - 保持文档与代码同步
 
 ### 添加新文档
-- 在 `docs/` 目录创建新文件
-- 更新 `README.md` 中的链接
+- 在 `docs/guide/` 创建新文件，并在 `docs/.vitepress/config.mts` 侧栏注册
+- 更新根 `README.md` 中的文档站链接（如需要）
 
 ## 🔄 开发工作流
 

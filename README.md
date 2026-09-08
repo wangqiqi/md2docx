@@ -66,7 +66,7 @@
 
 ## 规划与路线图
 
-📋 本地开发编排：`.cursorGrowth/plan.md`（**不入库**，jwplan/jwrun 自用）· 文档索引：[docs/README.md](docs/README.md)
+📋 本地开发编排：`.cursorGrowth/plan.md`（**不入库**，jwplan/jwrun 自用）· **在线文档**：<https://wangqiqi.github.io/md2docx/> · 源码：[docs/](docs/)
 
 **已完成 ✅:**
 - ✅ 专业测试体系 (321 测试，覆盖率 ≥85%，CI 持续验证)

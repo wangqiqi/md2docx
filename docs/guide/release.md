@@ -197,6 +197,6 @@ bash scripts/verify_pypi_version.sh 0.5.49
 
 ## 📚 相关链接
 
-- [通用发布管理规范](../rules/release_management.md) - 通用原则和规则
+- 通用发布管理规范（项目内未单独维护，以本文与 CHANGELOG 为准）
 - [PyPI官方文档](https://pypi.org/help/)
 - [Trusted Publisher指南](https://docs.pypi.org/trusted-publishers/)

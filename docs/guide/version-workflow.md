@@ -89,6 +89,6 @@ git push origin v0.4.3
 
 ## 📚 相关链接
 
-- [通用版本管理规范](../rules/version_management.md) - 通用原则和规则
+- 通用版本管理规范（项目内以本文与 `pyproject.toml` 为准）
 - [语义化版本规范](https://semver.org/)
 - [CHANGELOG格式规范](https://keepachangelog.com/)

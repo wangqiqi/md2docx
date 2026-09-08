@@ -167,4 +167,8 @@ archive/
 # Log files
 *.log
 
+node_modules/
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+
 plan.md

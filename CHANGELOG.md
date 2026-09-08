@@ -9,7 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- VitePress 中文文档站（`docs/` + `npm run docs:dev` / `docs:build`），部署至 GitHub Pages：<https://wangqiqi.github.io/md2docx/>
+- `scripts/verify_docs_site.sh` 文档站构建验收脚本
+- `.github/workflows/pages.yml`：`main` push 自动构建并发布 Pages
+
 ### Changed
+
+- 原 `docs/01–07_*.md` 迁入 `docs/guide/`；根 README 与 CONTRIBUTING 指向在线文档站
 
 ### Fixed
 
