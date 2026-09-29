@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.56] - 2026-09-29
+
 ### Added
 
 - VitePress 中文文档站（`docs/` + `npm run docs:dev` / `docs:build`），部署至 GitHub Pages：<https://wangqiqi.github.io/md2docx/>
@@ -41,6 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README 架构文档链接指向已迁移的 `docs/01_架构设计.md`
 - `.gitignore` 未忽略本地编排目录 `.dsh/`
 - `mypy` 门禁在 `python_version = 3.9` 下因 `tomllib` 缺失而误报，`mypy.ini` 放行该 import
+- 打包用例真实访问 PyPI 且未配重试，一次读超时就会让发布门禁假红；现加 `PIP_DEFAULT_TIMEOUT` / `PIP_RETRIES`
+- `scripts/verify_release_candidate.sh` 的运行时版本检查未把 `src` 加入 `sys.path`，升版后会命中环境里的旧安装而假红
 
 ## [0.5.55] - 2026-09-08
 
