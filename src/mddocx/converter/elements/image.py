@@ -3,15 +3,22 @@
 """
 
 import re
+from collections import OrderedDict
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Optional, Set, Tuple
 
-import requests
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.shared import Pt
+from docx.shared import Pt, RGBColor
 
-from ..security import MAX_IMAGE_BYTES, MAX_IMAGE_CACHE_ENTRIES, is_safe_remote_url, resolve_safe_local_path
+from ..security import (
+    MAX_IMAGE_BYTES,
+    MAX_IMAGE_CACHE_BYTES,
+    MAX_IMAGE_CACHE_ENTRIES,
+    fetch_remote_bytes,
+    is_safe_remote_url,
+    resolve_safe_local_path,
+)
 from .base import ElementConverter
 
 
@@ -20,7 +27,7 @@ class ImageConverter(ElementConverter):
 
     def __init__(self, base_converter: Optional[Any] = None) -> None:
         super().__init__(base_converter)
-        self._image_cache: dict[str, bytes] = {}
+        self._image_cache: "OrderedDict[str, bytes]" = OrderedDict()
         self._base_dir: Optional[Path] = None
         self._extra_allowed_dirs: Set[Path] = set()
 
@@ -31,6 +38,10 @@ class ImageConverter(ElementConverter):
     def set_extra_allowed_dirs(self, dirs: Set[Path]) -> None:
         """设置额外允许的本地图片根目录（如测试样例）"""
         self._extra_allowed_dirs = {d.resolve() for d in dirs}
+
+    def reset_state(self) -> None:
+        """清空图片字节缓存（新文档重新下载；base_dir 等配置保留）。"""
+        self._image_cache = OrderedDict()
 
     def convert(self, tokens: Tuple[Any, Any]) -> Optional[Any]:
         """转换图片元素
@@ -79,6 +90,7 @@ class ImageConverter(ElementConverter):
             if not image_data:
                 if debug:
                     print(f"无法获取图片数据: {src}")
+                self._add_failure_note(paragraph, src)
                 return paragraph
 
             # 添加图片到文档
@@ -106,7 +118,16 @@ class ImageConverter(ElementConverter):
         except Exception as e:
             if debug:
                 print(f"添加图片失败: {str(e)}")
+            self._add_failure_note(paragraph, src)
             return paragraph
+
+    def _add_failure_note(self, paragraph: Any, src: Any) -> None:
+        """图片获取/嵌入失败时留痕，避免内容静默丢失。"""
+        label = src if isinstance(src, str) else str(src)
+        note = paragraph.add_run(f"[图片加载失败: {label}]")
+        note.italic = True
+        note.font.size = Pt(9)
+        note.font.color.rgb = RGBColor(128, 128, 128)
 
     def convert_in_paragraph(self, paragraph: Any, token: Any, style: Optional[Any] = None) -> None:
         """在段落中转换图片
@@ -147,6 +168,7 @@ class ImageConverter(ElementConverter):
             if not image_data:
                 if debug:
                     print(f"无法获取图片数据: {src}")
+                self._add_failure_note(paragraph, src)
                 return
 
             # 添加图片到段落
@@ -164,13 +186,29 @@ class ImageConverter(ElementConverter):
         except Exception as e:
             if debug:
                 print(f"添加段落内图片失败: {str(e)}")
+            self._add_failure_note(paragraph, src)
+
+    def _cache_get(self, src: str) -> Optional[bytes]:
+        """读取缓存并标记为最近使用。"""
+        data = self._image_cache.get(src)
+        if data is None:
+            return None
+        self._image_cache.move_to_end(src)
+        return data
 
     def _cache_image(self, src: str, image_data: bytes) -> None:
-        """缓存图片数据，限制条目数量"""
-        if len(self._image_cache) >= MAX_IMAGE_CACHE_ENTRIES:
-            oldest_key = next(iter(self._image_cache))
-            del self._image_cache[oldest_key]
+        """缓存图片数据（LRU 淘汰，受条目数与总字节数双上限约束）"""
+        if not image_data:
+            return
+        if src in self._image_cache:
+            del self._image_cache[src]
         self._image_cache[src] = image_data
+        total_bytes = sum(len(data) for data in self._image_cache.values())
+        while self._image_cache and (
+            len(self._image_cache) > MAX_IMAGE_CACHE_ENTRIES or total_bytes > MAX_IMAGE_CACHE_BYTES
+        ):
+            _, evicted = self._image_cache.popitem(last=False)
+            total_bytes -= len(evicted)
 
     def _get_image_data(self, src: str) -> Optional[BytesIO]:
         """获取图片数据
@@ -181,29 +219,22 @@ class ImageConverter(ElementConverter):
         Returns:
             BytesIO: 图片数据流
         """
-        # 检查缓存
-        if src in self._image_cache:
-            return BytesIO(self._image_cache[src])
+        # 检查缓存（命中时标记为最近使用）
+        cached = self._cache_get(src)
+        if cached is not None:
+            return BytesIO(cached)
 
         try:
-            # 处理在线图片
+            # 处理在线图片（逐跳校验，避免重定向绕过 SSRF 防护）
             if src.startswith(("http://", "https://")):
-                if not is_safe_remote_url(src):
+                image_data = fetch_remote_bytes(
+                    src,
+                    validator=is_safe_remote_url,
+                    timeout=10,
+                    max_bytes=MAX_IMAGE_BYTES,
+                )
+                if not image_data:
                     return None
-                response = requests.get(src, timeout=10, stream=True)
-                if response.status_code != 200:
-                    return None
-                content_length = response.headers.get("Content-Length")
-                if content_length and int(content_length) > MAX_IMAGE_BYTES:
-                    return None
-                chunks = []
-                total = 0
-                for chunk in response.iter_content(chunk_size=8192):
-                    total += len(chunk)
-                    if total > MAX_IMAGE_BYTES:
-                        return None
-                    chunks.append(chunk)
-                image_data = b"".join(chunks)
                 self._cache_image(src, image_data)
                 return BytesIO(image_data)
 

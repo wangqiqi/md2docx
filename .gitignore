@@ -171,4 +171,7 @@ node_modules/
 docs/.vitepress/dist/
 docs/.vitepress/cache/
 
+# DSH 本地编排状态（不入库，同 .cursorGrowth/）
+.dsh/
+
 plan.md

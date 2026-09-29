@@ -66,3 +66,51 @@ class TestLargeFileHandling:
         a = base_converter.convert(md, chunked=False)
         b = base_converter.convert(md, chunked=True)
         assert len(a.paragraphs) == len(b.paragraphs)
+
+
+class TestChunkingFenceAwareness:
+    """围栏内的 "# " 不能被当作一级标题切分（否则分块后渲染会撕裂）。"""
+
+    FENCED = """# Title
+
+```bash
+# this is a comment
+echo hi
+```
+
+More text.
+"""
+
+    def test_no_split_inside_backtick_fence(self):
+        sections = split_markdown_sections(self.FENCED)
+        assert len(sections) == 1
+        assert sections[0] == self.FENCED
+
+    def test_no_split_inside_tilde_fence(self):
+        md = "# T\n\n~~~python\n# not a heading\n~~~\n"
+        assert len(split_markdown_sections(md)) == 1
+
+    def test_splits_again_after_fence_closes(self):
+        md = "# A\n\n```\n# not heading\n```\n\n# B\n\ntext\n"
+        sections = split_markdown_sections(md)
+        assert len(sections) == 2
+        assert sections[0].startswith("# A")
+        assert sections[1].startswith("# B")
+        assert "# not heading" in sections[0]
+
+    def test_indented_fence_marker_ignored(self):
+        """4 空格缩进是缩进代码块，不是围栏。"""
+        md = "# A\n\n    ```\n# B\n"
+        sections = split_markdown_sections(md)
+        assert len(sections) == 2
+
+    def test_chunked_matches_unchunked_for_fenced_code(self, base_converter):
+        """含 "# " 注释的代码块，分块与不分块渲染一致。"""
+        md = self.FENCED + "\n" + "filler\n\n" * 20
+        normal = base_converter.convert(md, chunked=False)
+        chunked = base_converter.convert(md, chunked=True)
+
+        normal_paras = [(p.style.name, p.text) for p in normal.paragraphs]
+        chunked_paras = [(p.style.name, p.text) for p in chunked.paragraphs]
+        assert chunked_paras == normal_paras
+        assert ("Code", "# this is a comment\necho hi") in chunked_paras

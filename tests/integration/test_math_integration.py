@@ -34,7 +34,7 @@ $$
 
 
 @patch("docx.text.run.Run.add_picture")
-@patch("mddocx.converter.elements.math.requests.get")
+@patch("mddocx.converter.security.requests.get")
 def test_math_integration_numbered_ref(mock_get, mock_add_picture, tmp_path):
     mock_resp = MagicMock()
     mock_resp.status_code = 200
@@ -53,7 +53,7 @@ def test_math_integration_numbered_ref(mock_get, mock_add_picture, tmp_path):
 
 
 @patch("docx.text.run.Run.add_picture")
-@patch("mddocx.converter.elements.math.requests.get")
+@patch("mddocx.converter.security.requests.get")
 def test_math_integration(mock_get, mock_add_picture, tmp_path):
     mock_resp = MagicMock()
     mock_resp.status_code = 200

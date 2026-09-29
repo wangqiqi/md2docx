@@ -52,7 +52,7 @@ class TestMathConverter:
         return conv
 
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.math.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_render_block(self, mock_get, mock_add_picture, converter):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -68,7 +68,7 @@ class TestMathConverter:
         mock_add_picture.assert_called_once()
 
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.math.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_render_inline(self, mock_get, mock_add_picture, converter):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -84,7 +84,7 @@ class TestMathConverter:
         assert mock_get.called
         mock_add_picture.assert_called_once()
 
-    @patch("mddocx.converter.elements.math.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_render_failure_fallback(self, mock_get, converter):
         mock_get.side_effect = Exception("network error")
 
@@ -96,10 +96,28 @@ class TestMathConverter:
         assert "渲染失败" in text
         assert "frac" in text
 
+    @patch("docx.text.run.Run.add_picture")
+    @patch("mddocx.converter.security.requests.get")
+    def test_duplicate_formula_fetches_once(self, mock_get, mock_add_picture, converter):
+        """同一文档内重复的公式只渲染一次（命中缓存）。"""
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.headers = {"Content-Type": "image/png"}
+        mock_resp.iter_content.return_value = [FAKE_PNG]
+        mock_get.return_value = mock_resp
+
+        for _ in range(3):
+            token = MagicMock()
+            token.content = r"E=mc^2"
+            converter.convert(token)
+
+        assert mock_get.call_count == 1
+        assert mock_add_picture.call_count == 3
+
 
 class TestMathRouting:
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.math.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_base_converter_inline_math(self, mock_get, mock_add_picture):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -112,7 +130,7 @@ class TestMathRouting:
         assert len(doc.paragraphs) >= 1
 
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.math.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_base_converter_block_math(self, mock_get, mock_add_picture):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -154,7 +172,7 @@ class TestEquationNumbering:
         return conv
 
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.math.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_block_equation_number_caption(self, mock_get, mock_add_picture, converter):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -172,7 +190,7 @@ class TestEquationNumbering:
         assert "(2)" in text
 
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.math.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_label_stripped_from_codecogs_request(self, mock_get, mock_add_picture, converter):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -190,7 +208,7 @@ class TestEquationNumbering:
 
 class TestEquationRef:
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.math.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_ref_resolves_after_labeled_block(self, mock_get, mock_add_picture):
         mock_resp = MagicMock()
         mock_resp.status_code = 200

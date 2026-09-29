@@ -235,3 +235,85 @@ def test_image_converter_with_base_converter():
 
     # 验证基础转换器被正确设置
     assert converter.base_converter == base_converter
+
+
+class TestImageCachePolicy:
+    """缓存受条目数与总字节数双上限约束，并按 LRU 淘汰。"""
+
+    def test_evicts_least_recently_used_entry(self, monkeypatch):
+        import mddocx.converter.elements.image as image_module
+
+        monkeypatch.setattr(image_module, "MAX_IMAGE_CACHE_ENTRIES", 2)
+        converter = ImageConverter()
+        converter._cache_image("a", b"1")
+        converter._cache_image("b", b"2")
+
+        assert converter._cache_get("a") == b"1"  # a 变为最近使用
+        converter._cache_image("c", b"3")
+
+        assert converter._cache_get("a") == b"1"
+        assert converter._cache_get("b") is None
+        assert converter._cache_get("c") == b"3"
+
+    def test_evicts_when_total_bytes_exceeded(self, monkeypatch):
+        import mddocx.converter.elements.image as image_module
+
+        monkeypatch.setattr(image_module, "MAX_IMAGE_CACHE_BYTES", 10)
+        converter = ImageConverter()
+        converter._cache_image("a", b"x" * 6)
+        converter._cache_image("b", b"y" * 6)
+
+        assert converter._cache_get("a") is None
+        assert converter._cache_get("b") == b"y" * 6
+
+    def test_oversized_single_entry_is_dropped(self, monkeypatch):
+        import mddocx.converter.elements.image as image_module
+
+        monkeypatch.setattr(image_module, "MAX_IMAGE_CACHE_BYTES", 4)
+        converter = ImageConverter()
+        converter._cache_image("a", b"x" * 10)
+
+        assert converter._cache_get("a") is None
+
+    def test_reset_state_clears_cache(self):
+        converter = ImageConverter()
+        converter._cache_image("a", b"1")
+
+        converter.reset_state()
+
+        assert converter._cache_get("a") is None
+
+
+class TestImageFailureVisibility:
+    """图片加载失败要留痕，不能静默丢内容。"""
+
+    @patch("requests.get")
+    def test_block_image_failure_adds_note(self, mock_get):
+        mock_get.side_effect = Exception("network down")
+
+        converter = ImageConverter()
+        converter.set_document(Document())
+
+        token = MagicMock()
+        token.type = "image"
+        token.attrs = {"src": "https://example.com/missing.png"}
+        token.content = "替代文字"
+
+        with patch("mddocx.converter.elements.image.is_safe_remote_url", return_value=True):
+            paragraph = converter.convert((token, token))
+
+        assert "图片加载失败" in paragraph.text
+
+    def test_inline_image_failure_adds_note(self):
+        converter = ImageConverter()
+        converter.set_document(Document())
+        paragraph = converter.doc.add_paragraph()
+
+        token = MagicMock()
+        token.type = "image"
+        token.attrs = {"src": "/nonexistent/absolute.png"}
+        token.content = "替代文字"
+
+        converter.convert_in_paragraph(paragraph, token)
+
+        assert "图片加载失败" in paragraph.text

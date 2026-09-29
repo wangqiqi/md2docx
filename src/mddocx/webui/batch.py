@@ -4,9 +4,6 @@ from __future__ import annotations
 
 import io
 import json
-import os
-import tempfile
-import uuid
 import zipfile
 from dataclasses import dataclass
 from typing import Callable, List, Optional, Sequence, Tuple
@@ -14,7 +11,7 @@ from typing import Callable, List, Optional, Sequence, Tuple
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
-from ..converter import BaseConverter
+from ..converter.security import markdown_utf8_byte_size
 from ..errors import (
     E_CONTENT_EMPTY,
     E_CONTENT_TOO_LARGE,
@@ -24,6 +21,7 @@ from ..errors import (
     error_from_exception,
     error_info,
 )
+from .converter_pool import get_converter
 
 
 @dataclass(frozen=True)
@@ -97,7 +95,7 @@ def _read_upload_text(
         info = error_info(E_CONTENT_EMPTY)
         return None, BatchFileError(filename, info.code, info.message)
 
-    if len(content) > max_text_size:
+    if markdown_utf8_byte_size(content) > max_text_size:
         info = error_info(E_CONTENT_TOO_LARGE)
         return None, BatchFileError(filename, info.code, info.message)
 
@@ -106,19 +104,11 @@ def _read_upload_text(
 
 def _convert_one(content: str, filename: str) -> Tuple[Optional[bytes], Optional[BatchFileError]]:
     try:
-        doc = BaseConverter().convert(content)
-        temp_name = f"md2docx_batch_{uuid.uuid4().hex}.docx"
-        temp_path = os.path.join(tempfile.gettempdir(), temp_name)
-        try:
-            doc.save(temp_path)
-            with open(temp_path, "rb") as handle:
-                return handle.read(), None
-        finally:
-            try:
-                if os.path.exists(temp_path):
-                    os.unlink(temp_path)
-            except OSError:
-                pass
+        doc = get_converter().convert(content)
+        # 直接序列化到内存，避免每个文件都落一次临时盘
+        buffer = io.BytesIO()
+        doc.save(buffer)
+        return buffer.getvalue(), None
     except MemoryError:
         info = error_info(E_MEMORY)
         return None, BatchFileError(filename, info.code, info.message)

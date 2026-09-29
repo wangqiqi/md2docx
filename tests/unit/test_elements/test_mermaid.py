@@ -135,7 +135,7 @@ class TestMermaidConverter:
         return token
 
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.mermaid.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_render_graph_embeds_image(self, mock_get, mock_add_picture, converter):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -151,7 +151,7 @@ class TestMermaidConverter:
         assert "Mermaid 流程图" in text
 
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.mermaid.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_render_sequence_embeds_image(self, mock_get, mock_add_picture, converter):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -166,7 +166,7 @@ class TestMermaidConverter:
         assert "Mermaid 时序图" in text
 
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.mermaid.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_render_gantt_embeds_image(self, mock_get, mock_add_picture, converter):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -181,7 +181,7 @@ class TestMermaidConverter:
         assert "Mermaid 甘特图" in text
 
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.mermaid.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_render_state_embeds_image(self, mock_get, mock_add_picture, converter):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -195,7 +195,7 @@ class TestMermaidConverter:
         assert "Mermaid 状态图" in text
 
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.mermaid.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_render_class_embeds_image(self, mock_get, mock_add_picture, converter):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -209,7 +209,7 @@ class TestMermaidConverter:
         assert "Mermaid 类图" in text
 
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.mermaid.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_render_pie_embeds_image(self, mock_get, mock_add_picture, converter):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -222,7 +222,7 @@ class TestMermaidConverter:
         text = "\n".join(p.text for p in converter.document.paragraphs)
         assert "Mermaid 饼图" in text
 
-    @patch("mddocx.converter.elements.mermaid.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_render_failure_fallback(self, mock_get, converter):
         mock_get.side_effect = Exception("network error")
 
@@ -231,6 +231,23 @@ class TestMermaidConverter:
         text = "\n".join(p.text for p in converter.document.paragraphs)
         assert "渲染失败" in text
         assert "graph TD" in text
+
+    @patch("docx.text.run.Run.add_picture")
+    @patch("mddocx.converter.security.requests.get")
+    def test_duplicate_diagram_fetches_once(self, mock_get, mock_add_picture, converter):
+        """同一文档内重复的图表只渲染一次（命中缓存）。"""
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.headers = {"Content-Type": "image/png"}
+        mock_resp.iter_content.return_value = [FAKE_PNG]
+        mock_get.return_value = mock_resp
+
+        token = self._make_token(SAMPLE_GRAPH)
+        for _ in range(3):
+            converter.convert(token)
+
+        assert mock_get.call_count == 1
+        assert mock_add_picture.call_count == 3
 
     def test_unsupported_type_fallback(self, converter):
         converter.convert(self._make_token("journey\n  title: Trip"))
@@ -245,7 +262,7 @@ class TestMermaidConverter:
             conv.convert(self._make_token(SAMPLE_GRAPH))
 
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.mermaid.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_embed_failure_falls_back_to_code(self, mock_get, mock_add_picture, converter):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -259,7 +276,7 @@ class TestMermaidConverter:
         text = "\n".join(p.text for p in converter.document.paragraphs)
         assert "渲染失败" in text
 
-    @patch("mddocx.converter.elements.mermaid.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_fetch_blocked_url(self, mock_get, converter):
         with patch(
             "mddocx.converter.elements.mermaid.is_allowed_mermaid_ink_url",
@@ -271,7 +288,7 @@ class TestMermaidConverter:
         text = "\n".join(p.text for p in converter.document.paragraphs)
         assert "渲染失败" in text
 
-    @patch("mddocx.converter.elements.mermaid.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_fetch_non_200(self, mock_get, converter):
         mock_resp = MagicMock()
         mock_resp.status_code = 500
@@ -281,7 +298,7 @@ class TestMermaidConverter:
 
         assert "渲染失败" in "\n".join(p.text for p in converter.document.paragraphs)
 
-    @patch("mddocx.converter.elements.mermaid.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_fetch_bad_content_type(self, mock_get, converter):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -292,7 +309,7 @@ class TestMermaidConverter:
 
         assert "渲染失败" in "\n".join(p.text for p in converter.document.paragraphs)
 
-    @patch("mddocx.converter.elements.mermaid.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_fetch_oversized_image(self, mock_get, converter):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
@@ -335,7 +352,7 @@ class TestMermaidConverter:
 
 class TestMermaidRouting:
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.mermaid.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_base_converter_routes_mermaid_fence(self, mock_get, mock_add_picture):
         mock_resp = MagicMock()
         mock_resp.status_code = 200

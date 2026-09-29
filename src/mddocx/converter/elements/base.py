@@ -27,6 +27,13 @@ class ElementConverter:
         """
         self.document = document
 
+    def reset_state(self) -> None:
+        """重置跨文档的实例状态（供 BaseConverter 复用时调用）。
+
+        默认无状态；有可变状态的转换器（列表编号、表格样式、图片缓存等）
+        应覆盖此方法。
+        """
+
     @property
     def doc(self) -> DocxDocument:
         """已设置的 DOCX 文档（未 set 时抛 ValueError）"""

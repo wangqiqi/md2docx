@@ -29,6 +29,10 @@ class TableConverter(ElementConverter):
         if base_converter:
             self.debug = base_converter.debug
 
+    def reset_state(self) -> None:
+        """清空单元格内联样式状态。"""
+        self.current_style = {}
+
     def convert(self, token: Any, tokens: Optional[List[Any]] = None) -> Optional[Table]:
         """转换表格token为DOCX表格
 

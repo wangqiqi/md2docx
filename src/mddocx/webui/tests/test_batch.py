@@ -143,3 +143,38 @@ class TestBatchConvert:
         contents = _read_zip(response.data)
         docx_names = sorted(name for name in contents if name.endswith(".docx"))
         assert docx_names == ["dup.docx", "dup_2.docx"]
+
+
+class TestUtf8ByteSizeLimits:
+    """限额必须按 UTF-8 字节数算：多字节字符下按字符数会低估体积。"""
+
+    def test_batch_upload_limit_counts_bytes_not_chars(self, client, monkeypatch):
+        from mddocx.webui import app as app_module
+
+        monkeypatch.setattr(app_module.config, "MAX_TEXT_CONTENT_SIZE", 5)
+        # "中文" = 2 字符但 6 字节，按字符数会漏过
+        files = [(BytesIO("中文".encode("utf-8")), "cn.md")]
+
+        response = _post_batch(client, files)
+
+        assert response.status_code == 200
+        payload = json.loads(_read_zip(response.data)["batch_errors.json"].decode("utf-8"))
+        assert payload["errors"][0]["code"] == "E_CONTENT_TOO_LARGE"
+
+    def test_preview_limit_counts_bytes_not_chars(self, client, monkeypatch):
+        from mddocx.webui import app as app_module
+
+        monkeypatch.setattr(app_module.config, "MAX_PREVIEW_CONTENT_SIZE", 5)
+
+        response = client.post("/preview", data={"markdown": "中文"})
+
+        assert "内容过大" in response.get_data(as_text=True)
+
+    def test_preview_accepts_content_within_byte_limit(self, client, monkeypatch):
+        from mddocx.webui import app as app_module
+
+        monkeypatch.setattr(app_module.config, "MAX_PREVIEW_CONTENT_SIZE", 5)
+
+        response = client.post("/preview", data={"markdown": "abc"})
+
+        assert "内容过大" not in response.get_data(as_text=True)

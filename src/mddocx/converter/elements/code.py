@@ -14,6 +14,10 @@ class CodeConverter(ElementConverter):
         super().__init__(base_converter)
         self._last_was_code = False
 
+    def reset_state(self) -> None:
+        """新文档不复用上一份文档的「连续代码块」状态。"""
+        self._last_was_code = False
+
     def set_document(self, document: DocxDocument) -> None:
         if document is None:
             raise ValueError("Document cannot be None")

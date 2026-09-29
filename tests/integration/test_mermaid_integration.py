@@ -22,7 +22,7 @@ graph TD
 """
 
 
-@patch("mddocx.converter.elements.mermaid.requests.get")
+@patch("mddocx.converter.security.requests.get")
 def test_mermaid_integration_graph_td(mock_get, tmp_path):
     mock_resp = MagicMock()
     mock_resp.status_code = 200
@@ -59,7 +59,7 @@ gantt
 """
 
 
-@patch("mddocx.converter.elements.mermaid.requests.get")
+@patch("mddocx.converter.security.requests.get")
 def test_mermaid_integration_sequence(mock_get, tmp_path):
     mock_resp = MagicMock()
     mock_resp.status_code = 200
@@ -75,7 +75,7 @@ def test_mermaid_integration_sequence(mock_get, tmp_path):
     assert mock_get.called
 
 
-@patch("mddocx.converter.elements.mermaid.requests.get")
+@patch("mddocx.converter.security.requests.get")
 def test_mermaid_integration_gantt(mock_get, tmp_path):
     mock_resp = MagicMock()
     mock_resp.status_code = 200
@@ -117,7 +117,7 @@ pie title Share
 """
 
 
-@patch("mddocx.converter.elements.mermaid.requests.get")
+@patch("mddocx.converter.security.requests.get")
 def test_mermaid_integration_state(mock_get, tmp_path):
     mock_resp = MagicMock()
     mock_resp.status_code = 200
@@ -132,7 +132,7 @@ def test_mermaid_integration_state(mock_get, tmp_path):
     assert mock_get.called
 
 
-@patch("mddocx.converter.elements.mermaid.requests.get")
+@patch("mddocx.converter.security.requests.get")
 def test_mermaid_integration_class(mock_get, tmp_path):
     mock_resp = MagicMock()
     mock_resp.status_code = 200
@@ -147,7 +147,7 @@ def test_mermaid_integration_class(mock_get, tmp_path):
     assert mock_get.called
 
 
-@patch("mddocx.converter.elements.mermaid.requests.get")
+@patch("mddocx.converter.security.requests.get")
 def test_mermaid_integration_pie(mock_get, tmp_path):
     mock_resp = MagicMock()
     mock_resp.status_code = 200

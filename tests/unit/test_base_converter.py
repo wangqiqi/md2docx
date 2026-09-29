@@ -17,7 +17,7 @@ FAKE_PNG = (
 
 class TestBaseConverterRouting:
     @patch("docx.text.run.Run.add_picture")
-    @patch("mddocx.converter.elements.mermaid.requests.get")
+    @patch("mddocx.converter.security.requests.get")
     def test_fence_mermaid_routes_to_mermaid(self, mock_get, mock_add_picture):
         mock_resp = MagicMock()
         mock_resp.status_code = 200

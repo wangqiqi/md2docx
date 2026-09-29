@@ -6,13 +6,13 @@ from io import BytesIO
 from typing import Any, Optional, cast
 from urllib.parse import quote
 
-import requests
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches, Pt, RGBColor
 from docx.text.paragraph import Paragraph
 
 from ..equation_labels import EquationRegistry, strip_label
-from ..security import MAX_IMAGE_BYTES, is_allowed_codecogs_url
+from ..render_cache import RenderCache
+from ..security import MAX_IMAGE_BYTES, fetch_remote_bytes, is_allowed_codecogs_url
 from .base import ElementConverter
 from .mermaid import _is_valid_image_payload
 
@@ -31,6 +31,11 @@ def build_codecogs_url(latex: str, inline: bool = False) -> str:
 
 class MathConverter(ElementConverter):
     """将 LaTeX 公式渲染为 PNG 并嵌入 DOCX"""
+
+    def __init__(self, base_converter: Optional[Any] = None) -> None:
+        super().__init__(base_converter)
+        # 同一文档内重复的公式不再重复请求 CodeCogs
+        self._render_cache = RenderCache()
 
     def convert(self, token: Any) -> None:
         """块级 math_block token"""
@@ -99,27 +104,24 @@ class MathConverter(ElementConverter):
         source = (latex or "").strip()
         if not source or len(source) > MAX_LATEX_SOURCE_LEN:
             return None
+
+        cache_key = f"{'inline' if inline else 'block'}:{source}"
+        cached = self._render_cache.get(cache_key)
+        if cached is not None:
+            return cached
+
         url = build_codecogs_url(source, inline=inline)
-        if not is_allowed_codecogs_url(url):
+        data = fetch_remote_bytes(
+            url,
+            validator=is_allowed_codecogs_url,
+            timeout=15,
+            max_bytes=MAX_IMAGE_BYTES,
+            content_type_prefix="image",
+        )
+        if not data or not _is_valid_image_payload(data):
             return None
-        try:
-            response = requests.get(url, timeout=15, stream=True)
-            if response.status_code != 200:
-                return None
-            content_type = response.headers.get("Content-Type", "")
-            if content_type and "image" not in content_type:
-                return None
-            chunks = []
-            total = 0
-            for chunk in response.iter_content(chunk_size=8192):
-                total += len(chunk)
-                if total > MAX_IMAGE_BYTES:
-                    return None
-                chunks.append(chunk)
-            data = b"".join(chunks)
-            return data if _is_valid_image_payload(data) else None
-        except Exception:
-            return None
+        self._render_cache.put(cache_key, data)
+        return data
 
     def _embed_block_image(self, image_data: bytes, equation_number: Optional[int] = None) -> None:
         paragraph = self.doc.add_paragraph()

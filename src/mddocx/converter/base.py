@@ -100,10 +100,9 @@ class BaseConverter:
         self._list_stack = []
         self._equation_registry = EquationRegistry()
         for converter in self.converters.values():
-            if hasattr(converter, "_last_was_code"):
-                converter._last_was_code = False
-            if hasattr(converter, "_image_cache"):
-                converter._image_cache = {}
+            reset = getattr(converter, "reset_state", None)
+            if callable(reset):
+                reset()
             if hasattr(converter, "set_document"):
                 converter.set_document(self.document)
 

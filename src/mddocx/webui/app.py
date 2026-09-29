@@ -7,10 +7,7 @@ import io
 import json
 import logging
 import mimetypes
-import os
 import re
-import tempfile
-import uuid
 from html import escape
 from typing import Optional
 from urllib.parse import quote
@@ -22,7 +19,7 @@ from markdown_it import MarkdownIt
 from mdit_py_plugins.dollarmath import dollarmath_plugin
 from werkzeug.utils import secure_filename
 
-from ..converter import BaseConverter
+from ..converter.security import markdown_utf8_byte_size
 from ..errors import (
     E_CONTENT_EMPTY,
     E_CONTENT_TOO_LARGE,
@@ -36,6 +33,7 @@ from ..errors import (
     error_info,
 )
 from .config import get_config
+from .converter_pool import get_converter
 
 # 与转换器保持一致的 Markdown 解析配置
 ALLOWED_PREVIEW_TAGS = [
@@ -87,8 +85,6 @@ def create_markdown_parser() -> MarkdownIt:
 
 
 md = create_markdown_parser()
-
-logging.basicConfig(level=logging.INFO)
 
 config = get_config()
 
@@ -185,43 +181,24 @@ def convert():
             flash_error(E_CONTENT_EMPTY)
             return redirect(url_for("index"))
 
-        if len(markdown_content) > config.MAX_TEXT_CONTENT_SIZE:
+        # 与转换器统一按 UTF-8 字节数比较（多字节字符下字符数会低估体积）
+        if markdown_utf8_byte_size(markdown_content) > config.MAX_TEXT_CONTENT_SIZE:
             flash_error(E_CONTENT_TOO_LARGE)
             return redirect(url_for("index"))
 
-        doc = BaseConverter().convert(markdown_content)
+        doc = get_converter().convert(markdown_content)
 
-        temp_filename = f"md2docx_{uuid.uuid4().hex}.docx"
-        temp_dir = tempfile.gettempdir()
-        docx_file_path = os.path.join(temp_dir, temp_filename)
+        # 直接写入内存流，避免临时文件中转与清理竞态
+        docx_buffer = io.BytesIO()
+        doc.save(docx_buffer)
+        docx_buffer.seek(0)
 
-        try:
-            doc.save(docx_file_path)
-
-            response = send_file(
-                docx_file_path,
-                as_attachment=True,
-                download_name="converted.docx",
-                mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            )
-
-            @response.call_on_close
-            def cleanup():
-                try:
-                    if os.path.exists(docx_file_path):
-                        os.unlink(docx_file_path)
-                except (OSError, IOError) as e:
-                    app.logger.warning(f"清理临时文件失败: {e}")
-
-            return response
-
-        except Exception as save_error:
-            try:
-                if os.path.exists(docx_file_path):
-                    os.unlink(docx_file_path)
-            except (OSError, IOError):
-                pass
-            raise save_error
+        return send_file(
+            docx_buffer,
+            as_attachment=True,
+            download_name="converted.docx",
+            mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        )
 
     except UnicodeDecodeError:
         flash_error(E_INPUT_ENCODING)
@@ -306,7 +283,7 @@ def preview():
         if not markdown_content or len(markdown_content.strip()) == 0:
             return _preview_placeholder("请输入Markdown内容")
 
-        if len(markdown_content) > config.MAX_PREVIEW_CONTENT_SIZE:
+        if markdown_utf8_byte_size(markdown_content) > config.MAX_PREVIEW_CONTENT_SIZE:
             return _preview_error(error_info(E_CONTENT_TOO_LARGE).format_user())
 
         preview_html = generate_preview_html(markdown_content.strip())
@@ -379,8 +356,11 @@ def add_security_headers(response):
     return response
 
 
-def main():
+def main() -> None:
     """命令行入口点"""
+    # 仅在作为脚本启动时配置根日志，避免 import 本模块时产生全局副作用
+    if not logging.getLogger().handlers:
+        logging.basicConfig(level=logging.INFO)
     app.run(debug=config.DEBUG, host=config.HOST, port=config.PORT)
 
 

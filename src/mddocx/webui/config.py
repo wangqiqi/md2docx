@@ -19,7 +19,7 @@ class Config:
     ALLOWED_EXTENSIONS = {"md", "markdown", "txt"}
     ALLOWED_MIME_TYPES = {"text/plain", "text/markdown", "text/x-markdown"}
 
-    # 内容限制
+    # 内容限制（均为 UTF-8 字节数，与转换器安全阈值口径一致）
     MAX_TEXT_CONTENT_SIZE = 5 * 1024 * 1024  # 5MB
     MAX_PREVIEW_CONTENT_SIZE = 2 * 1024 * 1024  # 2MB
     MAX_BATCH_FILES = 20

@@ -7,11 +7,11 @@ import json
 from io import BytesIO
 from typing import Any, Optional
 
-import requests
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches, Pt, RGBColor
 
-from ..security import MAX_IMAGE_BYTES, is_allowed_mermaid_ink_url
+from ..render_cache import RenderCache
+from ..security import MAX_IMAGE_BYTES, fetch_remote_bytes, is_allowed_mermaid_ink_url
 from .base import ElementConverter
 
 SUPPORTED_DIAGRAM_PREFIXES = (
@@ -76,6 +76,11 @@ def build_mermaid_ink_url(diagram: str, image_type: str = "png") -> str:
 class MermaidConverter(ElementConverter):
     """将 Mermaid 图表渲染为图片并嵌入 DOCX"""
 
+    def __init__(self, base_converter: Optional[Any] = None) -> None:
+        super().__init__(base_converter)
+        # 同一文档内重复的图表不再重复请求 mermaid.ink
+        self._render_cache = RenderCache()
+
     def convert(self, token: Any) -> None:
         if not self.document:
             raise ValueError("Document not set")
@@ -96,27 +101,22 @@ class MermaidConverter(ElementConverter):
         self._fallback_as_code(token, source)
 
     def _fetch_diagram_image(self, diagram: str) -> Optional[bytes]:
+        cached = self._render_cache.get(diagram)
+        if cached is not None:
+            return cached
+
         url = build_mermaid_ink_url(diagram)
-        if not is_allowed_mermaid_ink_url(url):
+        data = fetch_remote_bytes(
+            url,
+            validator=is_allowed_mermaid_ink_url,
+            timeout=15,
+            max_bytes=MAX_IMAGE_BYTES,
+            content_type_prefix="image",
+        )
+        if not data or not _is_valid_image_payload(data):
             return None
-        try:
-            response = requests.get(url, timeout=15, stream=True)
-            if response.status_code != 200:
-                return None
-            content_type = response.headers.get("Content-Type", "")
-            if content_type and "image" not in content_type:
-                return None
-            chunks = []
-            total = 0
-            for chunk in response.iter_content(chunk_size=8192):
-                total += len(chunk)
-                if total > MAX_IMAGE_BYTES:
-                    return None
-                chunks.append(chunk)
-            data = b"".join(chunks)
-            return data if _is_valid_image_payload(data) else None
-        except Exception:
-            return None
+        self._render_cache.put(diagram, data)
+        return data
 
     def _embed_image(self, image_data: bytes, kind: str = "流程图") -> None:
         paragraph = self.doc.add_paragraph()

@@ -37,10 +37,10 @@ def fresh_docx_dir(tmp_path_factory):
     mock_resp = _mock_image_response()
     # Mermaid / LaTeX 依赖外网，CI 易抖动；与 test_full_conversion 一致走 mock。
     with patch(
-        "mddocx.converter.elements.mermaid.requests.get",
+        "mddocx.converter.security.requests.get",
         return_value=mock_resp,
     ), patch(
-        "mddocx.converter.elements.math.requests.get",
+        "mddocx.converter.security.requests.get",
         return_value=mock_resp,
     ):
         for md_path in list_sample_md_files(SAMPLES_ROOT):

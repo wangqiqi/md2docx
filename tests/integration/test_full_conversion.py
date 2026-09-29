@@ -78,7 +78,7 @@ def test_convert_all_samples(converter, samples_dir, tmp_path):
 
 
 @patch("docx.text.run.Run.add_picture")
-@patch("mddocx.converter.elements.mermaid.requests.get")
+@patch("mddocx.converter.security.requests.get")
 def test_convert_advanced_samples(mock_get, mock_add_picture, converter, samples_advanced, tmp_path):
     """测试转换 advanced 样例（mermaid 走 mock）"""
     mock_resp = MagicMock()
@@ -105,7 +105,7 @@ def test_convert_advanced_samples(mock_get, mock_add_picture, converter, samples
 
 
 @patch("docx.text.run.Run.add_picture")
-@patch("mddocx.converter.elements.math.requests.get")
+@patch("mddocx.converter.security.requests.get")
 def test_convert_math_sample_label_ref(mock_get, mock_add_picture, converter, samples_advanced, tmp_path):
     """tests/samples/advanced/math.md \\label/\\ref 端到端（T-TEST-03-04）"""
     mock_resp = MagicMock()

@@ -5,8 +5,10 @@
 import ipaddress
 import socket
 from pathlib import Path
-from typing import Optional, Set
-from urllib.parse import urlparse
+from typing import Callable, Optional, Set
+from urllib.parse import urljoin, urlparse
+
+import requests
 
 # 允许下载的最大图片大小（10MB）
 MAX_IMAGE_BYTES = 10 * 1024 * 1024
@@ -20,9 +22,16 @@ CHUNKED_THRESHOLD = 512 * 1024
 # 图片缓存最大条目数
 MAX_IMAGE_CACHE_ENTRIES = 64
 
+# 图片缓存总字节上限（64 × 10MB 条目上限过宽，这里再兜一层内存）
+MAX_IMAGE_CACHE_BYTES = 64 * 1024 * 1024
+
 MERMAID_INK_HOST = "mermaid.ink"
 CODECOGS_HOST = "latex.codecogs.com"
 MAX_CODECOGS_URL_LEN = 8192
+
+# 远程资源下载的最大跳转次数与跳转状态码
+MAX_REDIRECTS = 3
+_REDIRECT_STATUSES = frozenset({301, 302, 303, 307, 308})
 
 
 class MarkdownTooLargeError(Exception):
@@ -139,6 +148,76 @@ def is_safe_remote_url(url: str) -> bool:
         return False
 
     return True
+
+
+def _read_limited(response: "requests.Response", max_bytes: int) -> Optional[bytes]:
+    """流式读取响应体；超过 max_bytes 立即放弃。"""
+    chunks = []
+    total = 0
+    for chunk in response.iter_content(chunk_size=8192):
+        total += len(chunk)
+        if total > max_bytes:
+            return None
+        chunks.append(chunk)
+    return b"".join(chunks)
+
+
+def fetch_remote_bytes(
+    url: str,
+    *,
+    validator: Callable[[str], bool],
+    timeout: float = 10.0,
+    max_bytes: int = MAX_IMAGE_BYTES,
+    content_type_prefix: Optional[str] = None,
+    max_redirects: int = MAX_REDIRECTS,
+) -> Optional[bytes]:
+    """下载远程资源，对每一跳重定向都重新做 URL 校验。
+
+    直接跟随重定向会让一个通过校验的公网 URL 302 到内网 / 云元数据地址
+    （SSRF），因此这里手动逐跳跟随并对新 URL 再次调用 ``validator``；跳转次数
+    超过 ``max_redirects`` 或任一步失败都返回 None。
+
+    Args:
+        url: 初始 URL
+        validator: URL 白名单校验函数（如 ``is_safe_remote_url`` / 固定域名校验）
+        timeout: 单次请求超时秒数
+        max_bytes: 响应体上限
+        content_type_prefix: 非空时要求 Content-Type 含该子串（如 ``image``）
+        max_redirects: 最大跳转次数
+    """
+    current = url
+    for _ in range(max_redirects + 1):
+        if not validator(current):
+            return None
+        try:
+            response = requests.get(current, timeout=timeout, stream=True, allow_redirects=False)
+        except Exception:
+            return None
+        try:
+            if response.status_code in _REDIRECT_STATUSES:
+                location = response.headers.get("Location")
+                if not location:
+                    return None
+                current = urljoin(current, location)
+                continue
+            if response.status_code != 200:
+                return None
+            content_type = response.headers.get("Content-Type", "")
+            if content_type_prefix and content_type and content_type_prefix not in content_type:
+                return None
+            content_length = response.headers.get("Content-Length")
+            if content_length:
+                try:
+                    if int(content_length) > max_bytes:
+                        return None
+                except (TypeError, ValueError):
+                    pass
+            return _read_limited(response, max_bytes)
+        except Exception:
+            return None
+        finally:
+            response.close()
+    return None
 
 
 def resolve_safe_local_path(

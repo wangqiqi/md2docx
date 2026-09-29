@@ -28,6 +28,13 @@ class ListConverter(ElementConverter):
         # 上一个处理的标记类型
         self._last_token_type: Optional[str] = None
 
+    def reset_state(self) -> None:
+        """清空跨文档的列表编号状态，避免编号/缩进延续到下一份文档。"""
+        self._current_lists = []
+        self._numbering_cache = {}
+        self._current_numbers = {}
+        self._last_token_type = None
+
     def convert(self, tokens: Tuple[Any, Any]) -> Paragraph:
         """转换列表元素
 

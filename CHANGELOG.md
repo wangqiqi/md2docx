@@ -12,12 +12,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - VitePress 中文文档站（`docs/` + `npm run docs:dev` / `docs:build`），部署至 GitHub Pages：<https://wangqiqi.github.io/md2docx/>
 - `scripts/verify_docs_site.sh` 文档站构建验收脚本
 - `.github/workflows/pages.yml`：`main` push 自动构建并发布 Pages
+- `RenderCache`：Mermaid / LaTeX 渲染结果 LRU 缓存（同一文档重复图表只请求一次）
+- `security.fetch_remote_bytes()`：受限远程下载器，逐跳校验 URL 并关闭自动重定向
+- WebUI 线程局部转换器复用（`webui/converter_pool.py`），省去每请求重建解析器与 13 个转换器
+- `ElementConverter.reset_state()`：转换器跨文档状态重置钩子
 
 ### Changed
 
 - 原 `docs/01–07_*.md` 迁入 `docs/guide/`；根 README 与 CONTRIBUTING 指向在线文档站
+- WebUI 单文件与批量转换改为内存 `BytesIO` 直出，去掉临时文件中转与 `call_on_close` 清理
+- `BaseConverter._reset_state()` 统一调用各转换器的 `reset_state()`（列表编号、表格样式等不再跨文档残留）
+- README 测试基线与 CI Python 版本对齐实际构建
 
 ### Fixed
+
+- 分块转换（>512KB）会把代码围栏内以 `# ` 开头的行误判为一级标题，撕裂围栏导致渲染错乱
+- SSRF：远程图片 / Mermaid / 公式下载未校验重定向目标，可被 302 绕过直达内网或云元数据地址
+- `requirements.txt` 指向的 `requirements-dev.txt` 缺失（断链）；`requirements-prod.txt` 漏 `mdit-py-plugins`（数学公式 ImportError）
+- README 架构文档链接指向已迁移的 `docs/01_架构设计.md`
+- `.gitignore` 未忽略本地编排目录 `.dsh/`
+- `mypy` 门禁在 `python_version = 3.9` 下因 `tomllib` 缺失而误报，`mypy.ini` 放行该 import
 
 ## [0.5.55] - 2026-09-08
 
