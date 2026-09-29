@@ -7,7 +7,7 @@ from mddocx.webui.app import app
 from mddocx.webui.config import get_config
 
 
-def main():
+def main() -> None:
     """主函数"""
     config = get_config()
     print("🚀 启动 Markdown to DOCX WebUI...")

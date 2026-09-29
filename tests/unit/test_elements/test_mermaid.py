@@ -100,7 +100,14 @@ class TestMermaidHelpers:
         assert _is_valid_image_payload(b"short") is False
         assert _is_valid_image_payload(FAKE_PNG) is True
         assert _is_valid_image_payload(b"\xff\xd8\xff" + b"x" * 100) is True
-        assert _is_valid_image_payload(b"x" * 100) is True
+        assert _is_valid_image_payload(b"GIF89a" + b"x" * 100) is True
+        assert _is_valid_image_payload(b"RIFF" + b"\x00" * 4 + b"WEBP" + b"x" * 10) is True
+
+    def test_rejects_non_image_payload(self):
+        """任意二进制 / HTML 错误页不能被当成图片（否则会污染缓存与嵌入）。"""
+        assert _is_valid_image_payload(b"x" * 100) is False
+        assert _is_valid_image_payload(b"<html><body>error</body></html>" + b"x" * 100) is False
+        assert _is_valid_image_payload(b"RIFF" + b"\x00" * 4 + b"WAVE" + b"x" * 10) is False
 
     def test_build_url_uses_mermaid_ink(self):
         url = build_mermaid_ink_url(SAMPLE_GRAPH)

@@ -11,7 +11,7 @@ _MCP_IMPORT_ERROR: Optional[ImportError] = None
 try:
     from mcp.server.mcpserver import MCPServer
 except ImportError as exc:
-    MCPServer = None  # type: ignore[misc, assignment]
+    MCPServer = None
     _MCP_IMPORT_ERROR = exc
 
 

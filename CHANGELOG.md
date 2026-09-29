@@ -23,11 +23,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - WebUI 单文件与批量转换改为内存 `BytesIO` 直出，去掉临时文件中转与 `call_on_close` 清理
 - `BaseConverter._reset_state()` 统一调用各转换器的 `reset_state()`（列表编号、表格样式等不再跨文档残留）
 - README 测试基线与 CI Python 版本对齐实际构建
+- CI 矩阵恢复为 3.8–3.12，并按 Python 版本条件安装 `[mcp]` extra（`mcp` 要求 Python ≥3.10）
+- mypy 门禁从 converter + 2 个模块扩展到 11 个模块（`cli` / `mcp` / `webui` / `config` 补齐注解）
+- WebUI 内容限额改按 UTF-8 字节数统计，与转换器 `MAX_MARKDOWN_BYTES` 口径一致
+- CI actions 升级：`checkout@v5` / `setup-python@v5` / `cache@v4` / `codecov-action@v4`
+- `logging.basicConfig()` 从 import 期移到 `main()`，避免 import 本包时产生全局日志副作用
 
 ### Fixed
 
 - 分块转换（>512KB）会把代码围栏内以 `# ` 开头的行误判为一级标题，撕裂围栏导致渲染错乱
 - SSRF：远程图片 / Mermaid / 公式下载未校验重定向目标，可被 302 绕过直达内网或云元数据地址
+- 图片缓存只有条目数上限（64 × 10MB = 最坏 640MB），现按 LRU + 64MB 总字节上限淘汰
+- 限流字典的客户端 key 永不回收，现超过跟踪上限后清理窗口已过期的条目
+- 图片加载失败静默返回空段落，现写入可见的「图片加载失败」提示
+- 渲染结果校验过弱：任意 ≥100 字节二进制都算图片，现改为按魔数白名单（PNG/JPEG/GIF/TIFF/BMP/WEBP）判定
 - `requirements.txt` 指向的 `requirements-dev.txt` 缺失（断链）；`requirements-prod.txt` 漏 `mdit-py-plugins`（数学公式 ImportError）
 - README 架构文档链接指向已迁移的 `docs/01_架构设计.md`
 - `.gitignore` 未忽略本地编排目录 `.dsh/`

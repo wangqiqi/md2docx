@@ -23,19 +23,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ['3.11', '3.12']
+        # 覆盖 pyproject 声明的最低版本（3.8）到当前最新；mcp extra 要求 Python ≥3.10
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Cache pip dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/pyproject.toml') }}
@@ -46,7 +48,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -e .[dev,mcp]
+        pip install -e .[dev]
+        # mcp extra 依赖 Python ≥3.10：低版本只验证核心与 WebUI
+        if python -c "import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)"; then
+          pip install -e .[mcp]
+        fi
 
     - name: Run tests with coverage
       run: |
@@ -54,7 +60,7 @@ jobs:
 
     - name: Upload coverage to Codecov
       if: matrix.python-version == '3.11' && github.event_name == 'pull_request'
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         file: ./coverage.xml
         flags: unittests
@@ -64,10 +70,10 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
 
@@ -87,7 +93,19 @@ jobs:
 
     - name: Run mypy (standalone modules)
       run: |
-        mypy --follow-imports=skip src/mddocx/errors.py src/mddocx/webui/rate_limit.py --config-file mypy.ini
+        mypy --follow-imports=skip \
+          src/mddocx/__init__.py \
+          src/mddocx/cli.py \
+          src/mddocx/errors.py \
+          src/mddocx/mcp/convert.py \
+          src/mddocx/mcp/server.py \
+          src/mddocx/webui/app.py \
+          src/mddocx/webui/batch.py \
+          src/mddocx/webui/config.py \
+          src/mddocx/webui/converter_pool.py \
+          src/mddocx/webui/rate_limit.py \
+          src/mddocx/webui/start_webui.py \
+          --config-file mypy.ini
 
     - name: Run isort check
       run: isort --check-only --diff src tests
@@ -105,10 +123,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
 

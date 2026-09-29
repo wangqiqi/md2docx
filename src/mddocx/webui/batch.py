@@ -148,13 +148,15 @@ def build_batch_zip(
                 max_text_size=max_text_size,
                 allowed_file=allowed_file,
             )
-            if read_error is not None:
-                errors.append(read_error)
+            if content is None:
+                if read_error is not None:
+                    errors.append(read_error)
                 continue
 
             docx_bytes, convert_error = _convert_one(content, display_name)
-            if convert_error is not None:
-                errors.append(convert_error)
+            if docx_bytes is None:
+                if convert_error is not None:
+                    errors.append(convert_error)
                 continue
 
             archive.writestr(_unique_docx_name(display_name, used_names), docx_bytes)

@@ -9,7 +9,7 @@ import logging
 import mimetypes
 import re
 from html import escape
-from typing import Optional
+from typing import Any, Optional
 from urllib.parse import quote
 
 import bleach
@@ -112,7 +112,7 @@ def parse_user_error(message: str) -> dict:
 app.jinja_env.globals["parse_user_error"] = parse_user_error
 
 
-def allowed_file(filename, file_obj=None):
+def allowed_file(filename: str, file_obj: Any = None) -> bool:
     """验证文件是否允许上传"""
     if "." not in filename:
         return False
@@ -136,7 +136,7 @@ def allowed_file(filename, file_obj=None):
 
 
 @app.route("/")
-def index():
+def index() -> str:
     """主页"""
     return render_template("index.html")
 
@@ -146,7 +146,7 @@ def flash_error(code: str, message: Optional[str] = None) -> None:
 
 
 @app.route("/convert", methods=["POST"])
-def convert():
+def convert() -> Any:
     """转换处理"""
     from .rate_limit import is_rate_limited
 
@@ -212,7 +212,7 @@ def convert():
 
 
 @app.route("/convert/batch", methods=["POST"])
-def convert_batch():
+def convert_batch() -> Any:
     """批量转换：多文件上传，返回 ZIP（含 batch_errors.json 失败清单）。"""
     from .batch import BatchRequestError, build_batch_zip
     from .rate_limit import is_rate_limited
@@ -257,7 +257,7 @@ def convert_batch():
 
 
 @app.route("/preview", methods=["POST"])
-def preview():
+def preview() -> str:
     """预览功能 - 只返回预览内容的HTML片段"""
     from .rate_limit import is_rate_limited
 
@@ -312,7 +312,7 @@ def sanitize_preview_html(html_content: str) -> str:
     )
 
 
-def generate_preview_html(markdown_content):
+def generate_preview_html(markdown_content: str) -> str:
     """生成预览HTML"""
     html_content = md.render(markdown_content)
     safe_html = sanitize_preview_html(html_content)
@@ -325,14 +325,14 @@ def generate_preview_html(markdown_content):
 
 
 @app.errorhandler(413)
-def too_large(e):
+def too_large(e: Any) -> Any:
     """文件过大错误"""
     flash_error(E_CONTENT_TOO_LARGE, "文件大小超过限制 (16MB)")
     return redirect(url_for("index"))
 
 
 @app.errorhandler(500)
-def internal_error(e):
+def internal_error(e: Any) -> Any:
     """服务器错误"""
     app.logger.error(f"服务器错误: {str(e)}", exc_info=True)
     flash_error(E_SERVER_ERROR)
@@ -340,7 +340,7 @@ def internal_error(e):
 
 
 @app.after_request
-def add_security_headers(response):
+def add_security_headers(response: Any) -> Any:
     """添加安全头"""
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"

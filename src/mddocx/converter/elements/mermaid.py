@@ -46,12 +46,29 @@ def mermaid_diagram_kind(source: str) -> str:
     return "图表"
 
 
+_IMAGE_MAGIC_PREFIXES = (
+    b"\x89PNG\r\n\x1a\n",  # PNG
+    b"\xff\xd8\xff",  # JPEG
+    b"GIF87a",
+    b"GIF89a",  # GIF
+    b"II*\x00",
+    b"MM\x00*",  # TIFF
+    b"BM",  # BMP
+)
+
+
 def _is_valid_image_payload(data: bytes) -> bool:
-    if len(data) < 8:
+    """按魔数判断渲染结果是否为可嵌入的图片。
+
+    非图片响应（HTML 错误页、任意二进制）必须在嵌入前被拒掉，否则
+    ``add_picture`` 抛错后只能走回退路径，且缓存里会存下垃圾数据。
+    """
+    if not data:
         return False
-    if data.startswith(b"\x89PNG\r\n\x1a\n") or data.startswith(b"\xff\xd8\xff"):
+    if any(data.startswith(prefix) for prefix in _IMAGE_MAGIC_PREFIXES):
         return True
-    return len(data) >= 100
+    # WEBP: RIFF....WEBP
+    return len(data) >= 12 and data.startswith(b"RIFF") and data[8:12] == b"WEBP"
 
 
 def is_supported_mermaid_diagram(source: str) -> bool:

@@ -3,6 +3,7 @@ WebUI 配置管理
 """
 
 import os
+from typing import Optional
 
 
 class Config:
@@ -45,7 +46,7 @@ class ProductionConfig(Config):
 
     # 在生产环境中需要设置环境变量
     @property
-    def SECRET_KEY(self):
+    def SECRET_KEY(self) -> str:  # type: ignore[override]
         key = os.environ.get("SECRET_KEY")
         if not key:
             raise ValueError("生产环境必须设置 SECRET_KEY 环境变量")
@@ -60,9 +61,9 @@ config = {
 }
 
 
-def get_config(config_name=None):
+def get_config(config_name: Optional[str] = None) -> Config:
     """获取配置类"""
     if config_name is None:
         config_name = os.environ.get("FLASK_ENV", "default")
 
-    return config.get(config_name, config["default"])()
+    return config[config_name]() if config_name in config else config["default"]()
