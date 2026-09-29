@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 import zipfile
@@ -15,6 +16,14 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 from pyproject_util import load_pyproject, project_version  # noqa: E402
+
+# 这两个用例会真实访问 PyPI；默认无重试时一次读超时就会让发布门禁假红
+_PIP_ENV = {
+    **os.environ,
+    "PIP_DEFAULT_TIMEOUT": "60",
+    "PIP_RETRIES": "5",
+    "PIP_DISABLE_PIP_VERSION_CHECK": "1",
+}
 
 
 def _pyproject_version() -> str:
@@ -45,6 +54,7 @@ def test_wheel_excludes_webui_tests(tmp_path: Path) -> None:
         check=True,
         capture_output=True,
         text=True,
+        env=_PIP_ENV,
     )
     wheels = list(outdir.glob("*.whl"))
     assert wheels, "expected at least one wheel"
@@ -65,10 +75,12 @@ def test_editable_install_with_old_setuptools(tmp_path: Path) -> None:
     subprocess.run(
         [str(pip), "install", "-q", "-U", "pip<25", "setuptools<70", "wheel"],
         check=True,
+        env=_PIP_ENV,
     )
     result = subprocess.run(
         [str(pip), "install", "-e", str(ROOT)],
         capture_output=True,
         text=True,
+        env=_PIP_ENV,
     )
     assert result.returncode == 0, result.stderr or result.stdout

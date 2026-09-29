@@ -100,6 +100,7 @@ echo "=== runtime version vs pyproject ==="
 "$PYTHON" -c "
 import sys
 sys.path.insert(0, 'scripts')
+sys.path.insert(0, 'src')  # 与 verify_release_alignment.py 一致：优先校验源码树版本，避免命中环境里的旧安装
 from pyproject_util import project_version
 import mddocx
 want = project_version()
