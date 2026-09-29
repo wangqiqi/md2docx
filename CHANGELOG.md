@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.57] - 2026-09-29
+
 ### Fixed
 
 - CI `mypy (standalone modules)`：`tomli` 是 `python_version<'3.11'` 的条件依赖，在 3.11 上缺失导致门禁失败；`mypy.ini` 放行 `tomli` 与可选 extra `mcp`
