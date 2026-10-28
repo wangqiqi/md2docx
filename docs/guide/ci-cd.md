@@ -188,6 +188,14 @@ METRICS_SOFT=1 bash scripts/check_convert_metrics.sh   # 仅调试：耗时 soft
 bash scripts/check_pip_audit.sh
 ```
 
+### 文档站依赖（npm audit）
+
+`docs-security` job 与 **Pages** 部署均运行 `bash scripts/check_npm_audit.sh`（`npm ci` + **`npm audit --audit-level=critical`**，registry 默认 `registry.npmjs.org`）。moderate/high 无上游 fix 时由 Dependabot 跟踪，不阻塞 critical 门禁。
+
+```bash
+bash scripts/check_npm_audit.sh
+```
+
 Dependabot 配置见 [`.github/dependabot.yml`](../../.github/dependabot.yml)（weekly · pip · GitHub Actions · npm）。报告渠道见 [`SECURITY.md`](../../SECURITY.md)。
 
 ## 🔧 CI/CD维护清单

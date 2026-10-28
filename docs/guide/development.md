@@ -269,6 +269,7 @@ CI `quality` job 已调用 `check_convert_metrics.sh`，且 **`METRICS_SOFT=0`**
 ### 发版前安全（SPRINT-SEC-01）
 
 - [ ] `bash scripts/check_pip_audit.sh` 绿（与 CI 同序：升级 `pip/setuptools/wheel` 后审计 `.[dev,mcp]`）
+- [ ] `bash scripts/check_npm_audit.sh` 绿（VitePress 文档站 · **critical** 硬失败 · 官方 registry 审计 API）
 - [ ] `pytest -q` 绿
 - [ ] 合并 Dependabot 安全 PR（若有）或记录 accepted risk
 - [ ] 更新 `CHANGELOG.md` · 见根目录 [`SECURITY.md`](../../SECURITY.md)

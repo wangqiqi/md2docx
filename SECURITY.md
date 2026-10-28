@@ -19,6 +19,8 @@ Please **do not** open a public issue for security-sensitive reports.
 
 - **Python**: CI runs [`pip-audit`](https://pypi.org/project/pip-audit/) after installing `pip install -e .[dev,mcp]` on a clean runner (see `.github/workflows/ci.yml`).
 - **Local check**: `bash scripts/check_pip_audit.sh`
+- **Docs (VitePress / npm)**: CI job `docs-security` and GitHub Pages workflow run `bash scripts/check_npm_audit.sh` (`npm audit --audit-level=critical` against `registry.npmjs.org`).
+- **Local docs check**: `bash scripts/check_npm_audit.sh` (Node.js 20+)
 - **Updates**: [Dependabot](https://docs.github.com/en/code-security/dependabot) opens weekly PRs for `pip`, GitHub Actions, and npm (VitePress docs).
 
-Before tagging a release, maintainers should run `bash scripts/check_pip_audit.sh` and `pytest -q` (see `docs/guide/development.md`).
+Before tagging a release, maintainers should run `bash scripts/check_pip_audit.sh`, `bash scripts/check_npm_audit.sh`, and `pytest -q` (see `docs/guide/development.md`).

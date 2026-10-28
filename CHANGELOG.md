@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.62] - 2026-10-28
+
+### Added
+
+- `scripts/check_npm_audit.sh` — VitePress 文档站 npm 依赖审计（critical 硬失败 · 官方 registry）
+- CI job **`docs-security`**；Pages 工作流在构建前 **`npm audit`**
+
+### Changed
+
+- `package-lock.json`：`npm audit fix`（source-map-js）
+- `SECURITY.md` · 开发/CI 文档 · README 对齐 npm 与 pip 双门禁
+
 ## [0.5.61] - 2026-10-28
 
 ### Changed

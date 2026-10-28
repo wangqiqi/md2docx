@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.5.61-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.61)
+[![Version](https://img.shields.io/badge/version-0.5.62-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.62)
 [![Cursor AI Rules](https://img.shields.io/badge/Super%20Cursor-v5.0.7-green.svg)](https://github.com/wangqiqi/cursor-ai)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
@@ -51,7 +51,7 @@
 
 ### 🔄 CI/CD 自动化
 - **GitHub Actions** - 多 Python 版本测试 (3.8-3.12，覆盖 `requires-python` 声明的下限)
-- **自动化检查** - 代码质量、格式、**pip-audit 依赖安全**
+- **自动化检查** - 代码质量、格式、**pip-audit** 与文档站 **npm audit**
 - **持续集成** - 每次提交自动验证
 
 ### 🛠️ 开发工具链
@@ -60,6 +60,7 @@
 - **flake8** - 代码风格和错误检查
 - **ConvertMetrics** — CI `quality` 对耗时回归 **硬门禁**（`METRICS_SOFT=0`）；本地 `bash scripts/check_convert_metrics.sh`
 - **pip-audit** — CI 与 `bash scripts/check_pip_audit.sh`（见 [SECURITY.md](SECURITY.md)）
+- **npm audit** — 文档站 CI/Pages 与 `bash scripts/check_npm_audit.sh`（critical 门禁）
 - **Dependabot** - 每周 pip / Actions / npm 依赖 PR
 
 ## 规划与路线图
@@ -77,6 +78,7 @@
 - ✅ ConvertMetrics 性能基线与 CI 门禁（E-METRICS-01）
 - ✅ html/mermaid 元素转换器热路径覆盖（E-COV-01）
 - ✅ WebUI 批量转换、阶段进度与结构化错误摘要（P-WEBUI-01）
+- ✅ 文档站 npm audit · CI `docs-security` · Pages 门禁（P-DOCS-01 / v0.5.62）
 - ✅ 依赖安全门禁 pip-audit · Dependabot · SECURITY.md（P-SEC-01 / v0.5.60）
 
 **规划中 📋:**
