@@ -8,7 +8,7 @@ from docx.enum.table import WD_ALIGN_VERTICAL
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
-from docx.shared import Inches
+from docx.shared import Inches, Pt
 from docx.table import Table, _Cell
 
 from .base import ElementConverter
@@ -271,62 +271,20 @@ class TableConverter(ElementConverter):
 
                 # 处理单元格内容
                 if cell_data["content"]:
-                    # 如果有基础转换器，使用它来处理内联内容
+                    p = cell.paragraphs[0]
                     if self.base_converter:
-                        p = cell.paragraphs[0]
                         for content_token in cell_data["content"]:
                             if hasattr(content_token, "type") and content_token.type == "inline":
-                                # 使用基础转换器处理内联内容
-                                if hasattr(self.base_converter, "_process_inline"):
-                                    self.base_converter._process_inline(content_token, p)
-                                # 直接处理内联内容（如果基础转换器没有_process_inline方法）
-                                elif hasattr(content_token, "children"):
-                                    for child in content_token.children:
-                                        if hasattr(child, "type"):
-                                            if child.type == "text":
-                                                run = p.add_run(child.content)
-                                                # 应用当前样式
-                                                if "bold" in self.current_style:
-                                                    run.bold = self.current_style["bold"]
-                                                if "italic" in self.current_style:
-                                                    run.italic = self.current_style["italic"]
-                                                if "strike" in self.current_style:
-                                                    run.font.strike = self.current_style["strike"]
-                                            elif child.type == "strong_open":
-                                                # 开始加粗
-                                                self.current_style = {"bold": True}
-                                            elif child.type == "strong_close":
-                                                # 结束加粗
-                                                self.current_style = {}
-                                            elif child.type == "em_open":
-                                                # 开始斜体
-                                                self.current_style = {"italic": True}
-                                            elif child.type == "em_close":
-                                                # 结束斜体
-                                                self.current_style = {}
-                                            elif child.type == "s_open":
-                                                # 开始删除线
-                                                self.current_style = {"strike": True}
-                                            elif child.type == "s_close":
-                                                # 结束删除线
-                                                self.current_style = {}
+                                self._render_inline_into_paragraph(p, content_token)
                             elif hasattr(content_token, "type") and content_token.type == "text":
                                 p.add_run(content_token.content)
-                            else:
-                                # 处理其他类型的内容
+                            elif hasattr(self.base_converter, "_process_token"):
                                 try:
-                                    # 尝试使用基础转换器处理
-                                    if hasattr(self.base_converter, "_process_token"):
-                                        self.base_converter._process_token(content_token, cell)
-                                    else:
-                                        # 简单文本处理
-                                        if hasattr(content_token, "content"):
-                                            p.add_run(content_token.content)
+                                    self.base_converter._process_token(content_token, cell)
                                 except Exception as e:
                                     if self.debug:
                                         print(f"处理单元格内容时出错: {e}")
                     else:
-                        # 简单文本处理
                         text = self._get_text_from_tokens(cell_data["content"])
                         cell.text = text
 
@@ -355,6 +313,72 @@ class TableConverter(ElementConverter):
             elif hasattr(token, "children"):
                 text += self._get_text_from_tokens(token.children)
         return text
+
+    def _render_inline_into_paragraph(self, paragraph: Any, inline_token: Any) -> None:
+        """Render markdown-it inline children into a table cell paragraph."""
+        if not hasattr(inline_token, "children") or not inline_token.children:
+            if hasattr(inline_token, "content"):
+                paragraph.add_run(inline_token.content)
+            return
+
+        current_text = ""
+        current_style: Dict[str, bool] = {"bold": False, "italic": False, "strike": False}
+
+        def flush_text() -> None:
+            nonlocal current_text
+            if not current_text:
+                return
+            run = paragraph.add_run(current_text)
+            run.bold = current_style["bold"]
+            run.italic = current_style["italic"]
+            run.font.strike = current_style["strike"]
+            current_text = ""
+
+        for child in inline_token.children:
+            ctype = getattr(child, "type", None)
+            if ctype == "text":
+                current_text += child.content
+            elif ctype == "strong_open":
+                flush_text()
+                current_style["bold"] = True
+            elif ctype == "strong_close":
+                flush_text()
+                current_style["bold"] = False
+            elif ctype == "em_open":
+                flush_text()
+                current_style["italic"] = True
+            elif ctype == "em_close":
+                flush_text()
+                current_style["italic"] = False
+            elif ctype == "s_open":
+                flush_text()
+                current_style["strike"] = True
+            elif ctype == "s_close":
+                flush_text()
+                current_style["strike"] = False
+            elif ctype == "code_inline":
+                flush_text()
+                run = paragraph.add_run(child.content)
+                run.bold = current_style["bold"]
+                run.italic = current_style["italic"]
+                run.font.strike = current_style["strike"]
+                run.font.name = "Consolas"
+                run.font.size = Pt(10)
+            elif ctype in ("softbreak", "hardbreak"):
+                flush_text()
+                paragraph.add_run().add_break()
+            elif ctype == "html_inline":
+                flush_text()
+                tag = (child.content or "").strip().lower()
+                if tag in ("<br>", "<br/>", "<br />"):
+                    paragraph.add_run().add_break()
+                elif tag:
+                    paragraph.add_run(child.content)
+            elif ctype == "math_inline":
+                flush_text()
+                paragraph.add_run(f"${child.content}$")
+
+        flush_text()
 
     def _set_cell_alignment(self, cell: _Cell, align: Optional[str]) -> None:
         """设置单元格水平对齐方式
