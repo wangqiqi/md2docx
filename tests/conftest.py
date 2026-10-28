@@ -47,6 +47,12 @@ def samples_advanced():
 
 
 @pytest.fixture
+def samples_quality():
+    """质量层样例（深嵌套列表 · 表格边角）"""
+    return TESTS_DIR / "samples" / "quality"
+
+
+@pytest.fixture
 def samples_root():
     """样例根目录（含 test.md）"""
     return TESTS_DIR / "samples"
