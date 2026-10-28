@@ -167,6 +167,18 @@ would reformat tests/integration/test_hr_integration.py
 - [ ] 分支保护规则配置
 - [ ] 状态徽章集成到README
 
+### 依赖安全（pip-audit）
+
+`quality` job 在安装 `pip install -e .[dev,mcp]` 前升级 `pip` / `setuptools` / `wheel`，随后运行 **`pip-audit`**（有已知漏洞则 job 失败）。
+
+本地复现：
+
+```bash
+bash scripts/check_pip_audit.sh
+```
+
+Dependabot 配置见 [`.github/dependabot.yml`](../../.github/dependabot.yml)（weekly · pip · GitHub Actions · npm）。报告渠道见 [`SECURITY.md`](../../SECURITY.md)。
+
 ## 🔧 CI/CD维护清单
 
 ### 定期检查

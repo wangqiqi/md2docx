@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.60] - 2026-10-28
+
+### Added
+
+- `.github/dependabot.yml`：weekly 更新 pip · GitHub Actions · npm（VitePress）
+- `scripts/check_pip_audit.sh`：干净 venv 复现 CI 的 `pip-audit` 门禁
+- 根目录 `SECURITY.md`：漏洞报告渠道与支持版本
+
+### Changed
+
+- CI `quality` job：`pip install -U pip setuptools wheel` 后运行 `pip-audit`（SPRINT-SEC-01）
+- `[dev]` 可选依赖增加 `pip-audit`；`docs/guide/ci-cd.md` · `development.md` · README 对齐
+
 ## [0.5.59] - 2026-10-28
 
 ### Fixed

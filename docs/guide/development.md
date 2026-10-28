@@ -264,6 +264,13 @@ print(m.duration_ms, m.input_bytes, m.chunked)
 
 CI `quality` job 已调用 `check_convert_metrics.sh`（默认 **`METRICS_SOFT=1`**，耗时回归只 WARN；发版或本地严检可用 **`METRICS_SOFT=0`**，见上表）。
 
+### 发版前安全（SPRINT-SEC-01）
+
+- [ ] `bash scripts/check_pip_audit.sh` 绿（与 CI 同序：升级 `pip/setuptools/wheel` 后审计 `.[dev,mcp]`）
+- [ ] `pytest -q` 绿
+- [ ] 合并 Dependabot 安全 PR（若有）或记录 accepted risk
+- [ ] 更新 `CHANGELOG.md` · 见根目录 [`SECURITY.md`](../../SECURITY.md)
+
 ### 常见调试场景
 1. **转换结果异常**: 检查元素转换器的输出
 2. **样式问题**: 验证DOCX样式设置
