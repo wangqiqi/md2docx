@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.70] - 2026-10-28
+
+### Added
+
+- Mermaid **journey** 与 **erDiagram**（ER 图）经 mermaid.ink 渲染嵌入 DOCX（SPRINT-MERMAID-01 / P-MERMAID-01）
+- `tests/samples/advanced/flowcharts.md` 用户旅程与 ER 样例 · 单测/集成测
+
 ## [0.5.69] - 2026-10-28
 
 ### Added

@@ -323,6 +323,7 @@ doc = converter.convert(text, chunked=False)   # 强制单次 parse
 ### 已实现缓存与复用
 
 - **RenderCache**（`converter/render_cache.py`）：Mermaid / LaTeX 渲染 PNG 共用 LRU（挂载在 `BaseConverter._render_cache`）
+- **Mermaid**（`converter/elements/mermaid.py`）：远程 [mermaid.ink](https://mermaid.ink) PNG 嵌入；支持 graph/flowchart、sequenceDiagram、gantt、stateDiagram、classDiagram、pie、**journey**、**erDiagram**（ER 图）；其它 diagram 类型保留源码并提示
 - **图片字节 LRU**（`ImageConverter`）：条目数 + 总字节双上限；跨文档 `reset_state` 清空
 - **converter_pool**（`converter/converter_pool.py`）：WebUI / CLI / MCP / 批量脚本线程内复用 `BaseConverter`
 - **WebUI 预览**：`POST /preview` 为 `md.render` HTML；**`POST /preview/docx`** 为 convert → mammoth 版式预览（`preview_docx.py`）

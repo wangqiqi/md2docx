@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.5.69-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.69)
+[![Version](https://img.shields.io/badge/version-0.5.70-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.70)
 [![Cursor AI Rules](https://img.shields.io/badge/Super%20Cursor-v5.0.7-green.svg)](https://github.com/wangqiqi/cursor-ai)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
@@ -24,7 +24,7 @@
 - ✅ 代码块（支持语法高亮）
 - ✅ 链接处理（内联链接、引用链接、URL自动链接）
 - ✅ 图片支持（本地图片、在线图片）
-- ✅ Mermaid 图表（graph / flowchart / sequence / gantt / state / class / pie）
+- ✅ Mermaid 图表（graph / flowchart / sequence / gantt / state / class / pie / journey / erDiagram）
 - ✅ LaTeX 数学公式（`$…$` / `$$…$$`；块级自动编号 `(1)(2)…`；支持 `\label` / `\ref`）
 - ✅ 表格转换（基础表格、对齐方式）
 - ✅ **Word 模板** · CLI `--template` 保留页眉页脚（P-STYLE-01 / v0.5.65）
@@ -188,7 +188,7 @@ pip install mddocx[mcp]
 
 ### Mermaid 流程图
 
-在 Markdown 中使用 ` ```mermaid ` 代码块，支持 **graph** / **flowchart**、**sequenceDiagram**、**gantt**、**stateDiagram**、**classDiagram** 与 **pie**。转换时通过 [mermaid.ink](https://mermaid.ink) 渲染为 PNG 并嵌入 DOCX；渲染失败或不支持的图表类型会保留源码并附提示。
+在 Markdown 中使用 ` ```mermaid ` 代码块，支持 **graph** / **flowchart**、**sequenceDiagram**、**gantt**、**stateDiagram**、**classDiagram**、**pie**、**journey** 与 **erDiagram**。转换时通过 [mermaid.ink](https://mermaid.ink) 渲染为 PNG 并嵌入 DOCX；渲染失败或不支持的图表类型会保留源码并附提示。
 
 ````markdown
 ```mermaid
@@ -197,7 +197,7 @@ graph TD
 ```
 ````
 
-> 需要网络访问 mermaid.ink；journey、ER 等未列类型将回退为源码。
+> 需要网络访问 mermaid.ink；mindmap、timeline 等未列类型将回退为源码。
 
 ### LaTeX 数学公式
 
