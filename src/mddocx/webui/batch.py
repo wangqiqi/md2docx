@@ -103,14 +103,14 @@ def _read_upload_text(
     return content, None
 
 
-def _convert_one_worker(payload: Tuple[str, str]) -> Tuple[str, Optional[bytes], Optional[BatchFileError]]:
+def _convert_one_worker(payload: Tuple[str, str, Optional[str]]) -> Tuple[str, Optional[bytes], Optional[BatchFileError]]:
     """子进程转换（每进程独立 converter_pool）。"""
-    content, display_name = payload
+    content, display_name, template_path = payload
     from ..converter.converter_pool import get_converter, reset_converter_pool
 
     reset_converter_pool()
     try:
-        doc = get_converter().convert(content)
+        doc = get_converter().convert(content, template_path=template_path)
         buffer = io.BytesIO()
         doc.save(buffer)
         return display_name, buffer.getvalue(), None
@@ -122,9 +122,14 @@ def _convert_one_worker(payload: Tuple[str, str]) -> Tuple[str, Optional[bytes],
         return display_name, None, BatchFileError(display_name, info.code, info.message)
 
 
-def _convert_one(content: str, filename: str) -> Tuple[Optional[bytes], Optional[BatchFileError]]:
+def _convert_one(
+    content: str,
+    filename: str,
+    *,
+    template_path: Optional[str] = None,
+) -> Tuple[Optional[bytes], Optional[BatchFileError]]:
     try:
-        doc = get_converter().convert(content)
+        doc = get_converter().convert(content, template_path=template_path)
         # 直接序列化到内存，避免每个文件都落一次临时盘
         buffer = io.BytesIO()
         doc.save(buffer)
@@ -144,6 +149,7 @@ def build_batch_zip(
     max_text_size: int,
     allowed_file: Callable[..., bool],
     jobs: int = 1,
+    template_path: Optional[str] = None,
 ) -> BatchZipResult:
     uploads = [item for item in files if item and item.filename]
     if not uploads:
@@ -180,7 +186,9 @@ def build_batch_zip(
         succeeded = 0
         if workers <= 1:
             for display_name, content, zip_name in prepared:
-                docx_bytes, convert_error = _convert_one(content, display_name)
+                docx_bytes, convert_error = _convert_one(
+                    content, display_name, template_path=template_path
+                )
                 if docx_bytes is None:
                     if convert_error is not None:
                         errors.append(convert_error)
@@ -190,7 +198,7 @@ def build_batch_zip(
         else:
             with ProcessPoolExecutor(max_workers=workers) as pool:
                 futures = {
-                    pool.submit(_convert_one_worker, (content, display_name)): zip_name
+                    pool.submit(_convert_one_worker, (content, display_name, template_path)): zip_name
                     for display_name, content, zip_name in prepared
                 }
                 for future in as_completed(futures):

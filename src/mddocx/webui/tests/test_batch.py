@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import zipfile
 from io import BytesIO
+from pathlib import Path
 
 import pytest
 from docx import Document
@@ -76,6 +77,28 @@ class TestBatchConvert:
         codes = {item["code"] for item in payload["errors"]}
         assert "E_CONTENT_EMPTY" in codes
         assert "E_FILE_TYPE_INVALID" in codes
+
+    @pytest.mark.skipif(
+        not (Path(__file__).resolve().parents[4] / "tests/samples/templates/minimal_company.docx").is_file(),
+        reason="sample template missing",
+    )
+    def test_batch_convert_with_template(self, client):
+        template_path = Path(__file__).resolve().parents[4] / "tests/samples/templates/minimal_company.docx"
+        files = [(BytesIO(b"# BatchTpl\n\none."), "one.md")]
+        with template_path.open("rb") as handle:
+            response = client.post(
+                "/convert/batch",
+                data={
+                    "files": files,
+                    "template": (handle, "company.docx"),
+                },
+                content_type="multipart/form-data",
+            )
+        assert response.status_code == 200
+        contents = _read_zip(response.data)
+        doc = Document(BytesIO(contents["one.docx"]))
+        assert "MD2DOCX-TEMPLATE-HEADER" in doc.sections[0].header.paragraphs[0].text
+        assert "BatchTpl" in "\n".join(p.text for p in doc.paragraphs)
 
     def test_batch_all_failures_still_returns_zip(self, client):
         files = [
