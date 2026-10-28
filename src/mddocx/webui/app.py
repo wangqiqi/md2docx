@@ -9,7 +9,7 @@ import logging
 import mimetypes
 import re
 from html import escape
-from typing import Any, Optional
+from typing import Any, Optional, Tuple
 from urllib.parse import quote
 
 import bleach
@@ -70,6 +70,8 @@ ALLOWED_PREVIEW_ATTRS = {
     "*": ["class"],
     "a": ["href", "title", "target", "rel"],
     "img": ["src", "alt", "title", "width", "height"],
+    "td": ["colspan", "rowspan"],
+    "th": ["colspan", "rowspan"],
 }
 
 
@@ -276,6 +278,32 @@ def convert_batch() -> Any:
     return response
 
 
+def _read_preview_markdown() -> Tuple[Optional[str], Optional[str]]:
+    """Return (markdown, error_html). error_html set on validation failure."""
+    markdown_content = ""
+    if "file" in request.files and request.files["file"].filename:
+        file = request.files["file"]
+        filename = secure_filename(file.filename)
+
+        if not allowed_file(filename, file):
+            return None, _preview_error(error_info(E_FILE_TYPE_INVALID).format_user())
+
+        try:
+            markdown_content = file.read().decode("utf-8")
+        except UnicodeDecodeError:
+            return None, _preview_error(error_info(E_INPUT_ENCODING).format_user())
+    else:
+        markdown_content = request.form.get("markdown", "")
+
+    if not markdown_content or len(markdown_content.strip()) == 0:
+        return None, _preview_placeholder("请输入Markdown内容")
+
+    if markdown_utf8_byte_size(markdown_content) > config.MAX_PREVIEW_CONTENT_SIZE:
+        return None, _preview_error(error_info(E_CONTENT_TOO_LARGE).format_user())
+
+    return markdown_content.strip(), None
+
+
 @app.route("/preview", methods=["POST"])
 def preview() -> str:
     """预览功能 - 只返回预览内容的HTML片段"""
@@ -285,33 +313,47 @@ def preview() -> str:
         return _preview_error(error_info(E_RATE_LIMIT).format_user())
 
     try:
-        markdown_content = ""
-        if "file" in request.files and request.files["file"].filename:
-            file = request.files["file"]
-            filename = secure_filename(file.filename)
+        markdown_content, err = _read_preview_markdown()
+        if err is not None:
+            return err
 
-            if not allowed_file(filename, file):
-                return _preview_error(error_info(E_FILE_TYPE_INVALID).format_user())
-
-            try:
-                markdown_content = file.read().decode("utf-8")
-            except UnicodeDecodeError:
-                return _preview_error(error_info(E_INPUT_ENCODING).format_user())
-        else:
-            markdown_content = request.form.get("markdown", "")
-
-        if not markdown_content or len(markdown_content.strip()) == 0:
-            return _preview_placeholder("请输入Markdown内容")
-
-        if markdown_utf8_byte_size(markdown_content) > config.MAX_PREVIEW_CONTENT_SIZE:
-            return _preview_error(error_info(E_CONTENT_TOO_LARGE).format_user())
-
-        preview_html = generate_preview_html(markdown_content.strip())
+        preview_html = generate_preview_html(markdown_content)
         return f'<div class="preview-result">' f'<div class="preview-content-rendered">{preview_html}</div>' f"</div>"
 
     except Exception as e:
         app.logger.error(f"预览失败: {str(e)}", exc_info=True)
         return _preview_error(error_info(E_PREVIEW_FAILED).format_user())
+
+
+@app.route("/preview/docx", methods=["POST"])
+def preview_docx_layout() -> str:
+    """版式预览：Markdown → DOCX → mammoth HTML。"""
+    from .preview_docx import markdown_to_docx_preview_html
+    from .rate_limit import is_rate_limited
+
+    if is_rate_limited(request.remote_addr or "unknown"):
+        return _preview_error(error_info(E_RATE_LIMIT).format_user())
+
+    try:
+        markdown_content, err = _read_preview_markdown()
+        if err is not None:
+            return err
+
+        layout_html = markdown_to_docx_preview_html(
+            markdown_content,
+            convert=get_converter().convert,
+            sanitize=sanitize_preview_html,
+        )
+        return (
+            f'<div class="preview-result docx-preview-mode">'
+            f'<div class="preview-content-rendered">{layout_html}</div>'
+            f"</div>"
+        )
+    except MemoryError:
+        return _preview_error(error_info(E_MEMORY).format_user())
+    except Exception as e:
+        app.logger.error(f"版式预览失败: {str(e)}", exc_info=True)
+        return _preview_error(error_from_exception(e).format_user())
 
 
 def _preview_error(message: str) -> str:
