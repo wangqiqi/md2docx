@@ -1,5 +1,7 @@
-"""Quality-tier sample regression (SPRINT-QUAL-01)."""
+"""Quality-tier sample regression (SPRINT-QUAL-01 / SPRINT-QUAL-02)."""
 
+import tempfile
+import zipfile
 from pathlib import Path
 
 import pytest
@@ -75,3 +77,35 @@ def test_quality_tables(converter, samples_quality):
 
     code_cell = inline_table.rows[3].cells[1]
     assert 'print("hi")' in code_cell.text
+
+
+def test_quality_footnotes(converter, samples_quality):
+    md = samples_quality / "footnotes_quality.md"
+    content = md.read_text(encoding="utf-8")
+    doc = converter.convert(content, base_path=str(md))
+
+    body = _paragraph_text(doc)
+    assert "正文引用" in body
+
+    with tempfile.NamedTemporaryFile(suffix=".docx") as tmp:
+        doc.save(tmp.name)
+        with zipfile.ZipFile(tmp.name) as zf:
+            assert "word/footnotes.xml" in zf.namelist()
+            foot_xml = zf.read("word/footnotes.xml").decode("utf-8")
+            assert "脚注正文" in foot_xml
+            doc_xml = zf.read("word/document.xml").decode("utf-8")
+            assert "footnoteReference" in doc_xml
+
+
+def test_quality_toc(converter, samples_quality):
+    md = samples_quality / "toc_quality.md"
+    content = md.read_text(encoding="utf-8")
+    doc = converter.convert(content, base_path=str(md))
+
+    assert "第一节正文" in _paragraph_text(doc)
+
+    with tempfile.NamedTemporaryFile(suffix=".docx") as tmp:
+        doc.save(tmp.name)
+        with zipfile.ZipFile(tmp.name) as zf:
+            doc_xml = zf.read("word/document.xml").decode("utf-8")
+            assert "instrText" in doc_xml and "TOC" in doc_xml
