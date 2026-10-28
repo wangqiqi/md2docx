@@ -266,11 +266,12 @@ print(m.duration_ms, m.input_bytes, m.chunked)
 
 CI `quality` job 已调用 `check_convert_metrics.sh`，且 **`METRICS_SOFT=0`**（结构与耗时均硬失败）。发版候选脚本 `verify_release_candidate.sh` 默认同为 hard。
 
-### Markdown 扩展（脚注 · 目录）
+### Markdown 扩展（脚注 · 目录 · 参考式链接）
 
 - **脚注**：CommonMark + `mdit_py_plugins.footnote`；输出为 Word **`footnotes.xml`** + 正文 `footnoteReference`（`FootnoteManager` · 无上游 python-docx API）。
 - **目录**：独立段落写 **`[TOC]`** 或 **`[[TOC]]`** → 插入 Word TOC 域（打开文档后更新域即可生成目录）。
-- **回归**：`pytest tests/integration/test_quality_regression.py -q`（含 `tests/samples/quality/footnotes_quality.md` · `toc_quality.md`）。
+- **参考式链接**：`[可见文字][id]` 与文末 `[id]: https://…`（可选 `"标题"`）；与 inline 链接相同，写入 Word **hyperlink** 关系；链接前的空格会保留。
+- **回归**：`pytest tests/integration/test_quality_regression.py -q`（含 `footnotes_quality.md` · `toc_quality.md` · `pandoc_quality.md`）；参考链接专项 `pytest -k reference_link -q`。
 
 ### Word 模板（`--template`）
 

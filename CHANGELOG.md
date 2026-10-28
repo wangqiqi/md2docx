@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.66] - 2026-10-28
+
+### Added
+
+- **参考式链接** `[text][id]` + `[id]: url` → Word 超链接（CommonMark · 与脚注共存）
+- `tests/samples/quality/pandoc_quality.md` · `test_reference_links.py`（SPRINT-QUAL-03 / P-QUAL-01 片 3）
+
+### Fixed
+
+- 段落内链接前的空格被误删（`TextConverter` · 影响 inline 与参考式链接）
+
 ## [0.5.65] - 2026-10-28
 
 ### Added

@@ -45,7 +45,8 @@ tests/
         ├── nested_lists_quality.md
         ├── tables_quality.md
         ├── footnotes_quality.md
-        └── toc_quality.md
+        ├── toc_quality.md
+        └── pandoc_quality.md
 ```
 
 ### conftest 样例 fixtures
