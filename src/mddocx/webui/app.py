@@ -184,7 +184,18 @@ def convert() -> Any:
             flash_error(E_CONTENT_TOO_LARGE)
             return redirect(url_for("index"))
 
-        doc = get_converter().convert(markdown_content)
+        from .template_upload import TemplateUploadError, optional_template_path
+
+        template_upload = request.files.get("template")
+        try:
+            with optional_template_path(
+                template_upload,
+                max_bytes=config.MAX_TEMPLATE_UPLOAD_SIZE,
+            ) as template_path:
+                doc = get_converter().convert(markdown_content, template_path=template_path)
+        except TemplateUploadError as exc:
+            flash_error(exc.code, exc.message)
+            return redirect(url_for("index"))
 
         # 直接写入内存流，避免临时文件中转与清理竞态
         docx_buffer = io.BytesIO()
@@ -220,15 +231,26 @@ def convert_batch() -> Any:
         return jsonify({"code": info.code, "message": info.message}), 429
 
     files = request.files.getlist("files")
+    from .template_upload import TemplateUploadError, optional_template_path
+
+    template_upload = request.files.get("template")
     try:
-        result = build_batch_zip(
-            files,
-            max_batch_files=config.MAX_BATCH_FILES,
-            max_text_size=config.MAX_TEXT_CONTENT_SIZE,
-            allowed_file=allowed_file,
-        )
-    except BatchRequestError as exc:
-        return jsonify({"code": exc.code, "message": exc.message}), exc.status
+        with optional_template_path(
+            template_upload,
+            max_bytes=config.MAX_TEMPLATE_UPLOAD_SIZE,
+        ) as template_path:
+            try:
+                result = build_batch_zip(
+                    files,
+                    max_batch_files=config.MAX_BATCH_FILES,
+                    max_text_size=config.MAX_TEXT_CONTENT_SIZE,
+                    allowed_file=allowed_file,
+                    template_path=template_path,
+                )
+            except BatchRequestError as exc:
+                return jsonify({"code": exc.code, "message": exc.message}), exc.status
+    except TemplateUploadError as exc:
+        return jsonify({"code": exc.code, "message": exc.message}), 400
 
     zip_buffer = io.BytesIO(result.zip_bytes)
     zip_buffer.seek(0)

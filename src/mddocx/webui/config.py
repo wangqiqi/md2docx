@@ -24,6 +24,7 @@ class Config:
     MAX_TEXT_CONTENT_SIZE = 5 * 1024 * 1024  # 5MB
     MAX_PREVIEW_CONTENT_SIZE = 2 * 1024 * 1024  # 2MB
     MAX_BATCH_FILES = 20
+    MAX_TEMPLATE_UPLOAD_SIZE = 5 * 1024 * 1024  # 5MB
 
     # 服务器配置
     HOST = os.environ.get("HOST", "127.0.0.1")
