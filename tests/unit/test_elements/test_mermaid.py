@@ -45,6 +45,16 @@ SAMPLE_PIE = """pie title 分配
     "B" : 60
 """
 
+SAMPLE_JOURNEY = """journey
+    title My Day
+    section Work
+      Task: 5: Me
+"""
+
+SAMPLE_ER = """erDiagram
+    A ||--|| B : rel
+"""
+
 # 最小合法 1x1 PNG
 FAKE_PNG = (
     b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
@@ -75,8 +85,14 @@ class TestMermaidHelpers:
     def test_supported_pie(self):
         assert is_supported_mermaid_diagram(SAMPLE_PIE) is True
 
-    def test_unsupported_journey(self):
-        assert is_supported_mermaid_diagram("journey\n  title: X") is False
+    def test_supported_journey(self):
+        assert is_supported_mermaid_diagram(SAMPLE_JOURNEY) is True
+
+    def test_supported_er_diagram(self):
+        assert is_supported_mermaid_diagram(SAMPLE_ER) is True
+
+    def test_unsupported_mindmap(self):
+        assert is_supported_mermaid_diagram("mindmap\n  root((X))") is False
 
     def test_diagram_kind_labels(self):
         assert mermaid_diagram_kind(SAMPLE_GRAPH) == "流程图"
@@ -85,11 +101,13 @@ class TestMermaidHelpers:
         assert mermaid_diagram_kind(SAMPLE_STATE) == "状态图"
         assert mermaid_diagram_kind(SAMPLE_CLASS) == "类图"
         assert mermaid_diagram_kind(SAMPLE_PIE) == "饼图"
+        assert mermaid_diagram_kind(SAMPLE_JOURNEY) == "用户旅程"
+        assert mermaid_diagram_kind(SAMPLE_ER) == "ER图"
 
     def test_diagram_kind_empty_or_unknown(self):
         assert mermaid_diagram_kind("") == "图表"
         assert mermaid_diagram_kind("   ") == "图表"
-        assert mermaid_diagram_kind("journey\n  title: X") == "图表"
+        assert mermaid_diagram_kind("journey\n  title: X") == "用户旅程"
 
     def test_is_supported_empty_source(self):
         assert is_supported_mermaid_diagram("") is False
@@ -257,11 +275,11 @@ class TestMermaidConverter:
         assert mock_add_picture.call_count == 3
 
     def test_unsupported_type_fallback(self, converter):
-        converter.convert(self._make_token("journey\n  title: Trip"))
+        converter.convert(self._make_token("mindmap\n  root((idea))"))
 
         text = "\n".join(p.text for p in converter.document.paragraphs)
         assert "不支持" in text
-        assert "journey" in text
+        assert "mindmap" in text
 
     def test_document_not_set(self):
         conv = MermaidConverter()
@@ -331,11 +349,11 @@ class TestMermaidConverter:
 
     def test_fallback_without_code_converter(self, converter):
         converter.base_converter = None
-        converter.convert(self._make_token("journey\n  title: Trip"))
+        converter.convert(self._make_token("mindmap\n  root((idea))"))
 
         text = "\n".join(p.text for p in converter.document.paragraphs)
         assert "不支持" in text
-        assert "journey" in text
+        assert "mindmap" in text
 
     def test_fallback_plain_run_when_code_style_missing(self, converter):
         """无 code converter 且 Code 样式不存在时仍写入源码。"""

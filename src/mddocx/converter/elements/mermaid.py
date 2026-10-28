@@ -23,6 +23,8 @@ SUPPORTED_DIAGRAM_PREFIXES = (
     "statediagram",
     "classdiagram",
     "pie",
+    "journey",
+    "erdiagram",
 )
 
 
@@ -41,6 +43,10 @@ def mermaid_diagram_kind(source: str) -> str:
         return "类图"
     if first.startswith("pie"):
         return "饼图"
+    if first.startswith("journey"):
+        return "用户旅程"
+    if first.startswith("erdiagram"):
+        return "ER图"
     if first.startswith(("graph ", "flowchart ")):
         return "流程图"
     return "图表"
@@ -72,7 +78,7 @@ def _is_valid_image_payload(data: bytes) -> bool:
 
 
 def is_supported_mermaid_diagram(source: str) -> bool:
-    """支持 graph / flowchart / sequence / gantt / state / class / pie"""
+    """支持 graph / flowchart / sequence / gantt / state / class / pie / journey / erDiagram"""
     if not source or not source.strip():
         return False
     first = source.strip().split("\n", 1)[0].strip().lower()
