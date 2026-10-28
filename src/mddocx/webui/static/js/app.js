@@ -140,7 +140,20 @@ function handleFileSelect(event) {
     if (event.target.id === 'batch-file-input') {
         return;
     }
-    const file = event.target.files[0];
+    if (event.target.id === 'template-input') {
+        const label = document.getElementById('template-selection-label');
+        const file = event.target.files[0];
+        if (label) {
+            if (file) {
+                label.textContent = `模板：${file.name}`;
+                label.hidden = false;
+            } else {
+                label.textContent = '';
+                label.hidden = true;
+            }
+        }
+        return;
+    }
     if (!file) return;
 
     // 显示文件信息
@@ -207,6 +220,10 @@ async function convertBatch() {
     const restoreButton = showLoading(button);
     const formData = new FormData();
     files.forEach(file => formData.append('files', file));
+    const templateInput = document.getElementById('template-input');
+    if (templateInput && templateInput.files && templateInput.files[0]) {
+        formData.append('template', templateInput.files[0]);
+    }
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
     if (csrfToken) formData.append('csrf_token', csrfToken);

@@ -94,6 +94,11 @@ print('Hello World!')
             <form id="convert-form" action="{{ url_for('convert') }}" method="post" enctype="multipart/form-data" style="display: inline;">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <input type="hidden" id="hidden-markdown" name="markdown" value="">
+                <input type="file" id="template-input" name="template" accept=".docx,.dotx" style="display: none;">
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('template-input').click()">
+                    <span class="icon">📄</span> Word 模板（可选）
+                </button>
+                <span id="template-selection-label" class="batch-selection-summary" hidden></span>
                 <button type="submit" class="btn btn-primary" onclick="updateHiddenInput()">
                     <span class="icon">📥</span>
                     转换为 DOCX
