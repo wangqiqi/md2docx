@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.74] - 2026-10-28
+
+### Added
+
+- **`scripts/verify_quality.sh`**：本地一键跑齐 CI `quality` job（打 tag / PyPI 前推荐）
+
+### Fixed
+
+- **WebUI**：预览路由 mypy（`_read_preview_markdown` 成功路径类型收窄）
+- **质量**：isort 与 CI 对齐（batch · footnote_manager · base · test_front_matter）
+- **质量**：`verify_release_candidate.sh` standalone mypy 范围与 CI 一致
+
+### Changed
+
+- **文档 / 门面**：README · VitePress 门户（首页 · 发布 · 测试 · CI）与 **v0.5.74** 同步（415 测试 · Python 3.10–3.12 · 发版预检流程）
+
 ## [0.5.73] - 2026-10-28
 
 ### Fixed

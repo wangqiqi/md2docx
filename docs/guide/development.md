@@ -264,7 +264,7 @@ print(m.duration_ms, m.input_bytes, m.chunked)
 - `--compare` FAIL → 样例体积或分块路径变了；先确认是否故意改样例，再 `--write` 更新基线并同 PR 说明。
 - 耗时 WARN/FAIL → 热路径明显变慢；先本地复现，勿仅因微小波动改基线。
 
-CI `quality` job 已调用 `check_convert_metrics.sh`，且 **`METRICS_SOFT=0`**（结构与耗时均硬失败）。发版候选脚本 `verify_release_candidate.sh` 默认同为 hard。
+CI `quality` job 已调用 `check_convert_metrics.sh`，且 **`METRICS_SOFT=0`**（结构与耗时均硬失败）。**打 tag 前**先跑 `bash scripts/verify_quality.sh`；完整发版候选用 `verify_release_candidate.sh`（默认同为 hard）。
 
 ### Markdown 扩展（脚注 · 目录 · 参考式链接）
 

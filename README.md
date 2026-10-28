@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.5.73-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.73)
+[![Version](https://img.shields.io/badge/version-0.5.74-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.74)
 [![Cursor AI Rules](https://img.shields.io/badge/Super%20Cursor-v5.0.7-green.svg)](https://github.com/wangqiqi/cursor-ai)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
@@ -36,7 +36,7 @@
 - ✅ 任务列表（TODO列表）
 - ✅ 基础 HTML 标签支持（复杂 HTML 块可选 `pip install mddocx[html]`，依赖 **html-for-docx**）
 - ✅ Web界面 (Flask + HTML5 + CSS3)
-- ✅ 实时预览功能
+- ✅ 实时预览功能（Markdown HTML · **版式预览** `POST /preview/docx` · mammoth · v0.5.69）
 - ✅ 单文件上传和 DOCX 下载
 - ✅ WebUI 多文件批量转换、阶段进度、ZIP 下载与逐文件错误摘要
 - ✅ 响应式设计 (桌面/移动)
@@ -48,7 +48,7 @@
 项目采用专业级的质量保证体系，确保代码可靠性和开发效率：
 
 ### 🧪 测试体系
-- **379 测试用例**（`pytest -q`，随版本增长；以 CI 为准）— 覆盖核心功能、WebUI 和边界条件
+- **415 测试用例**（`pytest -q`，随版本增长；以 CI 为准）— 覆盖核心功能、WebUI 和边界条件
 - **持续集成覆盖率报告** - 多维度测试保证
 - **大文件测试** - 支持1MB+文档处理
 - **边界条件测试** - Unicode、嵌套、异常输入
@@ -64,6 +64,7 @@
 - **black + isort** - 自动代码格式化和导入排序
 - **flake8** - 代码风格和错误检查
 - **ConvertMetrics** — CI `quality` 对耗时回归 **硬门禁**（`METRICS_SOFT=0`）；本地 `bash scripts/check_convert_metrics.sh`
+- **发版预检** — 打 tag 前 `bash scripts/verify_quality.sh`（与 CI `quality` 同序）；完整候选 `bash scripts/verify_release_candidate.sh`
 - **pip-audit** — CI 与 `bash scripts/check_pip_audit.sh`（见 [SECURITY.md](SECURITY.md)）
 - **npm audit** — 文档站 CI/Pages 与 `bash scripts/check_npm_audit.sh`（critical 门禁）
 - **Dependabot** - 每周 pip / Actions / npm 依赖 PR
@@ -73,7 +74,7 @@
 📋 本地开发编排：`.growing/plan.md`（**不入库**；旧 `.cursorGrowth/` 安装时自动迁移）· **在线文档**：<https://wangqiqi.github.io/md2docx/> · 源码：[docs/](docs/)
 
 **已完成 ✅:**
-- ✅ 专业测试体系 (379 测试，覆盖率 ≥85%，CI 持续验证)
+- ✅ 专业测试体系 (415 测试，覆盖率 ≥85%，CI 持续验证)
 - ✅ CI/CD 自动化 (GitHub Actions 多版本测试)
 - ✅ 代码质量保证 (pre-commit + 多工具检查)
 - ✅ Web 界面、实时预览、响应式设计
@@ -86,7 +87,10 @@
 - ✅ **Word 模板** · `--template`（P-STYLE-01 / v0.5.65）
 - ✅ **封面 / front matter** · `cover: true`（P-STYLE-01 片 2 / v0.5.67）
 - ✅ **WebUI 模板上传**（P-STYLE-01 片 3 / v0.5.68）
-- ✅ **quality 样例回归** · 脚注/TOC/参考链接/表格/列表（P-QUAL-01 片 1–3 / v0.5.66）
+- ✅ **Mermaid journey / ER 图**（mermaid.ink · v0.5.70）
+- ✅ **WebUI 版式预览**（DOCX 布局 · v0.5.69）
+- ✅ **CI / 质量**：Python 3.10–3.12 矩阵 · black 26 · mypy 收紧 · `verify_quality.sh`（v0.5.71–0.5.74）
+- ✅ **quality 样例回归** · 脚注/TOC/参考链接/表格/列表（P-QUAL-01 / v0.5.66）
 - ✅ 依赖安全门禁 pip-audit · Dependabot · SECURITY.md（P-SEC-01 / v0.5.60）
 
 **规划中 📋:**
@@ -384,9 +388,9 @@ bash scripts/verify_release_candidate.sh
 项目使用 GitHub Actions 和 PyPI Trusted Publisher 实现自动发布：
 
 ```bash
-# 推送版本标签触发自动发布
-git tag v0.4.6
-git push origin v0.4.6
+# 推送版本标签触发自动发布（须先 bash scripts/verify_quality.sh）
+git tag v0.5.74
+git push origin v0.5.74
 ```
 
 ### 手动发布

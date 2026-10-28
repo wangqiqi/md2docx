@@ -49,7 +49,7 @@
 bash scripts/verify_release_alignment.sh
 
 # 打 tag 时额外校验 tag 与 pyproject 一致
-EXPECT_TAG=v0.5.49 bash scripts/verify_release_alignment.sh
+EXPECT_TAG=v0.5.74 bash scripts/verify_release_alignment.sh
 ```
 
 CI `quality` 与 `publish.yml`（tag 推送）均会自动执行；`verify_release_candidate.sh` 也会先跑对齐检查。
@@ -76,8 +76,8 @@ CI `quality` 与 `publish.yml`（tag 推送）均会自动执行；`verify_relea
 4. 备用：本地 `python -m build && ./scripts/publish_to_pypi.sh`（API token）
 
 #### 本地验证
-- [ ] **发布候选预检（推荐）**：`bash scripts/verify_release_candidate.sh`  
-  聚合 pytest（覆盖率 ≥85%）、flake8、black、mypy、isort、ConvertMetrics、`python -m build` + `twine check`、wheel 卫生检查、隔离安装后 `pip check` / CLI 转换 / WebUI 资源冒烟，并提示 PyPI 版本碰撞（当前 `pyproject.toml` 版本已发布时，后续 `/release` 须升下一 patch）。
+- [ ] **质量门禁（打 tag 前必跑）**：`bash scripts/verify_quality.sh`（flake8 · black · 两段 mypy · isort · ConvertMetrics · 门面对齐；与 CI `quality` job 同序）
+- [ ] **发布候选预检（推荐）**：`bash scripts/verify_release_candidate.sh`
 - [ ] 构建包：`python -m build`
 - [ ] 检查包：`twine check dist/*`
 - [ ] 测试安装：`pip install dist/mddocx-<version>-py3-none-any.whl`（`<version>` 与 `pyproject.toml` 一致）
@@ -87,8 +87,8 @@ CI `quality` 与 `publish.yml`（tag 推送）均会自动执行；`verify_relea
 #### 自动发布（推荐）
 ```bash
 # 推送版本标签，自动触发发布
-git tag -a v0.4.3 -m "Release version 0.4.3"
-git push origin v0.4.3
+git tag -a v0.5.74 -m "Release 0.5.74: quality gate and doc facade sync"
+git push origin v0.5.74
 ```
 
 #### 手动发布（备用）

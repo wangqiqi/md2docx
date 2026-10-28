@@ -20,9 +20,9 @@ features:
   - title: 完整语法支持
     details: 标题、列表、表格、代码块、Mermaid、LaTeX、任务列表与可选 HTML 块。
   - title: 命令行与 WebUI
-    details: mddocx CLI 批量转换；Flask Web 界面支持预览、批量 ZIP 下载。
+    details: mddocx CLI 批量转换；Flask Web 界面支持 Markdown 预览、DOCX 版式预览、批量 ZIP 下载。
   - title: 质量保障
-    details: 300+ pytest 用例、GitHub Actions 多版本 CI、ConvertMetrics 性能基线。
+    details: 415+ pytest 用例、GitHub Actions（Python 3.10–3.12）、ConvertMetrics 性能基线；发版前 verify_quality 与 CI quality 同序。
   - title: 开源可扩展
     details: MIT 许可，PyPI 发布，MCP 集成可选，欢迎贡献。
 ---

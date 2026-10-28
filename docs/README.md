@@ -29,5 +29,6 @@ npm run docs:dev
 | 发布流程 | [/guide/release](/guide/release) |
 | 版本工作流 | [/guide/version-workflow](/guide/version-workflow) |
 
-> **Sprint / 待办真源**：`.growing/plan.md`（本地，不入库；自 v0.5.58 起，原 `.cursorGrowth/` 已迁移）。  
+> **当前发布**：**v0.5.74**（`pyproject.toml` · PyPI · GitHub tag 须一致；校验 `bash scripts/verify_release_alignment.sh`）。  
+> **Sprint / 待办真源**：`.growing/plan.md`（本地，不入库）。  
 > **活路线图**：`.growing/ROADMAP.md`（本地，不入库）。

@@ -1,94 +1,50 @@
 # 📦 版本管理工作流程 (Version Management Workflow)
 
-*版本: v1.0.0 | 最后更新: 2025-12-26 | 作者: AI Assistant*
+*最后更新: 2026-10-28*
 
 ## 🎯 概述
 
-本文档详细记录了项目中的版本管理工作流程、具体实施步骤和问题解决方案。
+版本**唯一真源**为 `pyproject.toml` → `[project].version`。运行时 `mddocx.__version__` 从 pyproject（源码树）或 wheel metadata（已安装）读取，**勿**在 `__init__.py` 硬编码。
 
-## 📋 版本号更新清单
+## 📋 门面同步清单
 
-### 🔧 必须更新的文件
+| 文件 | 动作 |
+|------|------|
+| `pyproject.toml` | bump `[project].version` |
+| `README.md` | version badge 与 releases 链接 |
+| `CHANGELOG.md` | 折叠 `[Unreleased]` → `## [x.y.z] - 日期` |
+| `docs/` 门户 | 首页 · 发布/测试/CI 指南中的版本与流程说明 |
+| git tag | `v{x.y.z}` annotated，打在含 CHANGELOG 的 commit 上 |
 
-1. **`pyproject.toml`**
-   ```toml
-   [project]
-   version = "0.4.3"  # ← 更新此处
-   ```
+校验：
 
-2. **`src/mddocx/__init__.py`**
-   ```python
-   __version__ = "0.4.3"  # ← 更新此处
-   ```
-
-3. **`README.md`**
-   ```markdown
-   [![Version](https://img.shields.io/badge/version-0.4.3-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.4.3)
-   ```
-
-### 🏷️ 版本号格式规范
-
-- **格式**: `x.y.z` (语义化版本)
-- **示例**: `0.4.3`, `1.0.0`, `2.1.5`
-- **标签**: `v{x.y.z}` (如: `v0.4.3`)
-
-## ✅ 发布前检查清单
-
-### 🔍 代码质量验证
-- [ ] `black --check --diff src tests` 通过
-- [ ] `flake8 src tests` 0个错误
-- [ ] `python -m pytest -v` 全部测试通过
-- [ ] `mypy src` 类型检查完成
-
-### 📋 版本一致性检查
-- [ ] 所有文件版本号完全一致
-- [ ] README徽章指向正确的发布版本
-- [ ] CHANGELOG.md已更新发布说明
-- [ ] 文档中的版本引用已更新
-
-### 🏷️ Git操作规范
-- [ ] 创建带详细注释的标签：
-  ```bash
-  git tag -a v0.4.3 -m "Release version 0.4.3
-
-  - 修复flake8代码质量问题
-  - 重构测试文件和脚本
-  - 更新项目配置和文档
-  - 改进WebUI应用和异常处理
-  - 新增链接转换器和CLI测试
-  - 所有测试通过"
-  ```
-
-- [ ] 推送标签触发发布：
-  ```bash
-  git push origin v0.4.3
-  ```
-
-## ⚠️ 常见问题与解决方案
-
-### 版本号不一致
 ```bash
-# 检查所有版本号
-grep -r "0\.4\.[0-9]" --include="*.py" --include="*.toml" --include="*.md" .
+bash scripts/verify_release_alignment.sh
+EXPECT_TAG=v0.5.74 bash scripts/verify_release_alignment.sh  # 打 tag 时
 ```
 
-### 忘记更新某个文件
-- 使用检查清单逐一验证
-- 提交前运行完整测试确保一切正常
+## ✅ 发布前检查（推荐顺序）
 
-### 标签管理错误
+1. **`bash scripts/verify_quality.sh`** — 与 CI `quality` job 同序（约 1 分钟）
+2. **`bash scripts/verify_release_candidate.sh`** — pytest · 构建 · 隔离安装（发版前可选但推荐）
+3. 更新 CHANGELOG / README / docs 后再次 `verify_release_alignment.sh`
+
+### 代码质量（verify_quality 已包含）
+
+- flake8 · black · mypy（converter + standalone）· isort · ConvertMetrics
+
+## 🏷️ 发布
+
 ```bash
-# 删除错误的标签
-git tag -d v0.4.3
-git push origin --delete v0.4.3
-
-# 重新创建正确标签
-git tag -a v0.4.3 -m "详细的发布说明"
-git push origin v0.4.3
+git tag -a v0.5.74 -m "Release 0.5.74: …"
+git push origin master
+git push origin v0.5.74   # 触发 publish.yml → PyPI
 ```
 
-## 📚 相关链接
+推送 `docs/**` 到 `master` 会触发 GitHub Pages（VitePress 门户）。
 
-- 通用版本管理规范（项目内以本文与 `pyproject.toml` 为准）
-- [语义化版本规范](https://semver.org/)
-- [CHANGELOG格式规范](https://keepachangelog.com/)
+## 📚 相关
+
+- [发布流程](/guide/release)
+- [CHANGELOG 格式](https://keepachangelog.com/)
+- [语义化版本](https://semver.org/)
