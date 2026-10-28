@@ -1,11 +1,6 @@
 """Front matter parsing (SPRINT-STYLE-02 / TASK-044)."""
 
-from mddocx.converter.front_matter import (
-    FrontMatter,
-    first_markdown_h1,
-    resolve_cover_title,
-    split_front_matter,
-)
+from mddocx.converter.front_matter import FrontMatter, first_markdown_h1, resolve_cover_title, split_front_matter
 
 
 def test_no_front_matter():

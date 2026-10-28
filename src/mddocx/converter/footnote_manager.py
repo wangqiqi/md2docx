@@ -8,9 +8,9 @@ from docx.document import Document as DocxDocument
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.opc.packuri import PackURI
 from docx.opc.part import XmlPart
-from docx.parts.document import DocumentPart
 from docx.oxml import OxmlElement, parse_xml
 from docx.oxml.ns import nsdecls, qn
+from docx.parts.document import DocumentPart
 from docx.text.paragraph import Paragraph
 
 _FOOTNOTES_CT = "application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml"

@@ -278,7 +278,7 @@ def convert_batch() -> Any:
     return response
 
 
-def _read_preview_markdown() -> Tuple[Optional[str], Optional[str]]:
+def _read_preview_markdown() -> Tuple[str, None] | Tuple[None, str]:
     """Return (markdown, error_html). error_html set on validation failure."""
     markdown_content = ""
     if "file" in request.files and request.files["file"].filename:
@@ -316,6 +316,7 @@ def preview() -> str:
         markdown_content, err = _read_preview_markdown()
         if err is not None:
             return err
+        assert markdown_content is not None
 
         preview_html = generate_preview_html(markdown_content)
         return f'<div class="preview-result">' f'<div class="preview-content-rendered">{preview_html}</div>' f"</div>"
@@ -338,6 +339,7 @@ def preview_docx_layout() -> str:
         markdown_content, err = _read_preview_markdown()
         if err is not None:
             return err
+        assert markdown_content is not None
 
         layout_html = markdown_to_docx_preview_html(
             markdown_content,

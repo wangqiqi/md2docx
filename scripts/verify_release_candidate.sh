@@ -63,9 +63,24 @@ echo "=== black ==="
 black --check --diff src tests
 
 echo ""
-echo "=== mypy ==="
+echo "=== mypy (converter) ==="
 mypy src/mddocx/converter --config-file mypy.ini
-mypy --follow-imports=skip src/mddocx/errors.py src/mddocx/webui/rate_limit.py --config-file mypy.ini
+
+echo ""
+echo "=== mypy (standalone modules, same as CI quality) ==="
+mypy --follow-imports=skip \
+  src/mddocx/__init__.py \
+  src/mddocx/cli.py \
+  src/mddocx/errors.py \
+  src/mddocx/mcp/convert.py \
+  src/mddocx/mcp/server.py \
+  src/mddocx/webui/app.py \
+  src/mddocx/webui/batch.py \
+  src/mddocx/webui/config.py \
+  src/mddocx/webui/converter_pool.py \
+  src/mddocx/webui/rate_limit.py \
+  src/mddocx/webui/start_webui.py \
+  --config-file mypy.ini
 
 echo ""
 echo "=== isort ==="

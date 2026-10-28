@@ -14,7 +14,7 @@ from mdit_py_plugins.dollarmath import dollarmath_plugin
 from mdit_py_plugins.footnote import footnote_plugin
 
 from .chunking import split_markdown_sections
-from .footnote_manager import FootnoteManager, extract_footnote_text
+from .cover import render_cover_page
 from .elements import (
     BlockquoteConverter,
     CodeConverter,
@@ -32,6 +32,8 @@ from .elements import (
 )
 from .elements.base import ElementConverter
 from .equation_labels import EquationRegistry
+from .footnote_manager import FootnoteManager, extract_footnote_text
+from .front_matter import FrontMatter, resolve_cover_title, split_front_matter
 from .metrics import ConvertMetrics
 from .render_cache import RenderCache
 from .security import (
@@ -41,10 +43,8 @@ from .security import (
     stream_file_byte_size,
     validate_markdown_size,
 )
-from .token_processor import TokenProcessor
 from .template_loader import load_document_from_template
-from .front_matter import FrontMatter, resolve_cover_title, split_front_matter
-from .cover import render_cover_page
+from .token_processor import TokenProcessor
 
 logger = logging.getLogger(__name__)
 

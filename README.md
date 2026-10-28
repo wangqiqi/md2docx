@@ -360,7 +360,12 @@ md2docx/
 pytest tests/ src/mddocx/webui/tests/
 ```
 
-发布候选预检（本地 `/release` 前推荐）：
+打 tag / push 前（与 CI `quality` job 同序，约 1 分钟）：
+```bash
+bash scripts/verify_quality.sh
+```
+
+发布候选预检（本地 `/release` 前推荐，含 pytest · 构建 · 隔离安装）：
 ```bash
 bash scripts/verify_release_candidate.sh
 ```
