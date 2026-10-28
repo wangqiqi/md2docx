@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.64] - 2026-10-28
+
+### Added
+
+- Markdown **脚注**（`[^id]` / `[^id]:`）→ DOCX `word/footnotes.xml`（`FootnoteManager` · `footnote_plugin`）
+- 段落 **`[TOC]`** → Word TOC 域（`converter/toc.py`）
+- quality 样例 `footnotes_quality.md` · `toc_quality.md` 与回归测试（SPRINT-QUAL-02 / P-QUAL-01 片 2）
+
 ## [0.5.63] - 2026-10-28
 
 ### Added

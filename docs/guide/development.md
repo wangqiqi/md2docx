@@ -266,6 +266,12 @@ print(m.duration_ms, m.input_bytes, m.chunked)
 
 CI `quality` job 已调用 `check_convert_metrics.sh`，且 **`METRICS_SOFT=0`**（结构与耗时均硬失败）。发版候选脚本 `verify_release_candidate.sh` 默认同为 hard。
 
+### Markdown 扩展（脚注 · 目录）
+
+- **脚注**：CommonMark + `mdit_py_plugins.footnote`；输出为 Word **`footnotes.xml`** + 正文 `footnoteReference`（`FootnoteManager` · 无上游 python-docx API）。
+- **目录**：独立段落写 **`[TOC]`** 或 **`[[TOC]]`** → 插入 Word TOC 域（打开文档后更新域即可生成目录）。
+- **回归**：`pytest tests/integration/test_quality_regression.py -q`（含 `tests/samples/quality/footnotes_quality.md` · `toc_quality.md`）。
+
 ### 发版前安全（SPRINT-SEC-01）
 
 - [ ] `bash scripts/check_pip_audit.sh` 绿（与 CI 同序：升级 `pip/setuptools/wheel` 后审计 `.[dev,mcp]`）

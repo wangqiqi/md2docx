@@ -43,7 +43,9 @@ tests/
     │   └── chunked.md
     └── quality/             # 质量层结构回归（test_quality_regression）
         ├── nested_lists_quality.md
-        └── tables_quality.md
+        ├── tables_quality.md
+        ├── footnotes_quality.md
+        └── toc_quality.md
 ```
 
 ### conftest 样例 fixtures
