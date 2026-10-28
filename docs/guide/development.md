@@ -273,6 +273,13 @@ CI `quality` job 已调用 `check_convert_metrics.sh`，且 **`METRICS_SOFT=0`**
 - **参考式链接**：`[可见文字][id]` 与文末 `[id]: https://…`（可选 `"标题"`）；与 inline 链接相同，写入 Word **hyperlink** 关系；链接前的空格会保留。
 - **回归**：`pytest tests/integration/test_quality_regression.py -q`（含 `footnotes_quality.md` · `toc_quality.md` · `pandoc_quality.md`）；参考链接专项 `pytest -k reference_link -q`。
 
+### YAML front matter · 封面
+
+- **Front matter**：文首 `---` … `---` 块，支持 `title` · `author` · `date` · `cover`（布尔）；剥离后再解析 Markdown（无块时与旧版一致）。
+- **封面**：`cover: true` 时在正文前插入 **Title / Subtitle** 段落 + 分页符；`title` 缺省取正文首个 `# H1`。
+- **模板**：可与 **`--template` / `template_path`** 同用（先加载模板再写封面与正文）；与 **chunked** 或 **`cover: true`** 分块互斥（fail-closed）。
+- **验收**：`bash scripts/verify_cover_convert.sh` · `pytest -k cover_page -q`
+
 ### Word 模板（`--template`）
 
 - **用途**：以现有 **.docx / .dotx** 为基底转换，**保留页眉页脚与样式**，正文由 Markdown 写入。

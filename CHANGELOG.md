@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.67] - 2026-10-28
+
+### Added
+
+- **YAML front matter**（`title` · `author` · `date` · `cover`）文首 `---` 块剥离后转换
+- **`cover: true`** 封面页（Title/Subtitle + 分页符）；与 **`--template`** 兼容（SPRINT-STYLE-02 / P-STYLE-01 片 2）
+- `tests/samples/style/cover_front_matter.md` · `scripts/verify_cover_convert.sh`
+
+### Changed
+
+- `cover: true` 与 **chunked** 分块互斥（fail-closed，同 `template_path`）
+
 ## [0.5.66] - 2026-10-28
 
 ### Added

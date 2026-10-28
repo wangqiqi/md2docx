@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.5.66-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.66)
+[![Version](https://img.shields.io/badge/version-0.5.67-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.67)
 [![Cursor AI Rules](https://img.shields.io/badge/Super%20Cursor-v5.0.7-green.svg)](https://github.com/wangqiqi/cursor-ai)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
@@ -28,6 +28,7 @@
 - ✅ LaTeX 数学公式（`$…$` / `$$…$$`；块级自动编号 `(1)(2)…`；支持 `\label` / `\ref`）
 - ✅ 表格转换（基础表格、对齐方式）
 - ✅ **Word 模板** · CLI `--template` 保留页眉页脚（P-STYLE-01 / v0.5.65）
+- ✅ **封面 + YAML front matter** · `cover: true`（P-STYLE-01 片 2 / v0.5.67）
 - ✅ **脚注**（`[^id]`）与 **`[TOC]`** 目录域（OOXML · v0.5.64）
 - ✅ **参考式链接** `[text][id]` + 文末定义（v0.5.66 · P-QUAL-01 片 3）
 - ✅ 分隔线
