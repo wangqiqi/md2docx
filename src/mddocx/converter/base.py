@@ -42,6 +42,7 @@ from .security import (
     validate_markdown_size,
 )
 from .token_processor import TokenProcessor
+from .template_loader import load_document_from_template
 
 logger = logging.getLogger(__name__)
 
@@ -93,6 +94,7 @@ class BaseConverter:
         self.last_metrics: Optional[ConvertMetrics] = None
         self._token_processor: Optional[TokenProcessor] = None
         self._footnote_manager = FootnoteManager()
+        self._template_path: Optional[Path] = None
 
         # 自动注册所有转换器
         self._register_default_converters()
@@ -103,7 +105,10 @@ class BaseConverter:
 
     def _reset_state(self) -> None:
         """重置文档与内部状态，使实例可安全复用"""
-        self.document = Document()
+        if self._template_path:
+            self.document = load_document_from_template(self._template_path)
+        else:
+            self.document = Document()
         self._list_stack = []
         self._equation_registry = EquationRegistry()
         self._footnote_manager.reset()
@@ -162,6 +167,7 @@ class BaseConverter:
         md_text: str,
         base_path: Optional[str] = None,
         chunked: Optional[bool] = None,
+        template_path: Optional[str] = None,
     ) -> DocxDocument:
         """将 Markdown 文本转换为 DOCX 文档
 
@@ -169,6 +175,7 @@ class BaseConverter:
             md_text: Markdown 文本
             base_path: Markdown 源文件路径，用于校验本地图片相对路径
             chunked: 是否分块转换；None 时在体积 ≥ CHUNKED_THRESHOLD 时自动启用
+            template_path: 可选 Word 模板（.docx/.dotx），保留页眉页脚/样式
 
         Returns:
             Document: 生成的 DOCX 文档
@@ -181,13 +188,17 @@ class BaseConverter:
         start = time.perf_counter()
         input_bytes = markdown_utf8_byte_size(md_text) if isinstance(md_text, str) else 0
         use_chunked = chunked
+        self._template_path = Path(template_path).expanduser() if template_path else None
         try:
             validate_markdown_size(md_text)
             use_chunked = chunked if chunked is not None else input_bytes >= CHUNKED_THRESHOLD
+            if self._template_path and use_chunked:
+                raise ConvertError("template_path 与分块转换（chunked）暂不支持同时使用")
             if use_chunked:
                 return self._convert_chunked(md_text, base_path)
             return self._convert_tokens(md_text, base_path)
         finally:
+            self._template_path = None
             duration_ms = (time.perf_counter() - start) * 1000
             self.last_metrics = ConvertMetrics(
                 duration_ms=duration_ms,
@@ -205,6 +216,7 @@ class BaseConverter:
         self,
         path: Path,
         chunked: Optional[bool] = None,
+        template_path: Optional[str] = None,
     ) -> DocxDocument:
         """从文件路径转换 Markdown（流式校验体积后读取）。
 
@@ -222,7 +234,7 @@ class BaseConverter:
 
         stream_file_byte_size(file_path)
         content = file_path.read_text(encoding="utf-8")
-        return self.convert(content, base_path=str(file_path.resolve()), chunked=chunked)
+        return self.convert(content, base_path=str(file_path.resolve()), chunked=chunked, template_path=template_path)
 
     def _setup_base_path(self, base_path: Optional[str]) -> None:
         if not base_path:

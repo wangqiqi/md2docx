@@ -12,13 +12,19 @@ from .converter.converter_pool import get_converter
 from .errors import E_INPUT_NOT_FOUND, E_SAVE_FAILED, error_from_exception, error_info
 
 
-def convert_file(input_file: str, output_file: str, debug: bool = False) -> None:
+def convert_file(
+    input_file: str,
+    output_file: str,
+    debug: bool = False,
+    template: str | None = None,
+) -> None:
     """转换文件
 
     Args:
         input_file: 输入的 Markdown 文件路径
         output_file: 输出的 DOCX 文件路径
         debug: 是否显示调试信息
+        template: 可选 Word 模板路径（.docx / .dotx）
 
     Raises:
         FileNotFoundError: 输入文件不存在
@@ -41,7 +47,7 @@ def convert_file(input_file: str, output_file: str, debug: bool = False) -> None
 
     try:
         converter = get_converter(debug=debug)
-        doc = converter.convert_file(input_path)
+        doc = converter.convert_file(input_path, template_path=template)
         if debug and converter.last_metrics is not None:
             m = converter.last_metrics
             print(f"metrics: duration_ms={m.duration_ms:.1f} " f"input_bytes={m.input_bytes} chunked={m.chunked}")
@@ -107,6 +113,7 @@ Markdown to DOCX 转换工具 v{0}
             "input_help": "输入的 Markdown 文件路径",
             "output_help": "输出的 DOCX 文件路径",
             "debug_help": "显示调试信息和详细的转换过程",
+            "template_help": "Word 模板路径（.docx/.dotx），保留页眉页脚与样式",
             "version_help": "显示版本信息 (-v, -V)",
             "lang_help": "选择帮助信息的语言 (zh/en, 默认: zh)",
         },
@@ -137,6 +144,7 @@ Usage examples:
             "input_help": "Path to input Markdown file",
             "output_help": "Path to output DOCX file",
             "debug_help": "Show debug information and detailed conversion process",
+            "template_help": "Word template path (.docx/.dotx); keeps headers/footers/styles",
             "version_help": "Show version information (-v, -V)",
             "lang_help": "Choose language for help information (zh/en, default: zh)",
         },
@@ -195,6 +203,12 @@ def main() -> None:
         action="store_true",
         help=texts["debug_help"],
     )
+    parser.add_argument(
+        "--template",
+        metavar="PATH",
+        default=None,
+        help=texts["template_help"],
+    )
 
     # 添加版本信息
     parser.add_argument(
@@ -216,7 +230,7 @@ def main() -> None:
         sys.exit(1)
 
     try:
-        convert_file(args.input, args.output, args.debug)
+        convert_file(args.input, args.output, args.debug, template=args.template)
     except Exception as e:
         print(f"错误: {error_from_exception(e).format_user()}")
         sys.exit(1)

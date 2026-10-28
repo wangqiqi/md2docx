@@ -163,6 +163,7 @@ archive/
 
 # Output files (if any)
 *.docx
+!tests/samples/templates/*.docx
 *.pdf
 
 # Log files
