@@ -28,6 +28,7 @@ class ImageConverter(ElementConverter):
     def __init__(self, base_converter: Optional[Any] = None) -> None:
         super().__init__(base_converter)
         self._image_cache: "OrderedDict[str, bytes]" = OrderedDict()
+        self._image_cache_bytes = 0
         self._base_dir: Optional[Path] = None
         self._extra_allowed_dirs: Set[Path] = set()
 
@@ -42,6 +43,7 @@ class ImageConverter(ElementConverter):
     def reset_state(self) -> None:
         """清空图片字节缓存（新文档重新下载；base_dir 等配置保留）。"""
         self._image_cache = OrderedDict()
+        self._image_cache_bytes = 0
 
     def convert(self, tokens: Tuple[Any, Any]) -> Optional[Any]:
         """转换图片元素
@@ -201,14 +203,15 @@ class ImageConverter(ElementConverter):
         if not image_data:
             return
         if src in self._image_cache:
-            del self._image_cache[src]
+            self._image_cache_bytes -= len(self._image_cache.pop(src))
         self._image_cache[src] = image_data
-        total_bytes = sum(len(data) for data in self._image_cache.values())
+        self._image_cache_bytes += len(image_data)
         while self._image_cache and (
-            len(self._image_cache) > MAX_IMAGE_CACHE_ENTRIES or total_bytes > MAX_IMAGE_CACHE_BYTES
+            len(self._image_cache) > MAX_IMAGE_CACHE_ENTRIES
+            or self._image_cache_bytes > MAX_IMAGE_CACHE_BYTES
         ):
             _, evicted = self._image_cache.popitem(last=False)
-            total_bytes -= len(evicted)
+            self._image_cache_bytes -= len(evicted)
 
     def _get_image_data(self, src: str) -> Optional[BytesIO]:
         """获取图片数据
