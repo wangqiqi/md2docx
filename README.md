@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.5.64-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.64)
+[![Version](https://img.shields.io/badge/version-0.5.65-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.65)
 [![Cursor AI Rules](https://img.shields.io/badge/Super%20Cursor-v5.0.7-green.svg)](https://github.com/wangqiqi/cursor-ai)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
@@ -27,6 +27,7 @@
 - ✅ Mermaid 图表（graph / flowchart / sequence / gantt / state / class / pie）
 - ✅ LaTeX 数学公式（`$…$` / `$$…$$`；块级自动编号 `(1)(2)…`；支持 `\label` / `\ref`）
 - ✅ 表格转换（基础表格、对齐方式）
+- ✅ **Word 模板** · CLI `--template` 保留页眉页脚（P-STYLE-01 / v0.5.65）
 - ✅ **脚注**（`[^id]`）与 **`[TOC]`** 目录域（OOXML · v0.5.64）
 - ✅ 分隔线
 - ✅ 任务列表（TODO列表）
@@ -79,6 +80,7 @@
 - ✅ ConvertMetrics 性能基线与 CI 门禁（E-METRICS-01）
 - ✅ html/mermaid 元素转换器热路径覆盖（E-COV-01）
 - ✅ WebUI 批量转换、阶段进度与结构化错误摘要（P-WEBUI-01）
+- ✅ **Word 模板** · `--template`（P-STYLE-01 / v0.5.65）
 - ✅ **quality 样例回归** · 脚注/TOC/表格/列表（P-QUAL-01 片 1–2 / v0.5.64）
 - ✅ 依赖安全门禁 pip-audit · Dependabot · SECURITY.md（P-SEC-01 / v0.5.60）
 
@@ -265,6 +267,7 @@ export FLASK_ENV=development
 
 ```bash
 mddocx input.md output.docx
+mddocx --template company.docx input.md output.docx
 ```
 
 #### 批量转换

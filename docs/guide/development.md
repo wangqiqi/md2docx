@@ -272,6 +272,13 @@ CI `quality` job 已调用 `check_convert_metrics.sh`，且 **`METRICS_SOFT=0`**
 - **目录**：独立段落写 **`[TOC]`** 或 **`[[TOC]]`** → 插入 Word TOC 域（打开文档后更新域即可生成目录）。
 - **回归**：`pytest tests/integration/test_quality_regression.py -q`（含 `tests/samples/quality/footnotes_quality.md` · `toc_quality.md`）。
 
+### Word 模板（`--template`）
+
+- **用途**：以现有 **.docx / .dotx** 为基底转换，**保留页眉页脚与样式**，正文由 Markdown 写入。
+- **CLI**：`mddocx --template company.docx input.md output.docx`
+- **API**：`convert(..., template_path=)` · `convert_file(..., template_path=)`
+- **限制**：与 **分块（chunked）** 暂不支持同用；验收 `bash scripts/verify_template_convert.sh`
+
 ### 发版前安全（SPRINT-SEC-01）
 
 - [ ] `bash scripts/check_pip_audit.sh` 绿（与 CI 同序：升级 `pip/setuptools/wheel` 后审计 `.[dev,mcp]`）

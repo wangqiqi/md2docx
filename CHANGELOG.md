@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.65] - 2026-10-28
+
+### Added
+
+- **`--template`** / `template_path` — 以 `.docx` · `.dotx` 为基底转换，保留页眉页脚与样式（SPRINT-STYLE-01）
+- `tests/samples/templates/minimal_company.docx` · `scripts/verify_template_convert.sh`
+
+### Changed
+
+- `template_path` 与自动 **chunked** 分块互斥（fail-closed）
+
 ## [0.5.64] - 2026-10-28
 
 ### Added
