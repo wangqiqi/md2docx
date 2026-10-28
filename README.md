@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.5.62-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.62)
+[![Version](https://img.shields.io/badge/version-0.5.63-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.63)
 [![Cursor AI Rules](https://img.shields.io/badge/Super%20Cursor-v5.0.7-green.svg)](https://github.com/wangqiqi/cursor-ai)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
@@ -78,12 +78,12 @@
 - ✅ ConvertMetrics 性能基线与 CI 门禁（E-METRICS-01）
 - ✅ html/mermaid 元素转换器热路径覆盖（E-COV-01）
 - ✅ WebUI 批量转换、阶段进度与结构化错误摘要（P-WEBUI-01）
-- ✅ 文档站 npm audit · CI `docs-security` · Pages 门禁（P-DOCS-01 / v0.5.62）
+- ✅ **quality 样例回归** · 表格单元格内联/br/code（P-QUAL-01 片 1 / v0.5.63）
 - ✅ 依赖安全门禁 pip-audit · Dependabot · SECURITY.md（P-SEC-01 / v0.5.60）
 
 **规划中 📋:**
 - 活路线图（产品 / 工程 backlog）：本地 **`.growing/ROADMAP.md`**（**不入库**；clone 后由 `/learn`·`/plan` 维护）
-- 产品候选：样式/模板 · 转换质量深挖
+- 产品候选：样式/模板 · 转换质量深挖（**quality 样例回归** · v0.5.63 片 1）
 
 ## 开发环境要求
 
@@ -325,7 +325,8 @@ md2docx/
 │   ├── integration/     # 集成测试
 │   └── samples/         # 测试样例
 │       ├── basic/       # 基础语法样例
-│       └── advanced/    # 高级语法样例
+│       ├── advanced/    # 高级语法样例
+│       └── quality/     # 表格/列表结构回归
 ├── docs/                # VitePress 文档站（guide/ 阅读序，见 docs/README.md）
 ├── scripts/             # 工具脚本目录
 │   └── batch_convert.py         # 批量转换脚本

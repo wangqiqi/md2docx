@@ -38,12 +38,12 @@ tests/
     │   ├── 1.png            # image.md / tables.md 本地图资源
     │   └── ...              # 其他基础样例
     ├── advanced/            # 高级语法样例（test_convert_advanced_samples）
-    │   ├── tables.md        # 表格样例
-    │   ├── math.md          # 数学公式样例（含 \\label/\\ref）
-    │   ├── flowcharts.md    # Mermaid 流程图（含 flowchart 关键字）
-    │   └── ...              # 其他高级样例
-    └── large/               # 大文档样例（显式 chunked 冒烟）
-        └── chunked.md
+    │   └── ...
+    ├── large/               # 大文档分块冒烟
+    │   └── chunked.md
+    └── quality/             # 质量层结构回归（test_quality_regression）
+        ├── nested_lists_quality.md
+        └── tables_quality.md
 ```
 
 ### conftest 样例 fixtures
@@ -53,6 +53,7 @@ tests/
 | `samples_dir` / `samples_basic` | `tests/samples/basic/` |
 | `samples_advanced` | `tests/samples/advanced/` |
 | `samples_root` | `tests/samples/`（含 `test.md`） |
+| `samples_quality` | `tests/samples/quality/`（结构断言 · `test_quality_regression.py`） |
 
 ### 测试文件命名规范
 - **单元测试**: `test_*.py`
@@ -271,7 +272,7 @@ pytest --cov=src --cov-report=xml
 - **语句覆盖率**: ≥ **85%**（当前基线 **85%**，v0.5.32 达标）
 - **全量回归**: `pytest tests/ src/mddocx/webui/tests/` → **259 passed**（v0.5.42 基线 · T-TEST-03）
 - **CI 报告**: `pytest --cov=src/mddocx --cov-report=term-missing`
-- WebUI 与 `tests/samples` basic/advanced 均已纳入 CI
+- WebUI 与 `tests/samples` basic/advanced/quality 均已纳入 CI
 
 ### 性能标准
 - **单元测试**: 单个测试 < 0.1秒

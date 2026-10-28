@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.63] - 2026-10-28
+
+### Added
+
+- `tests/samples/quality/` 与 `test_quality_regression.py` — 深嵌套列表、表格空单元格/对齐/单元格内联（P-QUAL-01 片 1）
+
+### Fixed
+
+- 表格单元格内联：`<br>` 换行、`` `code` ``、粗斜体与删除线样式（`TableConverter`）
+
 ## [0.5.62] - 2026-10-28
 
 ### Added
