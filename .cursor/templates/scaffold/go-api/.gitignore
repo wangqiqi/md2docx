@@ -1,8 +1,0 @@
-bin/
-dist/
-*.exe
-*.test
-coverage.out
-
-# Super Cursor (plan · archive · learn · rules)
-.cursorGrowth/

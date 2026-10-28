@@ -1,0 +1,92 @@
+---
+description: ROADMAP/archive/CHANGELOG 职责 · doc-coherence · 断链与门面计数 — 文档卫生门禁（通用）
+globs:
+  - "**/*.md"
+  - docs/**/*
+  - README*
+  - "**/ROADMAP*"
+  - "**/archive/**"
+alwaysApply: false
+---
+
+# 执行规范 · 文档卫生（doc-hygiene）
+
+**用这个**：ROADMAP/archive/CHANGELOG 分工 · doc 自洽 · 断链 · README 计数。**不是那个**：写作原则与结构 → **docs.mdc** · 交付走查 → **delivery** · 可发布手册 → **user-manual** `/manual`。
+
+跨项目 CHANGELOG 审计：**文档卫生**为高频重复劳动 — ROADMAP 膨胀 · archive 混放 · doc 锚点漂移 · 门面 skills/rules 计数滞后。
+
+## 职责三联（真源）
+
+| 内容 | 放哪里 | 禁止 |
+|------|--------|------|
+| 未完成计划、候选能力 | `docs/` ROADMAP（或等价） | 大量 `done` 行长期冒充待办 |
+| 已交付长叙事 / 里程碑 | `{archive_dir}/{domain}/` 时间戳文件 | 根目录 flat 堆积 · 与 ROADMAP 双份维护同一故事 |
+| 用户可见版本差异 | `CHANGELOG.md` | 在 ROADMAP 写已发布细节 |
+
+Sprint 闭合：**archive 一篇摘要**（**至少一级域子目录**，SSOT → **plan** `reference/growth-layout.md`）· plan **删 Active 正文** · CHANGELOG `[Unreleased]` — 见 **run** skill。
+
+## doc-coherence 三联
+
+改规格/导航/术语/公开能力时同步：
+
+1. **正文** — README / `docs/` / OpenAPI 示例
+2. **锚点** — 故事线节标题 · `#anchor` · E2E/说明书选器（见 **i18n-copy**）
+3. **verify** — `verify_doc_*` 或项目等价；新增前读 **verify.mdc** §复用门禁
+
+母版：`bash .cursor/bin/verify-doc-super-cursor.sh`（被 `verify-super-cursor.sh` 聚合）。
+
+## 门面计数（母版 / Super Cursor）
+
+| 变更 | 同 Sprint 同步 |
+|------|----------------|
+| 新增/改名 skill | 根 `README.md` · `.cursor/AGENTS.md` · `docs/training/skills.md` · `docs/migration-catalog.md` 计数 |
+| 新增 rule | `verify-super-cursor.sh` · `docs/rules-catalog.md` · `AGENTS.md` execution 行 |
+| 新增 config 键 / 文件 | `config/schema.json`（否则 `verify-config.sh` FAIL）· `config/README.md` 键表 |
+| 新增 `bin/verify-*.sh` | 接入 `verify-super-cursor.sh` 或 `template-verify.sh`（**接线自检**会 FAIL）· `rules/feedback/verify.mdc` §母版门禁清单 · 根 `README.md` §验证 |
+| 改 `bin/` 目录内容 | `.cursor/README.md` §结构 的 `bin/` 清单 · 根 `README.md` §开箱即用 |
+| 新增对外文档 | `docs/scripts/sync-cursor-docs.sh` 镜像 + `docs/.vitepress/config.ts` 侧栏（否则站点看不到） |
+| 用户可见能力 | CHANGELOG `[Unreleased]` 与 README 摘要一致 |
+
+验收：`bash .cursor/bin/cursor-coherence.sh` · `verify-doc-super-cursor.sh` · `verify-config.sh`（门禁清单 → `rules/feedback/verify.mdc`）。
+
+## 代码注释卫生（应用源码）
+
+| 写在代码里 | 不写进代码 |
+|------------|------------|
+| 模块职责 · 行为 · 配置含义 · 边界条件 | `TASK-*` · `SPRINT-*` · `SPIKE-*` 等追溯编号 |
+| 通用语义（「deferred flush」） | 立项叙事（→ `CHANGELOG` · `archive/`） |
+
+可选门禁：复制 verify-layers `slices/verify_code_comments.example.sh` → 项目 `verify_code_comments.sh` 并登记 manifest（**example only**，母版不强制 L1）。
+
+## 对称清扫（HYGIENE Sprint）
+
+| 原则 | 说明 |
+|------|------|
+| **对称** | 契约变更后同步 docs · 类型/客户端生成物 · OpenAPI · verify 锚点 |
+| **不改行为** | 卫生 Sprint 默认 **Out of scope**：HTTP 路由 · 响应结构（除非独立 Breaking Sprint） |
+| **删前 grep** | 无生产引用的 export/类型，若仍被 verify 脚本引用 → 先改脚本再删 |
+| **FE 门禁** | 删类型/分支前全树 `rg` + typecheck + 项目 FE verify 切片 |
+
+细节与 verify 增长 → **test** skill `reference/verify-growth.md` · 全栈 mixed 叶 → `reference/fullstack-verify-split.md`。
+
+## 禁止
+
+- 第三个「对齐 doc/ROADMAP/README」hotfix 而不 `/plan` 文档收敛 TASK（见 **bugfix** §Follow-up）
+- 只改 CHANGELOG 不更新仍对外引用的 doc 锚点
+- 新建 `verify_doc_*` 而不 grep 已有脚本 / `scripts/lib/`
+
+## 规划与验收
+
+| 阶段 | 动作 |
+|------|------|
+| **/plan** | 大文档拆分 · ROADMAP 清 done · 全站 doc 收敛 → 单独 TASK；验收列写 `verify_doc_*` |
+| **task-verify** | 项目 doc 脚本 / 母版 `verify-doc-super-cursor.sh` |
+| **/delivery** §3 | 规格与实现 · doc-coherence |
+| **/learn** | 重复模式 → `changelog-insights.md` §重复工作模式 |
+
+## 交叉引用
+
+- 写法与 API 契约 → **docs.mdc**
+- 文案/i18n 锚点 → **i18n-copy.mdc**
+- verify 脚本复用 → **verify.mdc**
+- 项目路径与 doc 索引 → `.growing/learn/dev-conventions.md`

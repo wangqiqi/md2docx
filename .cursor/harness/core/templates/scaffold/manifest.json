@@ -1,0 +1,294 @@
+{
+  "version": 2,
+  "tier": "standard+",
+  "tier_notes": "lint+test+verify+CI+env · 8 stacks · optional bundles",
+  "categories": {
+    "frontend": [
+      "react-vite-ts",
+      "vue-vite-ts",
+      "nextjs-ts"
+    ],
+    "backend": [
+      "go-api",
+      "rust-axum",
+      "python-fastapi",
+      "java-gradle"
+    ],
+    "systems": [
+      "cpp-cmake"
+    ]
+  },
+  "test_convention": {
+    "dev_loop": "scripts/test.sh",
+    "full_verify": "scripts/verify.sh",
+    "docs": "tests/README.md"
+  },
+  "scaffolds": [
+    {
+      "id": "react-vite-ts",
+      "name": "React + Vite + TypeScript",
+      "category": "frontend",
+      "tags": [
+        "react",
+        "typescript",
+        "vite",
+        "eslint",
+        "vitest"
+      ],
+      "description": "SPA · 独立 tests/ · Vitest+RTL · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": [
+        "npm install",
+        "./scripts/verify.sh"
+      ],
+      "test_framework": [
+        "vitest",
+        "@testing-library/react"
+      ]
+    },
+    {
+      "id": "vue-vite-ts",
+      "name": "Vue 3 + Vite + TypeScript",
+      "category": "frontend",
+      "tags": [
+        "vue",
+        "typescript",
+        "vite",
+        "eslint",
+        "vitest"
+      ],
+      "description": "SPA · Composition API · Vitest · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": [
+        "npm install",
+        "./scripts/verify.sh"
+      ],
+      "test_framework": [
+        "vitest",
+        "@vue/test-utils"
+      ]
+    },
+    {
+      "id": "nextjs-ts",
+      "name": "Next.js + TypeScript",
+      "category": "frontend",
+      "tags": [
+        "nextjs",
+        "react",
+        "typescript",
+        "vitest"
+      ],
+      "description": "App Router · next lint · Vitest · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": [
+        "npm install",
+        "./scripts/verify.sh"
+      ],
+      "test_framework": [
+        "vitest",
+        "@testing-library/react"
+      ]
+    },
+    {
+      "id": "go-api",
+      "name": "Go HTTP API",
+      "category": "backend",
+      "tags": [
+        "go",
+        "http"
+      ],
+      "description": "cmd/ + internal/ + tests/integration · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": [
+        "go mod tidy",
+        "./scripts/verify.sh"
+      ],
+      "test_framework": [
+        "go test"
+      ]
+    },
+    {
+      "id": "rust-axum",
+      "name": "Rust + Axum",
+      "category": "backend",
+      "tags": [
+        "rust",
+        "axum",
+        "tokio"
+      ],
+      "description": "lib app() 可测 · tests/ 集成 · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": [
+        "cargo test",
+        "./scripts/verify.sh"
+      ],
+      "test_framework": [
+        "cargo test"
+      ]
+    },
+    {
+      "id": "java-gradle",
+      "name": "Java + Gradle (Kotlin DSL)",
+      "category": "backend",
+      "tags": [
+        "java",
+        "gradle",
+        "junit"
+      ],
+      "description": "JDK HttpServer /health · JUnit 5 · src/test/java · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": [
+        "./gradlew test",
+        "./scripts/verify.sh"
+      ],
+      "test_framework": [
+        "gradlew",
+        "junit"
+      ]
+    },
+    {
+      "id": "python-fastapi",
+      "name": "Python FastAPI",
+      "category": "backend",
+      "tags": [
+        "python",
+        "fastapi",
+        "ruff",
+        "mypy",
+        "pytest"
+      ],
+      "description": "tests/unit+integration · ruff+mypy · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": [
+        "python3 -m venv .venv",
+        "source .venv/bin/activate",
+        "pip install -e '.[dev]'",
+        "./scripts/verify.sh"
+      ],
+      "test_framework": [
+        "pytest"
+      ]
+    },
+    {
+      "id": "cpp-cmake",
+      "name": "C++ + CMake",
+      "category": "systems",
+      "tags": [
+        "cpp",
+        "cmake",
+        "gtest"
+      ],
+      "description": "GoogleTest tests/ · -Wall · CI",
+      "verify": "scripts/verify.sh",
+      "test": "scripts/test.sh",
+      "post_apply": [
+        "./scripts/verify.sh"
+      ],
+      "test_framework": [
+        "ctest"
+      ]
+    }
+  ],
+  "bundles": [
+    {
+      "id": "user-manual",
+      "name": "User manual skeleton",
+      "category": "docs",
+      "description": "Manual Contract · user guide doc · sync/verify scripts; Playwright walkthrough for frontend stacks",
+      "path": "_bundles/user-manual",
+      "layers": {
+        "shared": "shared",
+        "web": "web"
+      },
+      "stacks_web": [
+        "react-vite-ts",
+        "vue-vite-ts",
+        "nextjs-ts"
+      ],
+      "post_apply": [
+        "Edit config/manual.yaml — roles, storylines, capture commands",
+        "Web stacks: npm i -D @playwright/test && npx playwright install chromium",
+        "Add script test:e2e:manual → playwright test -c playwright.manual.config.ts",
+        "Regen: MANUAL_WALKTHROUGH_ENABLED=1 npm run test:e2e:manual && bash scripts/docs/sync_manual_screenshots.sh",
+        "L1: SKIP_MANUAL_ASSETS=1 bash scripts/verify/docs/verify_doc_manual.sh (until PNGs exist)"
+      ]
+    },
+    {
+      "id": "test-report",
+      "name": "Test report skeleton",
+      "category": "docs",
+      "description": "Report Contract · test-report doc · collect/verify scripts for verify-after benchmark docs",
+      "path": "_bundles/test-report",
+      "layers": {
+        "shared": "shared"
+      },
+      "post_apply": [
+        "Edit config/test-report.yaml — run.suites[] and verify.anchors",
+        "Tune suite commands for your stack (default: scripts/verify.sh --l1, scripts/test.sh)",
+        "Collect: bash scripts/docs/collect_test_report.sh",
+        "Regen doc: /report (from-logs if logs fresh)",
+        "L1: bash scripts/verify/docs/verify_test_report.sh"
+      ]
+    },
+    {
+      "id": "verify-layers",
+      "name": "Verify layers starter",
+      "category": "eng",
+      "description": "L1–L3 verify layering · slice registry · example slice · parallel runner · flock lock",
+      "path": "_bundles/verify-layers",
+      "layers": {
+        "shared": "shared"
+      },
+      "post_apply": [
+        "Read scripts/README-verify-layers.md and .cursor/skills/test/reference/verify-growth.md",
+        "Register entries in scripts/verify/manifest.tsv (not verify-layers.sh arrays)",
+        "L1: ./scripts/verify.sh",
+        "Registry: bash scripts/verify/slices/verify_layers_registry.sh",
+        "CI: VERIFY_REGISTRY_STRICT=1 bash scripts/verify/slices/verify_manifest_integrity.sh"
+      ]
+    },
+    {
+      "id": "design-system",
+      "name": "Design system starter",
+      "category": "frontend",
+      "description": "Neutral design-tokens.json · PageShell · ListLoadErrorAlert · color-audit.mjs",
+      "path": "_bundles/design-system",
+      "layers": {
+        "shared": "shared",
+        "web": "web"
+      },
+      "stacks_web": [
+        "react-vite-ts",
+        "vue-vite-ts",
+        "nextjs-ts"
+      ],
+      "post_apply": [
+        "Import client/src/styles/design-tokens.css in app entry",
+        "Register verify_design_tokens.sh in verify-layers (if bundle applied)",
+        "node scripts/color-audit.mjs"
+      ]
+    },
+    {
+      "id": "doc-coherence",
+      "name": "Doc coherence starter",
+      "category": "docs",
+      "description": "doc-anchors.js · verify_openapi_sync template · hygiene slice example",
+      "path": "_bundles/doc-coherence",
+      "layers": {
+        "shared": "shared"
+      },
+      "post_apply": [
+        "Add docs/openapi.yaml version anchor when API spec exists",
+        "bash scripts/docs/verify_openapi_sync.sh",
+        "bash scripts/verify/slices/verify_hygiene_example.sh"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+# 每行一条可从仓库根执行的命令（manifest type=bundle-commands 引用）
+# npm run test
+# go test ./...
+# pytest -q

@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeSubmitPrompt": [
+      {
+        "command": ".cursor/hooks/growth-init.sh"
+      }
+    ],
+    "sessionStart": [
+      {
+        "command": ".cursor/hooks/run-start.sh",
+        "timeout": 5
+      }
+    ],
+    "stop": [
+      {
+        "command": ".cursor/hooks/run-stop.sh",
+        "timeout": 5,
+        "loop_limit": 15
+      }
+    ]
+  }
+}

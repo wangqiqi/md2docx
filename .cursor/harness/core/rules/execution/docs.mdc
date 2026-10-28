@@ -1,0 +1,63 @@
+---
+description: 执行规范 — 制定与维护项目文档
+globs:
+  - "**/*.md"
+  - docs/**/*
+  - README*
+alwaysApply: false
+---
+
+# 执行规范 · 文档编写
+
+## 原则
+
+- 文档说明**为什么**与**如何操作**，不重复代码里每个标识符。
+- 行为影响用户时，与代码变更同 PR 更新文档。
+- **API 契约**： public REST/GraphQL changes update route docs and examples together.
+- **VIBE 对齐**： multi-layer features — grep shared field names against `docs/` and OpenAPI when present.
+
+## 结构（按仓库适配）
+
+- `README.md` — 安装、运行、验证、贡献
+- `docs/` — 深度指南、ADR、架构、**未完成 ROADMAP**（若有）
+- `CHANGELOG.md` — 对外已发布说明（见 `rules/feedback/changelog.mdc`）
+- **已交付里程碑长文** — 迁入 `archive/`（或项目约定归档目录）；勿与未完成 ROADMAP 混在同一「现行计划」文件里无限膨胀
+
+## ROADMAP vs 归档 vs CHANGELOG
+
+| 内容 | 放哪里 |
+|------|--------|
+| 未完成计划、候选能力 | `docs/` ROADMAP（或等价） |
+| 已交付长叙事 / 验收里程碑 | `archive/` 时间戳文件 |
+| 用户可见版本差异 | `CHANGELOG.md`（对外 SSOT） |
+
+禁止：把大量已完成项长期堆在现行 ROADMAP 冒充待办。
+
+## 功能交付清单
+
+- [ ] CLI、配置或公开 API 变更已更新 README/docs
+- [ ] **Super Cursor 母版**：skills/agents/指令/workflow 变更须 **同 Sprint** 更新根 `README.md`；`bash .cursor/bin/cursor-coherence.sh` 绿（见 **plan** · **run** skill）
+- [ ] 示例可运行或标为 deprecated
+- [ ] 修改文件内断链已修复
+- [ ] UI/功能对外交付：规格与实现一致；冲突走 **`/delivery`** · **`Decision needed`**（见 **delivery** skill）
+- [ ] 大文档拆分后：ROADMAP / 归档 / CHANGELOG 职责清晰（见上表）
+
+## 与 .growing 的分工
+
+- **通用写法 SOP** → 本 rule（留在 `.cursor/`）
+- **本项目术语、模块地图、历史决策摘要** → `/learn` 写入 `.growing/learn/`（git 忽略）
+
+## 文档自洽（doc-coherence）
+
+大型文档 Sprint 或规格↔实现易漂移时：
+
+| 手段 | 内容 |
+|------|------|
+| **脚本** | `docs/scripts/verify_doc_*.sh`（或项目等价）：grep 断链 · 版本锚点 · 表计数 · **防回退**字符串 |
+| **互链** | 相关 doc 双向链接；`docs/README.md`（或索引）列入口 |
+| **版本头** | 主文档顶栏版本号 / 日期与 CHANGELOG 大改同步 |
+
+- 脚本绿 → 可进 `task-verify`；语义完整 → **`/delivery`** §3（见 **delivery** skill「脚本化 vs 人工」）
+- **可发布操作手册**（故事线 + 配图 regen）→ **user-manual** `/manual`（见该 skill · Manual Contract）
+- **可发布测试报告**（verify 后汇总 · benchmark 文档）→ **test-report** `/report`（见该 skill · Report Contract）
+- **母版**不写具体章节号；项目锚点 → `learn/dev-conventions.md`

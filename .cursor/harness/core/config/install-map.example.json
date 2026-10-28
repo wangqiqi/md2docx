@@ -1,0 +1,47 @@
+{
+  "_comment": "SPIKE-002 draft — wire in SPRINT-HARNESS-INSTALL; full notes in .growing/archive/meta/SPIKE-002-install-behavior.md",
+  "version": 1,
+  "harness": {
+    "core_pack": ".cursor",
+    "growth_dir": ".growing",
+    "env_root": "SC_HARNESS_ROOT"
+  },
+  "adaptors": {
+    "cursor": {
+      "install_dir": ".cursor",
+      "growth_dir": ".growing",
+      "includes": ["core", "cursor_hooks", "cursor_plugin_verify"],
+      "hooks_manifest": ".cursor/hooks.json"
+    },
+    "dsh": {
+      "install_dir": ".dsh",
+      "growth_dir": ".growing",
+      "includes": ["core"],
+      "hooks_manifest": null
+    },
+    "kiro": {
+      "install_dir": ".kiro",
+      "growth_dir": ".growing",
+      "includes": ["core_rules_export"],
+      "hooks_manifest": null
+    },
+    "trae": {
+      "install_dir": ".trae",
+      "growth_dir": ".growing",
+      "includes": ["core_rules_export"],
+      "hooks_manifest": null
+    },
+    "opencode": {
+      "install_dir": ".opencode",
+      "growth_dir": ".growing",
+      "includes": ["core"],
+      "hooks_manifest": null
+    },
+    "zcode": {
+      "install_dir": ".zcode",
+      "growth_dir": ".growing",
+      "includes": ["core"],
+      "hooks_manifest": ".zcode/config.json"
+    }
+  }
+}

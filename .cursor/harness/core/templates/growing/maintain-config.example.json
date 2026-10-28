@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "description": "Optional override. Copy to .growing/maintain-config.json and edit for your machine.",
+  "protected_dirs": [
+    "~/vendor",
+    "~/models"
+  ],
+  "installer_dirs": [
+    {
+      "path": "~/Downloads",
+      "label": "Downloads",
+      "flag": "CLEAN_DOWNLOADS_INSTALLERS"
+    }
+  ],
+  "build_artifact_dirs": [
+    "~/.cache/ccache"
+  ],
+  "build_artifact_tmp_globs": [
+    "/tmp/my-app-test-*"
+  ],
+  "_note_temp_cleanup": "测试后立即回收请用 temp-cleanup.example.json → .growing/temp-cleanup.json（ephemeral/persistent 分层）；本文件偏 maintain --clean 周期清扫"
+}

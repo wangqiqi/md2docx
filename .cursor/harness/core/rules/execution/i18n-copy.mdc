@@ -1,0 +1,55 @@
+---
+description: 文案/i18n/禁词/E2E 锚点三联 — 改 copy 时同步 locale、verify 与可访问性标签（通用）
+globs:
+  - "**/*.tsx"
+  - "**/*.jsx"
+  - "**/*.vue"
+  - "**/*.svelte"
+  - "**/locales/**"
+  - "**/i18n/**"
+  - "**/*i18n*"
+  - "**/messages/**"
+alwaysApply: false
+---
+
+# 执行规范 · 文案与 i18n（i18n-copy）
+
+**用这个**：用户可见字符串、术语、禁词、E2E/说明书锚点。**不是那个**：视觉抛光 → **delivery** · 导航结构 → **ia** · 纯后端错误码 → **error-context**。
+
+跨项目 CHANGELOG 审计：**i18n/文案对齐**为最高频重复劳动之一 — 改一处漏两处（locale · aria · verify · doc06 选器）。
+
+## 必须（三联）
+
+1. **Locale 真源**
+   - 用户可见文案走项目 i18n 机制（`t()` / `useI18n` / message 文件）；禁止硬编码上屏（debug 占位除外且须 ticket）。
+   - 动态键用窄类型（如 `MessagePath`）；新增键 **所有** 活跃 locale 同步，或显式 fallback 策略写清。
+
+2. **术语与禁词**
+   - 产品禁词表 / 术语表 → `.growing/learn/acceptance.md` 或项目 docs；改 copy 前 grep 禁词。
+   - 同概念全站统一称谓（如「批次」vs「batch」混用 → 一次 Sprint 收敛，非逐页 hotfix）。
+
+3. **E2E / 说明书 / a11y 锚点**
+   - 改按钮/菜单文案时同步：`aria-label` · `data-testid` · Playwright 选器 · **user-manual** 配图 regen 锚点。
+   - 验收脚本中的字符串断言与 UI **同一真源**（优先 i18n key 或共享常量，禁止 verify 与组件各写一份中文）。
+
+## 禁止
+
+- 只改 React 组件不改 `locales/*`
+- verify/E2E 写死旧文案 while UI 已换术语
+- 为绕过 i18n 类型在组件内 `as any` 拼 message key
+- 第三个「对齐文案」hotfix 而不走 `/plan` 术语收敛 TASK
+
+## 规划与验收
+
+| 阶段 | 动作 |
+|------|------|
+| **/plan** | 术语变更 / 全站 copy 收敛 → 单独 TASK；含 verify_copy / i18n 测试 |
+| **task-verify** | 项目若有 `verify_*copy*` / i18n 单测 / ESLint i18n 规则 → 必跑 |
+| **/delivery** §2 | 文案 · i18n · 术语与实现一致 |
+| **/manual** | 故事线文案变 → 配图 regen |
+
+## 交叉引用
+
+- Bug 文案回归 → **bugfix** §Follow-up · **debug**
+- UX 分层 → **ux** · **delivery**
+- 项目 token/库路径 → `.growing/learn/acceptance.md`

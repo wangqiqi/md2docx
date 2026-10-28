@@ -1,0 +1,26 @@
+{
+  "_comment": "install-super-cursor.sh --skills-bundle; mother repo always ships all skills. Not the same as .cursor-plugin/ (5 lifecycle skills) — see cursor-platform.md §分发三轨",
+  "default": "full",
+  "bundles": {
+    "full": {
+      "description": "All skills (28); same as pre-bundle installs"
+    },
+    "core": {
+      "description": "Lifecycle + domain skills without optional tools bundle",
+      "exclude_skills": [
+        "week",
+        "disk",
+        "maintain",
+        "ops-deploy",
+        "code-stats-viz"
+      ]
+    }
+  },
+  "tools_skills": [
+    "week",
+    "disk",
+    "maintain",
+    "ops-deploy",
+    "code-stats-viz"
+  ]
+}

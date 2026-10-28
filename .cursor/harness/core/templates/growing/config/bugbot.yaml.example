@@ -1,0 +1,19 @@
+# Copy to .cursor/config/bugbot.yaml (committed on default/base branch).
+# Docs: cursor.com/docs/bugbot — all fields optional.
+version: 1
+
+triggers:
+  drafts: false
+  frequency: everyPush # everyPush | oncePerPr
+
+review:
+  effort: default # low | default | high | smart
+  smartPrompt: ""
+  incremental: true
+
+prSummary:
+  mode: comment # disabled | description | comment
+  riskScore: true
+
+autofix:
+  mode: disabled # disabled | newBranch | existingBranch

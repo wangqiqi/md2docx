@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "layerOrder": ["l1", "l2-core", "l2-standard"],
+  "defaultLayer": "l2-core",
+  "prefixRules": []
+}

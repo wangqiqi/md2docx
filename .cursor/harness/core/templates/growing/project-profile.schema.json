@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://super-cursor.local/schemas/project-profile.schema.json",
+  "title": "Super Cursor project profile",
+  "description": "Machine-readable stack and verify enablement for .growing (整包 .cursor · 按需启用).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "adapted_at", "stacks", "verify", "tech_rules"],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "adapted_at": {
+      "type": "string",
+      "minLength": 1,
+      "description": "ISO-8601 timestamp when profile was last written (scaffold adapt --write)."
+    },
+    "stacks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["detected", "primary"],
+      "properties": {
+        "detected": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "From scaffold detect_stack (filesystem signals)."
+        },
+        "primary": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "description": "Stacks enabled for session hints and verify policy; user-confirmed subset of detected."
+        }
+      }
+    },
+    "verify": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled_tiers"],
+      "properties": {
+        "enabled_tiers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["l0", "l1", "l2-core", "l2-domain", "l3", "changed"]
+          },
+          "minItems": 1
+        },
+        "enabled_slices": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Optional slice ids; empty = tier policy only (see tech-stacks.md §Verify)."
+        }
+      }
+    },
+    "tech_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["globs-only"],
+          "description": "整包 rules/tech on disk; Cursor globs + profile primary stacks at runtime."
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional human note; mirror key facts in learn/dev-conventions.md."
+    }
+  }
+}

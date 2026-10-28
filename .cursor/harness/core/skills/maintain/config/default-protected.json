@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "protected_dirs": [
+    ".growing",
+    "~/.cache/ms-playwright",
+    "~/.cache/ms-playwright-go"
+  ],
+  "installer_dirs": [
+    {
+      "path": "~/Downloads",
+      "label": "Downloads",
+      "flag": "CLEAN_DOWNLOADS_INSTALLERS"
+    }
+  ],
+  "cache_dirs": [
+    "~/.cache/google-chrome",
+    "~/.cache/mozilla",
+    "~/.cache/microsoft-edge",
+    "~/.cache/vscode-cpptools",
+    "~/.cache/uv",
+    "~/.cache/thumbnails",
+    "~/.cache/gnome-software",
+    "~/.cache/apt",
+    "~/.cache/pip",
+    "~/.cache/pre-commit",
+    "~/.cache/yarn",
+    "~/.cache/electron",
+    "~/.cache/electron-builder",
+    "~/.cache/Cypress",
+    "~/.cache/puppeteer"
+  ],
+  "extra_cache_dirs": [
+    "~/.cache/go-build",
+    "~/.cache/clangd"
+  ],
+  "build_artifact_dirs": [],
+  "build_artifact_tmp_globs": [],
+  "tmp_dev_globs": [
+    "/tmp/cursor-sandbox-cache",
+    "/tmp/node-compile-cache",
+    "/tmp/sc-cursor.*",
+    "/tmp/sc-runner-smoke.*",
+    "/tmp/sc-consumer-smoke.*",
+    "/tmp/sc-install-smoke.*",
+    "/tmp/sc-verify-parallel.*",
+    "/tmp/sc-verify-skills-bundle.*",
+    "/tmp/sc-verify-plugin-mvp.*",
+    "/tmp/pytest-of-*",
+    "/tmp/sais-pg-*"
+  ]
+}

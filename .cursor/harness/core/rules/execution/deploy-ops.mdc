@@ -1,0 +1,43 @@
+---
+description: docker-compose · .env.example · nginx 部署约定 — 布局真源与 env 对齐（通用）
+globs:
+  - "**/docker-compose*.yml"
+  - "**/docker-compose*.yaml"
+  - "**/Dockerfile*"
+  - "**/.env.example"
+  - "**/deploy/**"
+  - "**/nginx*.conf*"
+  - "**/docs/deploy/**"
+alwaysApply: false
+---
+
+# 执行规范 · 部署与运维（deploy-ops）
+
+**用这个**：改 compose / env 模板 / nginx 反代。**不是那个**：完整 SOP 与 reference → **ops-deploy** skill · 安全密钥 → **security** · 交付走查 → **delivery**。
+
+## 必须
+
+1. **单一真源**
+   - `docker-compose.yml` 默认在仓库根；勿 `compose/` 与根双份不同步
+   - `.env.example` 为唯一非密钥模板；`.env` / `.env.local` 在 `.gitignore`
+
+2. **三联对齐**
+   - 改端口/URL/服务名 → 同步 compose · `.env.example` · README（+ OpenAPI server 若存在）
+
+3. **nginx 示例**
+   - 放 `deploy/*.example` 或 `docs/deploy/` 并索引；`upstream` 与 compose **service** 名一致
+
+4. **verify 复用**
+   - 新增部署断言前读 **ops-deploy** `reference/verify-registration.md` 与 **verify.mdc** §门禁；优先扩已有脚本 / `scripts/lib/`
+
+## 禁止
+
+- compose 明文密钥
+- 第三个「对齐 env/compose」hotfix 而不 `/plan` 收敛（见 **bugfix** §Follow-up）
+- 母版仓库根目录新建 `scripts/verify_deploy.sh`（hybrid 惯例）
+
+## 交叉引用
+
+- 脚手架新建项目 → **scaffold** · `reference/ops-env-contract.md`
+- 项目路径坐标 → `.growing/learn/dev-conventions.md` §Deploy
+- 上传 limit 与 nginx `client_max_body_size` → **input-bounds**

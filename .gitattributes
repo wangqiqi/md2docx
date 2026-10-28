@@ -1,0 +1,38 @@
+# 行尾统一 —— 「无关系统」的硬前提
+#
+# 为什么必须有：Git for Windows 默认 core.autocrlf=true，克隆时会把 *.sh 转成 CRLF，
+# 首行变成 `#!/usr/bin/env bash\r` → 解释器找不到、脚本"秒退且无报错"。
+# 本文件让**所有平台检出后都是 LF**，脚本/规则/配置在 Windows 也可直接运行。
+
+* text=auto eol=lf
+
+# 脚本与规则：必须 LF（Windows 下 CRLF 会直接让脚本不可执行）
+*.sh    text eol=lf
+*.bash  text eol=lf
+*.mdc   text eol=lf
+*.py    text eol=lf
+*.json  text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.toml  text eol=lf
+*.md    text eol=lf
+*.ts    text eol=lf
+*.tsx   text eol=lf
+*.js    text eol=lf
+
+# Windows 原生脚本反过来需要 CRLF
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+*.ps1   text eol=crlf
+
+# 二进制：不做行尾/文本转换
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.pdf   binary
+*.woff  binary
+*.woff2 binary
+*.zip   binary
+*.gz    binary

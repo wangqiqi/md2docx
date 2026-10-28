@@ -1,0 +1,28 @@
+{
+  "_comment": "项目持久文档体系 —— 号位=瀑布阶段（不可变），名称按项目类型替换。门禁 bin/verify-docs-layout.sh。详见 rules/execution/project-docs.mdc。",
+  "enabled": true,
+  "profile": "web-fullstack",
+  "dir": "docs",
+  "max_numbered": 10,
+  "roadmap_file": "ROADMAP.md",
+  "allow_unnumbered": ["README.md", "ROADMAP.md"],
+  "slots": {
+    "01": { "role": "需求分析", "required": true, "names": ["需求规格", "需求规格说明书"] },
+    "02": { "role": "架构设计", "required": true, "names": ["架构设计", "系统设计"] },
+    "03": { "role": "数据/契约", "required": false, "names": ["数据库设计", "接口契约", "ABI契约"] },
+    "04": { "role": "接口/算法", "required": false, "names": ["接口设计", "算法设计"] },
+    "05": { "role": "详细设计", "required": false, "names": ["详细设计", "模块设计", "性能与基准", "状态与数据模型"] },
+    "06": { "role": "工程规范", "required": true, "names": ["开发规范", "工程规范"] },
+    "07": { "role": "使用", "required": false, "generated": "manual", "names": ["用户手册", "接口使用指南", "集成指南", "命令参考"] },
+    "08": { "role": "测试", "required": true, "generated": "report", "names": ["测试报告"] },
+    "09": { "role": "发布", "required": false, "names": ["部署运维", "发布与版本兼容", "发布与分发", "发布与安装"] },
+    "10": { "role": "调优", "required": true, "names": ["调试调优", "调试调优手册"] }
+  },
+  "profiles": {
+    "web-fullstack": { "03": "数据库设计", "04": "接口设计", "05": "详细设计", "07": "用户手册", "09": "部署运维" },
+    "api-service": { "03": "数据库设计", "04": "接口设计", "05": "详细设计", "07": "接口使用指南", "09": "部署运维" },
+    "frontend-app": { "03": "接口契约", "04": "接口设计", "05": "状态与数据模型", "07": "用户手册", "09": "发布与分发" },
+    "library": { "03": "ABI契约", "04": "算法设计", "05": "性能与基准", "07": "集成指南", "09": "发布与版本兼容" },
+    "cli-tool": { "03": "接口契约", "04": "接口设计", "05": "详细设计", "07": "命令参考", "09": "发布与安装" }
+  }
+}

@@ -1,0 +1,23 @@
+---
+description: 示例 — 双方言 SQL/查询纪律（复制到 .growing/rules/local/ 并改 globs）
+alwaysApply: false
+globs:
+  - "**/services/**"
+  - "**/lib/db*"
+---
+
+# 双方言数据访问（项目特化 · 示例）
+
+背景摘要 → `.growing/learn/dual-dialect.example.md`。
+
+## 必须
+
+1. 新增/改动查询前：grep 方言专属习语（`ANY(` · `::interval` · `unnest` 等）— 命中则改写为双方言等价。
+2. 数组参数：IN 列表展开，勿单占位符绑数组。
+3. 时间窗：应用层算 cutoff 再传参。
+4. 不为单条 SQL 扩翻译器正则 — 在 SQL 源头收敛。
+5. 敏感查询补两方言语义单测。
+
+## 禁止
+
+- 生产方言习语落在仅测方言 A 的路径且无覆盖。

@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "layerOrder": ["l1", "l2-core", "l2-standard"],
+  "defaultLayer": "l2-core",
+  "minLayer": null,
+  "prefixRules": [
+    { "prefix": "frontend/", "layer": "l1" },
+    { "prefix": "backend/", "layer": "l2-core" }
+  ]
+}

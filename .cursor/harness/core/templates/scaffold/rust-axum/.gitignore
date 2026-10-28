@@ -1,0 +1,8 @@
+/target/
+**/*.rs.bk
+
+# Super Cursor (plan · archive · learn · rules)
+.growing/
+
+# verify 锁（scripts/verify.sh 运行期创建）
+.verify.lock

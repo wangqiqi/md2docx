@@ -1,0 +1,13 @@
+# tier	type	target	stacks
+# manifest.tsv = 分层验收 SSOT（一行一入口 · 禁止同一测例多行登记）
+# tier 累积：l2-standard 含 l2-core 行；l3 含全部 tier
+# type: bash | command | bundle-commands
+# stacks（可选第 4 列）: * 或空 = 通用；逗号分隔栈 id（与 project-profile stacks.primary 求交，无交则 SKIP）
+l2-core	bash	slices/verify_manifest_integrity.sh	*
+l2-core	bash	slices/verify_layers_registry.sh	*
+l2-standard	bash	slices/verify_example_health.sh	*
+# 栈专属（按需取消注释 · adapt 后只启用 primary 匹配行）:
+# l2-standard	command	npm run lint	nodejs,react,vue,nextjs
+# l2-standard	command	npm run type-check	nodejs,react,vue,nextjs
+# l2-standard	command	./gradlew test	java
+# l2-standard	bundle-commands	bundles/example-commands.txt	nodejs

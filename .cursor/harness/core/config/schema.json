@@ -1,0 +1,160 @@
+{
+  "_comment": "Super Cursor config schema — 允许的键与类型。由 bin/verify-config.sh 校验（未知键即 FAIL，避免错键静默回退默认值）。type: string|bool|int|array|object。安装后按团队需要扩展本文件，勿在 rules/skills 正文里散落配置说明。",
+  "workflow.json": {
+    "profile": "string",
+    "plan_file": "string",
+    "archive_dir": "string",
+    "verify_default": "string",
+    "version_line_meta": "string",
+    "version_tag_glob_env": "string",
+    "version_default_env": "string",
+    "workflow": {
+      "enabled": "bool",
+      "hooks_enabled": "bool"
+    },
+    "growth": {
+      "enabled": "bool",
+      "dir": "string",
+      "learn_dir": "string",
+      "learn_sources": "array",
+      "archive_flat_max": "int",
+      "onekey_bootstrap": "bool"
+    },
+    "release": {
+      "enabled": "bool",
+      "mode": "string",
+      "config": "string"
+    },
+    "task_id": {
+      "prefixes_autonomous": "array",
+      "prefixes_skip": "array"
+    },
+    "autonomous": {
+      "default": "bool",
+      "max_loops_default": "int",
+      "confirm_before": "array",
+      "interrupt_on": "array"
+    },
+    "role": {
+      "default": "string",
+      "config": "string"
+    },
+    "followup_gate": {
+      "enabled": "bool",
+      "require_spike_after_patches": "int",
+      "require_spike": "bool",
+      "symptom_cluster_rules": "array"
+    },
+    "sdd": {
+      "specs_dir": "string",
+      "principles_file": "string",
+      "feature_id_width": "int"
+    },
+    "task_verify_heuristics": {
+      "enabled": "bool",
+      "fallback_test_script": "string",
+      "fallback_verify_script": "string",
+      "frontend_test_dir": "string",
+      "backend_test_dir": "string",
+      "frontend_test_cmd": "string",
+      "backend_test_cmd": "string"
+    },
+    "temp_cleanup": {
+      "enabled": "bool",
+      "config": "string",
+      "after_test": "bool",
+      "after_verify": "bool",
+      "after_task_verify": "bool",
+      "sweep_after_verify": "bool",
+      "dry_run": "bool"
+    }
+  },
+  "release.json": {
+    "changelog_file": "string",
+    "unreleased_heading": "string",
+    "version_heading_pattern": "string",
+    "tag_format": "string",
+    "tag_prefix": "string",
+    "annotated_tags": "bool",
+    "order": "string",
+    "merge_policy": "string",
+    "plan_file": "string",
+    "archive_dir": "string",
+    "tag_per_commit": "bool",
+    "bump": {
+      "default": "string",
+      "auto_minor": "bool",
+      "auto_major": "bool"
+    },
+    "version_source": {
+      "from_git_tag": "bool",
+      "plan_meta_version_line": "string",
+      "plan_meta_version_default": "string",
+      "plan_meta_release_bump": "string"
+    }
+  },
+  "roles.json": {
+    "version": "string",
+    "description": "string",
+    "default": "string",
+    "default_note": "string",
+    "skills_policy": "string",
+    "skills_policy_note": "string",
+    "speech_rules": "object",
+    "call_resolution": "object",
+    "personas": "array"
+  },
+  "skill-bundles.json": {
+    "_comment": "Install-time skills subset; see install-super-cursor.sh --skills-bundle",
+    "default": "string",
+    "bundles": "object",
+    "tools_skills": "array"
+  },
+  "profiles/full.json": {
+    "profile": "string",
+    "workflow": {
+      "enabled": "bool",
+      "hooks_enabled": "bool"
+    },
+    "autonomous": {
+      "default": "bool"
+    },
+    "task_verify_heuristics": {
+      "enabled": "bool"
+    }
+  },
+  "profiles/lite.json": {
+    "profile": "string",
+    "workflow": {
+      "enabled": "bool",
+      "hooks_enabled": "bool"
+    },
+    "autonomous": {
+      "default": "bool"
+    },
+    "task_verify_heuristics": {
+      "enabled": "bool"
+    }
+  },
+  "profiles/rules-only.json": {
+    "profile": "string",
+    "workflow": {
+      "enabled": "bool",
+      "hooks_enabled": "bool"
+    },
+    "task_verify_heuristics": {
+      "enabled": "bool"
+    }
+  },
+  "docs-layout.json": {
+    "_comment": "项目文档体系（号位=瀑布阶段）。profiles/slots 为自由结构，仅校验顶层类型。",
+    "enabled": "bool",
+    "profile": "string",
+    "dir": "string",
+    "max_numbered": "int",
+    "roadmap_file": "string",
+    "allow_unnumbered": "array",
+    "slots": "object",
+    "profiles": "object"
+  }
+}

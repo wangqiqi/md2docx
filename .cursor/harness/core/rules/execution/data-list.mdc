@@ -1,0 +1,58 @@
+---
+description: 分页列表与 cursor pager — render 重置、limit 与 API tunable 对齐（通用）
+globs:
+  - "**/*.tsx"
+  - "**/*.jsx"
+  - "**/*.vue"
+  - "**/*.svelte"
+  - "**/*page*"
+  - "**/*pager*"
+  - "**/*pagination*"
+  - "**/*List.tsx"
+  - "**/*List.jsx"
+  - "**/*List.vue"
+  - "**/*List.svelte"
+alwaysApply: false
+---
+
+# 执行规范 · 数据列表与分页（data-list）
+
+**用这个**：表格/列表分页、无限滚动、cursor 翻页、筛选后页码。**不是那个**：大批量 ID 查询 → **data-batch** · 异步 job 进度 → **async-progress** · 长任务 UI → **long-running-ui**。
+
+## 必须
+
+1. **筛选/数据源变更 → 重置分页**
+   - 切换 tab、filter、sort、search 时在 **render 路径或同一 effect** 将 page/cursor 置首屏；禁止 stale 页码导致空列表。
+   - React：`set-state-in-effect` 争议场景 — 优先「key 重置子树」或 derive page from filter；必要时 eslint-disable **带注释**说明。
+
+2. **前后端 limit 一致**
+   - 列表 `pageSize` / `limit` 与 API 默认及 `GET .../app-config`（或等价 tunable）对齐；改一端须 grep 另一端。
+   - 批量上限与 **data-batch** · **input-bounds** 一致；禁止 UI 允许选择超过 API 硬顶。
+
+3. **Cursor / offset 契约**
+   - 服务端 cursor 分页：客户端只传 opaque cursor + limit；禁止混用 offset 与 cursor 两套语义。
+   - 「加载更多」须处理 `isDone` / 重复项 / 插入删除时的 reactive 一致性（Convex 等用官方 paginate 模式）。
+
+4. **空态与 loading**
+   - 分页 loading 与全页 loading 分层；空列表与「筛选无结果」文案区分。
+
+## 禁止
+
+- filter 变了仍请求 `page=7`
+- 每个列表页 copy-paste 一套 pager hook 而不抽共享 `useCursorPagePager`（或项目等价）
+- 无索引的全表 `.collect()` 假分页（见 Convex **query-optimization**）
+
+## 规划与验收
+
+| 阶段 | 动作 |
+|------|------|
+| **/plan** | 新列表域 TASK 验收列写分页边界（首屏 · 换 filter · 最后一页） |
+| **task-verify** | 单测覆盖 page reset；有 `verify_*fe*` 则含列表 smoke |
+| **/delivery** §5 | 长列表 · 空态 · 加载态走查 |
+
+## 交叉引用
+
+- 批量 ID / IN 分块 → **data-batch**
+- 上传后轮询列表刷新 → **async-progress** · **long-running-ui**
+- 项目 pager 工具类名 → `.growing/learn/dev-conventions.md`
+- 列表 `GET` JSON 信封（`items` · `total` · `next_cursor`）→ **api** skill `reference/list-pagination-contract.md`

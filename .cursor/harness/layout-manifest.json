@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "core": {
+    "top_level_dirs": ["agents", "bin", "config", "docs", "lib", "rules", "skills", "templates"],
+    "top_level_files": ["AGENTS.md", "README.md", "verify-super-cursor.sh", "verify-system.sh"],
+    "bin_adaptor_only": [
+      "verify-cursor-plugin-mvp.sh",
+      "verify-cursor-plugin-manifest.sh",
+      "verify-cursor-platform-contract.sh",
+      "verify-spike-plugin-mvp-scope.sh",
+      "verify-spike-plugin-agents-scope.sh",
+      "verify-spike-plugin-phase2-scope.sh"
+    ],
+    "docs_adaptor_only": ["cursor-cloud.md", "plan-run.md"]
+  },
+  "adaptors": {
+    "cursor": {
+      "top_level_dirs": ["hooks"],
+      "top_level_files": ["hooks.json"],
+      "bin_from_core": true,
+      "docs_from_core": true
+    },
+    "zcode": {
+      "top_level_dirs": ["docs"],
+      "top_level_files": ["README.md", "hooks.json"],
+      "bin_from_core": false,
+      "docs_from_core": false
+    },
+    "placeholders": ["dsh", "kiro", "trae", "opencode"]
+  }
+}

@@ -1,7 +1,7 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.5.57-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.57)
-[![Cursor AI Rules](https://img.shields.io/badge/Cursor%20AI%20Rules-v3.0.0-green.svg)](https://github.com/wangqiqi/cursor-ai-rules)
+[![Version](https://img.shields.io/badge/version-0.5.58-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.58)
+[![Cursor AI Rules](https://img.shields.io/badge/Super%20Cursor-v5.0.7-green.svg)](https://github.com/wangqiqi/cursor-ai)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
 
@@ -66,7 +66,7 @@
 
 ## 规划与路线图
 
-📋 本地开发编排：`.cursorGrowth/plan.md`（**不入库**，jwplan/jwrun 自用）· **在线文档**：<https://wangqiqi.github.io/md2docx/> · 源码：[docs/](docs/)
+📋 本地开发编排：`.growing/plan.md`（**不入库**；旧 `.cursorGrowth/` 安装时自动迁移）· **在线文档**：<https://wangqiqi.github.io/md2docx/> · 源码：[docs/](docs/)
 
 **已完成 ✅:**
 - ✅ 专业测试体系 (379 测试，覆盖率 ≥85%，CI 持续验证)
@@ -81,7 +81,7 @@
 - ✅ WebUI 批量转换、阶段进度与结构化错误摘要（P-WEBUI-01）
 
 **规划中 📋:**
-- 活路线图（产品 / 工程 backlog）：本地 **`.cursorGrowth/ROADMAP.md`**（**不入库**；clone 后由 `/learn`·`/plan` 维护）
+- 活路线图（产品 / 工程 backlog）：本地 **`.growing/ROADMAP.md`**（**不入库**；clone 后由 `/learn`·`/plan` 维护）
 - 产品候选：样式/模板 · 转换质量深挖
 
 ## 开发环境要求

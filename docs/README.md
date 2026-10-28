@@ -29,5 +29,5 @@ npm run docs:dev
 | 发布流程 | [/guide/release](/guide/release) |
 | 版本工作流 | [/guide/version-workflow](/guide/version-workflow) |
 
-> **Sprint / 待办真源**：`.cursorGrowth/plan.md`（本地，不入库）。  
-> **活路线图**：`.cursorGrowth/ROADMAP.md`（本地，不入库）。
+> **Sprint / 待办真源**：`.growing/plan.md`（本地，不入库；自 v0.5.58 起，原 `.cursorGrowth/` 已迁移）。  
+> **活路线图**：`.growing/ROADMAP.md`（本地，不入库）。

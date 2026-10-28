@@ -1,0 +1,96 @@
+---
+description: 项目持久文档体系 — 号位=瀑布阶段 · 名称按项目类型替换 · ≤10 号位 + ROADMAP；docs/ 编辑或改 docs-layout 时加载
+globs:
+  - "docs/**/*.md"
+  - ".cursor/config/docs-layout.json"
+alwaysApply: false
+---
+
+# 执行规范 · 项目文档体系（瀑布式）
+
+目标：**对外持久的项目文档有固定骨架**——可通读、编号稳定、按项目类型裁剪，而不是随手在 `docs/` 堆文件。
+
+配置真源：`.cursor/config/docs-layout.json`（`enabled` · `profile` · `dir` · `max_numbered` · `slots` · `profiles`）
+门禁：`bash .cursor/bin/verify-docs-layout.sh`（聚合进 `verify-super-cursor.sh`）
+**一键 bootstrap**：`bash .cursor/bin/runner.sh docs-init [--profile <p>] [--slots 03,04] [--all]`
+默认只铺**必选号位** + `ROADMAP.md` + `docs/README.md` 索引；`--profile` 会写回 `config/docs-layout.json`；幂等（已存在默认 skip，`--force` 覆盖）；`--dry-run` 预演。
+
+项目侧登记：`.growing/learn/plan-conventions.md`（本项目选了哪个 profile、哪些号位启用）
+
+## 号位 = 瀑布阶段（不可变）
+
+**号位语义固定，名称按项目类型替换** —— 这样不同项目的 `03` 永远指"数据/契约"层，跨项目可对齐。
+
+| 号 | 阶段语义 | 典型名称 | 必选 |
+|----|----------|----------|------|
+| `01` | **需求分析** | 需求规格说明书 | ✅ |
+| `02` | **架构设计**（概要设计） | 架构设计说明书 | ✅ |
+| `03` | **数据 / 契约** | 数据库设计 ⟷ 接口契约 ⟷ ABI 契约 | — |
+| `04` | **接口 / 算法** | 接口设计（REST/gRPC/ABI/CLI）⟷ 算法设计 | — |
+| `05` | **详细设计** | 详细设计 / 模块设计 / 性能与基准 | — |
+| `06` | **工程规范** | 开发规范（含测试策略 · 分支/提交） | ✅ |
+| `07` | **使用** | 用户手册 / 接口使用指南 / 集成指南 / 命令参考 | — · **自动生成** |
+| `08` | **测试** | 测试报告（含 benchmark） | ✅ · **自动生成** |
+| `09` | **发布** | 部署运维 / 发布与版本兼容 | — |
+| `10` | **调优** | 调试调优手册 | ✅ |
+| — | 长期计划 | **`ROADMAP.md`**（例外 · 不加序号） | ✅ |
+
+`03` 与 `04` 的顺序固定为 **数据 → 接口**：接口依赖数据模型，先定模型再定契约。
+
+## Profile（项目类型 → 名称替换）
+
+`config/docs-layout.json` → `profile` 选一，决定条件号位的名称：
+
+| profile | 03 | 04 | 05 | 07 | 09 |
+|---------|----|----|----|----|----|
+| `web-fullstack` | 数据库设计 | 接口设计 | 详细设计 | 用户手册 | 部署运维 |
+| `api-service` | 数据库设计 | 接口设计 | 详细设计 | 接口使用指南 | 部署运维 |
+| `frontend-app` | 接口契约 | 接口设计 | 状态与数据模型 | 用户手册 | 发布与分发 |
+| `library` | ABI契约 | 算法设计 | 性能与基准 | 集成指南 | 发布与版本兼容 |
+| `cli-tool` | 接口契约 | 接口设计 | 详细设计 | 命令参考 | 发布与安装 |
+
+**纯算法库 / 动态库**（无数据库、无前端）用 `library`：`03` 放 ABI/头文件契约，**不写数据库设计**。
+`/learn` 可据仓库证据（`package.json` · ORM/迁移目录 · `Cargo.toml` + `src/lib.rs` · CLI 入口 · 前端框架）建议 profile。
+
+## 命名与序号纪律
+
+- 文件名：`NN_中文功能.md`（两位号 + 下划线 + 名称），例 `01_需求规格.md` · `03_数据库设计.md`
+- **带序号文档硬上限 10**（`max_numbered`）；`ROADMAP.md` 例外不计入
+- 号 **不重用**：删除后留空号，新文档**追加**；重排会断 git 历史与外部链接
+- 细则放**同号子目录**：`docs/03_数据库设计/02_表结构.md`（子目录不计入 10，主文件仍在根）
+- `docs/` 根**只允许** `NN_*.md` + `config/docs-layout.json` → `allow_unnumbered`（默认 `README.md` · `ROADMAP.md`）
+
+## 自动生成的两份（禁止手写）
+
+| 号 | 文档 | 生成入口 | 路径来源 |
+|----|------|----------|----------|
+| `07` | 使用文档 | **`/manual`**（user-manual · Manual Contract） | `config/manual.yaml` → `doc_path` |
+| `08` | 测试报告 | **`/report`**（test-report · Report Contract） | `config/test-report.yaml` → `doc_path` |
+
+文件头必须带生成标记，供门禁与 regenerate 识别：
+
+```markdown
+<!-- generated: manual · regenerate: /manual -->
+```
+
+**不要手改**这两份；要改先改契约（`doc_path` / 章节配置）再重新生成。
+
+## 必备但**不**进编号（生态约定名）
+
+`README.md` · `CHANGELOG.md` · `LICENSE` · `NOTICE` · `CONTRIBUTING.md` · `SECURITY.md` —— 这些文件名由 GitHub / npm / crates 等生态固定，**不**改成 `00_README.md`。
+
+| 内容 | 去处 |
+|------|------|
+| 对外持久文档（需求/设计/契约/手册/报告/运维/调优） | `docs/NN_*.md` |
+| 长期计划 | `docs/ROADMAP.md`（**进行中/计划中** 未交付行不得随意删；已完成迁出或归档 — 见 **plan** `reference/task-retention.md`） |
+| 项目本地认知（模块地图 · 发版节奏 · 踩坑） | `.growing/learn/`（gitignore） |
+| 已交付长叙事 | `.growing/archive/{domain}/` |
+| 安全与威胁模型 | 并入 `02_架构设计`（不单独占号） |
+| 性能基准 | 并入 `08_测试报告`（`/report` benchmark）或 `10_调试调优` |
+
+## 与已有机制的衔接
+
+- **SDD**：`01_需求规格.md` 用 `templates/sdd/spec-template.md` · `02_架构设计.md` 用 `tech-plan-template.md` · `05_详细设计.md` 用 `tasks-template.md`；**不另写一套**
+- **plan**：大改版立 `DOC-*` 任务，验收写 `bash .cursor/bin/verify-docs-layout.sh`
+- **doc-hygiene 三联**：改文档 → 同步锚点 → verify（`doc-hygiene.mdc`）
+- **渐进启用**：`docs/` 尚无编号文档时不 FAIL，只提示；一旦有第 1 份编号文档，全部断言生效

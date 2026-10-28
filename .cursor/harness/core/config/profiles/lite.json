@@ -1,0 +1,13 @@
+{
+  "profile": "lite",
+  "workflow": {
+    "enabled": true,
+    "hooks_enabled": false
+  },
+  "autonomous": {
+    "default": true
+  },
+  "task_verify_heuristics": {
+    "enabled": false
+  }
+}

@@ -1,0 +1,31 @@
+---
+description: 示例 — Agent 验收分层（复制到 .growing/rules/local/ 并按项目改命令）
+alwaysApply: true
+---
+
+# Agent 验收（项目特化 · 示例）
+
+真源：**verify.mdc** §分层验收 · **test** skill。
+
+## 必须
+
+- 编码后默认跑 **增量** 入口（例：`./scripts/verify.sh --changed` 或 `npm run verify:changed`）；仅改 UI 树时用定向单测。
+- 动到 **服务端** 再用 core 子集或 plan/TASK 列出的域脚本；Sprint 出口才跑 standard/full。
+- 长测用项目包装脚本（timeout · 并发上限）；用户要求停止时结束进程，**不要**再开无参全量。
+
+## 禁止
+
+- 小 diff 用 **全量集成/L2** 当默认验收。
+- 连续多轮全量「消 flake」（最多定向重跑失败用例一轮）。
+- 绕过项目 test 包装直接调底层 runner（易缺 timeout/环境变量）。
+
+## 速查（改成你的 npm/Makefile 名）
+
+| 层 | 入口 |
+|----|------|
+| L1 | `./scripts/test.sh` |
+| 增量 | `verify:changed` 或 `--changed` |
+| L2-core | `verify:core` |
+| L2 | `verify:standard` |
+
+`changed-map.json` 可为跨目录协作挂额外 slice（非全量默认）。

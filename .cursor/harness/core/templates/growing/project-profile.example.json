@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "adapted_at": "2026-10-26T01:00:00+08:00",
+  "stacks": {
+    "detected": ["java"],
+    "primary": ["java"]
+  },
+  "verify": {
+    "enabled_tiers": ["l0", "l1", "l2-core"],
+    "enabled_slices": []
+  },
+  "tech_rules": {
+    "mode": "globs-only"
+  },
+  "notes": "Brownfield adapt example; run: .cursor/bin/scaffold.sh adapt --write"
+}

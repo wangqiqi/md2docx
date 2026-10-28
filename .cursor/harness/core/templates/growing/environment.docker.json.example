@@ -1,0 +1,7 @@
+{
+  "install": "npm ci 2>/dev/null || npm install",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  }
+}

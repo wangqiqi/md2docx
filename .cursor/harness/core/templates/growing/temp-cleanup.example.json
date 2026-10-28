@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "enabled": true,
+  "description": "复制为 .growing/temp-cleanup.json。在此登记本项目 /tmp glob（勿写入母版 .cursor/）。",
+  "rules": [
+    {
+      "id": "ephemeral-workdirs",
+      "glob": "/tmp/myapp-*",
+      "tier": "ephemeral",
+      "after": ["test", "verify", "task-verify"]
+    },
+    {
+      "id": "session-fixtures",
+      "glob": "/tmp/myapp-session-*",
+      "tier": "persistent",
+      "max_age_hours": 72,
+      "after": ["sweep"]
+    }
+  ]
+}

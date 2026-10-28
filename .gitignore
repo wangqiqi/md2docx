@@ -136,7 +136,8 @@ dmypy.json
 *.swo
 *~
 
-# Cursor AI Rules system
+# Cursor AI Rules system（Super Cursor 产出 · 不入库）
+.growing/
 .cursorGrowth/
 .cursor/backup/
 
@@ -174,4 +175,7 @@ docs/.vitepress/cache/
 # DSH 本地编排状态（不入库，同 .cursorGrowth/）
 .dsh/
 
-plan.md
+plan.md.growing/
+.cursor/rules/local
+.cursor/hooks/state/*
+!.cursor/hooks/state/README.md

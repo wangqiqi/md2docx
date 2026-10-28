@@ -1,0 +1,86 @@
+# Super Cursor 母版 — Cursor Agent 硬排除（Tab / Agent / @ 均不可读）
+# .gitignore 主要影响索引；密钥与依赖目录须在此重复声明
+
+# --- Node / 前端（本地试跑 scaffold 时）---
+node_modules/
+.pnpm-store/
+.yarn/
+.pnp.*
+dist/
+build/
+.next/
+out/
+.turbo/
+.parcel-cache/
+.vite/
+coverage/
+*.tsbuildinfo
+
+# --- Python ---
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+*.egg-info/
+.eggs/
+htmlcov/
+.coverage
+.coverage.*
+
+# --- Rust ---
+target/
+
+# --- Go（/bin/ 仅根目录 — 勿写 bin/ 会误伤 .cursor/bin/）---
+/bin/
+*.exe
+*.test
+coverage.out
+*.out
+
+# --- Java / JVM ---
+.gradle/
+build/
+out/
+target/
+*.class
+
+# --- C / C++ ---
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.dll
+
+# --- 通用临时 / 缓存 / 日志 ---
+*.log
+*.tmp
+*.temp
+.cache/
+.DS_Store
+Thumbs.db
+
+# --- 项目认知（learn/ 保留可索引）---
+.growing/logs/
+.growing/perception/
+
+# --- 敏感 ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets.*
+
+# --- 母版模板二进制（无需 Agent 编辑）---
+*.jar

@@ -1,0 +1,141 @@
+---
+description: 验收命令与分层 — gate-check · task-verify · verify 脚本；编辑 plan VERIFY 或 scripts/ 时加载
+globs:
+  - .growing/plan.md
+  - plan.md
+  - scripts/verify.sh
+  - scripts/test.sh
+  - .cursor/config/workflow.json
+alwaysApply: false
+---
+
+# 验收
+
+遵循 `rules/workflow.mdc`：`gate-check`/`task-verify` 非 OK 不得 ✅ 或 commit；打 tag 前 `verify`。
+
+## 命令
+
+```bash
+./.cursor/bin/runner.sh gate-check
+./.cursor/bin/runner.sh task-verify    # 当前 ACTIVE 任务
+./.cursor/bin/runner.sh verify         # Sprint / 打版前全量（读 plan VERIFY 后执行脚本）
+```
+
+**勿混淆**：`runner.sh verify` 是 **CLI 入口**；plan 工作副本（`workflow.json` → `plan_file`）里的 `<!-- VERIFY: ... -->` 必须指向 **项目验收脚本**（默认 `./scripts/verify.sh`），**禁止**写 `runner.sh verify`（会无限递归）。
+
+## 验收列约定
+
+| 阶段 | 推荐 |
+|------|------|
+| 每个 TASK · `task-verify` | `./scripts/verify.sh`（**L1**，~20s） |
+| merge / 高频 patch 前 | `npm run verify:core`（**L2-core**，~2–4min） |
+| Sprint 收尾 · 打 tag 前 | `npm run verify:standard`（**L2**，优先 CI） |
+| CI / nightly | `./scripts/verify.sh --full`（**L3**） |
+
+**禁止**把 `--standard` 或 `--full` 当每个 TASK 的默认门禁。plan `<!-- VERIFY: ... -->` 写 Sprint 出口层（通常 `verify:core` 或 `verify:standard`），TASK 验收列写 L1 或域脚本。
+
+### Agent · 分层运行（禁止拖慢）
+
+Cursor Agent 跑验收时对齐上表 **L0–L3**，**勿**把 Sprint/打版层当每个 TASK 默认。
+
+| 意图 | 用这个 | 不是那个 |
+|------|--------|----------|
+| 仅客户端/前端树 | `./scripts/test.sh` · 定向单文件测 · 项目若有 `verify:changed` | 无参全量 L2/L3 集成 |
+| 服务端/后端树 | plan 验收列 · L2-core 子集 · 单文件测 | 连续多轮全量「消 flake」 |
+| TASK 收尾 | `task-verify` 列出的命令 | plan `<!-- VERIFY: ... -->` 全量 |
+| Sprint / `release-tag` | plan `VERIFY` · L2/L3 | — |
+
+增量计划（`verify:changed` + `changed-map`）由项目或 scaffold **verify-layers** bundle 提供；路径坐标写 Growth `learn/`，**勿**在 `.cursor/` 写死业务域。
+
+| 阶段（简表） | 推荐 |
+|------|------|
+| 开发任务 | `./scripts/test.sh`（= L1 子集） |
+| 任务收尾 / P0 | `./scripts/verify.sh` |
+
+`task_verify_heuristics.enabled` 默认 **false**（`config/workflow.json`）。设为 `true` 时，描述性验收列回退 `fallback_test_script` / `fallback_verify_script`。
+
+用户可见修复 → CHANGELOG `### Fixed`。
+
+## 分层验收（verify-layers）
+
+**通用增长 SSOT**（栈无关 · 详 **test** skill `reference/verify-growth.md`）：
+
+| 件 | 路径 | 用途 |
+|----|------|------|
+| **manifest** | `scripts/verify/manifest.tsv` | tier × 类型（`bash` · `command` · `bundle-commands`）一行一入口 |
+| **runner** | `scripts/verify/run-manifest-tier.sh` | 累积 tier；空 tier / 空 bundle **FAIL** |
+| **去重** | `audit-dedup.config.json` + `audit-dedup.mjs` | 测例只登记一次 |
+| **增量** | `changed-map.json` + `verify:changed` | 按 diff 最小层 |
+| **/tmp 契约** | `.growing/temp-cleanup.json` + `project-tmp-cleanup.sh` | 测试后删 `ephemeral`；`persistent` 靠 `max_age_hours` + `sweep` |
+
+大型或跨模块功能：除 `./scripts/test.sh` / `./scripts/verify.sh` 外，新增能力 **只加 manifest 一行** 或 `scripts/verify/slices/verify_<feature>.sh`。栈专属坐标 → Growth `learn/`。
+
+| 层 | 典型内容 | 外部依赖 | 默认 CI |
+|----|----------|----------|---------|
+| **L0** | 关键文件 / 配置存在 | 无 | ✅ |
+| **L1** | import · 单元测试 · 静态检查 | 无 | ✅ |
+| **L2-core** | P0 切片并行（例：`verify-core.sh`） | 无 · 无 Docker 默认可 SKIP | merge 前 |
+| **L2** | 全量切片（例：`--standard`） | 部分 slice 需 Playwright/Docker | Sprint / 打版 |
+| **L3** | `--full`：L2 + HEAVY + build + perf | 基础设施 | CI / nightly |
+
+约定：
+
+- **默认**（无参）：跑到 **L1**（或项目文档约定的最快绿层）
+- **`--full`**：跑到 **L3**
+- **聚合脚本**（示例 `scripts/verify_all.sh`）：顺序调用各域脚本；新域交付时 **注册一行**，勿复制整套逻辑进每个域脚本
+- **目录落点**：域脚本 `verify/domain/` · tier orchestrator `verify/tier/` · 公因子 `lib/_*.sh` · 工具 `ops/`/`dev/` → **plan** `reference/growth-layout.md`（Growth `archive/{domain}/` 同源）
+
+plan **验收列**写可执行命令（如 `bash scripts/verify_<feature>.sh`）；Sprint 全量走 `plan VERIFY` 或 `./scripts/verify.sh`。
+
+## Super Cursor layout 验收（`verify-super-cursor.sh`）
+
+与 **task-verify / `scripts/verify.sh`** 不同：校验 `.cursor/` 母版 **文件布局与自洽**（非业务测试）。
+
+| 模式 | 判定 | 纯母版项（`install-super-cursor.sh` · 禁止根 `scripts/` · `.github/workflows/verify.yml`） |
+|------|------|----------------------------------------------------------------------------------------------|
+| **mother** | 纯母版空仓；或 `SC_VERIFY_LAYOUT=mother` | **必须**满足 |
+| **hybrid** | 根目录有 `scripts/` · `backend/` · `frontend/` 等业务树（自动）；或 `SC_VERIFY_LAYOUT=hybrid` | **SKIP**；改验 `scripts/verify.sh` 存在 |
+
+混合仓日常：**`cursor-coherence.sh`** + **`verify-super-cursor.sh`**；纯母版空仓：**`bash .cursor/template-verify.sh`**（先 `harness/link-cursor-ide.sh`）。母版 SSOT → `harness/README.md` · 根 `README.md` §验证。
+
+**L0–L3 真源在本文件**；**test** skill 只引用本表，勿另写一份层定义。测试文件细则 → `rules/execution/testing.mdc` · 垂直切片层序 → `rules/execution/vibe.mdc`。
+
+## task-verify 语义（fail-closed）
+
+`./.cursor/bin/runner.sh task-verify` 按 `acceptance_kind()` 判定，**描述性验收不再静默通过**：
+
+| 验收列形态 | 行为 |
+|------------|------|
+| 可执行命令（`./…` · `npm …` · `pytest …` · `bash …`） | 执行，按其退出码 |
+| `manual: <步骤与证据>` | **唯一豁免** → 0；证据须落 plan/CHANGELOG |
+| 描述性文字 + `fallback_test_script` 存在（heuristics 开） | 跑兜底脚本 |
+| 描述性文字（其余） | **FAIL + 退出 1**，并给出改写建议 |
+
+`plan-check` 会在**开工前**对 prose 验收列 WARN 并计入 issues。写法 → `.cursor/templates/plan.md`。
+
+## 母版门禁清单（分组聚合 · 全部接线）
+
+`verify-super-cursor.sh` 聚合全部 `bin/verify-*.sh`（含 **接线自检**）；`template-verify.sh` 是母版 CI 完整入口（上式 + coherence + scaffold + runner + install + `consumer-smoke.sh`）。**分组全表**与三轨分发 → `docs/migration-catalog.md` §母版 verify 索引 · 根 `README.md` §验证。
+
+| 组 | 脚本（`.cursor/bin/`） | 守护什么 | 触发 |
+|----|-------------------------|----------|------|
+| **core** | `verify-rules-globs` · `verify-portability` · `verify-config` · `verify-roo-compat` · `verify-secrets` · `verify-scripts-layout` · `verify-docs-layout` · `verify-changelog` · `verify-doc-super-cursor` · `verify-growth-layout` · `verify-harness-layout` · `verify-adaptor-contract` · `verify-mother-root-bin` · `verify-onekey-template` | 规则 glob · 可移植 · schema · 协议字段 · 密钥 · scripts/docs 布局 · CHANGELOG · harness/adaptors 分区 · 占位 adaptor 契约 · 母版根 `bin/super-cursor-sync` · project-onekey 模板 | 通用 / 母版 |
+| **install** | `verify-skill-bundles-ssot` · `verify-install-skills-bundle` · `verify-install-dsh` · `verify-install-rules-export` · `verify-install-opencode` · `verify-spike-skills-bundle-scope` · `verify-spike-onekey-bootstrap-scope` | `skill-bundles.json` ↔ 磁盘 · install 冒烟 · `.dsh/` · kiro/trae · `.opencode/` · onekey SPIKE | 母版 |
+| **docs-sync** | `verify-spike-docs-sync-scope` | project-docs · `docs-init` SPIKE 归档 | 母版 |
+| **plugin** | `verify-cursor-plugin-manifest` · `verify-cursor-plugin-mvp` · `verify-spike-plugin-mvp-scope` · `verify-spike-plugin-agents-scope` · `verify-spike-plugin-phase2-scope` · `verify-spike-marketplace-prep-scope` | `.cursor-plugin/` 子集 · 三轨 · Marketplace prep 归档 | 母版 |
+| **platform** | `verify-cursor-platform-contract` · `verify-spike-tools-skills-archive` | 官方对齐 · tools/skills SPIKE | 母版 |
+| **hygiene** | `verify-spike-mother-hygiene-scope` | README / `migration-catalog` 门面与聚合脚本 SSOT（Growth 归档） | 母版 |
+| **E2E** | `consumer-smoke.sh`（经 `template-verify`） | 目标项目：install → 闸门 BLOCK → hook → 全绿 | 母版 |
+
+**接线自检**：每个 `bin/verify-*.sh` 必须被 `verify-super-cursor.sh` 或 `template-verify.sh` 调用，否则 FAIL —— 防止「脚本存在但从未生效」。
+
+**新增一门禁的固定动作**：脚本 + 至少一个负向测试 + 接入聚合 + 更新本节与 `migration-catalog` §母版 verify 索引 + 需要时同步根 `README.md` §验证 · `.cursor/README.md` · `building-super-cursor.md` 触发表。
+
+## 跨平台与 CI
+
+- **目标项目**：无 `install-super-cursor.sh` 时 `verify-super-cursor.sh` **SKIP** 母版块（Growth SPIKE · plugin · hygiene · `install-smoke` 路径）；通用 core 门禁仍跑
+- **SPIKE 归档门禁（母版）**：`.growing/archive/meta/` 是本地私有（`.growing/` 不入 git）。该目录**不存在**（新克隆 / CI）时归档段 `SKIP` 放行并打印原因；目录存在但目标归档缺失 → 仍 **FAIL**（本地证据回归）。公因子 → `lib/growth-archive.sh` · 双轨与脚本索引 → `skills/plan/reference/growth-meta-ci-dual.md` · `docs/migration-catalog.md` §Growth meta
+- 无 `jq` 时走 python 回退；`SC_FORCE_PYTHON=1` 可**强制**该路径（CI 用它覆盖非 jq 分支）
+- CI 矩阵：ubuntu（+jq，含文档构建）· macos（BSD 工具链）· windows/Git Bash（与 linux/macos 同阻塞；`consumer-smoke` + `template-verify`）
+- **push 前本地预检（母版）**：`bash .cursor/bin/ci-preflight.sh`（≈ 三矩阵腿 + `docs:build`；`install-smoke` 含 Windows 门面实体化重装回归）
+- 平台作用域与技能限制 → `docs/platforms.md` §技能平台作用域

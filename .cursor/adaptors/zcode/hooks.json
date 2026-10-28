@@ -1,0 +1,17 @@
+{
+  "_comment": "adaptor:zcode — ZCode workspace hooks。安装时本文件 hooks 键合并进 <目标>/.zcode/config.json（hooks.enabled 必须为 true，否则 ZCode 不跑配置文件 hooks）。schema：hooks.events.<Event>[].hooks[]；command 经 bash 调用以免可执行位问题；${ZCODE_PROJECT_DIR} 由 ZCode 模板展开。cursor 侧 loop_limit/timeout 语义按 ZCode 口径换算（timeout 单位=秒）。",
+  "hooks": {
+    "enabled": true,
+    "events": {
+      "SessionStart": [
+        { "hooks": [ { "type": "command", "command": "bash \"${ZCODE_PROJECT_DIR}/.zcode/hooks/run-start.sh\"", "timeout": 5 } ] }
+      ],
+      "UserPromptSubmit": [
+        { "hooks": [ { "type": "command", "command": "bash \"${ZCODE_PROJECT_DIR}/.zcode/hooks/growth-init.sh\"", "timeout": 5 } ] }
+      ],
+      "Stop": [
+        { "hooks": [ { "type": "command", "command": "bash \"${ZCODE_PROJECT_DIR}/.zcode/hooks/run-stop.sh\"", "timeout": 5 } ] }
+      ]
+    }
+  }
+}

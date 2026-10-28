@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "color": {
+    "primary": "#1677ff",
+    "text": "#1f1f1f",
+    "textSecondary": "#595959",
+    "border": "#d9d9d9",
+    "bg": "#ffffff",
+    "bgElevated": "#fafafa"
+  },
+  "space": {
+    "xs": 4,
+    "sm": 8,
+    "md": 16,
+    "lg": 24,
+    "xl": 32
+  },
+  "radius": {
+    "sm": 4,
+    "md": 8,
+    "lg": 12
+  },
+  "zIndex": {
+    "content": 1,
+    "sticky": 10,
+    "popover": 100,
+    "overlay": 1000
+  }
+}

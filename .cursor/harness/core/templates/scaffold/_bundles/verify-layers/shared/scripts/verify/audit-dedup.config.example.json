@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "description": "Copy to audit-dedup.config.json and tune discover globs for your stack.",
+  "scanRoots": [
+    "scripts/verify",
+    "scripts/lib"
+  ],
+  "suites": [
+    {
+      "id": "unit_tests",
+      "discoverGlobs": [
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.test.mjs",
+        "**/*_test.go",
+        "**/test_*.py"
+      ],
+      "ignoreGlobs": ["**/node_modules/**", "**/dist/**"]
+    }
+  ],
+  "policy": {
+    "maxListedReferences": 1,
+    "failOnDuplicate": false,
+    "warnUnlisted": true
+  }
+}

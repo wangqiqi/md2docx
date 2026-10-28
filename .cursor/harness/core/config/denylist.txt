@@ -1,0 +1,48 @@
+# Standalone denylist — 母版 `.cursor/` 不得出现的用户 / 项目 / 机器标识
+#
+# 由 `verify-super-cursor.sh` 逐行作为 **ERE 正则** 扫描 `.cursor/` 全树。
+# 目的：让「无关用户 · 无关项目 · 无关系统」成为可被门禁守护的断言，而不是口头承诺。
+#
+# 规则：
+#   - 空行与 `#` 开头为注释
+#   - 每行一个 ERE；大小写不敏感
+#   - 本文件与 `verify-super-cursor.sh` 自身不参与扫描
+#   - 新增团队/公司标识 → 追加一行（勿写进 rules/skills 正文）
+#
+# 注意：`config/roles.json` 的人格 `given_name` / `nicknames` 属**虚构角色**命名，
+# 不登记；只有作者/真人标识才登记。
+
+# --- 作者 / 维护者标识 ---
+saida
+wangqiqi
+guanfu
+sjudge
+rdm-week
+jwzhou
+老周
+周大叔
+
+# --- 机器绝对路径 ---
+/home/[a-zA-Z0-9._-]+/
+/Users/[a-zA-Z0-9._-]+/
+/data/workspace
+C:\\Users\\
+
+# --- 公司 / 内部项目代号（示例占位；安装后按团队替换） ---
+# acme-internal
+# corp-nexus
+
+# --- 作者项目的真实历史（示例必须是合成占位） ---
+# 母版正文的示例一律用 `<YYYYMMDD>_<HHMMSS>` · `SPRINT-NN` · `<topic>`；
+# 真实时间戳与真实 sprint 号会让使用者误以为模板自带这些编号。
+[0-9]{8}_[0-9]{6}
+SPRINT-(83|89|99|100|105|120|131)
+SPRINT-VIZ
+SPRINT-INT-VERIFY
+harness_sdk
+web_operator_panel
+v0\.82\.4
+
+# --- 凭据痕迹（只匹配密钥材料本身，勿写宽泛的扩展名） ---
+-----BEGIN [A-Z ]*PRIVATE KEY-----
+AKIA[0-9A-Z]{16}

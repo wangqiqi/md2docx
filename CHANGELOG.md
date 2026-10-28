@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.58] - 2026-10-28
+
+### Changed
+
+- 自 **cursor-ai** 母版同步 Super Cursor **v5.0.7** 布局（`harness/core` + adaptors · `install-super-cursor.sh --replace`）
+- 本地 Growth 目录由 `.cursorGrowth/` 迁移为 **`.growing/`**（plan · archive · learn；仍 gitignore）；`workflow.json` · README · docs 指针对齐
+- 新增 `.cursorignore` · `.gitattributes` · 根目录 `onekey_start.sh`（Growth onekey 引导）
+
 ## [0.5.57] - 2026-09-29
 
 ### Fixed

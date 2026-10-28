@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "example-stdio": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-everything"],
+      "env": {
+        "EXAMPLE_TOKEN": "${env:EXAMPLE_TOKEN}"
+      }
+    },
+    "example-remote": {
+      "url": "https://api.example.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${env:EXAMPLE_SERVICE_TOKEN}"
+      }
+    }
+  }
+}
