@@ -18,7 +18,7 @@ project_root = script_dir.parent
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "src"))
 
-from mddocx.converter.base import BaseConverter
+from mddocx.converter.converter_pool import get_converter
 
 
 def setup_logging(log_file, verbose=False):
@@ -61,10 +61,10 @@ def convert_file(input_file, output_file, debug=False, logger=None):
 
         # 创建转换器
         start_time = time.time()
-        converter = BaseConverter(debug=debug)
+        converter = get_converter(debug=debug)
 
-        # 转换文档
-        doc = converter.convert(content)
+        # 转换文档（复用转换器；base_path 供相对图片路径）
+        doc = converter.convert(content, base_path=str(Path(input_file).resolve()))
 
         # 保存文档
         doc.save(output_file)

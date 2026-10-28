@@ -8,7 +8,7 @@ import time
 from pathlib import Path
 
 from . import __version__
-from .converter import BaseConverter
+from .converter.converter_pool import get_converter
 from .errors import E_INPUT_NOT_FOUND, E_SAVE_FAILED, error_from_exception, error_info
 
 
@@ -40,7 +40,7 @@ def convert_file(input_file: str, output_file: str, debug: bool = False) -> None
         raise FileNotFoundError(f"无法读取输入文件 {input_file}: {e}")
 
     try:
-        converter = BaseConverter(debug=debug)
+        converter = get_converter(debug=debug)
         doc = converter.convert_file(input_path)
         if debug and converter.last_metrics is not None:
             m = converter.last_metrics

@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from ..converter import BaseConverter
+from ..converter.converter_pool import get_converter
 from ..errors import error_from_exception
 
 
@@ -57,7 +58,7 @@ def convert_markdown_text(
     out = Path(output_path).expanduser().resolve()
     try:
         _ensure_parent_dir(out)
-        converter = BaseConverter(debug=debug)
+        converter = get_converter(debug=debug)
         doc = converter.convert(markdown, base_path=base_path)
         doc.save(str(out))
         return _success_result(out, converter)
@@ -80,7 +81,7 @@ def convert_markdown_file(
 
     try:
         _ensure_parent_dir(out)
-        converter = BaseConverter(debug=debug)
+        converter = get_converter(debug=debug)
         doc = converter.convert_file(inp)
         doc.save(str(out))
         return _success_result(out, converter)
