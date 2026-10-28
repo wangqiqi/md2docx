@@ -294,7 +294,7 @@ CI `quality` job 已调用 `check_convert_metrics.sh`，且 **`METRICS_SOFT=0`**
 - [ ] `bash scripts/check_npm_audit.sh` 绿（VitePress 文档站 · **critical** 硬失败 · 官方 registry 审计 API）
 - [ ] `pytest -q` 绿
 - [ ] 合并 Dependabot 安全 PR（若有）或记录 accepted risk
-- [ ] 更新 `CHANGELOG.md` · 见根目录 [`SECURITY.md`](../../SECURITY.md)
+- [ ] 更新 `CHANGELOG.md` · 见根目录 [SECURITY.md](https://github.com/wangqiqi/md2docx/blob/master/SECURITY.md)
 
 ### 常见调试场景
 1. **转换结果异常**: 检查元素转换器的输出

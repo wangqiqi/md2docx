@@ -196,7 +196,7 @@ bash scripts/check_pip_audit.sh
 bash scripts/check_npm_audit.sh
 ```
 
-Dependabot 配置见 [`.github/dependabot.yml`](../../.github/dependabot.yml)（weekly · pip · GitHub Actions · npm）。报告渠道见 [`SECURITY.md`](../../SECURITY.md)。
+Dependabot 配置见 [`.github/dependabot.yml`](https://github.com/wangqiqi/md2docx/blob/master/.github/dependabot.yml)（weekly · pip · GitHub Actions · npm）。报告渠道见 [SECURITY.md](https://github.com/wangqiqi/md2docx/blob/master/SECURITY.md)。
 
 ## 🔧 CI/CD维护清单
 
