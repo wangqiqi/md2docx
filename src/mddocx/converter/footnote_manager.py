@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import Any, Optional
 
+from docx.document import Document as DocxDocument
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.opc.packuri import PackURI
 from docx.opc.part import XmlPart
+from docx.parts.document import DocumentPart
 from docx.oxml import OxmlElement, parse_xml
 from docx.oxml.ns import nsdecls, qn
 from docx.text.paragraph import Paragraph
@@ -29,8 +31,8 @@ class FootnoteManager:
     def __init__(self) -> None:
         self._bodies: dict[int, str] = {}
         self._footnotes_part: Optional[XmlPart] = None
-        self._footnotes_el: Optional[OxmlElement] = None
-        self._document_part = None
+        self._footnotes_el: Optional[Any] = None
+        self._document_part: Optional[DocumentPart] = None
 
     def reset(self) -> None:
         self._bodies.clear()
@@ -41,7 +43,7 @@ class FootnoteManager:
     def register_body(self, mdit_id: int, text: str) -> None:
         self._bodies[mdit_id] = text.strip()
 
-    def bind_document(self, document) -> None:
+    def bind_document(self, document: DocxDocument) -> None:
         self._document_part = document.part
 
     def add_reference(self, paragraph: Paragraph, mdit_id: int) -> None:
@@ -125,7 +127,7 @@ class FootnoteManager:
         return False
 
 
-def extract_footnote_text(tokens, start_index: int) -> tuple[int, str]:
+def extract_footnote_text(tokens: list[Any], start_index: int) -> tuple[int, str]:
     i = start_index + 1
     parts: list[str] = []
     while i < len(tokens):

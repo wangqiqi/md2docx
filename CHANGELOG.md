@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.73] - 2026-10-28
+
+### Fixed
+
+- **质量**：修复 `quality` 任务 mypy（`cover` · `footnote_manager` 类型注解）
+
 ## [0.5.72] - 2026-10-28
 
 ### Changed

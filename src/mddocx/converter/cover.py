@@ -5,12 +5,13 @@ from __future__ import annotations
 from docx.document import Document as DocxDocument
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
 from docx.shared import Pt
+from docx.styles.style import ParagraphStyle
 from docx.text.paragraph import Paragraph
 
 from .front_matter import FrontMatter
 
 
-def _style_or_none(document: DocxDocument, name: str):
+def _style_or_none(document: DocxDocument, name: str) -> ParagraphStyle | None:
     try:
         return document.styles[name]
     except KeyError:
