@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.72] - 2026-10-28
+
+### Changed
+
+- **质量**：black 26 格式化（image · footnote_manager · preview_docx · batch · 相关测试）
+- **dev**：`black>=26.10.0`，与 CI `quality` 任务一致
+
 ## [0.5.71] - 2026-10-28
 
 ### Changed
