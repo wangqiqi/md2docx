@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.61] - 2026-10-28
+
+### Changed
+
+- CI `quality`：`METRICS_SOFT=0`，ConvertMetrics 耗时回归与结构同为硬失败（SPRINT-METRICS-02 / P-PERF-02）
+- `verify_release_candidate.sh` 默认 `METRICS_SOFT=0`；`docs/guide/development.md` · `ci-cd.md` · README 对齐
+
 ## [0.5.60] - 2026-10-28
 
 ### Added

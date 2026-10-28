@@ -118,7 +118,7 @@ jobs:
     - name: ConvertMetrics baseline gate
       env:
         # 结构字段硬失败；耗时默认 soft，避免 runner 抖动假红
-        METRICS_SOFT: "1"
+        METRICS_SOFT: "0"
       run: bash scripts/check_convert_metrics.sh
 
     - name: Release alignment gate

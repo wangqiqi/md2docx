@@ -255,14 +255,16 @@ print(m.duration_ms, m.input_bytes, m.chunked)
 | `python scripts/collect_convert_metrics.py --compare` | 结构字段（`input_bytes`/`chunked`/路径）须与基线一致 |
 | `bash scripts/check_convert_metrics.sh` | 结构硬失败 + 耗时相对阈值（默认 **soft**） |
 
-**耗时门禁**：`live > max(baseline × METRICS_MAX_RATIO, METRICS_FLOOR_MS)` 才告警。默认 `ratio=5` · `floor=200ms` · `METRICS_SOFT=1`（只 WARN、退出 0，避免 CI runner 抖动假红）。本地要硬失败：`METRICS_SOFT=0 bash scripts/check_convert_metrics.sh`。
+**耗时门禁**：`live > max(baseline × METRICS_MAX_RATIO, METRICS_FLOOR_MS)` 才失败。默认 `ratio=5` · `floor=200ms`。  
+- **CI `quality` job**：`METRICS_SOFT=0`（耗时回归 **硬失败**）。  
+- **本地调试**：`METRICS_SOFT=1 bash scripts/check_convert_metrics.sh` 仅 WARN 耗时（避免 runner 抖动排查时假红）。
 
 **失败解读**：
 
 - `--compare` FAIL → 样例体积或分块路径变了；先确认是否故意改样例，再 `--write` 更新基线并同 PR 说明。
 - 耗时 WARN/FAIL → 热路径明显变慢；先本地复现，勿仅因微小波动改基线。
 
-CI `quality` job 已调用 `check_convert_metrics.sh`（默认 **`METRICS_SOFT=1`**，耗时回归只 WARN；发版或本地严检可用 **`METRICS_SOFT=0`**，见上表）。
+CI `quality` job 已调用 `check_convert_metrics.sh`，且 **`METRICS_SOFT=0`**（结构与耗时均硬失败）。发版候选脚本 `verify_release_candidate.sh` 默认同为 hard。
 
 ### 发版前安全（SPRINT-SEC-01）
 

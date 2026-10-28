@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.5.60-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.60)
+[![Version](https://img.shields.io/badge/version-0.5.61-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.61)
 [![Cursor AI Rules](https://img.shields.io/badge/Super%20Cursor-v5.0.7-green.svg)](https://github.com/wangqiqi/cursor-ai)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
@@ -58,7 +58,8 @@
 - **pre-commit** - 提交前代码质量检查
 - **black + isort** - 自动代码格式化和导入排序
 - **flake8** - 代码风格和错误检查
-- **pip-audit** - CI 与 `bash scripts/check_pip_audit.sh`（见 [SECURITY.md](SECURITY.md)）
+- **ConvertMetrics** — CI `quality` 对耗时回归 **硬门禁**（`METRICS_SOFT=0`）；本地 `bash scripts/check_convert_metrics.sh`
+- **pip-audit** — CI 与 `bash scripts/check_pip_audit.sh`（见 [SECURITY.md](SECURITY.md)）
 - **Dependabot** - 每周 pip / Actions / npm 依赖 PR
 
 ## 规划与路线图

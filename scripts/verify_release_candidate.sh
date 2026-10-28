@@ -5,7 +5,7 @@
 #   PYTHON          默认 python3
 #   DIST_DIR        构建输出目录（默认 $ROOT/.release-candidate-dist）
 #   VENV_DIR        隔离安装 venv（默认 mktemp）
-#   METRICS_SOFT    默认 1（与 CI 一致）
+#   METRICS_SOFT    默认 0（与 CI quality 一致；本地调试可 METRICS_SOFT=1）
 #   SKIP_ISOLATED   设为 1 跳过隔离安装冒烟（仅调试用）
 set -euo pipefail
 
@@ -14,7 +14,7 @@ cd "$ROOT"
 
 PYTHON="${PYTHON:-python3}"
 DIST_DIR="${DIST_DIR:-$ROOT/.release-candidate-dist}"
-METRICS_SOFT="${METRICS_SOFT:-1}"
+METRICS_SOFT="${METRICS_SOFT:-0}"
 SKIP_ISOLATED="${SKIP_ISOLATED:-0}"
 
 read_version() {

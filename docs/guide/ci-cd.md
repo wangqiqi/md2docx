@@ -167,6 +167,17 @@ would reformat tests/integration/test_hr_integration.py
 - [ ] 分支保护规则配置
 - [ ] 状态徽章集成到README
 
+### ConvertMetrics 门禁
+
+`quality` job 运行 `bash scripts/check_convert_metrics.sh`，环境 **`METRICS_SOFT=0`**（耗时超 baseline×ratio 或 floor 即失败）。结构字段 `--compare` 始终硬失败。
+
+本地：
+
+```bash
+bash scripts/check_convert_metrics.sh          # 同 CI（hard）
+METRICS_SOFT=1 bash scripts/check_convert_metrics.sh   # 仅调试：耗时 soft
+```
+
 ### 依赖安全（pip-audit）
 
 `quality` job 在安装 `pip install -e .[dev,mcp]` 前升级 `pip` / `setuptools` / `wheel`，随后运行 **`pip-audit`**（有已知漏洞则 job 失败）。
