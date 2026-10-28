@@ -109,3 +109,24 @@ def test_quality_toc(converter, samples_quality):
         with zipfile.ZipFile(tmp.name) as zf:
             doc_xml = zf.read("word/document.xml").decode("utf-8")
             assert "instrText" in doc_xml and "TOC" in doc_xml
+
+
+def test_quality_pandoc_reference_links(converter, samples_quality):
+    md = samples_quality / "pandoc_quality.md"
+    content = md.read_text(encoding="utf-8")
+    doc = converter.convert(content, base_path=str(md))
+
+    text = _paragraph_text(doc)
+    assert "See the spec" in text
+    assert "read the guide before shipping" in text.replace("\n", " ")
+    assert "prefix middle suffix" in text.replace("\n", " ")
+
+    with tempfile.NamedTemporaryFile(suffix=".docx") as tmp:
+        doc.save(tmp.name)
+        with zipfile.ZipFile(tmp.name) as zf:
+            rels = zf.read("word/_rels/document.xml.rels").decode("utf-8")
+            doc_xml = zf.read("word/document.xml").decode("utf-8")
+            assert "example.com/specification" in rels
+            assert "docs.example.com/guide" in rels
+            assert "hyperlink" in doc_xml
+            assert "word/footnotes.xml" in zf.namelist()
