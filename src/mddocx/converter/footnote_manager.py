@@ -20,9 +20,7 @@ _FOOTNOTES_XML = """<w:footnotes {ns}>
   <w:footnote w:type="continuationSeparator" w:id="0">
     <w:p><w:r><w:continuationSeparator/></w:r></w:p>
   </w:footnote>
-</w:footnotes>""".format(
-    ns=nsdecls("w")
-)
+</w:footnotes>""".format(ns=nsdecls("w"))
 
 
 class FootnoteManager:
