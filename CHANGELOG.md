@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.71] - 2026-10-28
+
 ### Changed
 
 - **CI**：矩阵改为 Python 3.10–3.12（GitHub Runner 已不提供 3.8/3.9）；`requires-python >=3.10`
