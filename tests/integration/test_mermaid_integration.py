@@ -116,6 +116,24 @@ pie title Share
 ```
 """
 
+JOURNEY_MD = """# 用户旅程
+
+```mermaid
+journey
+    title Demo
+    section S
+      Step: 5: User
+```
+"""
+
+ER_MD = """# ER
+
+```mermaid
+erDiagram
+    A ||--|| B : link
+```
+"""
+
 
 @patch("mddocx.converter.security.requests.get")
 def test_mermaid_integration_state(mock_get, tmp_path):
@@ -157,6 +175,36 @@ def test_mermaid_integration_pie(mock_get, tmp_path):
 
     doc = BaseConverter().convert(PIE_MD)
     output = tmp_path / "pie.docx"
+    doc.save(str(output))
+    assert output.exists()
+    assert mock_get.called
+
+
+@patch("mddocx.converter.security.requests.get")
+def test_mermaid_integration_journey(mock_get, tmp_path):
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.headers = {"Content-Type": "image/png"}
+    mock_resp.iter_content.return_value = [FAKE_PNG]
+    mock_get.return_value = mock_resp
+
+    doc = BaseConverter().convert(JOURNEY_MD)
+    output = tmp_path / "journey.docx"
+    doc.save(str(output))
+    assert output.exists()
+    assert mock_get.called
+
+
+@patch("mddocx.converter.security.requests.get")
+def test_mermaid_integration_er_diagram(mock_get, tmp_path):
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.headers = {"Content-Type": "image/png"}
+    mock_resp.iter_content.return_value = [FAKE_PNG]
+    mock_get.return_value = mock_resp
+
+    doc = BaseConverter().convert(ER_MD)
+    output = tmp_path / "er.docx"
     doc.save(str(output))
     assert output.exists()
     assert mock_get.called

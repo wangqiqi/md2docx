@@ -87,6 +87,30 @@ pie title 项目资源分配
     "管理" : 25
 ```
 
+## 用户旅程
+
+```mermaid
+journey
+    title 购买流程
+    section 浏览
+      打开页面: 5: 用户
+      查看商品: 4: 用户
+    section 下单
+      提交订单: 3: 用户, 系统
+```
+
+## ER 图
+
+```mermaid
+erDiagram
+    CUSTOMER ||--o{ ORDER : places
+    ORDER ||--|{ LINE : contains
+    CUSTOMER {
+        string name
+        string email
+    }
+```
+
 ## 复杂流程图
 
 ```mermaid

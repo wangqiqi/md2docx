@@ -138,7 +138,7 @@ EXPECTATIONS: dict[str, SampleExpectation] = {
     "advanced/flowcharts.md": SampleExpectation(
         min_media=1,
         text_contains=["流程图", "时序图", "状态图", "甘特图", "饼图"],
-        custom=expect_mermaid_diagrams(5),
+        custom=expect_mermaid_diagrams(7),
     ),
     "advanced/tables.md": SampleExpectation(
         min_tables=3,
