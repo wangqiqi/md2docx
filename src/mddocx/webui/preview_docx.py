@@ -15,7 +15,7 @@ def docx_bytes_to_preview_html(docx_bytes: bytes, sanitize: Callable[[str], str]
     safe = sanitize(html)
     return (
         '<div class="docx-layout-preview markdown-preview" '
-        'style="font-family: \'Arial\', sans-serif; line-height: 1.6;">'
+        "style=\"font-family: 'Arial', sans-serif; line-height: 1.6;\">"
         f"{safe}"
         "</div>"
     )

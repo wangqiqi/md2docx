@@ -188,9 +188,7 @@ def build_batch_zip(
         succeeded = 0
         if workers <= 1:
             for display_name, content, zip_name in prepared:
-                docx_bytes, convert_error = _convert_one(
-                    content, display_name, template_path=template_path
-                )
+                docx_bytes, convert_error = _convert_one(content, display_name, template_path=template_path)
                 if docx_bytes is None:
                     if convert_error is not None:
                         errors.append(convert_error)

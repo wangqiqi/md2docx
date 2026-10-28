@@ -43,12 +43,7 @@ def test_quality_nested_lists(converter, samples_quality):
     list_ps = _list_paragraphs(doc)
     assert len(list_ps) >= 10
 
-    strike_runs = [
-        r.font.strike
-        for p in doc.paragraphs
-        for r in p.runs
-        if "已完成" in r.text
-    ]
+    strike_runs = [r.font.strike for p in doc.paragraphs for r in p.runs if "已完成" in r.text]
     assert any(strike_runs), "strikethrough list item expected"
 
 

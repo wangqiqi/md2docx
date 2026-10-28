@@ -11,9 +11,7 @@ from docx import Document
 from mddocx.webui.app import app
 from mddocx.webui.rate_limit import reset_rate_limits
 
-TEMPLATE = (
-    Path(__file__).resolve().parents[4] / "tests" / "samples" / "templates" / "minimal_company.docx"
-)
+TEMPLATE = Path(__file__).resolve().parents[4] / "tests" / "samples" / "templates" / "minimal_company.docx"
 
 
 @pytest.fixture

@@ -19,7 +19,7 @@ def _docx_has_external_link(doc, url_part: str) -> bool:
     "markdown,link_text,url_part,expected_line",
     [
         (
-            "[See docs][doc]\n\n[doc]: https://example.com/doc \"Title\"\n",
+            '[See docs][doc]\n\n[doc]: https://example.com/doc "Title"\n',
             "See docs",
             "example.com/doc",
             "See docs",
@@ -49,11 +49,7 @@ def test_reference_link_renders_hyperlink(converter, markdown, link_text, url_pa
 
 
 def test_reference_link_with_footnote_in_same_doc(converter):
-    md = (
-        "Body [link][L] and footnote[^n].\n\n"
-        "[L]: https://example.com/l\n\n"
-        "[^n]: Footnote text.\n"
-    )
+    md = "Body [link][L] and footnote[^n].\n\n" "[L]: https://example.com/l\n\n" "[^n]: Footnote text.\n"
     doc = converter.convert(md)
     body = doc.paragraphs[0].text
     assert "link" in body and "footnote" in body.lower() or "Footnote" in body

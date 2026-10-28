@@ -207,8 +207,7 @@ class ImageConverter(ElementConverter):
         self._image_cache[src] = image_data
         self._image_cache_bytes += len(image_data)
         while self._image_cache and (
-            len(self._image_cache) > MAX_IMAGE_CACHE_ENTRIES
-            or self._image_cache_bytes > MAX_IMAGE_CACHE_BYTES
+            len(self._image_cache) > MAX_IMAGE_CACHE_ENTRIES or self._image_cache_bytes > MAX_IMAGE_CACHE_BYTES
         ):
             _, evicted = self._image_cache.popitem(last=False)
             self._image_cache_bytes -= len(evicted)
