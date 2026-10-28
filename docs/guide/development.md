@@ -284,8 +284,9 @@ CI `quality` job 已调用 `check_convert_metrics.sh`，且 **`METRICS_SOFT=0`**
 
 - **用途**：以现有 **.docx / .dotx** 为基底转换，**保留页眉页脚与样式**，正文由 Markdown 写入。
 - **CLI**：`mddocx --template company.docx input.md output.docx`
+- **WebUI**：表单字段 **`template`**（可选）· 单文件 `/convert` 与 `/convert/batch` 共用；临时落盘，响应用后删除。
 - **API**：`convert(..., template_path=)` · `convert_file(..., template_path=)`
-- **限制**：与 **分块（chunked）** 暂不支持同用；验收 `bash scripts/verify_template_convert.sh`
+- **限制**：与 **分块（chunked）** 暂不支持同用；验收 `bash scripts/verify_template_convert.sh` · WebUI `bash scripts/verify_webui_template.sh`
 
 ### 发版前安全（SPRINT-SEC-01）
 

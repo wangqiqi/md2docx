@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.68] - 2026-10-28
+
+### Added
+
+- WebUI 可选 **Word 模板** 上传（`template` 字段）· 单文件与批量转换（SPRINT-STYLE-03 / P-STYLE-01 片 3）
+- `scripts/verify_webui_template.sh` · `webui/template_upload.py`
+
 ## [0.5.67] - 2026-10-28
 
 ### Added
