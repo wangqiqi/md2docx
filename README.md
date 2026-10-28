@@ -83,6 +83,7 @@
 - ✅ html/mermaid 元素转换器热路径覆盖（E-COV-01）
 - ✅ WebUI 批量转换、阶段进度与结构化错误摘要（P-WEBUI-01）
 - ✅ **Word 模板** · `--template`（P-STYLE-01 / v0.5.65）
+- ✅ **封面 / front matter** · `cover: true`（P-STYLE-01 片 2 / v0.5.67）
 - ✅ **quality 样例回归** · 脚注/TOC/参考链接/表格/列表（P-QUAL-01 片 1–3 / v0.5.66）
 - ✅ 依赖安全门禁 pip-audit · Dependabot · SECURITY.md（P-SEC-01 / v0.5.60）
 
