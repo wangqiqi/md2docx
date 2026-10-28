@@ -43,6 +43,8 @@ from .security import (
 )
 from .token_processor import TokenProcessor
 from .template_loader import load_document_from_template
+from .front_matter import FrontMatter, resolve_cover_title, split_front_matter
+from .cover import render_cover_page
 
 logger = logging.getLogger(__name__)
 
@@ -95,6 +97,7 @@ class BaseConverter:
         self._token_processor: Optional[TokenProcessor] = None
         self._footnote_manager = FootnoteManager()
         self._template_path: Optional[Path] = None
+        self._front_matter = FrontMatter()
 
         # 自动注册所有转换器
         self._register_default_converters()
@@ -189,14 +192,17 @@ class BaseConverter:
         input_bytes = markdown_utf8_byte_size(md_text) if isinstance(md_text, str) else 0
         use_chunked = chunked
         self._template_path = Path(template_path).expanduser() if template_path else None
+        self._front_matter, md_body = split_front_matter(md_text if isinstance(md_text, str) else "")
         try:
             validate_markdown_size(md_text)
             use_chunked = chunked if chunked is not None else input_bytes >= CHUNKED_THRESHOLD
             if self._template_path and use_chunked:
                 raise ConvertError("template_path 与分块转换（chunked）暂不支持同时使用")
+            if self._front_matter.wants_cover and use_chunked:
+                raise ConvertError("cover front matter 与分块转换（chunked）暂不支持同时使用")
             if use_chunked:
-                return self._convert_chunked(md_text, base_path)
-            return self._convert_tokens(md_text, base_path)
+                return self._convert_chunked(md_body, base_path)
+            return self._convert_tokens(md_body, base_path)
         finally:
             self._template_path = None
             duration_ms = (time.perf_counter() - start) * 1000
@@ -297,8 +303,12 @@ class BaseConverter:
                 raise ConvertError(f"输入参数类型错误，期望 str，得到 {type(md_text).__name__}")
 
             if not md_text.strip():
-                # 空文档也创建基本的DOCX结构
                 return self.document
+
+            if self._front_matter.wants_cover:
+                cover_title = resolve_cover_title(self._front_matter, md_text)
+                if cover_title:
+                    render_cover_page(self.document, self._front_matter, cover_title)
 
             # 解析 Markdown 文本为 AST
             tokens = self.md.parse(md_text)
