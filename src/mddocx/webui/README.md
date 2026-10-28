@@ -5,7 +5,8 @@
 ## 🚀 特性
 
 - **现代化界面**: 响应式设计，支持一次性阅读体验
-- **实时预览**: 输入 Markdown 后实时生成 DOCX 预览
+- **实时预览**: 输入 Markdown 后实时生成 HTML 预览（`md.render`）
+- **版式预览**: 走真实转换 pipeline（DOCX → mammoth HTML），更接近 Word 正文
 - **文件上传**: 支持拖拽上传 Markdown 文件
 - **批量转换**: 最多选择 20 个文件，下载 DOCX ZIP，并显示成功/失败摘要
 - **Word 模板（可选）**: 上传 `.docx`/`.dotx` 作为 `template` 字段，单文件与批量共用；与 CLI `--template` 同语义

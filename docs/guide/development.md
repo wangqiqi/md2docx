@@ -325,7 +325,7 @@ doc = converter.convert(text, chunked=False)   # 强制单次 parse
 - **RenderCache**（`converter/render_cache.py`）：Mermaid / LaTeX 渲染 PNG 共用 LRU（挂载在 `BaseConverter._render_cache`）
 - **图片字节 LRU**（`ImageConverter`）：条目数 + 总字节双上限；跨文档 `reset_state` 清空
 - **converter_pool**（`converter/converter_pool.py`）：WebUI / CLI / MCP / 批量脚本线程内复用 `BaseConverter`
-- **WebUI 预览**：`get_converter().md` 与 DOCX 转换同一 `MarkdownIt` 配置
+- **WebUI 预览**：`POST /preview` 为 `md.render` HTML；**`POST /preview/docx`** 为 convert → mammoth 版式预览（`preview_docx.py`）
 
 **未做（backlog）**：同 Markdown 字符串的 AST/token 级缓存（见 `.growing/archive/` SPIKE-014）
 

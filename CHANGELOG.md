@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.69] - 2026-10-28
+
+### Added
+
+- WebUI **版式预览** · `POST /preview/docx`（Markdown → DOCX → mammoth HTML）（SPRINT-PREVIEW-01 / P-PREVIEW-01）
+- `preview_docx.py` · `scripts/verify_webui_docx_preview.sh` · 依赖 **mammoth**
+
 ## [0.5.68] - 2026-10-28
 
 ### Added

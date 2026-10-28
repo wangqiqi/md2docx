@@ -1,6 +1,6 @@
 # Markdown to DOCX 转换工具
 
-[![Version](https://img.shields.io/badge/version-0.5.68-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.68)
+[![Version](https://img.shields.io/badge/version-0.5.69-blue.svg)](https://github.com/wangqiqi/md2docx/releases/tag/v0.5.69)
 [![Cursor AI Rules](https://img.shields.io/badge/Super%20Cursor-v5.0.7-green.svg)](https://github.com/wangqiqi/cursor-ai)
 
 一个功能强大的 Markdown 转 DOCX 文档转换工具，支持丰富的 Markdown 语法，提供命令行和批量转换功能，能够生成格式精美的 DOCX 文档。
