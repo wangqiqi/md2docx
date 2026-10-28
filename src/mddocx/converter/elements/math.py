@@ -34,8 +34,10 @@ class MathConverter(ElementConverter):
 
     def __init__(self, base_converter: Optional[Any] = None) -> None:
         super().__init__(base_converter)
-        # 同一文档内重复的公式不再重复请求 CodeCogs
-        self._render_cache = RenderCache()
+        if base_converter is not None and hasattr(base_converter, "_render_cache"):
+            self._render_cache = base_converter._render_cache
+        else:
+            self._render_cache = RenderCache()
 
     def convert(self, token: Any) -> None:
         """块级 math_block token"""

@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - 图片 LRU 缓存维护 `_image_cache_bytes`，淘汰时不再每次 `sum()` 全表（TASK-007）
 
+### Changed
+
+- `BaseConverter` 共享 `RenderCache`，Math/Mermaid 共用同一 LRU（TASK-008）
+- CLI · MCP · `batch_convert` 与 WebUI 对齐 `converter_pool` 线程内复用（TASK-009）
+
 ## [0.5.58] - 2026-10-28
 
 ### Changed

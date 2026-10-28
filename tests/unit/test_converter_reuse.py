@@ -3,6 +3,7 @@
 from docx.oxml.ns import qn
 
 from mddocx.converter import BaseConverter
+from mddocx.converter.converter_pool import get_converter, reset_converter_pool
 
 DOC_A = """# Title
 
@@ -99,3 +100,17 @@ class TestConverterReuse:
         converter.convert("# next\n")
 
         assert converter.converters["mermaid"]._render_cache.get("graph TD; A-->B") == b"png"
+
+    def test_math_and_mermaid_share_render_cache(self):
+        converter = BaseConverter()
+        math_cache = converter.converters["math"]._render_cache
+        mermaid_cache = converter.converters["mermaid"]._render_cache
+        assert math_cache is mermaid_cache
+        assert math_cache is converter._render_cache
+
+    def test_get_converter_reuses_same_instance(self):
+        reset_converter_pool()
+        first = get_converter()
+        second = get_converter()
+        assert first is second
+        reset_converter_pool()

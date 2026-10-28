@@ -31,6 +31,7 @@ from .elements import (
 from .elements.base import ElementConverter
 from .equation_labels import EquationRegistry
 from .metrics import ConvertMetrics
+from .render_cache import RenderCache
 from .security import (
     CHUNKED_THRESHOLD,
     MarkdownTooLargeError,
@@ -85,6 +86,7 @@ class BaseConverter:
         self.converters: Dict[str, Any] = {}
         self._list_stack: List[Tuple[str, int]] = []  # [(list_type, level), ...]
         self._equation_registry = EquationRegistry()
+        self._render_cache = RenderCache()
         self.last_metrics: Optional[ConvertMetrics] = None
 
         # 自动注册所有转换器
