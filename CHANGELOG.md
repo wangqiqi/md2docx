@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **CI**：矩阵改为 Python 3.10–3.12（GitHub Runner 已不提供 3.8/3.9）；`requires-python >=3.10`
+- **GitHub Actions**：checkout/setup-python/setup-node v7、codecov v7、deploy-pages v5（合并 Dependabot 提议）
+- **质量**：修复 flake8（cover · batch · test_template_convert）
+
 ## [0.5.70] - 2026-10-28
 
 ### Added

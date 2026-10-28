@@ -103,7 +103,9 @@ def _read_upload_text(
     return content, None
 
 
-def _convert_one_worker(payload: Tuple[str, str, Optional[str]]) -> Tuple[str, Optional[bytes], Optional[BatchFileError]]:
+def _convert_one_worker(
+    payload: Tuple[str, str, Optional[str]],
+) -> Tuple[str, Optional[bytes], Optional[BatchFileError]]:
     """子进程转换（每进程独立 converter_pool）。"""
     content, display_name, template_path = payload
     from ..converter.converter_pool import get_converter, reset_converter_pool

@@ -55,7 +55,7 @@
 - **Web界面测试** - 已纳入 CI 的完整用户界面功能验证
 
 ### 🔄 CI/CD 自动化
-- **GitHub Actions** - 多 Python 版本测试 (3.8-3.12，覆盖 `requires-python` 声明的下限)
+- **GitHub Actions** - 多 Python 版本测试 (3.10–3.12，与 `requires-python` 及 MCP extra 对齐)
 - **自动化检查** - 代码质量、格式、**pip-audit** 与文档站 **npm audit**
 - **持续集成** - 每次提交自动验证
 
@@ -95,7 +95,7 @@
 
 ## 开发环境要求
 
-- Python 3.8+
+- Python 3.10+
 - python-docx
 - markdown-it-py
 - 其他依赖见 `pyproject.toml`
