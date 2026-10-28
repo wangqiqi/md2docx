@@ -6,6 +6,7 @@ import io
 import json
 import zipfile
 from dataclasses import dataclass
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import Callable, List, Optional, Sequence, Tuple
 
 from werkzeug.datastructures import FileStorage
@@ -102,6 +103,25 @@ def _read_upload_text(
     return content, None
 
 
+def _convert_one_worker(payload: Tuple[str, str]) -> Tuple[str, Optional[bytes], Optional[BatchFileError]]:
+    """子进程转换（每进程独立 converter_pool）。"""
+    content, display_name = payload
+    from ..converter.converter_pool import get_converter, reset_converter_pool
+
+    reset_converter_pool()
+    try:
+        doc = get_converter().convert(content)
+        buffer = io.BytesIO()
+        doc.save(buffer)
+        return display_name, buffer.getvalue(), None
+    except MemoryError:
+        info = error_info(E_MEMORY)
+        return display_name, None, BatchFileError(display_name, info.code, info.message)
+    except Exception as exc:
+        info = error_from_exception(exc)
+        return display_name, None, BatchFileError(display_name, info.code, info.message)
+
+
 def _convert_one(content: str, filename: str) -> Tuple[Optional[bytes], Optional[BatchFileError]]:
     try:
         doc = get_converter().convert(content)
@@ -123,6 +143,7 @@ def build_batch_zip(
     max_batch_files: int,
     max_text_size: int,
     allowed_file: Callable[..., bool],
+    jobs: int = 1,
 ) -> BatchZipResult:
     uploads = [item for item in files if item and item.filename]
     if not uploads:
@@ -139,28 +160,48 @@ def build_batch_zip(
     used_names: set[str] = set()
     buffer = io.BytesIO()
 
+    prepared: List[Tuple[str, str, str]] = []
+    for upload in uploads:
+        display_name = secure_filename(upload.filename or "") or "unknown"
+        content, read_error = _read_upload_text(
+            upload,
+            max_text_size=max_text_size,
+            allowed_file=allowed_file,
+        )
+        if content is None:
+            if read_error is not None:
+                errors.append(read_error)
+            continue
+        prepared.append((display_name, content, _unique_docx_name(display_name, used_names)))
+
+    workers = max(1, min(jobs, len(prepared) or 1))
+
     with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         succeeded = 0
-        for upload in uploads:
-            display_name = secure_filename(upload.filename or "") or "unknown"
-            content, read_error = _read_upload_text(
-                upload,
-                max_text_size=max_text_size,
-                allowed_file=allowed_file,
-            )
-            if content is None:
-                if read_error is not None:
-                    errors.append(read_error)
-                continue
-
-            docx_bytes, convert_error = _convert_one(content, display_name)
-            if docx_bytes is None:
-                if convert_error is not None:
-                    errors.append(convert_error)
-                continue
-
-            archive.writestr(_unique_docx_name(display_name, used_names), docx_bytes)
-            succeeded += 1
+        if workers <= 1:
+            for display_name, content, zip_name in prepared:
+                docx_bytes, convert_error = _convert_one(content, display_name)
+                if docx_bytes is None:
+                    if convert_error is not None:
+                        errors.append(convert_error)
+                    continue
+                archive.writestr(zip_name, docx_bytes)
+                succeeded += 1
+        else:
+            with ProcessPoolExecutor(max_workers=workers) as pool:
+                futures = {
+                    pool.submit(_convert_one_worker, (content, display_name)): zip_name
+                    for display_name, content, zip_name in prepared
+                }
+                for future in as_completed(futures):
+                    zip_name = futures[future]
+                    _, docx_bytes, convert_error = future.result()
+                    if docx_bytes is None:
+                        if convert_error is not None:
+                            errors.append(convert_error)
+                        continue
+                    archive.writestr(zip_name, docx_bytes)
+                    succeeded += 1
 
         total = len(uploads)
         failed = len(errors)

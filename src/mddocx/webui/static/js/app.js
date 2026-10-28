@@ -5,6 +5,7 @@
 // 全局状态
 let currentMode = 'editor'; // 'editor' 或 'features'
 let previewCollapsed = false;
+let previewAbortController = null;
 
 // 页面加载完成后的初始化
 document.addEventListener('DOMContentLoaded', function() {
@@ -665,9 +666,12 @@ function generatePreview() {
         </div>
     `;
 
-    // 发送到后端生成预览 - 添加超时控制
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
+    if (previewAbortController) {
+        previewAbortController.abort();
+    }
+    previewAbortController = new AbortController();
+    const controller = previewAbortController;
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
     const previewBody = 'markdown=' + encodeURIComponent(content)
@@ -699,12 +703,13 @@ function generatePreview() {
     })
     .catch(error => {
         clearTimeout(timeoutId);
+        if (error.name === 'AbortError') {
+            return;
+        }
         console.error('预览生成失败:', error);
 
         let errorMessage = '预览生成失败，请稍后重试';
-        if (error.name === 'AbortError') {
-            errorMessage = '预览生成超时，请重试';
-        } else if (error.message.includes('HTTP')) {
+        if (error.message.includes('HTTP')) {
             errorMessage = '服务器错误，请稍后重试';
         }
 

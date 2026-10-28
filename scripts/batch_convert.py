@@ -9,6 +9,7 @@ import logging
 import os
 import sys
 import time
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 
@@ -45,19 +46,20 @@ def convert_file(input_file, output_file, debug=False, logger=None):
     Returns:
         bool: 转换是否成功
     """
-    logger.info(f"开始转换: {input_file} -> {output_file}")
+    log = logger or logging.getLogger(__name__)
+    log.info(f"开始转换: {input_file} -> {output_file}")
 
     try:
         # 检查文件是否存在
         if not Path(input_file).exists():
-            logger.error(f"文件不存在: {input_file}")
+            log.error(f"文件不存在: {input_file}")
             return False
 
         # 读取输入文件
         with open(input_file, "r", encoding="utf-8") as f:
             content = f.read()
 
-        logger.info(f"文件大小: {len(content)} 字节")
+        log.info(f"文件大小: {len(content)} 字节")
 
         # 创建转换器
         start_time = time.time()
@@ -71,15 +73,36 @@ def convert_file(input_file, output_file, debug=False, logger=None):
 
         end_time = time.time()
         duration = end_time - start_time
-        logger.info(f"转换完成，用时: {duration:.2f}秒")
+        log.info(f"转换完成，用时: {duration:.2f}秒")
         return True
 
     except Exception as e:
-        logger.error(f"转换失败: {str(e)}")
+        log.error(f"转换失败: {str(e)}")
         import traceback
 
-        logger.error(traceback.format_exc())
+        log.error(traceback.format_exc())
         return False
+
+
+def _convert_file_job(payload):
+    """ProcessPool  worker：每进程独立 converter 池。"""
+    input_file, output_file, debug = payload
+    from mddocx.converter.converter_pool import reset_converter_pool
+
+    reset_converter_pool()
+    return convert_file(input_file, output_file, debug=debug, logger=None)
+
+
+def _record_result(results, md_file, output_file, success):
+    if success:
+        results["success"] += 1
+        status = "✅ 成功"
+    else:
+        results["failed"] += 1
+        status = "❌ 失败"
+    results["files"].append(
+        {"input": str(md_file), "output": str(output_file), "status": status}
+    )
 
 
 def find_markdown_files(directory):
@@ -135,6 +158,13 @@ def parse_args():
         help="递归查找子目录中的文件 (默认: True)",
     )
     parser.add_argument("--pattern", default="*.md", help="文件匹配模式 (默认: *.md)")
+    parser.add_argument(
+        "--jobs",
+        type=int,
+        default=1,
+        metavar="N",
+        help="并行转换进程数 (默认: 1，建议不超过 CPU 核数)",
+    )
 
     return parser.parse_args()
 
@@ -214,34 +244,40 @@ def main():
 
     # 转换结果统计
     results = {"success": 0, "failed": 0, "files": []}
+    jobs = max(1, args.jobs)
 
-    # 批量转换
+    work_items = []
     for md_file in md_files:
-        # 构建输出文件路径
         if args.recursive:
-            # 对于递归模式，保持相对路径结构
             relative_path = md_file.relative_to(input_path)
             output_file = output_path / relative_path.parent / f"{md_file.stem}.docx"
             output_file.parent.mkdir(parents=True, exist_ok=True)
         else:
-            # 对于非递归模式，直接放在输出目录下
             output_file = output_path / f"{md_file.stem}.docx"
+        work_items.append((md_file, output_file))
 
-        logger.info("=" * 80)
-        success = convert_file(
-            str(md_file), str(output_file), debug=debug, logger=logger
-        )
-
-        if success:
-            results["success"] += 1
-            status = "✅ 成功"
-        else:
-            results["failed"] += 1
-            status = "❌ 失败"
-
-        results["files"].append(
-            {"input": str(md_file), "output": str(output_file), "status": status}
-        )
+    if jobs <= 1:
+        for md_file, output_file in work_items:
+            logger.info("=" * 80)
+            success = convert_file(
+                str(md_file), str(output_file), debug=debug, logger=logger
+            )
+            _record_result(results, md_file, output_file, success)
+    else:
+        logger.info(f"并行转换: jobs={jobs}")
+        payloads = [(str(a), str(b), debug) for a, b in work_items]
+        with ProcessPoolExecutor(max_workers=min(jobs, len(payloads))) as pool:
+            future_map = {
+                pool.submit(_convert_file_job, payload): (
+                    Path(payload[0]),
+                    Path(payload[1]),
+                )
+                for payload in payloads
+            }
+            for future in as_completed(future_map):
+                md_file, output_file = future_map[future]
+                success = future.result()
+                _record_result(results, md_file, output_file, success)
 
     # 输出统计结果
     logger.info("=" * 80)

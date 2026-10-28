@@ -200,8 +200,8 @@ class TestCLI:
                 if os.path.exists(docx_path):
                     os.unlink(docx_path)
 
-    @patch("mddocx.cli.BaseConverter")
-    def test_convert_file_permission_retry(self, mock_converter_cls):
+    @patch("mddocx.cli.get_converter")
+    def test_convert_file_permission_retry(self, mock_get_converter):
         """输出被占用时带时间戳重试保存"""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False, encoding="utf-8") as md_file:
             md_file.write("# 标题")
@@ -212,7 +212,9 @@ class TestCLI:
 
         mock_doc = MagicMock()
         mock_doc.save.side_effect = [PermissionError(), None]
-        mock_converter_cls.return_value.convert_file.return_value = mock_doc
+        mock_converter = MagicMock()
+        mock_converter.convert_file.return_value = mock_doc
+        mock_get_converter.return_value = mock_converter
 
         try:
             convert_file(md_path, docx_path, debug=False)

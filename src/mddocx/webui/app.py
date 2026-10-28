@@ -84,8 +84,6 @@ def create_markdown_parser() -> MarkdownIt:
     )
 
 
-md = create_markdown_parser()
-
 config = get_config()
 
 app = Flask(__name__)
@@ -313,8 +311,8 @@ def sanitize_preview_html(html_content: str) -> str:
 
 
 def generate_preview_html(markdown_content: str) -> str:
-    """生成预览HTML"""
-    html_content = md.render(markdown_content)
+    """生成预览HTML（与转换路径共用 ``get_converter().md`` 解析器）。"""
+    html_content = get_converter().md.render(markdown_content)
     safe_html = sanitize_preview_html(html_content)
     return (
         '<div class="markdown-preview" '

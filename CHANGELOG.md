@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.59] - 2026-10-28
+
 ### Fixed
 
 - 图片 LRU 缓存维护 `_image_cache_bytes`，淘汰时不再每次 `sum()` 全表（TASK-007）
@@ -15,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `BaseConverter` 共享 `RenderCache`，Math/Mermaid 共用同一 LRU（TASK-008）
 - CLI · MCP · `batch_convert` 与 WebUI 对齐 `converter_pool` 线程内复用（TASK-009）
+- WebUI 预览共用 `get_converter().md`；预览请求支持 AbortController 取消过期 fetch（TASK-011 · TASK-012）
+- `TokenProcessor` 在 `BaseConverter` 上复用实例（TASK-017）
+- 批量转换可选并行：`batch_convert --jobs N` · `build_batch_zip(..., jobs=N)` 默认 1（TASK-016）
+- README 收束无实现的「实时项目分析」表述；Super Cursor 协作说明（TASK-013）
+- `docs/guide/development.md` §7：已实现缓存/复用清单 · metrics 门禁 · 大文件读入说明（TASK-010 · DOC-018）
 
 ## [0.5.58] - 2026-10-28
 

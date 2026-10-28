@@ -88,6 +88,7 @@ class BaseConverter:
         self._equation_registry = EquationRegistry()
         self._render_cache = RenderCache()
         self.last_metrics: Optional[ConvertMetrics] = None
+        self._token_processor: Optional[TokenProcessor] = None
 
         # 自动注册所有转换器
         self._register_default_converters()
@@ -107,6 +108,11 @@ class BaseConverter:
                 reset()
             if hasattr(converter, "set_document"):
                 converter.set_document(self.document)
+
+    def _get_token_processor(self) -> TokenProcessor:
+        if self._token_processor is None:
+            self._token_processor = TokenProcessor(self)
+        return self._token_processor
 
     def _register_default_converters(self) -> None:
         """注册默认的转换器"""
@@ -234,7 +240,7 @@ class BaseConverter:
             if not sections:
                 return self.document
 
-            processor = TokenProcessor(self)
+            processor = self._get_token_processor()
             for section in sections:
                 tokens = self.md.parse(section)
                 if self.debug:
@@ -286,7 +292,7 @@ class BaseConverter:
                                 f"content={child.content if hasattr(child, 'content') else ''}"
                             )
 
-            TokenProcessor(self).process(tokens)
+            self._get_token_processor().process(tokens)
             return self.document
 
         except (TypeError, ValueError) as e:

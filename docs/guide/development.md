@@ -262,7 +262,7 @@ print(m.duration_ms, m.input_bytes, m.chunked)
 - `--compare` FAIL → 样例体积或分块路径变了；先确认是否故意改样例，再 `--write` 更新基线并同 PR 说明。
 - 耗时 WARN/FAIL → 热路径明显变慢；先本地复现，勿仅因微小波动改基线。
 
-CI `quality` job 已调用 `check_convert_metrics.sh`。
+CI `quality` job 已调用 `check_convert_metrics.sh`（默认 **`METRICS_SOFT=1`**，耗时回归只 WARN；发版或本地严检可用 **`METRICS_SOFT=0`**，见上表）。
 
 ### 常见调试场景
 1. **转换结果异常**: 检查元素转换器的输出
@@ -288,10 +288,18 @@ doc = converter.convert_file(Path("large.md"))  # 大文件自动分块
 doc = converter.convert(text, chunked=False)   # 强制单次 parse
 ```
 
-### 代码优化
-- **避免重复解析**: 缓存解析结果
-- **批量处理**: 支持多个文件批量转换
-- **内存管理**: 大文件处理时的内存优化
+### 已实现缓存与复用
+
+- **RenderCache**（`converter/render_cache.py`）：Mermaid / LaTeX 渲染 PNG 共用 LRU（挂载在 `BaseConverter._render_cache`）
+- **图片字节 LRU**（`ImageConverter`）：条目数 + 总字节双上限；跨文档 `reset_state` 清空
+- **converter_pool**（`converter/converter_pool.py`）：WebUI / CLI / MCP / 批量脚本线程内复用 `BaseConverter`
+- **WebUI 预览**：`get_converter().md` 与 DOCX 转换同一 `MarkdownIt` 配置
+
+**未做（backlog）**：同 Markdown 字符串的 AST/token 级缓存（见 `.growing/archive/` SPIKE-014）
+
+### 大文件读入
+
+- `convert_file` 在 16MB 上限内整文件 `read_text`；分块降低 parse/转换峰值，不降低读盘峰值（SPIKE-015 结论：当前可接受）
 
 ### 工具使用
 ```bash
