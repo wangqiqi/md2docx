@@ -6,6 +6,9 @@
 let currentMode = 'editor'; // 'editor' 或 'features'
 let previewCollapsed = false;
 let previewAbortController = null;
+let docxPreviewAbortController = null;
+/** docx-preview-mode — 版式预览走 /preview/docx（convert → mammoth） */
+const DOCX_PREVIEW_MODE = 'docx-preview-mode';
 
 // 页面加载完成后的初始化
 document.addEventListener('DOMContentLoaded', function() {
@@ -735,6 +738,79 @@ function generatePreview() {
 }
 
 /**
+ * 版式预览（DOCX 转换路径，docx-preview-mode）
+ */
+function generateDocxLayoutPreview() {
+    const markdownInput = document.getElementById('markdown-input');
+    const previewContent = document.getElementById('preview-content');
+
+    if (!markdownInput || !previewContent) return;
+
+    const content = markdownInput.value.trim();
+
+    if (!content) {
+        previewContent.innerHTML = `
+            <div class="preview-placeholder">
+                <span class="icon">👁️</span>
+                <p>输入 Markdown 内容后将在此处显示版式预览</p>
+            </div>
+        `;
+        return;
+    }
+
+    previewContent.innerHTML = `
+        <div class="preview-loading">
+            <div class="loading-spinner"></div>
+            <p>生成版式预览中...</p>
+        </div>
+    `;
+
+    if (docxPreviewAbortController) {
+        docxPreviewAbortController.abort();
+    }
+    docxPreviewAbortController = new AbortController();
+    const controller = docxPreviewAbortController;
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+    const previewBody = 'markdown=' + encodeURIComponent(content)
+        + (csrfToken ? '&csrf_token=' + encodeURIComponent(csrfToken) : '');
+
+    fetch('/preview/docx', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken,
+        },
+        body: previewBody,
+        signal: controller.signal
+    })
+    .then(response => {
+        clearTimeout(timeoutId);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        return response.text();
+    })
+    .then(html => {
+        if (html.trim()) {
+            previewContent.innerHTML = html;
+            previewContent.classList.add(DOCX_PREVIEW_MODE);
+        } else {
+            previewContent.innerHTML = '<div class="preview-placeholder"><span class="icon">👁️</span><p>版式预览生成失败</p></div>';
+        }
+    })
+    .catch(error => {
+        clearTimeout(timeoutId);
+        if (error.name === 'AbortError') {
+            return;
+        }
+        console.error('版式预览失败:', error);
+        previewContent.innerHTML = '<div class="preview-error"><span class="icon">❌</span><p>版式预览失败，请稍后重试或使用实时预览</p></div>';
+    });
+}
+
+/**
  * 更新隐藏的表单字段
  */
 function updateHiddenInput() {
@@ -785,5 +861,6 @@ window.MD2DOCX = {
     toggleMode,
     togglePreview,
     generatePreview,
+    generateDocxLayoutPreview,
     clearContent
 };
