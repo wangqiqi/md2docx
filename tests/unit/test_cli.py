@@ -101,7 +101,7 @@ class TestCLI:
             main()
 
         # 验证convert_file被调用
-        mock_convert.assert_called_once_with("input.md", "output.docx", False)
+        mock_convert.assert_called_once_with("input.md", "output.docx", False, template=None)
 
     @patch("mddocx.cli.convert_file")
     @patch("pathlib.Path.exists", return_value=True)
@@ -113,7 +113,7 @@ class TestCLI:
             main()
 
         # 验证convert_file被调用且debug=True
-        mock_convert.assert_called_once_with("input.md", "output.docx", True)
+        mock_convert.assert_called_once_with("input.md", "output.docx", True, template=None)
 
     @patch("sys.stdout")
     def test_main_no_args(self, mock_stdout):
