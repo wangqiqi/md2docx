@@ -21,6 +21,14 @@ class TokenProcessor:
             if self._base.debug:
                 print(f"Processing token: type={token.type}, tag={token.tag if hasattr(token, 'tag') else ''}")
 
+            # 处理脚注定义块（正文已在 _index_footnote_bodies 登记）
+            elif token.type == "footnote_block_open":
+                i += 1
+                while i < len(tokens) and tokens[i].type != "footnote_block_close":
+                    i += 1
+                if i < len(tokens):
+                    i += 1
+
             # 处理标题
             if token.type == "heading_open":
                 converter = self._base.converters.get("heading")

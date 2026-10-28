@@ -11,8 +11,10 @@ from docx import Document
 from docx.document import Document as DocxDocument
 from markdown_it import MarkdownIt
 from mdit_py_plugins.dollarmath import dollarmath_plugin
+from mdit_py_plugins.footnote import footnote_plugin
 
 from .chunking import split_markdown_sections
+from .footnote_manager import FootnoteManager, extract_footnote_text
 from .elements import (
     BlockquoteConverter,
     CodeConverter,
@@ -81,6 +83,7 @@ class BaseConverter:
             .enable("emphasis")
             .enable("table")
             .use(dollarmath_plugin)
+            .use(footnote_plugin)
         )
         self.document = Document()
         self.converters: Dict[str, Any] = {}
@@ -89,6 +92,7 @@ class BaseConverter:
         self._render_cache = RenderCache()
         self.last_metrics: Optional[ConvertMetrics] = None
         self._token_processor: Optional[TokenProcessor] = None
+        self._footnote_manager = FootnoteManager()
 
         # 自动注册所有转换器
         self._register_default_converters()
@@ -102,6 +106,8 @@ class BaseConverter:
         self.document = Document()
         self._list_stack = []
         self._equation_registry = EquationRegistry()
+        self._footnote_manager.reset()
+        self._footnote_manager.bind_document(self.document)
         for converter in self.converters.values():
             reset = getattr(converter, "reset_state", None)
             if callable(reset):
@@ -243,6 +249,7 @@ class BaseConverter:
             processor = self._get_token_processor()
             for section in sections:
                 tokens = self.md.parse(section)
+                self._index_footnote_bodies(tokens)
                 if self.debug:
                     print(f"分块转换: section_bytes={markdown_utf8_byte_size(section)}")
                 processor.process(tokens)
@@ -259,6 +266,17 @@ class BaseConverter:
         except Exception as e:
             raise ConvertError(f"转换过程发生错误 ({type(e).__name__}): {e}") from e
 
+    def _index_footnote_bodies(self, tokens: List[Any]) -> None:
+        i = 0
+        while i < len(tokens):
+            if tokens[i].type == "footnote_open":
+                mdit_id = int(tokens[i].meta.get("id", 0))
+                end_i, text = extract_footnote_text(tokens, i)
+                self._footnote_manager.register_body(mdit_id, text)
+                i = end_i + 1
+            else:
+                i += 1
+
     def _convert_tokens(self, md_text: str, base_path: Optional[str] = None) -> DocxDocument:
         try:
             self._reset_state()
@@ -272,6 +290,7 @@ class BaseConverter:
 
             # 解析 Markdown 文本为 AST
             tokens = self.md.parse(md_text)
+            self._index_footnote_bodies(tokens)
 
             # 调试：打印所有标记
             if self.debug:

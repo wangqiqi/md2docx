@@ -36,9 +36,17 @@ class TextConverter(ElementConverter):
         # 创建新段落
         paragraph = self.doc.add_paragraph()
 
+        if content_token and hasattr(content_token, "content"):
+            if content_token.content.strip() in ("[TOC]", "[[TOC]]"):
+                from ..toc import insert_toc_field
+
+                insert_toc_field(paragraph)
+                return paragraph
+
         # 处理空段落
         if not content_token or not hasattr(content_token, "children") or not content_token.children:
             return None
+
         debug = self._debug_enabled()
         if debug:
             print(f"处理段落: {content_token.content}")
@@ -371,6 +379,14 @@ class TextConverter(ElementConverter):
                     current_text = ""
                 # 添加行内代码
                 self._add_inline_code(paragraph, child.content, current_style.copy())
+                i += 1
+            elif child.type == "footnote_ref":
+                if current_text:
+                    self._add_text_with_style(paragraph, current_text, current_style)
+                    current_text = ""
+                if self.base_converter and hasattr(self.base_converter, "_footnote_manager"):
+                    mdit_id = int(child.meta.get("id", 0))
+                    self.base_converter._footnote_manager.add_reference(paragraph, mdit_id)
                 i += 1
             elif child.type == "softbreak":
                 current_text += " "
