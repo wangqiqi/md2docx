@@ -277,7 +277,9 @@ class TextConverter(ElementConverter):
                     # 处理多行文本中的空格
                     text = child.content.replace("\n", " ")
                     if text.endswith(" "):
-                        text = text[:-1]
+                        next_type = children[i + 1].type if i + 1 < len(children) else None
+                        if next_type != "link_open":
+                            text = text[:-1]
                     current_text += text
                     i += 1
             elif child.type == "link_open":
